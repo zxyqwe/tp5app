@@ -152,7 +152,7 @@ function Curl_Post($curlPost, $url)
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
     }
     curl_close($curl);
-    trace(json_encode(array('method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str)));
+    trace(json_encode(array('method' => 'post', 'url' => $url, 'param' => $curlPost)));
     return $return_str;
 }
 
@@ -170,7 +170,7 @@ function Curl_Get($url)
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
     }
     curl_close($curl);
-    trace(json_encode(array('method' => 'get', 'url' => $url, 'res' => $return_str)));
+    trace(json_encode(array('method' => 'get', 'url' => $url)));
     return $return_str;
 }
 
