@@ -190,7 +190,10 @@ function WX($access_token, $openid)
      * {"openid":"ov3ult_HuJrCd8GjaC6HaPkLRFUU","nickname":"shiyuka","sex":1,"language":"zh_CN","city":"Hebei","province":"Tianjin","country":"CN","headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/aPSbIhPARHAaWgYobs1H3m8OEaFoZiaVibRJnoFqDJFwUDqQE5KiaZichyst3Iq5pNia8dpbJugEHbdIm5RkentqQ1zoFzDicotXGb\/0","privilege":[],"unionid":"ohT2YuN9miDm3ZSKnnSuamgsw4qw"}
     * 和openid无关，只用accesstoken
     */
-    $data = Curl_Get("https://api.weixin.qq.com/sns/userinfo?access_token=" . $access_token . "&openid=" . $openid . "&lang=zh_CN");
+    $data = Curl_Get("https://api.weixin.qq.com/sns/userinfo?" .
+        "access_token=" . $access_token .
+        "&openid=" . $openid .
+        "&lang=zh_CN");
     $data = json_decode($data, true);
     if (isset($data['errcode'])) {
         trace($data['errcode']);
@@ -202,15 +205,34 @@ function WX($access_token, $openid)
     return $data['openid'];
 }
 
-function WX_code($code)
+function WX_code($code, $api, $sec)
 {
-    $res = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . config('wx_js_api') . '&secret=' . config('ws_js_secret') . '&code=' . $code . '&grant_type=authorization_code');
+    $res = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?' .
+        'appid=' . $api .
+        '&secret=' . $sec .
+        '&code=' . $code .
+        '&grant_type=authorization_code');
     $res = json_decode($res, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
         exception(json_encode($res), 10003);
     }
     trace("Weixin Code " . $res['openid']);
     return $res['openid'];
+}
+
+function WX_access($api, $sec, $name)
+{
+    $tmp = cache($name);
+    if (false !== $tmp)
+        return $tmp;
+    $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec);
+    $res = json_decode($res, true);
+    if (!isset($res['access_token']) || !isset($res['expires_in'])) {
+        exception(json_encode($res), 10003);
+    }
+    trace("Weixin Access " . $res['access_token']);
+    cache($name, $res['access_token'], intval($res['expires_in']));
+    return $res['access_token'];
 }
 
 function extract_aws($res)
