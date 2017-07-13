@@ -55,6 +55,15 @@ class Index
 
     public function bulletin()
     {
+        return view('bulletin');
+    }
+
+    public function json_bulletin()
+    {
+        $tmp = cache('hanbj_json_bulletin');
+        if ($tmp) {
+            return json(json_decode($tmp, true));
+        }
         $map['m.code'] = 0;
         $map['f.unoper'] = ['EXP', 'IS NULL'];
         $join = [
@@ -66,10 +75,11 @@ class Index
             ->where($map)
             ->group('f.unique_name')
             ->field([
-                'sum(1)',
-                'f.unique_name',
-                'm.year_time'
+                'sum(1) as s',
+                'f.unique_name as u',
+                'm.year_time as t'
             ])->select();
+        cache('hanbj_json_bulletin', json_encode($tmp), 30);
         return json($tmp);
     }
 }

@@ -1,0 +1,54 @@
+{layout name="layout" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <div id="body">
+            <p><br/>会费收缴情况公告栏：（<i class="glyphicon glyphicon-star"></i>：已缴，<i
+                    class="glyphicon glyphicon-star-empty"></i>：欠费）</p>
+
+            <div>
+                <div id="toolbar">
+                    <select class="form-control">
+                        <option value="">Export Basic</option>
+                        <option value="all">Export All</option>
+                        <option value="selected">Export Selected</option>
+                    </select>
+                </div>
+                <table id="table"
+                       data-search="true"
+                       data-show-export="true"
+                       data-pagination="true"
+                       data-click-to-select="true"
+                       data-toolbar="#toolbar"
+                       data-page-list="[10, 25, 50, 100]">
+                    <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th data-field="s">Sum</th>
+                        <th data-field="u">uni</th>
+                        <th data-field="t">time</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.onload = function () {
+        $table = $('#table');
+        $table.bootstrapTable();
+        $(function () {
+            $('#toolbar').find('select').change(function () {
+                $table.bootstrapTable('destroy').bootstrapTable({
+                    exportDataType: $(this).val()
+                });
+            });
+        });
+        $.getJSON(
+            "/hanbj/index/json_bulletin",
+            function (msg) {
+                $table.bootstrapTable('load', msg);
+            
+            });
+    }
+</script>
