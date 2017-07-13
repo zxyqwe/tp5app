@@ -46,7 +46,14 @@ class Index
         return view('all');
     }
 
-    public function log()
+    public function feelog()
+    {
+        if ('succ' !== session('login')) {
+            return redirect('/hanbj/index/bulletin');
+        }
+    }
+
+    public function actlog()
     {
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');

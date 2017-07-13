@@ -27,6 +27,31 @@ class Data
         return json(['msg' => ' 登录成功'], 200);
     }
 
+    public function json_bulletin()
+    {
+        $tmp = cache('hanbj_json_bulletin');
+        if ($tmp) {
+            return json(json_decode($tmp, true));
+        }
+        $map['m.code'] = 0;
+        $map['f.unoper'] = ['EXP', 'IS NULL'];
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name']
+        ];
+        $tmp = Db::table('fee')
+            ->alias('f')
+            ->join($join)
+            ->where($map)
+            ->group('f.unique_name')
+            ->field([
+                'sum(1) as s',
+                'f.unique_name as u',
+                'm.year_time as t'
+            ])->select();
+        cache('hanbj_json_bulletin', json_encode($tmp), 30);
+        return json($tmp);
+    }
+
     public function json_all()
     {
         if ('succ' !== session('login')) {
@@ -54,31 +79,6 @@ class Data
                 'f.year_time as y',
             ])->select();
         cache('hanbj_json_all', json_encode($tmp), 30);
-        return json($tmp);
-    }
-
-    public function json_bulletin()
-    {
-        $tmp = cache('hanbj_json_bulletin');
-        if ($tmp) {
-            return json(json_decode($tmp, true));
-        }
-        $map['m.code'] = 0;
-        $map['f.unoper'] = ['EXP', 'IS NULL'];
-        $join = [
-            ['member m', 'm.unique_name=f.unique_name']
-        ];
-        $tmp = Db::table('fee')
-            ->alias('f')
-            ->join($join)
-            ->where($map)
-            ->group('f.unique_name')
-            ->field([
-                'sum(1) as s',
-                'f.unique_name as u',
-                'm.year_time as t'
-            ])->select();
-        cache('hanbj_json_bulletin', json_encode($tmp), 30);
         return json($tmp);
     }
 }
