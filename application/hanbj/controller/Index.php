@@ -40,4 +40,9 @@ class Index
     {
         
     }
+
+    public function bulletin()
+    {
+
+    }
 }

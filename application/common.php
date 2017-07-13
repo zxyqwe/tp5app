@@ -249,3 +249,5 @@ function extract_aws($res)
     }
     return $data;
 }
+
+\think\Route::rule('index.php/hyb', 'hanbj/index/bulletin');
