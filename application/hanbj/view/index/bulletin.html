@@ -52,7 +52,7 @@
         nye = '<i class="glyphicon glyphicon-star-empty"></i>';
         time = new Date();
         time = time.getFullYear() + 1;
-        $table.bootstrapTable();
+        $table.bootstrapTable({'pageSize': 50});
         $.getJSON(
             "/hanbj/data/json_bulletin",
             function (msg) {
@@ -62,7 +62,6 @@
                     msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);
                 }
                 $table.bootstrapTable('load', msg);
-
             });
     }
 </script>

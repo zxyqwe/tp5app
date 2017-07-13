@@ -27,6 +27,32 @@ class Data
         return json(['msg' => ' 登录成功'], 200);
     }
 
+    public function json_all()
+    {
+        $tmp = cache('hanbj_json_all');
+        if ($tmp) {
+            return json(json_decode($tmp, true));
+        }
+        $map['f.code'] = 0;
+        $tmp = Db::table('member')
+            ->alias('f')
+            ->where($map)
+            ->field([
+                'f.tieba_id as t',
+                'f.gender as g',
+                'f.phone as p',
+                'f.QQ as q',
+                'f.unique_name as u',
+                'f.master as m',
+                'f.rn as r',
+                'f.mail as a',
+                'f.pref as e',
+                'f.web_name as w',
+                'f.year_time as y',
+            ])->select();
+        cache('hanbj_json_all', json_encode($tmp), 30);
+        return json($tmp);
+    }
 
     public function json_bulletin()
     {

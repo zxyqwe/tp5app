@@ -43,6 +43,7 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        return view('all');
     }
 
     public function log()
