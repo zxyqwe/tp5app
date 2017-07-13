@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use think\captcha;
+use think\Db;
 
 
 class Index
@@ -12,7 +13,7 @@ class Index
         //$access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         //$access = substr($access, 0, 5);
         if ('succ' === session('login')) {
-            redirect('/hanbj/index/home');
+            return redirect('/hanbj/index/home');
         }
         $nonstr = getNonceStr();
         session('nonstr', $nonstr);
@@ -26,19 +27,25 @@ class Index
             return json(['msg' => '验证码错误'], 400);
         }
         $mm = input('post.mm');
-        $user = input('post.user');
         $nonstr = session('nonstr');
-        $tmp = '';
+        $user = input('post.user');
+        $tmp = Db::table('user')->where(['name' => $user])->value('mm');
+        $tmp = strtolower($tmp) . $nonstr;
+        $tmp = sha1($tmp);
         if ($mm !== $tmp) {
             return json(['msg' => '密码错误'], 400);
         }
         session('login', 'succ');
+        session('name', $user);
         return json(['msg' => ' 登录成功'], 200);
     }
 
     public function home()
     {
-        
+        if ('succ' !== session('login')) {
+            return redirect('/hanbj');
+        }
+        return view('home', ['name' => session('name')]);
     }
 
     public function bulletin()

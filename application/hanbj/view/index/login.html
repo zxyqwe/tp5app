@@ -54,6 +54,9 @@
 <script>
     window.onload = function () {
         var nonStr = '{$nonstr}';
+        $('#capt_img').click(function () {
+            $('#capt_img').attr('src', '/captcha.html?' + new Date());
+        });
         $("#login").click(function () {
             mm = $('#mm').val();
             mm = CryptoJS.SHA1(mm).toString();
@@ -73,6 +76,8 @@
                     msg = JSON.parse(msg.responseText);
                     alert(msg.msg);
                     $('#capt_img').attr('src', '/captcha.html?' + new Date());
+                    $('#mm').val('');
+                    $('#capt').val('');
                 }
             });
         });
