@@ -43,13 +43,32 @@ class Index
     public function home()
     {
         if ('succ' !== session('login')) {
-            return redirect('/hanbj');
+            return redirect('/hanbj/index/bulletin');
         }
         return view('home', ['name' => session('name')]);
     }
 
+    public function old()
+    {
+        return redirect('/hanbj/index/bulletin');
+    }
+
     public function bulletin()
     {
-
+        $map['m.code'] = 0;
+        $map['f.unoper'] = null;
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name']
+        ];
+        return Db::table('fee')
+            ->alias('f')
+            ->join($join)
+            ->where($map)
+            ->group('f.unique_name')
+            ->field([
+                'sum(1)',
+                'f.unique_name',
+                'm.year_time'
+            ])->select();
     }
 }
