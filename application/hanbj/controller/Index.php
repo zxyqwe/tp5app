@@ -82,4 +82,20 @@ class Index
         cache('hanbj_json_bulletin', json_encode($tmp), 30);
         return json($tmp);
     }
+
+    public function all()
+    {
+    }
+
+    public function log()
+    {
+    }
+
+    public function fee()
+    {
+    }
+
+    public function create()
+    {
+    }
 }
