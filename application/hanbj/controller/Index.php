@@ -56,11 +56,11 @@ class Index
     public function bulletin()
     {
         $map['m.code'] = 0;
-        $map['f.unoper'] = null;
+        $map['f.unoper'] = ['EXP', 'IS NULL'];
         $join = [
             ['member m', 'm.unique_name=f.unique_name']
         ];
-        return Db::table('fee')
+        $tmp = Db::table('fee')
             ->alias('f')
             ->join($join)
             ->where($map)
@@ -70,5 +70,6 @@ class Index
                 'f.unique_name',
                 'm.year_time'
             ])->select();
+        return json($tmp);
     }
 }
