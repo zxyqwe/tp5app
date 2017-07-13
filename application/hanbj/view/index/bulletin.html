@@ -54,7 +54,7 @@
         time = time.getFullYear() + 1;
         $table.bootstrapTable();
         $.getJSON(
-            "/hanbj/index/json_bulletin",
+            "/hanbj/data/json_bulletin",
             function (msg) {
                 for (i = 0; i < msg.length; i++) {
                     tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
