@@ -29,6 +29,9 @@ class Data
 
     public function json_all()
     {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
         $tmp = cache('hanbj_json_all');
         if ($tmp) {
             return json(json_decode($tmp, true));
