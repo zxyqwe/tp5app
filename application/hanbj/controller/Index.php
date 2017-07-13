@@ -51,6 +51,7 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        return view('feelog');
     }
 
     public function actlog()
@@ -58,6 +59,7 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        return view('actlog');
     }
 
     public function fee()
@@ -65,6 +67,7 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        return view('fee');
     }
 
     public function create()
@@ -72,5 +75,6 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        return view('create');
     }
 }
