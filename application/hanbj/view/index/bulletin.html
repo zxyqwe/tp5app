@@ -2,30 +2,20 @@
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <div id="body">
-            <p><br/>会费收缴情况公告栏：（<i class="glyphicon glyphicon-star"></i>：已缴，<i
+            <h1>会费收缴情况公告栏</h1>
+            <p>（<i class="glyphicon glyphicon-star"></i>：已缴，<i
                     class="glyphicon glyphicon-star-empty"></i>：欠费）</p>
 
             <div>
-                <div id="toolbar">
-                    <select class="form-control">
-                        <option value="">Export Basic</option>
-                        <option value="all">Export All</option>
-                        <option value="selected">Export Selected</option>
-                    </select>
-                </div>
                 <table id="table"
                        data-search="true"
-                       data-show-export="true"
                        data-pagination="true"
-                       data-click-to-select="true"
-                       data-toolbar="#toolbar"
                        data-page-list="[10, 25, 50, 100]">
                     <thead>
                     <tr>
                         <th data-field="state" data-checkbox="true"></th>
-                        <th data-field="s">Sum</th>
-                        <th data-field="u">uni</th>
-                        <th data-field="t">time</th>
+                        <th data-field="u">会员编号</th>
+                        <th data-field="o">会费情况</th>
                     </tr>
                     </thead>
                 </table>
@@ -34,21 +24,38 @@
     </div>
 </div>
 <script>
+    function repeat(target, n) {
+        var s = target, total = "";
+        while (n > 0) {
+            if (n % 2 == 1) {
+                total += s;
+            }
+            if (n == 1) {
+                break;
+            }
+
+            s += s;
+            n = n >> 1;//相当于将n除以2取其商，或者说是开2次方
+        }
+        return total;
+    }
     window.onload = function () {
         $table = $('#table');
+        alr = '<i class="glyphicon glyphicon-star"></i>';
+        nye = '<i class="glyphicon glyphicon-star-empty"></i>';
+        time = new Date();
+        time = time.getFullYear() + 1;
         $table.bootstrapTable();
-        $(function () {
-            $('#toolbar').find('select').change(function () {
-                $table.bootstrapTable('destroy').bootstrapTable({
-                    exportDataType: $(this).val()
-                });
-            });
-        });
         $.getJSON(
             "/hanbj/index/json_bulletin",
             function (msg) {
+                for (i = 0; i < msg.length; i++) {
+                    tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
+                    tmp = tmp > 0 ? tmp : 0;
+                    msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);
+                }
                 $table.bootstrapTable('load', msg);
-            
+
             });
     }
 </script>
