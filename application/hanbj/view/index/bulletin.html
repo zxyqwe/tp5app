@@ -57,17 +57,17 @@
         $('#back').click(function () {
             location.href = '/hanbj';
         });
-        $table = $('#table');
-        alr = '<i class="glyphicon glyphicon-star ggly"></i>';
-        nye = '<i class="glyphicon glyphicon-star-empty rgly"></i>';
-        time = new Date();
+        var $table = $('#table');
+        var alr = '<i class="glyphicon glyphicon-star ggly"></i>';
+        var nye = '<i class="glyphicon glyphicon-star-empty rgly"></i>';
+        var time = new Date();
         time = time.getFullYear() + 1;
         $table.bootstrapTable({
             'pageSize': 20,
             responseHandler: function (res) {
-                msg = res.rows;
+                var msg = res.rows;
                 for (i in msg) {
-                    tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
+                    var tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
                     tmp = tmp > 0 ? tmp : 0;
                     msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);
                 }

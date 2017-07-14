@@ -60,19 +60,19 @@
 </div>
 <script>
     function listitem(head, data) {
-        str = '<a href="#" class="list-group-item">' +
+        var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
-            '</h4>'
-        for (i in data) {
+            '</h4>';
+        for (var i in data) {
             str += '<p class="list-group-item-text">' + data[i] + '</p>';
         }
-        str += '</a>'
+        str += '</a>';
         return str;
     }
     function itfee(fee) {
-        data = [];
-        for (i in fee) {
-            tmp = fee[i];
+        var data = [];
+        for (var i in fee) {
+            var tmp = fee[i];
             data.push(listitem('<i class="glyphicon glyphicon-star ggly"></i>缴费', ['经手人：' + tmp.oper, "时间：" + tmp.fee_time]));
             if (null !== tmp.unoper) {
                 data.push(listitem('<i class="glyphicon glyphicon-star-empty rgly"></i>撤销', ['经手人：' + tmp.unoper, "时间：" + tmp.unfee_time]));
@@ -81,9 +81,9 @@
         return data.join("");
     }
     function itact(act) {
-        data = [];
-        for (i in act) {
-            tmp = act[i];
+        var data = [];
+        for (var i in act) {
+            var tmp = act[i];
             data.push(listitem(tmp.name, ["经手人：" + tmp.oper, "时间：" + tmp.act_time]));
         }
         return data.join("");
@@ -105,13 +105,13 @@
         });
     }
     function detailFormatter(index, row) {
-        str = $('#detailV').html();
+        var str = $('#detailV').html();
         str = str.replace('fee', 'fee' + row.id);
         str = str.replace('act', 'act' + row.id);
         return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
     }
     window.onload = function () {
-        $table = $('#table');
+        var $table = $('#table');
         $table.bootstrapTable({'pageSize': 20});
     }
 </script>

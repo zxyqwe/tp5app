@@ -58,12 +58,12 @@
             $('#capt_img').attr('src', '/captcha.html?' + new Date());
         });
         $("#login").click(function () {
-            mm = $('#mm').val();
+            var mm = $('#mm').val();
             mm = CryptoJS.SHA1(mm).toString();
             mm += nonStr;
             mm = CryptoJS.SHA1(mm).toString();
             $('#mm').val(mm);
-            d = $('#form').serializeArray();
+            var d = $('#form').serializeArray();
             $.ajax({
                 type: "POST",
                 url: "/hanbj/data/json_login",
