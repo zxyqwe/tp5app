@@ -12,7 +12,8 @@
     <script type="text/javascript" src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/core.js"></script>
     <script type="text/javascript" src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/sha1.js"></script>
     <script type="text/javascript" src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/bootstrap-table.min.js"></script>
-    <script type="text/javascript" src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script type="text/javascript"
+            src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/locale/bootstrap-table-zh-CN.min.js"></script>
     <title>汉服北京会员部管理系统</title>
 
     <style type="text/css">
@@ -128,6 +129,9 @@
             $(function () {
                 $(window).scroll(function () {
                     if ($(window).scrollTop() > 100) {
+                        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                            return;
+                        }
                         $("#back-to-top").fadeIn(700);
                     }
                     else {
@@ -135,7 +139,7 @@
                     }
                 });
                 $("#back-to-top").click(function () {
-                    $('body,html').animate({scrollTop: 0}, 1000);
+                    $('#htmlbody').animate({scrollTop: 0}, 1000);
                     return false;
                 });
             });
@@ -144,5 +148,5 @@
 
     </script>
 </head>
-<body>
+<body id="htmlbody">
 <p id="back-to-top"><a href="#top"><span></span>返回顶部</a></p>
