@@ -1,4 +1,13 @@
 {layout name="layout" /}
+<style>
+    .rgly {
+        color: red;
+    }
+
+    .ggly {
+        color: green;
+    }
+</style>
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <div id="body">
@@ -7,8 +16,8 @@
                         class="glyphicon glyphicon-log-in"></i><i>登录</i></button>
                 会费收缴情况公告栏
             </h1>
-            <p>（<i class="glyphicon glyphicon-star"></i>：已缴，<i
-                    class="glyphicon glyphicon-star-empty"></i>：欠费）</p>
+            <p>（<i class="glyphicon glyphicon-star ggly"></i>：已缴，<i
+                    class="glyphicon glyphicon-star-empty rgly"></i>：欠费）</p>
 
             <div>
                 <table id="table"
@@ -49,8 +58,8 @@
             location.href = '/hanbj';
         });
         $table = $('#table');
-        alr = '<i class="glyphicon glyphicon-star"></i>';
-        nye = '<i class="glyphicon glyphicon-star-empty"></i>';
+        alr = '<i class="glyphicon glyphicon-star ggly"></i>';
+        nye = '<i class="glyphicon glyphicon-star-empty rgly"></i>';
         time = new Date();
         time = time.getFullYear() + 1;
         $table.bootstrapTable({
