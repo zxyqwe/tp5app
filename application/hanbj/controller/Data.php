@@ -34,25 +34,23 @@ class Data
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $map['m.code'] = 0;
-        $map['f.unoper'] = ['EXP', 'IS NULL'];
         $join = [
-            ['fee f', 'm.unique_name=f.unique_name', 'left']
+            ['fee f', 'm.unique_name=f.unique_name AND f.unoper is null', 'left']
         ];
         $tmp = Db::table('member')
             ->alias('m')
             ->join($join)
             ->where($map)
             ->limit($offset, $size)
-            ->group('f.unique_name')
+            ->group('m.unique_name')
             ->field([
-                'sum(1) as s',
+                'count(oper) as s',
                 'm.unique_name as u',
                 'm.year_time as t'
             ])
             ->cache(600)
             ->select();
         $data['rows'] = $tmp;
-        unset($map['f.unoper']);
         $total = Db::table('member')
             ->alias('m')
             ->where($map)
