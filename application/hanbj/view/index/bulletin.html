@@ -66,7 +66,7 @@
             'pageSize': 20,
             responseHandler: function (res) {
                 msg = res.rows;
-                for (i = 0; i < msg.length; i++) {
+                for (i in msg) {
                     tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
                     tmp = tmp > 0 ? tmp : 0;
                     msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);

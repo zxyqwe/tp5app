@@ -75,6 +75,7 @@ class Data
             ->where($map)
             ->limit($offset, $size)
             ->field([
+                'f.id',
                 'f.tieba_id as t',
                 'f.gender as g',
                 'f.phone as p',
@@ -96,6 +97,42 @@ class Data
             ->cache(600)
             ->count();
         $data['total'] = $total;
+        return json($data);
+    }
+
+    public function json_detail()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $id = input('post.id', 1, FILTER_VALIDATE_INT);
+        $map['m.code'] = 0;
+        $map['m.id'] = $id;
+        $fee = Db::table('member')
+            ->alias('m')
+            ->join('fee f', 'm.unique_name=f.unique_name')
+            ->where($map)
+            ->field([
+                'oper',
+                'unoper',
+                'fee_time',
+                'unfee_time'
+            ])
+            ->cache(600)
+            ->select();
+        $act = Db::table('member')
+            ->alias('m')
+            ->join('activity f', 'm.unique_name=f.unique_name')
+            ->where($map)
+            ->field([
+                'oper',
+                'name',
+                'act_time'
+            ])
+            ->cache(600)
+            ->select();
+        $data['fee'] = $fee;
+        $data['act'] = $act;
         return json($data);
     }
 }

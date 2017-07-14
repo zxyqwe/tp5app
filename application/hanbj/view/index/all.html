@@ -1,4 +1,13 @@
 {layout name="layout2" /}
+<style>
+    .rgly {
+        color: red;
+    }
+
+    .ggly {
+        color: green;
+    }
+</style>
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <div id="body">
@@ -7,9 +16,12 @@
                        data-pagination="true"
                        data-side-pagination="server"
                        data-url="/hanbj/data/json_all"
+                       data-detail-view="true"
+                       data-detail-formatter="detailFormatter"
                        data-page-list="[20, 50, 100]">
                     <thead>
                     <tr>
+                        <th data-field="id" class="sr-only">ID</th>
                         <th data-field="t">贴吧ID</th>
                         <th data-field="g">性别</th>
                         <th data-field="p">电话</th>
@@ -29,7 +41,74 @@
         </div>
     </div>
 </div>
+<div class="sr-only" id="detailV">
+    <div><h1>详细信息</h1>
+        <div class="col-md-6 column">
+            <div class="panel panel-success">
+                <div class="panel-heading">缴费情况</div>
+                <div id="fee" class='list-group'>正在加载中...</div>
+            </div>
+        </div>
+        <div class="col-md-6 column">
+            <div class="panel panel-info">
+                <div class="panel-heading">活动情况</div>
+                <div id="act" class='list-group'>正在加载中...</div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    function listitem(head, data) {
+        str = '<a href="#" class="list-group-item">' +
+            '<h4 class="list-group-item-heading">' + head +
+            '</h4>'
+        for (i in data) {
+            str += '<p class="list-group-item-text">' + data[i] + '</p>';
+        }
+        str += '</a>'
+        return str;
+    }
+    function itfee(fee) {
+        data = [];
+        for (i in fee) {
+            tmp = fee[i];
+            data.push(listitem('<i class="glyphicon glyphicon-star ggly"></i>缴费', ['经手人：' + tmp.oper, "时间：" + tmp.fee_time]));
+            if (null !== tmp.unoper) {
+                data.push(listitem('<i class="glyphicon glyphicon-star-empty rgly"></i>撤销', ['经手人：' + tmp.unoper, "时间：" + tmp.unfee_time]));
+            }
+        }
+        return data.join("");
+    }
+    function itact(act) {
+        data = [];
+        for (i in act) {
+            tmp = act[i];
+            data.push(listitem(tmp.name, ["经手人：" + tmp.oper, "时间：" + tmp.act_time]));
+        }
+        return data.join("");
+    }
+    function loaddetail(id) {
+        $.ajax({
+            type: "POST",
+            url: "/hanbj/data/json_detail",
+            data: {id: id},
+            dataType: "json",
+            success: function (msg) {
+                $('#fee' + id).html(itfee(msg.fee));
+                $('#act' + id).html(itact(msg.act));
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                alert(msg.msg);
+            }
+        });
+    }
+    function detailFormatter(index, row) {
+        str = $('#detailV').html();
+        str = str.replace('fee', 'fee' + row.id);
+        str = str.replace('act', 'act' + row.id);
+        return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
+    }
     window.onload = function () {
         $table = $('#table');
         $table.bootstrapTable({'pageSize': 20});
