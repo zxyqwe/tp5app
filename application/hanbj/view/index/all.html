@@ -4,9 +4,10 @@
         <div id="body">
             <div>
                 <table id="table"
-                       data-search="true"
                        data-pagination="true"
-                       data-page-list="[50, 100, 500]">
+                       data-side-pagination="server"
+                       data-url="/hanbj/data/json_all"
+                       data-page-list="[20, 50, 100]">
                     <thead>
                     <tr>
                         <th data-field="t">贴吧ID</th>
@@ -31,11 +32,6 @@
 <script>
     window.onload = function () {
         $table = $('#table');
-        $table.bootstrapTable({'pageSize': 50});
-        $.getJSON(
-            "/hanbj/data/json_all",
-            function (msg) {
-                $table.bootstrapTable('load', msg);
-            });
+        $table.bootstrapTable({'pageSize': 20});
     }
 </script>

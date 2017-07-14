@@ -12,9 +12,10 @@
 
             <div>
                 <table id="table"
-                       data-search="true"
                        data-pagination="true"
-                       data-page-list="[50, 100, 500]">
+                       data-side-pagination="server"
+                       data-url="/hanbj/data/json_bulletin"
+                       data-page-list="[20, 50, 100]">
                     <thead>
                     <tr>
                         <th data-field="u">会员编号</th>
@@ -52,16 +53,17 @@
         nye = '<i class="glyphicon glyphicon-star-empty"></i>';
         time = new Date();
         time = time.getFullYear() + 1;
-        $table.bootstrapTable({'pageSize': 50});
-        $.getJSON(
-            "/hanbj/data/json_bulletin",
-            function (msg) {
+        $table.bootstrapTable({
+            'pageSize': 20,
+            responseHandler: function (res) {
+                msg = res.rows;
                 for (i = 0; i < msg.length; i++) {
                     tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
                     tmp = tmp > 0 ? tmp : 0;
                     msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);
                 }
-                $table.bootstrapTable('load', msg);
-            });
+                return res;
+            }
+        });
     }
 </script>

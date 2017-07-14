@@ -29,27 +29,37 @@ class Data
 
     public function json_bulletin()
     {
-        $tmp = cache('hanbj_json_bulletin');
-        if ($tmp) {
-            return json(json_decode($tmp, true));
-        }
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
         $map['m.code'] = 0;
         $map['f.unoper'] = ['EXP', 'IS NULL'];
         $join = [
-            ['member m', 'm.unique_name=f.unique_name']
+            ['fee f', 'm.unique_name=f.unique_name', 'left']
         ];
-        $tmp = Db::table('fee')
-            ->alias('f')
+        $tmp = Db::table('member')
+            ->alias('m')
             ->join($join)
             ->where($map)
+            ->limit($offset, $size)
             ->group('f.unique_name')
             ->field([
                 'sum(1) as s',
-                'f.unique_name as u',
+                'm.unique_name as u',
                 'm.year_time as t'
-            ])->select();
-        cache('hanbj_json_bulletin', json_encode($tmp), 30);
-        return json($tmp);
+            ])
+            ->cache(600)
+            ->select();
+        $data['rows'] = $tmp;
+        unset($map['f.unoper']);
+        $total = Db::table('member')
+            ->alias('m')
+            ->where($map)
+            ->cache(600)
+            ->count();
+        $data['total'] = $total;
+        return json($data);
     }
 
     public function json_all()
@@ -57,14 +67,15 @@ class Data
         if ('succ' !== session('login')) {
             return json(['msg' => '未登录'], 400);
         }
-        $tmp = cache('hanbj_json_all');
-        if ($tmp) {
-            return json(json_decode($tmp, true));
-        }
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
         $map['f.code'] = 0;
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
+            ->limit($offset, $size)
             ->field([
                 'f.tieba_id as t',
                 'f.gender as g',
@@ -77,8 +88,16 @@ class Data
                 'f.pref as e',
                 'f.web_name as w',
                 'f.year_time as y',
-            ])->select();
-        cache('hanbj_json_all', json_encode($tmp), 30);
-        return json($tmp);
+            ])
+            ->cache(600)
+            ->select();
+        $data['rows'] = $tmp;
+        $total = Db::table('member')
+            ->alias('f')
+            ->where($map)
+            ->cache(600)
+            ->count();
+        $data['total'] = $total;
+        return json($data);
     }
 }
