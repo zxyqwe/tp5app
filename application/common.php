@@ -195,12 +195,9 @@ function WX($access_token, $openid)
         "&openid=" . $openid .
         "&lang=zh_CN");
     $data = json_decode($data, true);
-    if (isset($data['errcode'])) {
-        trace($data['errcode']);
-        exception($data['errcode'], 10001);
-    } elseif (!isset($data['openid'])) {
+    if (!isset($data['openid'])) {
         trace("Weixin Exception " . json_encode($data));
-        exception(json_encode($data), 10002);
+        exception(json_encode($data), 10001);
     }
     return $data['openid'];
 }
@@ -214,10 +211,21 @@ function WX_code($code, $api, $sec)
         '&grant_type=authorization_code');
     $res = json_decode($res, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
-        exception(json_encode($res), 10003);
+        exception(json_encode($res), 10001);
     }
     trace("Weixin Code " . $res['openid']);
     return $res['openid'];
+}
+
+function WX_redirect($uri, $state = '')
+{
+    return redirect('https://open.weixin.qq.com/connect/oauth2/authorize?' .
+        'appid=' . config('hanbj_api') .
+        '&redirect_uri=' . urlencode($uri) .
+        '&response_type=code' .
+        '&scope=snsapi_base' .
+        '&state=' . $state .
+        '#wechat_redirect');
 }
 
 function WX_access($api, $sec, $name)
