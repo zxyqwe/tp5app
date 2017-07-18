@@ -150,9 +150,9 @@ function Curl_Post($curlPost, $url)
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
+        trace(json_encode(array('method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str)));
     }
     curl_close($curl);
-    trace(json_encode(array('method' => 'post', 'url' => $url, 'param' => $curlPost)));
     return $return_str;
 }
 
@@ -168,9 +168,9 @@ function Curl_Get($url)
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
+        trace(json_encode(array('method' => 'get', 'url' => $url, 'res' => $return_str)));
     }
     curl_close($curl);
-    trace(json_encode(array('method' => 'get', 'url' => $url)));
     return $return_str;
 }
 
@@ -183,7 +183,7 @@ function getNonceStr($length = 32, $chars = "abcdefghijklmnopqrstuvwxyz012345678
     return $str;
 }
 
-function WX($access_token, $openid)
+function WX_union($access_token, $openid)
 {
     /*
     * {"errcode":42001,"errmsg":"access_token expired, hints: [ req_id: rabp.A0077ns41 ]"}
@@ -197,21 +197,21 @@ function WX($access_token, $openid)
     $data = json_decode($data, true);
     if (!isset($data['openid'])) {
         trace("Weixin Exception " . json_encode($data));
-        exception(json_encode($data), 10001);
+        return $data;
     }
     return $data['openid'];
 }
 
-function WX_code($code, $api, $sec)
+function WX_code($code)
 {
     $res = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?' .
-        'appid=' . $api .
-        '&secret=' . $sec .
+        'appid=' . config('hanbj_api') .
+        '&secret=' . config('hanbj_secret') .
         '&code=' . $code .
         '&grant_type=authorization_code');
     $res = json_decode($res, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
-        exception(json_encode($res), 10001);
+        return $res;
     }
     trace("Weixin Code " . $res['openid']);
     return $res['openid'];
@@ -236,11 +236,26 @@ function WX_access($api, $sec, $name)
     $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec);
     $res = json_decode($res, true);
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
-        exception(json_encode($res), 10003);
+        return $res;
     }
     trace("Weixin Access " . $res['access_token']);
     cache($name, $res['access_token'], intval($res['expires_in']));
     return $res['access_token'];
+}
+
+function WX_iter()
+{
+    if (session('?openid')) {
+        return true;
+    }
+    if (input('?get.code')) {
+        $openid = WX_code(input('get.code'));
+        if (!is_array($openid)) {
+            session('openid', $openid);
+            return true;
+        }
+    }
+    return false;
 }
 
 function extract_aws($res)
