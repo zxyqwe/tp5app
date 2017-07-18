@@ -23,6 +23,10 @@ class Mobile
                 ''
             ])
             ->find();
+        if (null === $res) {
+            return view('reg');
+        }
+        return view('home', ['user' => $res]);
     }
 
     public function event()
