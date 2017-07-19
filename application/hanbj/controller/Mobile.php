@@ -31,6 +31,8 @@ class Mobile
 
     public function event()
     {
-        include_once APP_PATH . 'hanbj/';
+        include_once APP_PATH . 'hanbj/wx.php';
+        //$access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        //$access = substr($access, 0, 5);
     }
 }
