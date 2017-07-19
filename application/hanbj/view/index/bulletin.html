@@ -29,41 +29,7 @@
     </div>
 </div>
 <script>
-    function repeat(target, n) {
-        var s = target, total = "";
-        while (n > 0) {
-            if (n % 2 == 1) {
-                total += s;
-            }
-            if (n == 1) {
-                break;
-            }
-
-            s += s;
-            n = n >> 1;//相当于将n除以2取其商，或者说是开2次方
-        }
-        return total;
-    }
     window.onload = function () {
-        $('#back').click(function () {
-            location.href = '/hanbj';
-        });
-        var $table = $('#table');
-        var alr = '<i class="glyphicon glyphicon-star ggly"></i>';
-        var nye = '<i class="glyphicon glyphicon-star-empty rgly"></i>';
-        var time = new Date();
-        time = time.getFullYear() + 1;
-        $table.bootstrapTable({
-            'pageSize': 20,
-            responseHandler: function (res) {
-                var msg = res.rows;
-                for (i in msg) {
-                    var tmp = time - parseInt(msg[i].t) - parseInt(msg[i].s);
-                    tmp = tmp > 0 ? tmp : 0;
-                    msg[i].o = repeat(alr, parseInt(msg[i].s)) + repeat(nye, tmp);
-                }
-                return res;
-            }
-        });
+        bulletin.init();
     }
 </script>
