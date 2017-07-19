@@ -53,33 +53,7 @@
 </div>
 <script>
     window.onload = function () {
-        var nonStr = '{$nonstr}';
-        $('#capt_img').click(function () {
-            $('#capt_img').attr('src', '/captcha.html?' + new Date());
-        });
-        $("#login").click(function () {
-            var mm = $('#mm').val();
-            mm = CryptoJS.SHA1(mm).toString();
-            mm += nonStr;
-            mm = CryptoJS.SHA1(mm).toString();
-            $('#mm').val(mm);
-            var d = $('#form').serializeArray();
-            $.ajax({
-                type: "POST",
-                url: "/hanbj/data/json_login",
-                data: d,
-                dataType: "json",
-                success: function (msg) {
-                    location.reload(true);
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    alert(msg.msg);
-                    $('#capt_img').attr('src', '/captcha.html?' + new Date());
-                    $('#mm').val('');
-                    $('#capt').val('');
-                }
-            });
-        });
+        window.nonStr = '{$nonstr}';
+        login.init();
     }
 </script>
