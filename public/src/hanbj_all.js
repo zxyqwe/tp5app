@@ -2,7 +2,9 @@ var all = (function ($, w, undefined) {
     'use strict';
     var alr = $('#ggly').html();
     var nye = $('#rgly').html();
-    w.listitem = function (head, data) {
+    var jsr = '经手人：';
+    var sj = "时间：";
+    var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
             '</h4>';
@@ -12,22 +14,22 @@ var all = (function ($, w, undefined) {
         str += '</a>';
         return str;
     };
-    w.itfee = function (fee) {
+    var itfee = function (fee) {
         var data = [];
         for (var i in fee) {
             var tmp = fee[i];
-            data.push(listitem(alr + '缴费', ['经手人：' + tmp.oper, "时间：" + tmp.fee_time]));
+            data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time]));
             if (null !== tmp.unoper) {
-                data.push(listitem(nye + '撤销', ['经手人：' + tmp.unoper, "时间：" + tmp.unfee_time]));
+                data.push(listitem(nye + '撤销', [jsr + tmp.unoper, sj + tmp.unfee_time]));
             }
         }
         return data.join("");
     };
-    w.itact = function (act) {
+    var itact = function (act) {
         var data = [];
         for (var i in act) {
             var tmp = act[i];
-            data.push(listitem(tmp.name, ["经手人：" + tmp.oper, "时间：" + tmp.act_time]));
+            data.push(listitem(tmp.name, [jsr + tmp.oper, sj + tmp.act_time]));
         }
         return data.join("");
     };
@@ -35,7 +37,9 @@ var all = (function ($, w, undefined) {
         $.ajax({
             type: "POST",
             url: "/hanbj/data/json_detail",
-            data: {id: id},
+            data: {
+                id: id
+            },
             dataType: "json",
             success: function (msg) {
                 $('#fee' + id).html(itfee(msg.fee));
@@ -55,7 +59,9 @@ var all = (function ($, w, undefined) {
     };
     var init = function () {
         var $table = $('#table');
-        $table.bootstrapTable({'pageSize': 20});
+        $table.bootstrapTable({
+            'pageSize': 20
+        });
     };
     return {
         init: init
