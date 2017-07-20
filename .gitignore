@@ -5,3 +5,4 @@ composer.lock
 *.log
 thinkphp
 node_modules/*
+application/sensitive.php
