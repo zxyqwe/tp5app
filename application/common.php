@@ -92,11 +92,11 @@ function WX_union($access_token, $openid)
     return $data['openid'];
 }
 
-function WX_code($code)
+function WX_code($code, $api, $sec)
 {
     $res = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?' .
-        'appid=' . config('hanbj_api') .
-        '&secret=' . config('hanbj_secret') .
+        'appid=' . $api .
+        '&secret=' . $sec .
         '&code=' . $code .
         '&grant_type=authorization_code');
     $res = json_decode($res, true);
@@ -107,10 +107,10 @@ function WX_code($code)
     return $res['openid'];
 }
 
-function WX_redirect($uri, $state = '')
+function WX_redirect($uri, $api, $state = '')
 {
     return redirect('https://open.weixin.qq.com/connect/oauth2/authorize?' .
-        'appid=' . config('hanbj_api') .
+        'appid=' . $api .
         '&redirect_uri=' . urlencode($uri) .
         '&response_type=code' .
         '&scope=snsapi_base' .
@@ -133,13 +133,13 @@ function WX_access($api, $sec, $name)
     return $res['access_token'];
 }
 
-function WX_iter()
+function WX_iter($api, $sec)
 {
     if (session('?openid')) {
         return true;
     }
     if (input('?get.code')) {
-        $openid = WX_code(input('get.code'));
+        $openid = WX_code(input('get.code'), $api, $sec);
         if (!is_array($openid)) {
             session('openid', $openid);
             return true;

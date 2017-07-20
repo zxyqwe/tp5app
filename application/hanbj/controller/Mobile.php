@@ -9,8 +9,8 @@ class Mobile
 {
     public function index()
     {
-        if (!WX_iter()) {
-            return WX_redirect('/hanbj/mobile');
+        if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
+            return WX_redirect('/hanbj/mobile', config('hanbj_api'));
         }
         $openid = session('openid');
         $map['c.openid'] = $openid;
@@ -31,8 +31,7 @@ class Mobile
 
     public function event()
     {
-        include_once APP_PATH . 'hanbj/wx.php';
-        //$access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        //$access = substr($access, 0, 5);
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        return substr($access, 0, 5);
     }
 }
