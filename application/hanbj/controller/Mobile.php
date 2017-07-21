@@ -96,10 +96,8 @@ class Mobile
 
     private function auto($to, $from, $type)
     {
-        trace(implode('\t', [
-            input('get.openid'),
+        trace(implode(':', [
             $to,
-            $from,
             $type
         ]));
         $data = '<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[机器人自动回复：%s]]></Content></xml>';
