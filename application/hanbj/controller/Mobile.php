@@ -32,11 +32,13 @@ class Mobile
         }
         return view('home', ['user' => $res]);
     }
+    public function access(){
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        return substr($access, 0, 5);
+    }
 
     public function event()
     {
-        //$access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        //return substr($access, 0, 5);
         $token = config('hanbj_token');
         $aes = config('hanbj_EncodingAESKey');
         $api = config('hanbj_api');
