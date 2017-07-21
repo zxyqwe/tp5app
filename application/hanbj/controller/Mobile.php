@@ -14,7 +14,7 @@ class Mobile
     public function index()
     {
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
-            return WX_redirect('/hanbj/mobile', config('hanbj_api'));
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
         $openid = session('openid');
         $map['c.openid'] = $openid;
