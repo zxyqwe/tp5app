@@ -17,14 +17,13 @@ class Mobile
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
         $openid = session('openid');
-        $map['c.openid'] = $openid;
-        $res = Db::table('card')
-            ->alias('c')
-            ->join('member m', 'm.mcode=c.mcode')
+        $map['openid'] = $openid;
+        $res = Db::table('member')
+            ->alias('m')
             ->where($map)
-            ->cache(86400)
+            ->cache(600)
             ->field([
-                ''
+                'unique_name'
             ])
             ->find();
         if (null === $res) {
@@ -32,7 +31,9 @@ class Mobile
         }
         return view('home', ['user' => $res]);
     }
-    public function access(){
+
+    public function access()
+    {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         return substr($access, 0, 5);
     }
@@ -110,6 +111,8 @@ class Mobile
     {
         $type = (string)$msg->Event;
         switch ($type) {
+            case 'user_get_card':
+                return $this->get_card($msg);
             default:
                 trace(json_encode($msg));
             case 'subscribe':
@@ -128,5 +131,20 @@ class Mobile
                 //case 'submit_membercard_user_info':
                 return '';
         }
+    }
+
+    private function get_card($msg)
+    {
+        $cardid = (string)$msg->UserCardCode;
+        $openid = (string)$msg->FromUserName;
+        $data = [
+            'openid' => $openid,
+            'code' => $cardid
+        ];
+        $res = Db::table('card')->insert($data);
+        if ($res !== 1) {
+            trace($msg);
+        }
+        return '';
     }
 }
