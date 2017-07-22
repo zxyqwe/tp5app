@@ -26,14 +26,14 @@ function cross_site()
     }
 }
 
-function Curl_Post($curlPost, $url)
+function Curl_Post($curlPost, $url, $easy = true)
 {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($curlPost));
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $easy ? http_build_query($curlPost) : json_encode($curlPost));
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
     curl_setopt($curl, CURLOPT_TIMEOUT, 3);
     $return_str = curl_exec($curl);
