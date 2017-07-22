@@ -41,7 +41,7 @@ class Mobile
     public function img()
     {
         if (cache('?HANBJ_CARD')) {
-            redirect(cache('HANBJ_CARD'));
+            return redirect(cache('HANBJ_CARD'));
         }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/qrcode/create?access_token=' . $access;
@@ -59,7 +59,7 @@ class Mobile
             return json_encode($res);
         }
         cache('HANBJ_CARD', $res['show_qrcode_url'], $res['expire_seconds']);
-        redirect($res['show_qrcode_url']);
+        return redirect($res['show_qrcode_url']);
     }
 
     public function event()
