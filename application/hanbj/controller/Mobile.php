@@ -38,6 +38,30 @@ class Mobile
         return substr($access, 0, 5);
     }
 
+    public function img()
+    {
+        if (cache('?HANBJ_CARD')) {
+            redirect(cache('HANBJ_CARD'));
+        }
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/card/qrcode/create?access_token=' . $access;
+        $data = [
+            "action_name" => "QR_CARD",
+            "action_info" => [
+                "card" => [
+                    "card_id" => config('hanbj_cardid')
+                ]
+            ]
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            return json_encode($res);
+        }
+        cache('HANBJ_CARD', $res['show_qrcode_url'], $res['expire_seconds']);
+        redirect($res['show_qrcode_url']);
+    }
+
     public function event()
     {
         $token = config('hanbj_token');
