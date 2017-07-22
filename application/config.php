@@ -265,5 +265,6 @@ return [
     'aws_uri' => '/onca/xml',
     'hanbj_api' => 'wx8519c9fd7817dbcb',
     'hanbj_secret' => '',
+    'hanbj_cardid' => 'pJkBfvzCcbL6JSO33iBOt5Obc7tQ',
 
 ];
