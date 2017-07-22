@@ -62,6 +62,27 @@ class Mobile
         return redirect($res['show_qrcode_url']);
     }
 
+    public function json_old()
+    {
+        if (!session('?openid')) {
+            return json('未登录', 400);
+        }
+        $phone = input('post.phone');
+        $eid = input('post.eid');
+        $map['phone'] = $phone;
+        $map['openid'] = ['EXP', 'IS NULL'];
+        $res = Db::table('member')
+            ->where($map)
+            ->value('eid');
+        if (strlen($res) < 6) {
+            return json('手机号错误', 400);
+        }
+        if (substr($res, strlen($res) - 6) === $eid) {
+            return json('OK');
+        }
+        return json('身份证错误', 400);
+    }
+
     public function event()
     {
         $token = config('hanbj_token');
@@ -144,6 +165,7 @@ class Mobile
             case 'LOCATION':
             case 'CLICK':
             case 'VIEW':
+            case 'user_view_card':
                 //case 'card_pass_check':
             case 'user_gifting_card':
                 //case 'user_del_card':
