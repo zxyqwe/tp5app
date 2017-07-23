@@ -32,10 +32,21 @@ class Mobile
         if (null === $res) {
             return view('reg');
         }
+        switch ($res['code']) {
+            case 0:
+                $res['code'] = '正常';
+                break;
+            case 1:
+                $res['code'] = '注销';
+                break;
+        }
         $card = Db::table('card')
             ->where($map)
             ->value('status');
-        return view('home', ['user' => $res, 'card' => $card, 'test' => false]);
+        if ($card === false) {
+            $card = -1;
+        }
+        return view('home', ['user' => $res, 'card' => $card]);
     }
 
     public function access()
