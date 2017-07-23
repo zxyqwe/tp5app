@@ -3,7 +3,7 @@ var Old = (function ($, w, undefined) {
     var $toast = $('#toast');
     var $old_msg = $('#old_msg');
     var msgto = function (data) {
-        old_msg.html(data);
+        $old_msg.html(data);
         if ($toast.css('display') != 'none') return;
 
         $toast.fadeIn(100);
