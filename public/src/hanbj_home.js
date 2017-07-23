@@ -12,6 +12,39 @@ var home = (function ($, w, undefined) {
             $toast.fadeOut(100);
         }, 2000);
     };
+    var jsapi = function () {
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/mobile/json_wx?url=" + encodeURIComponent(location.href.split('#')[0]),
+            dataType: "json",
+            success: function (msg) {
+                wx.config({
+                    appId: msg.api,
+                    timestamp: msg.timestamp,
+                    nonceStr: msg.nonce,
+                    signature: msg.signature,
+                    jsApiList: ['openCard']
+                });
+                wx.ready(function () {
+                    $("#card1").click(function () {
+                        wx.openCard({
+                            cardList: [{
+                                cardId: msg.card,
+                                code: msg.code
+                            }]
+                        });
+                    });
+                });
+                wx.error(function (res) {
+                    console.log(res);
+                });
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                msgto(msg.msg);
+            }
+        });
+    };
     var init = function () {
         $toast = $('#toast');
         $old_msg = $('#old_msg');
@@ -30,8 +63,7 @@ var home = (function ($, w, undefined) {
                 }
             });
         });
-        $("#card1").click(function () {
-        });
+        jsapi();
     };
     return {
         init: init

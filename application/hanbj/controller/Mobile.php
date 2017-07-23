@@ -50,6 +50,46 @@ class Mobile
         return view('home', ['user' => $res, 'card' => $card]);
     }
 
+    public function json_wx()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $openid = session('openid');
+        $map['openid'] = $openid;
+        $card = Db::table('card')
+            ->where($map)
+            ->value('code');
+        $wx['code'] = $card;
+        $wx['card'] = config('hanbj_cardid');
+        $wx['api'] = config('hanbj_api');
+        $wx['timestamp'] = time();
+        $wx['nonce'] = getNonceStr();
+        $ss = 'jsapi_ticket=' . $this->jsapi() .
+            '&noncestr=' . $wx['nonce'] .
+            '&timestamp=' . $wx['timestamp']
+            . '&url=' . urldecode(input('get.url'));
+        $ss = sha1($ss);
+        $wx['signature'] = $ss;
+        return json($wx);
+    }
+
+    private function jsapi()
+    {
+        if (cache('?jsapi')) {
+            return cache('jsapi');
+        }
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
+            return '';
+        }
+        cache('jsapi', $res['ticket'], $res['expires_in']);
+        return $res['ticket'];
+    }
+
     public function access()
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
