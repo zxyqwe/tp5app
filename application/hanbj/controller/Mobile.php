@@ -65,7 +65,7 @@ class Mobile
     public function json_old()
     {
         if (!session('?openid')) {
-            return json('未登录', 400);
+            return json(['msg' => '未登录'], 400);
         }
         $phone = input('post.phone');
         $eid = input('post.eid');
@@ -75,12 +75,12 @@ class Mobile
             ->where($map)
             ->value('eid');
         if (strlen($res) < 6) {
-            return json('手机号错误', 400);
+            return json(['msg' => '手机号错误'], 400);
         }
         if (substr($res, strlen($res) - 6) === $eid) {
             return json('OK');
         }
-        return json('身份证错误', 400);
+        return json(['msg' => '身份证错误'], 400);
     }
 
     public function event()

@@ -2,9 +2,13 @@ var Old = (function ($, w, undefined) {
     'use strict';
     var $toast = $('#toast');
     var $old_msg = $('#old_msg');
+    var $weuiAgree = $('#weuiAgree');
+    var eid = $('#old_eid');
+    var phone = $('#old_phone');
     var msgto = function (data) {
         $old_msg.html(data);
-        if ($toast.css('display') != 'none') return;
+        if ($toast.css('display') !== 'none')
+            return;
 
         $toast.fadeIn(100);
         setTimeout(function () {
@@ -13,13 +17,13 @@ var Old = (function ($, w, undefined) {
     };
     var init = function () {
         $("#oldok").click(function () {
-            var weuiAgree = $('#weuiAgree').prop('checked');
-            if (!weuiAgree) {
+            var weagree = $weuiAgree.prop('checked');
+            if (!weagree) {
                 msgto('阅读并同意《相关条款》');
                 return;
             }
-            var old_eid = $('#old_eid').val();
-            var old_phone = $('#old_phone').val();
+            var old_eid = eid.val();
+            var old_phone = phone.val();
             $.ajax({
                 type: "POST",
                 url: "/hanbj/mobile/json_old",
