@@ -114,11 +114,12 @@ class Mobile
         }
         $openid = session('openid');
         $map['openid'] = $openid;
+        $map['status'] = 0;
         $card = Db::table('card')
             ->where($map)
             ->value('code');
         if ($card === false) {
-            return json(['msg' => '未获取会员卡'], 400);
+            return json(['msg' => '没有未激活会员卡'], 400);
         }
         return json(['msg' => $card], 400);
     }
