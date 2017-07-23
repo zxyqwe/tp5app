@@ -13,7 +13,7 @@ var Old = (function ($, w, undefined) {
     };
     var init = function () {
         $("#oldok").click(function () {
-            var weuiAgree = $('#weuiAgree').get(0).checked;
+            var weuiAgree = $('#weuiAgree').prop('checked');
             if (!weuiAgree) {
                 msgto('阅读并同意《相关条款》');
                 return;
