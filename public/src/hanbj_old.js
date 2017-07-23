@@ -41,4 +41,4 @@ var Old = (function ($, w, undefined) {
     return {
         init: init
     };
-})(jQuery, window);
+})(Zepto, window);
