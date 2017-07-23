@@ -247,14 +247,21 @@ class Mobile
 
     private function del_card($msg)
     {
-
         $cardid = (string)$msg->UserCardCode;
         $openid = (string)$msg->FromUserName;
         $data = [
             'openid' => $openid,
             'code' => $cardid
         ];
-
+        $res = Db::table('card')
+            ->where($data)
+            ->delete();
+        if ($res !== 1) {
+            $data['status'] = 'del fail';
+        } else {
+            $data['status'] = 'del OK';
+        }
+        trace(json_encode($data));
         return '';
     }
 
@@ -267,14 +274,10 @@ class Mobile
             'code' => $cardid
         ];
         $res = Db::table('card')
-            ->where($data)
-            ->delete();
+            ->insert($data);
         if ($res !== 1) {
-            $data['code'] = 'del fail';
-        } else {
-            $data['code'] = 'del OK';
+            trace($msg);
         }
-        trace(json_encode($data));
         return '';
     }
 
