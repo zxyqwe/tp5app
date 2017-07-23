@@ -499,3 +499,7 @@ ul {
     -webkit-animation: b .2s forwards;
     animation: b .2s forwards
 }
+
+.sr-only {
+    display: none;
+}
