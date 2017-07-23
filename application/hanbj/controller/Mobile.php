@@ -221,6 +221,8 @@ class Mobile
     {
         $type = (string)$msg->Event;
         switch ($type) {
+            case 'user_del_card':
+                return $this->del_card($msg);
             case 'user_get_card':
                 return $this->get_card($msg);
             default:
@@ -233,7 +235,6 @@ class Mobile
             case 'user_view_card':
                 //case 'card_pass_check':
             case 'user_gifting_card':
-                //case 'user_del_card':
                 //case 'user_pay_from_pay_cell':
             case 'user_enter_session_from_card':
                 //case 'update_member_card':
@@ -244,6 +245,19 @@ class Mobile
         }
     }
 
+    private function del_card($msg)
+    {
+
+        $cardid = (string)$msg->UserCardCode;
+        $openid = (string)$msg->FromUserName;
+        $data = [
+            'openid' => $openid,
+            'code' => $cardid
+        ];
+
+        return '';
+    }
+
     private function get_card($msg)
     {
         $cardid = (string)$msg->UserCardCode;
@@ -252,10 +266,15 @@ class Mobile
             'openid' => $openid,
             'code' => $cardid
         ];
-        $res = Db::table('card')->insert($data);
+        $res = Db::table('card')
+            ->where($data)
+            ->delete();
         if ($res !== 1) {
-            trace($msg);
+            $data['code'] = 'del fail';
+        } else {
+            $data['code'] = 'del OK';
         }
+        trace(json_encode($data));
         return '';
     }
 
