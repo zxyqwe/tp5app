@@ -24,7 +24,9 @@ class Mobile
             ->cache(600)
             ->field([
                 'unique_name',
-                'year'
+                'year_time',
+                'code',
+                'master'
             ])
             ->find();
         if (null === $res) {

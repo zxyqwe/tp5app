@@ -16,13 +16,26 @@
                     <div class="weui-cell__bd">
                         <p>注册年份</p>
                     </div>
-                    <div class="weui-cell__ft">{$user.year}</div>
+                    <div class="weui-cell__ft">{$user.year_time}</div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <p>审核人</p>
+                    </div>
+                    <div class="weui-cell__ft">{$user.master}</div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <p>会员状态</p>
+                    </div>
+                    <div class="weui-cell__ft">{$user.code}</div>
                 </div>
             </div>
         </div>
     </div>
     <script type="text/javascript">
         var status = {$card};
+        var test = {$test};
 
 </script>
 </script>
