@@ -1,13 +1,10 @@
 var Old = (function ($, w, undefined) {
     'use strict';
-    var $toast = $('#toast');
-    var $old_msg = $('#old_msg');
-    var $weuiAgree = $('#weuiAgree');
-    var eid = $('#old_eid');
-    var phone = $('#old_phone');
+    var $toast, $old_msg, $weuiAgree, eid, phone;
     var msgto = function (data) {
         $old_msg.html(data);
         var tdis = $toast.css('display');
+        console.log($toast);
         console.log(tdis);
         console.log($('#toast').css('display'));
         console.log($('#toast'));
@@ -21,6 +18,11 @@ var Old = (function ($, w, undefined) {
         }, 2000);
     };
     var init = function () {
+        $toast = $('#toast');
+        $old_msg = $('#old_msg');
+        $weuiAgree = $('#weuiAgree');
+        eid = $('#old_eid');
+        phone = $('#old_phone');
         $("#oldok").click(function () {
             var weagree = $weuiAgree.prop('checked');
             if (!weagree) {
