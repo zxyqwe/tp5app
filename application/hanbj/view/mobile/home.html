@@ -2,13 +2,27 @@
 <script type="text/html" id="tpl_home">
     <div class="page">
         <div class="page__hd">
-            <h1 class="page__title">{$user.unique_name}</h1>
             <p class="page__desc">个人中心</p>
         </div>
         <div class="page__bd page__bd_spacing">
-            <h1 class="page__title">{$user.unique_name}</h1>
-            <p class="page__desc">个人中心</p>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <p>会员编号</p>
+                    </div>
+                    <div class="weui-cell__ft">{$user.unique_name}</div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <p>注册年份</p>
+                    </div>
+                    <div class="weui-cell__ft">{$user.year}</div>
+                </div>
+            </div>
         </div>
     </div>
+    <script type="text/javascript">
+        var status = {$card};
 
+</script>
 </script>

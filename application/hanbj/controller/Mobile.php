@@ -23,13 +23,17 @@ class Mobile
             ->where($map)
             ->cache(600)
             ->field([
-                'unique_name'
+                'unique_name',
+                'year'
             ])
             ->find();
         if (null === $res) {
             return view('reg');
         }
-        return view('home', ['user' => $res]);
+        $card = Db::table('card')
+            ->where($map)
+            ->value('status');
+        return view('home', ['user' => $res, 'card' => $card, 'test' => false]);
     }
 
     public function access()
