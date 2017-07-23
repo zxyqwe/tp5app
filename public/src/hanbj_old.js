@@ -4,11 +4,6 @@ var Old = (function ($, w, undefined) {
     var msgto = function (data) {
         $old_msg.html(data);
         var tdis = $toast.css('display');
-        console.log($toast);
-        console.log(tdis);
-        console.log($('#toast').css('display'));
-        console.log($('#toast'));
-        console.log($('#toast').css('display') === tdis);
         if ('none' !== tdis)
             return;
 
@@ -26,7 +21,7 @@ var Old = (function ($, w, undefined) {
         $("#oldok").click(function () {
             var weagree = $weuiAgree.prop('checked');
             if (!weagree) {
-                msgto('阅读并同意《相关条款》');
+                msgto('《相关条款》');
                 return;
             }
             var old_eid = eid.val();

@@ -78,6 +78,13 @@ class Mobile
             return json(['msg' => '手机号错误'], 400);
         }
         if (substr($res, strlen($res) - 6) === $eid) {
+            $res = Db::table('member')
+                ->where($map)
+                ->setField('openid', session('openid'));
+            if ($res !== 1) {
+                trace([$phone, session('openid')]);
+                return json(['msg' => '绑定失败'], 500);
+            }
             return json('OK');
         }
         return json(['msg' => '身份证错误'], 400);
