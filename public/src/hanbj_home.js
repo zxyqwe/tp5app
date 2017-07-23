@@ -27,13 +27,20 @@ var home = (function ($, w, undefined) {
                 });
                 wx.ready(function () {
                     $("#card1").click(function () {
-                        wx.openCard({
-                            cardList: [{
-                                cardId: msg.card,
-                                code: msg.code
-                            }]
-                        });
-                    });
+                            wx.openCard({
+                                cardList: [{
+                                    cardId: msg.card,
+                                    code: msg.code
+                                }],
+                                success: function (res) {
+                                    console.log(res);
+                                },
+                                fail: function (res) {
+                                    console.log(res);
+                                }
+                            });
+                        }
+                    );
                 });
                 wx.error(function (res) {
                     console.log(res);
@@ -43,7 +50,8 @@ var home = (function ($, w, undefined) {
                 msg = JSON.parse(msg.responseText);
                 msgto(msg.msg);
             }
-        });
+        })
+        ;
     };
     var init = function () {
         $toast = $('#toast');
