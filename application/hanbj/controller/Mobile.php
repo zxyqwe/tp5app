@@ -107,6 +107,22 @@ class Mobile
         return json(['msg' => '身份证错误'], 400);
     }
 
+    public function json_card()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $openid = session('openid');
+        $map['openid'] = $openid;
+        $card = Db::table('card')
+            ->where($map)
+            ->value('code');
+        if ($card === false) {
+            return json(['msg' => '未获取会员卡'], 400);
+        }
+        return json(['msg' => $card], 400);
+    }
+
     public function event()
     {
         $token = config('hanbj_token');

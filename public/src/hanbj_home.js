@@ -15,7 +15,7 @@ var home = (function ($, w, undefined) {
     var init = function () {
         $toast = $('#toast');
         $old_msg = $('#old_msg');
-        w.status.css({"display": "block"});
+        w.$status.css({"display": "block"});
         $("#card0").click(function () {
             $.ajax({
                 type: "GET",
