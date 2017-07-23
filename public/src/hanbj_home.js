@@ -30,6 +30,8 @@ var home = (function ($, w, undefined) {
                 }
             });
         });
+        $("#card1").click(function () {
+        });
     };
     return {
         init: init

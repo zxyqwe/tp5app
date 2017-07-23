@@ -32,6 +32,7 @@ class Mobile
         if (null === $res) {
             return view('reg');
         }
+        session('unique_name', $res['unique_name']);
         switch ($res['code']) {
             case 0:
                 $res['code'] = '正常';
@@ -102,7 +103,7 @@ class Mobile
                 trace([$phone, session('openid')]);
                 return json(['msg' => '绑定失败'], 500);
             }
-            return json('OK');
+            return json(['msg' => 'OK']);
         }
         return json(['msg' => '身份证错误'], 400);
     }
@@ -121,7 +122,7 @@ class Mobile
         if ($card === false) {
             return json(['msg' => '没有未激活会员卡'], 400);
         }
-        return json(['msg' => $card], 400);
+        return $this->active($card);
     }
 
     public function event()
@@ -233,5 +234,23 @@ class Mobile
             trace($msg);
         }
         return '';
+    }
+
+    private function active($code)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/card/membercard/activate?access_token=' . $access;
+        $data = [
+            "membership_number" => session('unique_name'),
+            "code" => $code,
+            "card_id" => config('hanbj_cardid'),
+            'activate_end_time' => time() + 120
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            return json(['msg' => json_encode($res)], 400);
+        }
+        return json(['msg' => 'OK']);
     }
 }
