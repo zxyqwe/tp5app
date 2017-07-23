@@ -291,7 +291,7 @@ class Mobile
             "card_id" => config('hanbj_cardid'),
             'init_bonus' => 0,
             'init_custom_field_value1' => session('unique_name'),
-            'init_custom_field_value2' => '有效'
+            'init_custom_field_value2' => $this->cache_fee()
         ];
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
@@ -309,5 +309,23 @@ class Mobile
             return json(['msg' => '更新失败'], 500);
         }
         return json(['msg' => 'OK']);
+    }
+
+    private function cache_fee()
+    {
+        $uname = session('unique_name');
+        $map['unique_name'] = $uname;
+        $map['unoper'] = ['EXP', 'IS NULL'];
+        $res = Db::table('fee')
+            ->alias('f')
+            ->where($map)
+            ->count('1');
+        unset($map['unoper']);
+        $year = Db::table('member')
+            ->where($map)
+            ->value('year_time');
+        $fee = intval($year) + intval($res) - 1;
+        cache('fee', $fee);
+        return $fee;
     }
 }
