@@ -125,6 +125,21 @@ class Mobile
         return $this->active($card);
     }
 
+    public function json_view($code)
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/card/membercard/userinfo/get?access_token=' . $access;
+        $data = [
+            "code" => $code,
+            "card_id" => config('hanbj_cardid')
+        ];
+        $res = Curl_Post($data, $url, false);
+        return json(['msg' => $res]);
+    }
+
     public function event()
     {
         $token = config('hanbj_token');
@@ -241,10 +256,12 @@ class Mobile
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/activate?access_token=' . $access;
         $data = [
-            "membership_number" => session('unique_name'),
+            "membership_number" => $code,
             "code" => $code,
             "card_id" => config('hanbj_cardid'),
-            'activate_end_time' => time() + 120
+            'init_bonus' => 0,
+            'init_custom_field_value1' => session('unique_name'),
+            'init_custom_field_value2' => '有效'
         ];
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
