@@ -298,6 +298,16 @@ class Mobile
         if ($res['errcode'] !== 0) {
             return json(['msg' => json_encode($res)], 400);
         }
+        $map['status'] = 0;
+        $map['code'] = $code;
+        $map['openid'] = session('openid');
+        $res = Db::table('card')
+            ->where($map)
+            ->setField('status', 1);
+        if ($res !== 1) {
+            trace($data);
+            return json(['msg' => '更新失败'], 500);
+        }
         return json(['msg' => 'OK']);
     }
 }
