@@ -125,15 +125,23 @@ class Mobile
         return $this->active($card);
     }
 
-    public function json_view($code)
+    public function json_view()
     {
         if (!session('?openid')) {
             return json(['msg' => '未登录'], 400);
         }
+        $openid = session('openid');
+        $map['openid'] = $openid;
+        $card = Db::table('card')
+            ->where($map)
+            ->value('code');
+        if ($card === false) {
+            return json(['msg' => '没有会员卡'], 400);
+        }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/userinfo/get?access_token=' . $access;
         $data = [
-            "code" => $code,
+            "code" => $card,
             "card_id" => config('hanbj_cardid')
         ];
         $res = Curl_Post($data, $url, false);
