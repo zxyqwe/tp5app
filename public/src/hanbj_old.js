@@ -7,7 +7,12 @@ var Old = (function ($, w, undefined) {
     var phone = $('#old_phone');
     var msgto = function (data) {
         $old_msg.html(data);
-        if ($toast.css('display') !== 'none')
+        var tdis = $toast.css('display');
+        console.log(tdis);
+        console.log($('#toast').css('display'));
+        console.log($('#toast'));
+        console.log($('#toast').css('display') === tdis);
+        if ('none' !== tdis)
             return;
 
         $toast.fadeIn(100);
