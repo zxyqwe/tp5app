@@ -189,10 +189,12 @@ class Mobile
         $wx['card_id'] = config('hanbj_cardid');
         $wx['timestamp'] = time();
         $wx['nonce_str'] = getNonceStr();
-        $ss = $wx['nonce_str'] .
-            $wx['timestamp'] .
-            $this->ticketapi() .
-            $wx['card_id'];
+        $ss = [$wx['nonce_str'],
+            $wx['timestamp'],
+            $this->ticketapi(),
+            $wx['card_id']];
+        sort($ss);
+        $ss = implode('', $ss);
         $ss = sha1($ss);
         $wx['signature'] = $ss;
         return json($wx);
