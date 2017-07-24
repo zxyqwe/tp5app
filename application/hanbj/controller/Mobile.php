@@ -186,8 +186,6 @@ class Mobile
         if (!session('?openid')) {
             return json(['msg' => '未登录'], 400);
         }
-        $openid = session('openid');
-        $wx['openid'] = $openid;
         $wx['card_id'] = config('hanbj_cardid');
         $wx['timestamp'] = time();
         $wx['nonce_str'] = getNonceStr();
