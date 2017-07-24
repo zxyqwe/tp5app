@@ -44,7 +44,7 @@ class Mobile
         $card = Db::table('card')
             ->where($map)
             ->value('status');
-        if ($card === false) {
+        if ($card === null) {
             $card = -1;
         }
         return view('home', ['user' => $res, 'card' => $card]);
