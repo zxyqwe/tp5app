@@ -90,6 +90,22 @@ class Mobile
         return $res['ticket'];
     }
 
+    private function ticketapi()
+    {
+        if (cache('?ticketapi')) {
+            return cache('ticketapi');
+        }
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
+            return '';
+        }
+        cache('ticketapi', $res['ticket'], $res['expires_in']);
+        return $res['ticket'];
+    }
+
     public function access()
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
@@ -163,6 +179,25 @@ class Mobile
             return json(['msg' => '没有未激活会员卡'], 400);
         }
         return $this->active($card);
+    }
+
+    public function json_addcard()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $openid = session('openid');
+        $wx['openid'] = $openid;
+        $wx['card_id'] = config('hanbj_cardid');
+        $wx['timestamp'] = time();
+        $wx['nonce_str'] = getNonceStr();
+        $ss = $wx['nonce_str'] .
+            $wx['timestamp'] .
+            $this->ticketapi() .
+            $wx['card_id'];
+        $ss = sha1($ss);
+        $wx['signature'] = $ss;
+        return json($wx);
     }
 
     public function json_view()

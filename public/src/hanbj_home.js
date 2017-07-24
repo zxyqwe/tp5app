@@ -12,6 +12,30 @@ var home = (function ($, w, undefined) {
             $toast.fadeOut(100);
         }, 2000);
     };
+    var ticketapi = function () {
+        $("#card-1").click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/mobile/json_addcard",
+                dataType: "json",
+                success: function (msg) {
+                    wx.addCard({
+                        cardList: [{
+                            cardId: msg.card_id,
+                            cardExt: msg
+                        }],
+                        success: function (res) {
+                            location.reload(true);
+                        }
+                    });
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    msgto(msg.msg);
+                }
+            });
+        });
+    };
     var jsapi = function () {
         $.ajax({
             type: "GET",
@@ -23,24 +47,24 @@ var home = (function ($, w, undefined) {
                     timestamp: msg.timestamp,
                     nonceStr: msg.nonce,
                     signature: msg.signature,
-                    jsApiList: ['openCard']
+                    jsApiList: ['openCard', 'addCard']
                 });
                 wx.ready(function () {
                     $("#card1").click(function () {
-                            wx.openCard({
-                                cardList: [{
-                                    cardId: msg.card,
-                                    code: msg.code
-                                }],
-                                success: function (res) {
-                                    console.log(res);
-                                },
-                                fail: function (res) {
-                                    console.log(res);
-                                }
-                            });
-                        }
-                    );
+                        wx.openCard({
+                            cardList: [{
+                                cardId: msg.card,
+                                code: msg.code
+                            }],
+                            success: function (res) {
+                                console.log(res);
+                            },
+                            fail: function (res) {
+                                console.log(res);
+                            }
+                        });
+                    });
+                    ticketapi();
                 });
                 wx.error(function (res) {
                     console.log(res);
@@ -50,8 +74,7 @@ var home = (function ($, w, undefined) {
                 msg = JSON.parse(msg.responseText);
                 msgto(msg.msg);
             }
-        })
-        ;
+        });
     };
     var init = function () {
         $toast = $('#toast');
