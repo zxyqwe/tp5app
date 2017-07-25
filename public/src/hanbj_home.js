@@ -3,6 +3,9 @@ var home = (function ($, w, undefined) {
     var $card1, $card0, $cardn;
     var ticketapi = function () {
         $cardn.click(function () {
+            if ($cardn.hasClass('weui-btn_loading')) {
+                return;
+            }
             $cardn.addClass('weui-btn_loading');
             $.ajax({
                 type: "GET",
@@ -74,6 +77,9 @@ var home = (function ($, w, undefined) {
         $card0 = $("#card0");
         $card1 = $("#card1");
         $card0.click(function () {
+            if ($cardn.hasClass('weui-btn_loading')) {
+                return;
+            }
             $card0.addClass('weui-btn_loading');
             $.ajax({
                 type: "GET",
