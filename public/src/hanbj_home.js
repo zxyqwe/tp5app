@@ -18,7 +18,7 @@ var home = (function ($, w, undefined) {
                             cardExt: msg
                         }],
                         success: function (res) {
-                            location.reload(true);
+                            w.location.href = location.href.split('#')[0];
                         }
                     });
                 },
@@ -46,6 +46,28 @@ var home = (function ($, w, undefined) {
                     jsApiList: ['openCard', 'addCard']
                 });
                 wx.ready(function () {
+                    w.$status.css({"display": "block"});
+                    $card0.click(function () {
+                        if ($cardn.hasClass('weui-btn_loading')) {
+                            return;
+                        }
+                        $card0.addClass('weui-btn_loading');
+                        $.ajax({
+                            type: "GET",
+                            url: "/hanbj/mobile/json_card",
+                            dataType: "json",
+                            success: function (msg) {
+                                w.location.href = location.href.split('#')[0];
+                            },
+                            error: function (msg) {
+                                msg = JSON.parse(msg.responseText);
+                                w.msgto(msg.msg);
+                            },
+                            complete: function () {
+                                $card0.removeClass('weui-btn_loading');
+                            }
+                        });
+                    });
                     $card1.click(function () {
                         wx.openCard({
                             cardList: [{
@@ -60,6 +82,7 @@ var home = (function ($, w, undefined) {
                             }
                         });
                     });
+                    ticketapi();
                 });
                 wx.error(function (res) {
                     console.log(res);
@@ -72,33 +95,10 @@ var home = (function ($, w, undefined) {
         });
     };
     var init = function () {
-        w.$status.css({"display": "block"});
+        jsapi();
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
-        $card0.click(function () {
-            if ($cardn.hasClass('weui-btn_loading')) {
-                return;
-            }
-            $card0.addClass('weui-btn_loading');
-            $.ajax({
-                type: "GET",
-                url: "/hanbj/mobile/json_card",
-                dataType: "json",
-                success: function (msg) {
-                    location.reload(true);
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                },
-                complete: function () {
-                    $card0.removeClass('weui-btn_loading');
-                }
-            });
-        });
-        jsapi();
-        ticketapi();
     };
     return {
         init: init
