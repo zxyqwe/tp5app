@@ -26,7 +26,13 @@ class Mobile
                 'unique_name',
                 'year_time',
                 'code',
-                'master'
+                'master',
+                'tieba_id',
+                'gender',
+                'QQ',
+                'mail',
+                'pref',
+                'web_name',
             ])
             ->find();
         if (null === $res) {
