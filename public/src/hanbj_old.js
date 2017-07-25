@@ -1,27 +1,14 @@
 var Old = (function ($, w, undefined) {
     'use strict';
-    var $toast, $old_msg, $weuiAgree, eid, phone;
-    var msgto = function (data) {
-        $old_msg.html(data);
-        var tdis = $toast.css('display');
-        if ('none' !== tdis)
-            return;
-
-        $toast.fadeIn(100);
-        setTimeout(function () {
-            $toast.fadeOut(100);
-        }, 2000);
-    };
+    var $weuiAgree, eid, phone;
     var init = function () {
-        $toast = $('#toast');
-        $old_msg = $('#old_msg');
         $weuiAgree = $('#weuiAgree');
         eid = $('#old_eid');
         phone = $('#old_phone');
         $("#oldok").click(function () {
             var weagree = $weuiAgree.prop('checked');
             if (!weagree) {
-                msgto('《相关条款》');
+                w.msgto('《相关条款》');
                 return;
             }
             var old_eid = eid.val();
@@ -39,7 +26,7 @@ var Old = (function ($, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });

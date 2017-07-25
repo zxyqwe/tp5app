@@ -1,17 +1,5 @@
 var home = (function ($, w, undefined) {
     'use strict';
-    var $toast, $old_msg;
-    var msgto = function (data) {
-        $old_msg.html(data);
-        var tdis = $toast.css('display');
-        if ('none' !== tdis)
-            return;
-
-        $toast.fadeIn(100);
-        setTimeout(function () {
-            $toast.fadeOut(100);
-        }, 2000);
-    };
     var ticketapi = function () {
         $("#card-1").click(function () {
             $.ajax({
@@ -31,7 +19,7 @@ var home = (function ($, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });
@@ -72,13 +60,11 @@ var home = (function ($, w, undefined) {
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
-                msgto(msg.msg);
+                w.msgto(msg.msg);
             }
         });
     };
     var init = function () {
-        $toast = $('#toast');
-        $old_msg = $('#old_msg');
         w.$status.css({"display": "block"});
         $("#card0").click(function () {
             $.ajax({
@@ -90,7 +76,7 @@ var home = (function ($, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });

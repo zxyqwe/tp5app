@@ -233,6 +233,19 @@ $(function () {
         window.home = function () {
             location.hash = '';
         };
+        var $toast = $('#toast');
+        var $old_msg = $('#old_msg');
+        window.msgto = function (data) {
+            $old_msg.html(data);
+            var tdis = $toast.css('display');
+            if ('none' !== tdis)
+                return;
+
+            $toast.fadeIn(100);
+            setTimeout(function () {
+                $toast.fadeOut(100);
+            }, 2000);
+        };
     }
 
     init();

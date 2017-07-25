@@ -371,6 +371,7 @@ class Mobile
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
         if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
             return json(['msg' => json_encode($res)], 400);
         }
         $map['status'] = 0;
