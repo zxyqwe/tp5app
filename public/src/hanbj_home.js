@@ -48,7 +48,7 @@ var home = (function ($, w, undefined) {
                 wx.ready(function () {
                     w.$status.css({"display": "block"});
                     $card0.click(function () {
-                        if ($cardn.hasClass('weui-btn_loading')) {
+                        if ($card0.hasClass('weui-btn_loading')) {
                             return;
                         }
                         $card0.addClass('weui-btn_loading');
@@ -69,6 +69,10 @@ var home = (function ($, w, undefined) {
                         });
                     });
                     $card1.click(function () {
+                        if ($card1.hasClass('weui-btn_loading')) {
+                            return;
+                        }
+                        $card1.addClass('weui-btn_loading');
                         wx.openCard({
                             cardList: [{
                                 cardId: msg.card,
@@ -79,6 +83,9 @@ var home = (function ($, w, undefined) {
                             },
                             fail: function (res) {
                                 console.log(res);
+                            },
+                            complete: function () {
+                                $card1.removeClass('weui-btn_loading');
                             }
                         });
                     });
