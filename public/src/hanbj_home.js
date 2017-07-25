@@ -1,7 +1,9 @@
 var home = (function ($, w, undefined) {
     'use strict';
+    var $card1, $card0, $cardn;
     var ticketapi = function () {
-        $("#card-1").click(function () {
+        $cardn.click(function () {
+            $cardn.addClass('weui-btn_loading');
             $.ajax({
                 type: "GET",
                 url: "/hanbj/mobile/json_addcard",
@@ -20,6 +22,9 @@ var home = (function ($, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    $cardn.removeClass('weui-btn_loading');
                 }
             });
         });
@@ -38,7 +43,7 @@ var home = (function ($, w, undefined) {
                     jsApiList: ['openCard', 'addCard']
                 });
                 wx.ready(function () {
-                    $("#card1").click(function () {
+                    $card1.click(function () {
                         wx.openCard({
                             cardList: [{
                                 cardId: msg.card,
@@ -52,7 +57,6 @@ var home = (function ($, w, undefined) {
                             }
                         });
                     });
-                    ticketapi();
                 });
                 wx.error(function (res) {
                     console.log(res);
@@ -66,7 +70,11 @@ var home = (function ($, w, undefined) {
     };
     var init = function () {
         w.$status.css({"display": "block"});
-        $("#card0").click(function () {
+        $cardn = $("#card-1");
+        $card0 = $("#card0");
+        $card1 = $("#card1");
+        $card0.click(function () {
+            $card0.addClass('weui-btn_loading');
             $.ajax({
                 type: "GET",
                 url: "/hanbj/mobile/json_card",
@@ -77,10 +85,14 @@ var home = (function ($, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    $card0.removeClass('weui-btn_loading');
                 }
             });
         });
         jsapi();
+        ticketapi();
     };
     return {
         init: init
