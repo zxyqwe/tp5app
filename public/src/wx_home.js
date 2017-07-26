@@ -88,7 +88,7 @@ var wx_home = (function ($, w, undefined) {
         var vact = new Vue({
             el: '#wx_activity',
             ready: function () {
-                var ori = vact.data.items;
+                var ori = vact.items;
                 var $activity_button = $('wx_activity_load');
                 $activity_button.click(function () {
                     $.ajax({
