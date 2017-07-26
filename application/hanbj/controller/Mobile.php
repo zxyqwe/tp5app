@@ -116,7 +116,7 @@ class Mobile
         if (!session('?openid')) {
             return json(['msg' => '未登录'], 400);
         }
-        $phone = input('post.phone');
+        $phone = input('post.phone', FILTER_VALIDATE_INT);
         $eid = input('post.eid');
         $map['phone'] = $phone;
         $map['openid'] = ['EXP', 'IS NULL'];

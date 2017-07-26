@@ -84,6 +84,31 @@ var wx_home = (function ($, w, undefined) {
         });
         ticketapi();
     };
+    var activity = function () {
+        var vact = new Vue({
+            el: '#wx_activity',
+            ready: function () {
+                $('wx_activity_load').click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "/hanbj/mobile/json_activity",
+                        dataType: "json",
+                        success: function (msg) {
+                            var ori = vact.data.items;
+                            ori.push.apply(ori, msg);
+                        },
+                        error: function (msg) {
+                            msg = JSON.parse(msg.responseText);
+                            w.msgto(msg.msg);
+                        }
+                    });
+                });
+            },
+            data: {
+                items: {}
+            }
+        });
+    };
     var init = function () {
         $cardn = $("#card-1");
         $card0 = $("#card0");
@@ -91,6 +116,7 @@ var wx_home = (function ($, w, undefined) {
         bindclick();
     };
     return {
-        init: init
+        init: init,
+        activity: activity
     };
 })(Zepto, window);
