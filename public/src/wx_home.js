@@ -145,7 +145,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             el: '#wx_valid',
             data: {
                 items: [],
-                cur_year: new Date().getFullYear() + 1,
+                cur_year: new Date().getFullYear(),
                 real_year: 0
             },
             ready: function () {
