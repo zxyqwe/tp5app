@@ -15,7 +15,6 @@ class Wx
         $size = 5;
         $offset = max(0, $offset);
         $uname = session('unique_name');
-        $uname = '坤乙未';
         $map['unique_name'] = $uname;
         $card = Db::table('activity')
             ->where($map)
