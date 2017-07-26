@@ -113,6 +113,7 @@ class Data
             ->alias('m')
             ->join('nfee f', 'm.unique_name=f.unique_name')
             ->where($map)
+            ->order('f.fee_time', 'desc')
             ->field([
                 'f.oper',
                 'f.fee_time',
@@ -124,6 +125,7 @@ class Data
             ->alias('m')
             ->join('activity f', 'm.unique_name=f.unique_name')
             ->where($map)
+            ->order('act_time', 'desc')
             ->field([
                 'oper',
                 'name',
