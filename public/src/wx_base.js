@@ -253,6 +253,8 @@
         fastClick();
         androidInputBugFix();
         setPageManager();
+        console.log(w);
+        console.log($);
 
         w.pageManager = pageManager;
         w.home = function () {

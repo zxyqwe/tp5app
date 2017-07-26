@@ -1,4 +1,4 @@
-var home = (function ($, w, undefined) {
+var wx_home = (function ($, w, undefined) {
     'use strict';
     var $card1, $card0, $cardn, $loading;
     var ticketapi = function () {
@@ -85,10 +85,10 @@ var home = (function ($, w, undefined) {
         ticketapi();
     };
     var init = function () {
-        bindclick();
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
+        bindclick();
     };
     return {
         init: init
