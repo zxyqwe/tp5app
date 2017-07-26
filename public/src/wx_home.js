@@ -84,6 +84,28 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
         ticketapi();
     };
+    var load_act = function () {
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/wx/json_activity",
+            dataType: "json",
+            data: {
+                offset: vact.items.length
+            },
+            success: function (msg) {
+                var da = msg.list;
+                if (da.length < msg.size) {
+                    $activity_button.addClass('sr-only');
+                    return;
+                }
+                vact.items.push.apply(vact.items, da);
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            }
+        });
+    };
     var activity = function () {
         vact = new Vue({
             el: '#wx_activity',
@@ -92,28 +114,8 @@ var wx_home = (function ($, Vue, w, undefined) {
             }
         });
         var $activity_button = $('#wx_activity_load');
-        $activity_button.click(function () {
-            $.ajax({
-                type: "GET",
-                url: "/hanbj/wx/json_activity",
-                dataType: "json",
-                data: {
-                    offset: vact.items.length
-                },
-                success: function (msg) {
-                    if (msg.length === 0) {
-                        $activity_button.addClass('sr-only');
-                        return;
-                    }
-                    vact.items.push.apply(vact.items, msg);
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                }
-            });
-        });
-        $activity_button.trigger('click');
+        $activity_button.click(load_act);
+        load_act();
     };
     var init = function () {
         $cardn = $("#card-1");

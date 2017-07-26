@@ -12,7 +12,7 @@ class Wx
             return json(['msg' => '未登录'], 400);
         }
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
-        $size = 1;
+        $size = 5;
         $offset = max(0, $offset);
         $uname = session('unique_name');
         $uname = '坤乙未';
@@ -27,7 +27,7 @@ class Wx
                 'act_time'
             ])
             ->select();
-        return json($card);
+        return json(['list' => $card, 'size' => $size]);
     }
 
 }
