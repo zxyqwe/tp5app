@@ -1,6 +1,6 @@
-var wx_home = (function ($, w, undefined) {
+var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading;
+    var $card1, $card0, $cardn, $loading, vact;
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -85,10 +85,9 @@ var wx_home = (function ($, w, undefined) {
         ticketapi();
     };
     var activity = function () {
-        var vact = new Vue({
+        vact = new Vue({
             el: '#wx_activity',
             ready: function () {
-                var ori = vact.items;
                 var $activity_button = $('wx_activity_load');
                 $activity_button.click(function () {
                     $.ajax({
@@ -96,14 +95,14 @@ var wx_home = (function ($, w, undefined) {
                         url: "/hanbj/wx/json_activity",
                         dataType: "json",
                         data: {
-                            offset: ori.length
+                            offset: vact.items.length
                         },
                         success: function (msg) {
                             if (msg.length === 0) {
                                 $activity_button.addClass('sr-only');
                                 return;
                             }
-                            ori.push.apply(ori, msg);
+                            vact.items.push.apply(vact.items, msg);
                         },
                         error: function (msg) {
                             msg = JSON.parse(msg.responseText);
@@ -113,7 +112,7 @@ var wx_home = (function ($, w, undefined) {
                 });
             },
             data: {
-                items: {}
+                items: []
             }
         });
     };
@@ -125,6 +124,7 @@ var wx_home = (function ($, w, undefined) {
     };
     return {
         init: init,
-        activity: activity
+        activity: activity,
+        vact: vact
     };
-})(Zepto, window);
+})(Zepto, Vue, window);
