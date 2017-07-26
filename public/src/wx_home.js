@@ -1,6 +1,6 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button;
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -113,7 +113,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 items: []
             }
         });
-        var $activity_button = $('#wx_activity_load');
+        $activity_button = $('#wx_activity_load');
         $activity_button.click(load_act);
         load_act();
     };
@@ -125,7 +125,6 @@ var wx_home = (function ($, Vue, w, undefined) {
     };
     return {
         init: init,
-        activity: activity,
-        vact: vact
+        activity: activity
     };
 })(Zepto, Vue, window);
