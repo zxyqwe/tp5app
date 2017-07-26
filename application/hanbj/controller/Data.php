@@ -114,9 +114,9 @@ class Data
             ->join('nfee f', 'm.unique_name=f.unique_name')
             ->where($map)
             ->field([
-                'oper',
-                'fee_time',
-                'code'
+                'f.oper',
+                'f.fee_time',
+                'f.code'
             ])
             ->cache(600)
             ->select();
