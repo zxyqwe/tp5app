@@ -61,13 +61,6 @@ class Mobile
         if (!session('?openid')) {
             return json(['msg' => '未登录'], 400);
         }
-        $openid = session('openid');
-        $map['openid'] = $openid;
-        $card = Db::table('card')
-            ->where($map)
-            ->value('code');
-        $wx['code'] = $card;
-        $wx['card'] = config('hanbj_cardid');
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
@@ -118,30 +111,6 @@ class Mobile
         return substr($access, 0, 5);
     }
 
-    public function img()
-    {
-        if (cache('?HANBJ_CARD')) {
-            return redirect(cache('HANBJ_CARD'));
-        }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $url = 'https://api.weixin.qq.com/card/qrcode/create?access_token=' . $access;
-        $data = [
-            "action_name" => "QR_CARD",
-            "action_info" => [
-                "card" => [
-                    "card_id" => config('hanbj_cardid')
-                ]
-            ]
-        ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
-        if ($res['errcode'] !== 0) {
-            return json_encode($res);
-        }
-        cache('HANBJ_CARD', $res['show_qrcode_url'], $res['expire_seconds']);
-        return redirect($res['show_qrcode_url']);
-    }
-
     public function json_old()
     {
         if (!session('?openid')) {
@@ -177,6 +146,21 @@ class Mobile
         }
         $openid = session('openid');
         $map['openid'] = $openid;
+        $card = Db::table('card')
+            ->where($map)
+            ->value('code');
+        $wx['code'] = $card;
+        $wx['card'] = config('hanbj_cardid');
+        return json($wx);
+    }
+
+    public function json_active()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $openid = session('openid');
+        $map['openid'] = $openid;
         $map['status'] = 0;
         $card = Db::table('card')
             ->where($map)
@@ -204,29 +188,6 @@ class Mobile
         $ss = sha1($ss);
         $wx['signature'] = $ss;
         return json($wx);
-    }
-
-    public function json_view()
-    {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
-        $openid = session('openid');
-        $map['openid'] = $openid;
-        $card = Db::table('card')
-            ->where($map)
-            ->value('code');
-        if ($card === false) {
-            return json(['msg' => '没有会员卡'], 400);
-        }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $url = 'https://api.weixin.qq.com/card/membercard/userinfo/get?access_token=' . $access;
-        $data = [
-            "code" => $card,
-            "card_id" => config('hanbj_cardid')
-        ];
-        $res = Curl_Post($data, $url, false);
-        return json(['msg' => $res]);
     }
 
     public function event()

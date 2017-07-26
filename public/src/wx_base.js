@@ -220,8 +220,36 @@
             .setDefault('home')
             .init();
     };
+    var jsapi = function () {
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/mobile/json_wx?url=" + encodeURIComponent(location.href.split('#')[0]),
+            dataType: "json",
+            success: function (msg) {
+                wx.config({
+                    appId: msg.api,
+                    timestamp: msg.timestamp,
+                    nonceStr: msg.nonce,
+                    signature: msg.signature,
+                    jsApiList: ['openCard', 'addCard']
+                });
+                wx.ready(function () {
+                    w.cancelloading();
+                });
+                wx.error(function (res) {
+                    console.log(res);
+                });
+            },
+            error: function (msg) {
+                w.cancelloading();
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            }
+        });
+    };
 
-    function init() {
+    var init = function () {
         fastClick();
         androidInputBugFix();
         setPageManager();
@@ -252,7 +280,8 @@
         w.cancelloading = function () {
             $loadingToast.fadeOut(100);
         };
-    }
+        jsapi();
+    };
 
     init();
 }(Zepto, window));

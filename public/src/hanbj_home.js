@@ -32,36 +32,7 @@ var home = (function ($, w, undefined) {
             });
         });
     };
-    var jsapi = function () {
-        w.waitloading();
-        $.ajax({
-            type: "GET",
-            url: "/hanbj/mobile/json_wx?url=" + encodeURIComponent(location.href.split('#')[0]),
-            dataType: "json",
-            success: function (msg) {
-                wx.config({
-                    appId: msg.api,
-                    timestamp: msg.timestamp,
-                    nonceStr: msg.nonce,
-                    signature: msg.signature,
-                    jsApiList: ['openCard', 'addCard']
-                });
-                wx.ready(function () {
-                    bindclick(msg);
-                    w.cancelloading();
-                });
-                wx.error(function (res) {
-                    console.log(res);
-                });
-            },
-            error: function (msg) {
-                w.cancelloading();
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
-            }
-        });
-    };
-    var bindclick = function (msg) {
+    var bindclick = function () {
         w.$status.removeClass('sr-only');
         $loading = w.$status.children('i');
         $card0.click(function () {
@@ -71,7 +42,7 @@ var home = (function ($, w, undefined) {
             $loading.removeClass('sr-only');
             $.ajax({
                 type: "GET",
-                url: "/hanbj/mobile/json_card",
+                url: "/hanbj/mobile/json_active",
                 dataType: "json",
                 success: function (msg) {
                     w.location.href = location.href.split('#')[0];
@@ -90,26 +61,31 @@ var home = (function ($, w, undefined) {
                 return;
             }
             $loading.removeClass('sr-only');
-            wx.openCard({
-                cardList: [{
-                    cardId: msg.card,
-                    code: msg.code
-                }],
-                success: function (res) {
-                    console.log(res);
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/mobile/json_card",
+                dataType: "json",
+                success: function (msg) {
+                    wx.openCard({
+                        cardList: [{
+                            cardId: msg.card,
+                            code: msg.code
+                        }],
+                        complete: function () {
+                            $loading.addClass('sr-only');
+                        }
+                    });
                 },
-                fail: function (res) {
-                    console.log(res);
-                },
-                complete: function () {
-                    $loading.addClass('sr-only');
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
                 }
             });
         });
         ticketapi();
     };
     var init = function () {
-        jsapi();
+        bindclick();
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
