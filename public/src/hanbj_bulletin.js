@@ -29,7 +29,10 @@ var bulletin = (function ($, w, undefined) {
             responseHandler: function (res) {
                 var msg = res.rows;
                 for (var i in msg) {
-                    msg[i].s -= msg[i].n;
+                    if (msg[i].n === null) {
+                        msg[i].n = 0;
+                    }
+                    msg[i].s = parseInt(msg[i].s) - parseInt(msg[i].n) * 2;
                     var tmp = time - parseInt(msg[i].t) - msg[i].s;
                     tmp = tmp > 0 ? tmp : 0;
                     msg[i].o = repeat(alr, msg[i].s) + repeat(nye, tmp);
