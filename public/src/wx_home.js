@@ -160,6 +160,7 @@ var wx_home = (function ($, Vue, w, undefined) {
     };
     return {
         init: init,
-        activity: activity
+        activity: activity,
+        valid: valid
     };
 })(Zepto, Vue, window);
