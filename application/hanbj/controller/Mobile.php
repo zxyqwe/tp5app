@@ -47,6 +47,7 @@ class Mobile
                 $res['code'] = '注销';
                 break;
         }
+        $res['fee_code'] = $this->cache_fee();
         $card = Db::table('card')
             ->where($map)
             ->value('status');
@@ -358,16 +359,18 @@ class Mobile
     {
         $uname = session('unique_name');
         $map['unique_name'] = $uname;
-        $map['unoper'] = ['EXP', 'IS NULL'];
-        $res = Db::table('fee')
+        $res = Db::table('nfee')
             ->alias('f')
             ->where($map)
-            ->count('1');
-        unset($map['unoper']);
+            ->field([
+                'count(oper) as s',
+                'sum(f.code) as n'
+            ])
+            ->find();
         $year = Db::table('member')
             ->where($map)
             ->value('year_time');
-        $fee = intval($year) + intval($res) - 1;
+        $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
         cache('fee', $fee);
         return $fee;
     }
