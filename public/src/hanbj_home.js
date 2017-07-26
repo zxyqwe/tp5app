@@ -1,12 +1,12 @@
 var home = (function ($, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn;
+    var $card1, $card0, $cardn, $loading;
     var ticketapi = function () {
         $cardn.click(function () {
-            if ($cardn.hasClass('weui-btn_loading')) {
+            if (!$loading.hasClass('sr-only')) {
                 return;
             }
-            $cardn.addClass('weui-btn_loading');
+            $loading.removeClass('sr-only');
             $.ajax({
                 type: "GET",
                 url: "/hanbj/mobile/json_addcard",
@@ -27,7 +27,7 @@ var home = (function ($, w, undefined) {
                     w.msgto(msg.msg);
                 },
                 complete: function () {
-                    $cardn.removeClass('weui-btn_loading');
+                    $loading.addClass('sr-only');
                 }
             });
         });
@@ -46,50 +46,7 @@ var home = (function ($, w, undefined) {
                     jsApiList: ['openCard', 'addCard']
                 });
                 wx.ready(function () {
-                    w.$status.css({"display": "block"});
-                    $card0.click(function () {
-                        if ($card0.hasClass('weui-btn_loading')) {
-                            return;
-                        }
-                        $card0.addClass('weui-btn_loading');
-                        $.ajax({
-                            type: "GET",
-                            url: "/hanbj/mobile/json_card",
-                            dataType: "json",
-                            success: function (msg) {
-                                w.location.href = location.href.split('#')[0];
-                            },
-                            error: function (msg) {
-                                msg = JSON.parse(msg.responseText);
-                                w.msgto(msg.msg);
-                            },
-                            complete: function () {
-                                $card0.removeClass('weui-btn_loading');
-                            }
-                        });
-                    });
-                    $card1.click(function () {
-                        if ($card1.hasClass('weui-btn_loading')) {
-                            return;
-                        }
-                        $card1.addClass('weui-btn_loading');
-                        wx.openCard({
-                            cardList: [{
-                                cardId: msg.card,
-                                code: msg.code
-                            }],
-                            success: function (res) {
-                                console.log(res);
-                            },
-                            fail: function (res) {
-                                console.log(res);
-                            },
-                            complete: function () {
-                                $card1.removeClass('weui-btn_loading');
-                            }
-                        });
-                    });
-                    ticketapi();
+                    bindclick(msg);
                 });
                 wx.error(function (res) {
                     console.log(res);
@@ -100,6 +57,53 @@ var home = (function ($, w, undefined) {
                 w.msgto(msg.msg);
             }
         });
+    };
+    var bindclick = function (msg) {
+        w.$status.removeClass('sr-only');
+        $loading = w.$status.children('i');
+        $card0.click(function () {
+            if (!$loading.hasClass('sr-only')) {
+                return;
+            }
+            $loading.removeClass('sr-only');
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/mobile/json_card",
+                dataType: "json",
+                success: function (msg) {
+                    w.location.href = location.href.split('#')[0];
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    $loading.addClass('sr-only');
+                }
+            });
+        });
+        $card1.click(function () {
+            if (!$loading.hasClass('sr-only')) {
+                return;
+            }
+            $loading.removeClass('sr-only');
+            wx.openCard({
+                cardList: [{
+                    cardId: msg.card,
+                    code: msg.code
+                }],
+                success: function (res) {
+                    console.log(res);
+                },
+                fail: function (res) {
+                    console.log(res);
+                },
+                complete: function () {
+                    $loading.addClass('sr-only');
+                }
+            });
+        });
+        ticketapi();
     };
     var init = function () {
         jsapi();
