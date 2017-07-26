@@ -33,6 +33,7 @@ var home = (function ($, w, undefined) {
         });
     };
     var jsapi = function () {
+        w.waitloading();
         $.ajax({
             type: "GET",
             url: "/hanbj/mobile/json_wx?url=" + encodeURIComponent(location.href.split('#')[0]),
@@ -47,12 +48,14 @@ var home = (function ($, w, undefined) {
                 });
                 wx.ready(function () {
                     bindclick(msg);
+                    w.cancelloading();
                 });
                 wx.error(function (res) {
                     console.log(res);
                 });
             },
             error: function (msg) {
+                w.cancelloading();
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
             }
