@@ -1,8 +1,5 @@
-/**
- * Created by jf on 2015/9/11.
- * Modified by bear on 2016/9/7.
- */
-$(function () {
+(function ($, w, undefined) {
+    'use strict';
     var pageManager = {
         $container: $('#container'),
         _pageStack: [],
@@ -22,7 +19,7 @@ $(function () {
         init: function () {
             var self = this;
 
-            $(window).on('hashchange', function () {
+            $(w).on('hashchange', function () {
                 var state = history.state || {};
                 var url = location.hash.indexOf('#') === 0 ? location.hash : '#';
                 var page = self._find('url', url) || self._defaultPage;
@@ -144,7 +141,7 @@ $(function () {
         }
     };
 
-    function fastClick() {
+    var fastClick = function () {
         var supportTouch = function () {
             try {
                 document.createEvent("TouchEvent");
@@ -172,9 +169,9 @@ $(function () {
             }
             return this;
         };
-    }
+    };
 
-    function androidInputBugFix() {
+    var androidInputBugFix = function () {
         // .container 设置了 overflow 属性, 导致 Android 手机下输入框获取焦点时, 输入法挡住输入框的 bug
         // 相关 issue: https://github.com/weui/weui/issues/15
         // 解决方法:
@@ -182,19 +179,19 @@ $(function () {
         // 1. 参考 http://stackoverflow.com/questions/23757345/android-does-not-correctly-scroll-on-input-focus-if-not-body-element
         //    Android 手机下, input 或 textarea 元素聚焦时, 主动滚一把
         if (/Android/gi.test(navigator.userAgent)) {
-            window.addEventListener('resize', function () {
+            w.addEventListener('resize', function () {
                 if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
-                    window.setTimeout(function () {
+                    w.setTimeout(function () {
                         document.activeElement.scrollIntoViewIfNeeded();
                     }, 0);
                 }
             })
         }
-    }
+    };
 
-    function setPageManager() {
+    var setPageManager = function () {
         var pages = {}, tpls = $('script[type="text/html"]');
-        var winH = $(window).height();
+        var winH = $(w).height();
 
         for (var i = 0, len = tpls.length; i < len; ++i) {
             var tpl = tpls[i], name = tpl.id.replace(/tpl_/, '');
@@ -222,20 +219,20 @@ $(function () {
             })
             .setDefault('home')
             .init();
-    }
+    };
 
     function init() {
         fastClick();
         androidInputBugFix();
         setPageManager();
 
-        window.pageManager = pageManager;
-        window.home = function () {
+        w.pageManager = pageManager;
+        w.home = function () {
             location.hash = '';
         };
         var $toast = $('#toast');
         var $old_msg = $('#old_msg');
-        window.msgto = function (data) {
+        w.msgto = function (data) {
             $old_msg.html(data);
             var tdis = $toast.css('display');
             if ('none' !== tdis)
@@ -246,7 +243,16 @@ $(function () {
                 $toast.fadeOut(100);
             }, 2000);
         };
+        var $loadingToast = $('#loadingToast');
+        w.waitloading = function () {
+            if ($loadingToast.css('display') !== 'none') return;
+
+            $loadingToast.fadeIn(100);
+        };
+        w.cancelloading = function () {
+            $loadingToast.fadeOut(100);
+        };
     }
 
     init();
-});
+})(Zepto, window);
