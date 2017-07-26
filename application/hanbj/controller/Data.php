@@ -35,7 +35,7 @@ class Data
         $offset = max(0, $offset);
         $map['m.code'] = 0;
         $join = [
-            ['fee f', 'm.unique_name=f.unique_name AND f.unoper is null', 'left']
+            ['nfee f', 'm.unique_name=f.unique_name', 'left']
         ];
         $tmp = Db::table('member')
             ->alias('m')
@@ -44,9 +44,10 @@ class Data
             ->limit($offset, $size)
             ->group('m.unique_name')
             ->field([
-                'count(oper) as s',
+                'count(1) as s',
                 'm.unique_name as u',
-                'm.year_time as t'
+                'm.year_time as t',
+                'sum(f.code) as n'
             ])
             ->cache(600)
             ->select();
