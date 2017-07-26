@@ -29,4 +29,26 @@ class Wx
         return json(['list' => $card, 'size' => $size]);
     }
 
+    public function json_valid()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = 5;
+        $offset = max(0, $offset);
+        $uname = session('unique_name');
+        $map['unique_name'] = $uname;
+        $card = Db::table('nfee')
+            ->where($map)
+            ->limit($offset, $size)
+            ->order('fee_time', 'desc')
+            ->field([
+                'oper',
+                'code',
+                'fee_time'
+            ])
+            ->select();
+        return json(['list' => $card, 'size' => $size]);
+    }
 }

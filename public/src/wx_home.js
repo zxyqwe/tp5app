@@ -1,6 +1,6 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button;
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -105,6 +105,27 @@ var wx_home = (function ($, Vue, w, undefined) {
             }
         });
     };
+    var load_valid = function () {
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/wx/json_valid",
+            dataType: "json",
+            data: {
+                offset: vvalid.items.length
+            },
+            success: function (msg) {
+                var da = msg.list;
+                if (da.length < msg.size) {
+                    $valid_button.addClass('sr-only');
+                }
+                vvalid.items.push.apply(vvalid.items, da);
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            }
+        });
+    };
     var activity = function () {
         vact = new Vue({
             el: '#wx_activity',
@@ -117,6 +138,19 @@ var wx_home = (function ($, Vue, w, undefined) {
         $activity_button = $('#wx_activity_load');
         $activity_button.click(load_act);
         load_act();
+    };
+    var valid = function () {
+        vvalid = new Vue({
+            el: '#wx_valid',
+            data: {
+                items: []
+            },
+            ready: function () {
+            }
+        });
+        $valid_button = $('#wx_valid_load');
+        $valid_button.click(load_valid);
+        load_valid();
     };
     var init = function () {
         $cardn = $("#card-1");
