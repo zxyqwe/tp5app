@@ -1,4 +1,4 @@
-var Old = (function ($, w, undefined) {
+var wx_Old = (function ($, w, undefined) {
     'use strict';
     var $weuiAgree, eid, phone;
     var init = function () {
