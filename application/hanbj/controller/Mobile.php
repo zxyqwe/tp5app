@@ -47,7 +47,7 @@ class Mobile
                 $res['code'] = '注销';
                 break;
         }
-        $res['fee_code'] = $this->cache_fee();
+        $res['fee_code'] = $this->cache_fee(session('unique_name'));
         $card = Db::table('card')
             ->where($map)
             ->value('status');
@@ -334,7 +334,7 @@ class Mobile
             "card_id" => config('hanbj_cardid'),
             'init_bonus' => 0,
             'init_custom_field_value1' => session('unique_name'),
-            'init_custom_field_value2' => $this->cache_fee()
+            'init_custom_field_value2' => $this->cache_fee(session('unique_name'))
         ];
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
@@ -355,9 +355,11 @@ class Mobile
         return json(['msg' => 'OK']);
     }
 
-    private function cache_fee()
+    private function cache_fee($uname)
     {
-        $uname = session('unique_name');
+        if (cache('?fee' . $uname)) {
+            return cache('fee' . $uname);
+        }
         $map['unique_name'] = $uname;
         $res = Db::table('nfee')
             ->alias('f')
@@ -371,7 +373,7 @@ class Mobile
             ->where($map)
             ->value('year_time');
         $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
-        cache('fee', $fee);
+        cache('fee' . $uname, $fee, 600);
         return $fee;
     }
 }
