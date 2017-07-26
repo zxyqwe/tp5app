@@ -96,7 +96,6 @@ var wx_home = (function ($, Vue, w, undefined) {
                 var da = msg.list;
                 if (da.length < msg.size) {
                     $activity_button.addClass('sr-only');
-                    return;
                 }
                 vact.items.push.apply(vact.items, da);
             },
@@ -111,11 +110,13 @@ var wx_home = (function ($, Vue, w, undefined) {
             el: '#wx_activity',
             data: {
                 items: []
+            },
+            ready: function () {
+                load_act();
             }
         });
         $activity_button = $('#wx_activity_load');
         $activity_button.click(load_act);
-        load_act();
     };
     var init = function () {
         $cardn = $("#card-1");
