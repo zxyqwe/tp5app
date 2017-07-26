@@ -18,10 +18,11 @@ var all = (function ($, w, undefined) {
         var data = [];
         for (var i in fee) {
             var tmp = fee[i];
-            data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time]));
-            if (null !== tmp.unoper) {
-                data.push(listitem(nye + '撤销', [jsr + tmp.unoper, sj + tmp.unfee_time]));
-            }
+            if (tmp.code === '0')
+                data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time]));
+            else
+                data.push(listitem(nye + '撤销', [jsr + tmp.oper, sj + tmp.fee_time]));
+
         }
         return data.join("");
     };

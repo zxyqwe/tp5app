@@ -44,7 +44,7 @@ class Data
             ->limit($offset, $size)
             ->group('m.unique_name')
             ->field([
-                'count(1) as s',
+                'count(oper) as s',
                 'm.unique_name as u',
                 'm.year_time as t',
                 'sum(f.code) as n'
@@ -111,13 +111,12 @@ class Data
         $map['m.id'] = $id;
         $fee = Db::table('member')
             ->alias('m')
-            ->join('fee f', 'm.unique_name=f.unique_name')
+            ->join('nfee f', 'm.unique_name=f.unique_name')
             ->where($map)
             ->field([
                 'oper',
-                'unoper',
                 'fee_time',
-                'unfee_time'
+                'code'
             ])
             ->cache(600)
             ->select();
