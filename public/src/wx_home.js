@@ -87,34 +87,33 @@ var wx_home = (function ($, Vue, w, undefined) {
     var activity = function () {
         vact = new Vue({
             el: '#wx_activity',
-            ready: function () {
-                var $activity_button = $('wx_activity_load');
-                $activity_button.click(function () {
-                    $.ajax({
-                        type: "GET",
-                        url: "/hanbj/wx/json_activity",
-                        dataType: "json",
-                        data: {
-                            offset: vact.items.length
-                        },
-                        success: function (msg) {
-                            if (msg.length === 0) {
-                                $activity_button.addClass('sr-only');
-                                return;
-                            }
-                            vact.items.push.apply(vact.items, msg);
-                        },
-                        error: function (msg) {
-                            msg = JSON.parse(msg.responseText);
-                            w.msgto(msg.msg);
-                        }
-                    });
-                });
-            },
             data: {
                 items: []
             }
         });
+        var $activity_button = $('#wx_activity_load');
+        $activity_button.click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/wx/json_activity",
+                dataType: "json",
+                data: {
+                    offset: vact.items.length
+                },
+                success: function (msg) {
+                    if (msg.length === 0) {
+                        $activity_button.addClass('sr-only');
+                        return;
+                    }
+                    vact.items.push.apply(vact.items, msg);
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                }
+            });
+        });
+        $activity_button.trigger('click');
     };
     var init = function () {
         $cardn = $("#card-1");
