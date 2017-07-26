@@ -12,14 +12,20 @@ class Wx
             return json(['msg' => '未登录'], 400);
         }
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
-        $size = 5;
-        $size = min(100, max(0, $size));
+        $size = 1;
         $offset = max(0, $offset);
         $uname = session('unique_name');
+        $uname = '坤乙未';
         $map['unique_name'] = $uname;
         $card = Db::table('activity')
             ->where($map)
             ->limit($offset, $size)
+            ->order('act_time', 'desc')
+            ->field([
+                'oper',
+                'name',
+                'act_time'
+            ])
             ->select();
         return json($card);
     }

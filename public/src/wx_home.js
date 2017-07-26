@@ -88,13 +88,21 @@ var wx_home = (function ($, w, undefined) {
         var vact = new Vue({
             el: '#wx_activity',
             ready: function () {
-                $('wx_activity_load').click(function () {
+                var ori = vact.data.items;
+                var $activity_button = $('wx_activity_load');
+                $activity_button.click(function () {
                     $.ajax({
                         type: "GET",
-                        url: "/hanbj/mobile/json_activity",
+                        url: "/hanbj/wx/json_activity",
                         dataType: "json",
+                        data: {
+                            offset: ori.length
+                        },
                         success: function (msg) {
-                            var ori = vact.data.items;
+                            if (msg.length === 0) {
+                                $activity_button.addClass('sr-only');
+                                return;
+                            }
                             ori.push.apply(ori, msg);
                         },
                         error: function (msg) {
