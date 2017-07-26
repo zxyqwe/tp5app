@@ -112,11 +112,11 @@ var wx_home = (function ($, Vue, w, undefined) {
                 items: []
             },
             ready: function () {
-                load_act();
             }
         });
         $activity_button = $('#wx_activity_load');
         $activity_button.click(load_act);
+        load_act();
     };
     var init = function () {
         $cardn = $("#card-1");
