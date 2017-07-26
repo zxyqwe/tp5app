@@ -52,9 +52,9 @@
             <h1 class="page__title">缴费记录</h1>
         </div>
         <div class="page__bd page__bd_spacing">
-            <div class="weui-panel weui-panel_access">
-                <div class="weui-panel__hd">曾缴过的会费</div>
-                <div id="wx_valid" class="weui-panel__bd">
+            <div id="wx_valid" class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">应缴年份：{{ cur_year }} 实缴年份：{{ real_year }}</div>
+                <div class="weui-panel__bd">
                     <template v-for="item in items">
                         <div class="weui-media-box weui-media-box_text">
                             <h4 class="weui-media-box__title">{{ item.code }}</h4>

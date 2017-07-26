@@ -119,6 +119,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     $valid_button.addClass('sr-only');
                 }
                 vvalid.items.push.apply(vvalid.items, da);
+                vvalid.real_year = msg.real_year;
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
@@ -143,7 +144,9 @@ var wx_home = (function ($, Vue, w, undefined) {
         vvalid = new Vue({
             el: '#wx_valid',
             data: {
-                items: []
+                items: [],
+                cur_year: new Date().getFullYear() + 1,
+                real_year: 0
             },
             ready: function () {
             }
