@@ -1,4 +1,4 @@
-(function ($, w, undefined) {
+void function ($, w, undefined) {
     'use strict';
     var pageManager = {
         $container: $('#container'),
@@ -255,4 +255,4 @@
     }
 
     init();
-})(Zepto, window);
+}(Zepto, window);
