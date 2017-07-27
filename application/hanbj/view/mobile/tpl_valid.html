@@ -5,9 +5,14 @@
     <div class="page__bd page__bd_spacing">
         <div id="wx_valid" class="weui-panel weui-panel_access">
             <div class="weui-panel__hd">
-                <i v-if="cur_year > real_year" class="weui-icon-warn"></i>
-                <i v-else class="weui-icon-success-no-circle"></i>
-                应缴年份：{{ cur_year }}&nbsp;&nbsp;&nbsp;&nbsp;实缴年份：{{ real_year }}
+                <a id="wx_valid_fee" href="#valid_fee" class="weui-cell weui-cell_access">
+                    <div class="weui-cell__bd">
+                        <i v-if="cur_year > real_year" class="weui-icon-warn"></i>
+                        <i v-else class="weui-icon-success-no-circle"></i>
+                        应缴年份：{{ cur_year }}&nbsp;&nbsp;&nbsp;&nbsp;实缴年份：{{ real_year }}
+                    </div>
+                    <span class="weui-cell__ft">缴费</span>
+                </a>
             </div>
             <div class="weui-panel__bd">
                 <template v-for="item in items">
@@ -23,10 +28,6 @@
             <div class="weui-panel__ft">
                 <a id="wx_valid_load" href="javascript:;" class="weui-cell weui-cell_access weui-cell_link">
                     <div class="weui-cell__bd">查看更多</div>
-                    <span class="weui-cell__ft"></span>
-                </a>
-                <a id="wx_valid_fee" href="#valid_fee" class="weui-cell weui-cell_access weui-cell_link">
-                    <div class="weui-cell__bd">微信缴费</div>
                     <span class="weui-cell__ft"></span>
                 </a>
             </div>

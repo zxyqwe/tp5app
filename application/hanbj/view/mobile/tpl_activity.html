@@ -4,7 +4,12 @@
     </div>
     <div class="page__bd page__bd_spacing">
         <div class="weui-panel weui-panel_access">
-            <div class="weui-panel__hd">参加过的活动</div>
+            <div class="weui-panel__hd">
+                <a id="wx_activity_fee" href="javascript:;" class="weui-cell weui-cell_access">
+                    <div class="weui-cell__bd">活动签到</div>
+                    <span class="weui-cell__ft">报名</span>
+                </a>
+            </div>
             <div id="wx_activity" class="weui-panel__bd">
                 <template v-for="item in items">
                     <div class="weui-media-box weui-media-box_text">
