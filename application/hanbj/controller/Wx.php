@@ -55,10 +55,10 @@ class Wx
         return json(['list' => $card, 'size' => $size, 'real_year' => $this->cache_fee($uname)]);
     }
 
-    public function wxnotify()
+    public function notify()
     {
         $hand = new HanbjNotify();
-        $hand->Handle();
+        $hand->Handle(false);
     }
 
     private function cache_fee($uname)

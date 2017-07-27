@@ -10,7 +10,13 @@ class HanbjNotify extends WxPayNotify
     public function NotifyProcess($data, &$msg)
     {
         $msg = 'OK';
-        trace(json_encode($data));
+        if (!array_key_exists("transaction_id", $data)) {
+            return false;
+        }
+        //查询订单，判断订单真实性
+        if (!$this->Queryorder($data["transaction_id"])) {
+            return false;
+        }
         return true;
     }
 }
