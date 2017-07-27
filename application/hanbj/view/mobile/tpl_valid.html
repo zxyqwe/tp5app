@@ -4,7 +4,11 @@
     </div>
     <div class="page__bd page__bd_spacing">
         <div id="wx_valid" class="weui-panel weui-panel_access">
-            <div class="weui-panel__hd">应缴年份：{{ cur_year }}&nbsp;&nbsp;&nbsp;&nbsp;实缴年份：{{ real_year }}</div>
+            <div class="weui-panel__hd">
+                <div v-if="cur_year > real_year"><i class="weui-icon-warn"></i></div>
+                <div v-else><i class="weui-icon-success-no-circle"></i></div>
+                应缴年份：{{ cur_year }}&nbsp;&nbsp;&nbsp;&nbsp;实缴年份：{{ real_year }}
+            </div>
             <div class="weui-panel__bd">
                 <template v-for="item in items">
                     <div class="weui-media-box weui-media-box_text">
@@ -23,6 +27,8 @@
                 </a>
             </div>
         </div>
+    </div>
+    <div class="page__ft">
     </div>
 </div>
 <script type="text/javascript">
