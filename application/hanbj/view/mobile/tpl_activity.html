@@ -1,0 +1,27 @@
+<div class="page">
+    <div class="page__hd">
+        <h1 class="page__title">活动记录</h1>
+    </div>
+    <div class="page__bd page__bd_spacing">
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">参加过的活动</div>
+            <div id="wx_activity" class="weui-panel__bd">
+                <template v-for="item in items">
+                    <div class="weui-media-box weui-media-box_text">
+                        <h4 class="weui-media-box__title">{{ item.name }}</h4>
+                        <p class="weui-media-box__desc">时间：{{ item.act_time }} 登记者：{{ item.oper }}</p>
+                    </div>
+                </template>
+            </div>
+            <div class="weui-panel__ft">
+                <a id="wx_activity_load" href="javascript:;" class="weui-cell weui-cell_access weui-cell_link">
+                    <div class="weui-cell__bd">查看更多</div>
+                    <span class="weui-cell__ft"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    wx_home.activity();
+</script>

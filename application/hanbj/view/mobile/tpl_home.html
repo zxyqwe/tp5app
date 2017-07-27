@@ -1,0 +1,87 @@
+<div class="page">
+    <div class="page__hd">
+        <p class="page__desc">个人中心</p>
+    </div>
+    <div class="page__bd page__bd_spacing">
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>会员编号</p>
+                </div>
+                <div class="weui-cell__ft">{$user.unique_name}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>昵称</p>
+                </div>
+                <div class="weui-cell__ft">{$user.tieba_id}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>性别</p>
+                </div>
+                <div class="weui-cell__ft">{$user.gender}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>注册年份</p>
+                </div>
+                <div class="weui-cell__ft">{$user.year_time}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>最近缴费</p>
+                </div>
+                <div class="weui-cell__ft">{$user.fee_code}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>审核人</p>
+                </div>
+                <div class="weui-cell__ft">{$user.master}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>会员状态</p>
+                </div>
+                <div class="weui-cell__ft">{$user.code}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>QQ</p>
+                </div>
+                <div class="weui-cell__ft">{$user.QQ}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>邮件</p>
+                </div>
+                <div class="weui-cell__ft">{$user.mail}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>偏好</p>
+                </div>
+                <div class="weui-cell__ft">{$user.pref}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>常用网名</p>
+                </div>
+                <div class="weui-cell__ft">{$user.web_name}</div>
+            </div>
+        </div>
+        <a id="card0" href="javascript:;" class="weui-btn weui-btn_primary sr-only">
+            <i class="weui-loading sr-only"></i>激活会员卡</a>
+        <a id="card1" href="javascript:;" class="weui-btn weui-btn_primary sr-only">
+            <i class="weui-loading sr-only"></i>查看会员卡</a>
+        <a id="card-1" href="javascript:;" class="weui-btn weui-btn_primary sr-only">
+            <i class="weui-loading sr-only"></i>领取会员卡</a>
+        <a href="#activity" class="weui-btn weui-btn_primary">活动记录</a>
+        <a href="#valid" class="weui-btn weui-btn_primary">缴费记录</a>
+    </div>
+</div>
+<script type="text/javascript">
+    var $status = $('#card{$card}');
+    wx_home.init();
+</script>
