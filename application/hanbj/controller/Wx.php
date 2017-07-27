@@ -2,7 +2,10 @@
 
 namespace app\hanbj\controller;
 
+include_once '../WxConfig.php';
+include_once APP_PATH . 'WxPay.php';
 use think\Db;
+use app\HanbjNotify;
 
 class Wx
 {
@@ -50,6 +53,12 @@ class Wx
             ])
             ->select();
         return json(['list' => $card, 'size' => $size, 'real_year' => $this->cache_fee($uname)]);
+    }
+
+    public function wxnotify()
+    {
+        $hand = new HanbjNotify();
+        $hand->Handle();
     }
 
     private function cache_fee($uname)

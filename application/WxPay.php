@@ -5,6 +5,15 @@ namespace app;
 use Exception;
 use WxPayConfig;
 
+class HanbjNotify extends WxPayNotify
+{
+    public function NotifyProcess($data, &$msg)
+    {
+        $msg = 'OK';
+        trace(json_encode($data));
+        return true;
+    }
+}
 
 /**
  *
