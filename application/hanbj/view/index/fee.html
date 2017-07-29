@@ -82,6 +82,8 @@
                         this.res.push(item);
                     },
                     del_candy: function (item) {
+                        this.candy = [];
+                        this.res = [];
                     }
                 }
             });
@@ -97,6 +99,7 @@
                         vmain.candy = msg;
                     },
                     error: function (msg) {
+                        vmain.candy = [];
                         msg = JSON.parse(msg.responseText);
                         msgto(msg.msg);
                     }
@@ -104,12 +107,10 @@
             });
         };
         return {
-            init: init,
-            msg: msgto
+            init: init
         };
     })(jQuery, Vue, window);
     window.onload = function () {
         fee.init();
-        fee.msg('123');
     }
 </script>
