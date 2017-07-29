@@ -28,7 +28,7 @@
     var alr = $('#ggly').html() + '缴费';
     var nye = $('#rgly').html() + '撤销';
     function codeFormatter(value, row) {
-        return value === 0 ? alr : nye;
+        return value === '0' ? alr : nye;
     }
     window.onload = function () {
         var $table = $('#table');
