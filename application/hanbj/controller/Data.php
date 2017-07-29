@@ -215,4 +215,24 @@ class Data
         $data['act'] = $act;
         return json($data);
     }
+
+    public function fee_search()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $name = input('get.name');
+        $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
+        $tmp = Db::table('member')
+            ->alias('f')
+            ->where($map)
+            ->limit(10)
+            ->field([
+                'f.tieba_id as t',
+                'f.unique_name as u',
+            ])
+            ->cache(600)
+            ->select();
+        return json($tmp);
+    }
 }

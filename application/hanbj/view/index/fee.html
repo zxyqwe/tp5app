@@ -2,12 +2,81 @@
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <div id="body">
+            <h1>
+                <a class="btn btn-sm btn-primary" href="/hanbj/index/feelog">
+                    <i class="glyphicon glyphicon-log-in"></i>
+                    <i>日志查询</i>
+                </a>
+                缴费记录
+            </h1>
             <div>
-                ToDo fee
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="feesearch" class="col-sm-2 control-label">搜索</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="feesearch" placeholder="昵称或会员编号" v-model="uname"
+                                   debounce="500">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <table class="table table-bordered table-hover">
+                        <tr v-for="item in candy">
+                            <td>{{ item.t }}</td>
+                            <td>{{ item.u }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary" v-on:click="candy(item)"></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
                 <p></p>
             </div>
         </div>
     </div>
 </div>
 <script>
+    var fee = (function ($, w, undefined) {
+        'use strict';
+        var vmain;
+        var init = function () {
+            vmain = new Vue({
+                el: '#body',
+                data: {
+                    uname: '',
+                    candy: []
+                },
+                methods: {
+                    candy: function (item) {
+                        console.log(this.uname);
+                        console.log(this.candy);
+                        console.log(item);
+                    }
+                }
+            });
+            vmain.$watch('uname', function (nv) {
+                $.ajax({
+                    type: "GET",
+                    url: "/hanbj/data/fee_search",
+                    dataType: "json",
+                    data: {
+                        name: nv
+                    },
+                    success: function (msg) {
+                        vmain.candy = msg;
+                    },
+                    error: function (msg) {
+                        msg = JSON.parse(msg.responseText);
+                        w.msgto(msg.msg);
+                    }
+                });
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    window.onload = function () {
+        fee.init();
+    }
 </script>
