@@ -222,6 +222,9 @@ class Data
             return json(['msg' => '未登录'], 400);
         }
         $name = input('get.name');
+        if (empty($name)) {
+            return json();
+        }
         $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
         $tmp = Db::table('member')
             ->alias('f')

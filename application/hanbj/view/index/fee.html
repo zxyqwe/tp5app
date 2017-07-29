@@ -7,7 +7,7 @@
                     <i class="glyphicon glyphicon-log-in"></i>
                     <i>日志查询</i>
                 </a>
-                缴费记录
+                缴费登记
             </h1>
             <div>
                 <div class="form-horizontal">
@@ -19,16 +19,37 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <table class="table table-bordered table-hover">
-                        <tr v-for="item in candy">
-                            <td>{{ item.t }}</td>
-                            <td>{{ item.u }}</td>
-                            <td>
-                                <button type="button" class="btn btn-primary" v-on:click="candy(item)"></button>
-                            </td>
-                        </tr>
-                    </table>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <tr v-for="item in candy">
+                                <td>{{ item.t }}</td>
+                                <td>{{ item.u }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" v-on:click="sel_candy(item)">选择
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-info" v-if="res.length > 0">
+                        <div class="panel-heading">最终结果</div>
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                            <tr v-for="item in res">
+                                <td>{{ item.t }}</td>
+                                <td>{{ item.u }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs" v-on:click="del_candy(item)">删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button id="res_up" type="button" class="btn btn-success btn-block">提交</button>
+                    </div>
                 </div>
                 <p></p>
             </div>
@@ -38,19 +59,29 @@
 <script>
     var fee = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain;
+        var vmain, alert_msg;
+        var msgto = function (msg) {
+            alert_msg.html(msg);
+
+            alert_msg.fadeIn(100);
+            setTimeout(function () {
+                alert_msg.fadeOut(100);
+            }, 2000);
+        };
         var init = function () {
+            alert_msg = $('#alert_msg');
             vmain = new Vue({
                 el: '#body',
                 data: {
                     uname: '',
-                    candy: []
+                    candy: [],
+                    res: []
                 },
                 methods: {
-                    candy: function (item) {
-                        console.log(this.uname);
-                        console.log(this.candy);
-                        console.log(item);
+                    sel_candy: function (item) {
+                        this.res.push(item);
+                    },
+                    del_candy: function (item) {
                     }
                 }
             });
@@ -67,16 +98,18 @@
                     },
                     error: function (msg) {
                         msg = JSON.parse(msg.responseText);
-                        w.msgto(msg.msg);
+                        msgto(msg.msg);
                     }
                 });
             });
         };
         return {
-            init: init
+            init: init,
+            msg: msgto
         };
     })(jQuery, Vue, window);
     window.onload = function () {
         fee.init();
+        fee.msg('123');
     }
 </script>
