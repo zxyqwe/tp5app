@@ -76,9 +76,10 @@ class Data
         $offset = max(0, $offset);
         $tmp = Db::table('activity')
             ->limit($offset, $size)
-            ->order('act_time','desc')
+            ->order('act_time', 'desc')
             ->field([
                 'id',
+                'name as n',
                 'unique_name as u',
                 'oper as m',
                 'act_time as y'
@@ -104,7 +105,7 @@ class Data
         $offset = max(0, $offset);
         $tmp = Db::table('nfee')
             ->limit($offset, $size)
-            ->order('fee_time','desc')
+            ->order('fee_time', 'desc')
             ->field([
                 'id',
                 'unique_name as u',
