@@ -35,7 +35,7 @@ class Data
         $offset = max(0, $offset);
         $search = input('get.search');
         if (!empty($search)) {
-            $map['tieba_id'] = ['like', '%' . $search . '%'];
+            $map['unique_name'] = ['like', '%' . $search . '%'];
         }
         $map['m.code'] = 0;
         $join = [
