@@ -122,7 +122,7 @@ class Data
                 'f.unique_name as u',
                 'oper as m',
                 'fee_time as y',
-                'code as c',
+                'f.code as c',
                 'm.tieba_id as t'
             ])
             ->cache(600)
