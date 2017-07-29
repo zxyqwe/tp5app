@@ -74,15 +74,21 @@ class Data
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
         $tmp = Db::table('activity')
+            ->alias('f')
             ->limit($offset, $size)
+            ->join($join)
             ->order('act_time', 'desc')
             ->field([
-                'id',
+                'f.id',
                 'name as n',
-                'unique_name as u',
+                'f.unique_name as u',
                 'oper as m',
-                'act_time as y'
+                'act_time as y',
+                'm.tieba_id as t'
             ])
             ->cache(600)
             ->select();
@@ -103,15 +109,21 @@ class Data
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
         $tmp = Db::table('nfee')
+            ->alias('f')
             ->limit($offset, $size)
+            ->join($join)
             ->order('fee_time', 'desc')
             ->field([
-                'id',
-                'unique_name as u',
+                'f.id',
+                'f.unique_name as u',
                 'oper as m',
                 'fee_time as y',
-                'code as c'
+                'code as c',
+                'm.tieba_id as t'
             ])
             ->cache(600)
             ->select();
