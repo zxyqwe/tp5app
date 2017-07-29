@@ -65,6 +65,63 @@ class Data
         return json($data);
     }
 
+    public function json_act()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $tmp = Db::table('activity')
+            ->limit($offset, $size)
+            ->order('act_time','desc')
+            ->field([
+                'id',
+                'unique_name as u',
+                'oper as m',
+                'act_time as y'
+            ])
+            ->cache(600)
+            ->select();
+        $data['rows'] = $tmp;
+        $total = Db::table('activity')
+            ->cache(600)
+            ->count();
+        $data['total'] = $total;
+        return json($data);
+    }
+
+    public function json_fee()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $tmp = Db::table('nfee')
+            ->limit($offset, $size)
+            ->order('fee_time','desc')
+            ->field([
+                'id',
+                'unique_name as u',
+                'oper as m',
+                'fee_time as y',
+                'code as c'
+            ])
+            ->cache(600)
+            ->select();
+        $data['rows'] = $tmp;
+        $total = Db::table('nfee')
+            ->cache(600)
+            ->count();
+        $data['total'] = $total;
+        return json($data);
+    }
+
     public function json_all()
     {
         if ('succ' !== session('login')) {
