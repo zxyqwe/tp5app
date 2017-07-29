@@ -36,7 +36,7 @@
     </div>
 </div>
 <script>
-    var fee = (function ($, w, undefined) {
+    var fee = (function ($, Vue, w, undefined) {
         'use strict';
         var vmain;
         var init = function () {
@@ -75,7 +75,7 @@
         return {
             init: init
         };
-    })(jQuery, window);
+    })(jQuery, Vue, window);
     window.onload = function () {
         fee.init();
     }
