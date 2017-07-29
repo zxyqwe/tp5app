@@ -35,10 +35,7 @@ class Data
         $offset = max(0, $offset);
         $search = input('get.search');
         if (!empty($search)) {
-            $map['tieba_id'] = ['like', '%:search%'];
-            $bind = ['search' => [$search, \PDO::PARAM_STR]];
-        } else {
-            $bind = [];
+            $map['tieba_id'] = ['like', '%' . $search . '%'];
         }
         $map['m.code'] = 0;
         $join = [
@@ -48,7 +45,6 @@ class Data
             ->alias('m')
             ->join($join)
             ->where($map)
-            ->bind($bind)
             ->limit($offset, $size)
             ->group('m.unique_name')
             ->field([
@@ -63,7 +59,6 @@ class Data
         $total = Db::table('member')
             ->alias('m')
             ->where($map)
-            ->bind($bind)
             ->cache(600)
             ->count();
         $data['total'] = $total;
@@ -81,16 +76,12 @@ class Data
         $offset = max(0, $offset);
         $search = input('get.search');
         if (!empty($search)) {
-            $map['tieba_id'] = ['like', '%:search%'];
-            $bind = ['search' => [$search, \PDO::PARAM_STR]];
-        } else {
-            $bind = [];
+            $map['tieba_id'] = ['like', '%' . $search . '%'];
         }
         $map['f.code'] = 0;
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
-            ->bind($bind)
             ->limit($offset, $size)
             ->field([
                 'f.id',
@@ -112,7 +103,6 @@ class Data
         $total = Db::table('member')
             ->alias('f')
             ->where($map)
-            ->bind($bind)
             ->cache(600)
             ->count();
         $data['total'] = $total;
