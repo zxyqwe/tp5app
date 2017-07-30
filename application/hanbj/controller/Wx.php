@@ -2,7 +2,7 @@
 
 namespace app\hanbj\controller;
 
-include_once '../WxConfig.php';
+include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use think\Db;
 use app\HanbjNotify;
