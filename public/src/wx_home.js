@@ -35,6 +35,9 @@ var wx_home = (function ($, Vue, w, undefined) {
     var bindclick = function () {
         w.$status.removeClass('sr-only');
         $loading = w.$status.children('i');
+        $('#dialogs').on('click', '.weui-dialog__btn', function () {
+            $(this).parents('.js_dialog').fadeOut(200);
+        });
         $card0.click(function () {
             if (!$loading.hasClass('sr-only')) {
                 return;
