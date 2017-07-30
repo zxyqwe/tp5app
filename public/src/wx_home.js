@@ -71,6 +71,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                             cardId: msg.card,
                             code: msg.code
                         }],
+                        fail: function (msg) {
+                            w.msgto(JSON.stringify(msg));
+                        },
                         complete: function () {
                             $loading.addClass('sr-only');
                         }
