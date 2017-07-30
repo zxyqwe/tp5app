@@ -1,6 +1,6 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $iosDialog2;
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -72,7 +72,8 @@ var wx_home = (function ($, Vue, w, undefined) {
                             code: msg.code
                         }],
                         fail: function (msg) {
-                            w.msgto(JSON.stringify(msg));
+                            $iosDialog2.fadeIn(200);
+
                         },
                         complete: function () {
                             $loading.addClass('sr-only');
@@ -162,6 +163,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
+        $iosDialog2 = $('#iosDialog2');
         bindclick();
     };
     return {
