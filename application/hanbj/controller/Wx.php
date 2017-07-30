@@ -2,10 +2,12 @@
 
 namespace app\hanbj\controller;
 
+include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use think\Db;
 use app\HanbjNotify;
+use app\hanbj\FeeOper;
 
 class Wx
 {
@@ -52,34 +54,12 @@ class Wx
                 'fee_time'
             ])
             ->select();
-        return json(['list' => $card, 'size' => $size, 'real_year' => $this->cache_fee($uname)]);
+        return json(['list' => $card, 'size' => $size, 'real_year' => FeeOper::cache_fee($uname)]);
     }
 
     public function notify()
     {
         $hand = new HanbjNotify();
         $hand->Handle(false);
-    }
-
-    private function cache_fee($uname)
-    {
-        if (cache('?fee' . $uname)) {
-            return cache('fee' . $uname);
-        }
-        $map['unique_name'] = $uname;
-        $res = Db::table('nfee')
-            ->alias('f')
-            ->where($map)
-            ->field([
-                'count(oper) as s',
-                'sum(f.code) as n'
-            ])
-            ->find();
-        $year = Db::table('member')
-            ->where($map)
-            ->value('year_time');
-        $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
-        cache('fee' . $uname, $fee, 600);
-        return $fee;
     }
 }

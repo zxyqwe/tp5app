@@ -2,12 +2,14 @@
 
 namespace app\hanbj\controller;
 
+include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'wx.php';
 
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Db;
 use think\Response;
+use app\hanbj\FeeOper;
 
 class Mobile
 {
@@ -47,7 +49,7 @@ class Mobile
                 $res['code'] = '注销';
                 break;
         }
-        $res['fee_code'] = $this->cache_fee(session('unique_name'));
+        $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $card = Db::table('card')
             ->where($map)
             ->value('status');
@@ -334,7 +336,7 @@ class Mobile
             "card_id" => config('hanbj_cardid'),
             'init_bonus' => 0,
             'init_custom_field_value1' => session('unique_name'),
-            'init_custom_field_value2' => $this->cache_fee(session('unique_name'))
+            'init_custom_field_value2' => FeeOper::cache_fee(session('unique_name'))
         ];
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
@@ -353,27 +355,5 @@ class Mobile
             return json(['msg' => '更新失败'], 500);
         }
         return json(['msg' => 'OK']);
-    }
-
-    private function cache_fee($uname)
-    {
-        if (cache('?fee' . $uname)) {
-            return cache('fee' . $uname);
-        }
-        $map['unique_name'] = $uname;
-        $res = Db::table('nfee')
-            ->alias('f')
-            ->where($map)
-            ->field([
-                'count(oper) as s',
-                'sum(f.code) as n'
-            ])
-            ->find();
-        $year = Db::table('member')
-            ->where($map)
-            ->value('year_time');
-        $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
-        cache('fee' . $uname, $fee, 600);
-        return $fee;
     }
 }
