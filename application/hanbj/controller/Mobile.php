@@ -10,6 +10,8 @@ use app\WXBizMsgCrypt;
 use think\Db;
 use think\Response;
 use app\hanbj\FeeOper;
+use app\hanbj\WxHanbj;
+use app\hanbj\CardOper;
 
 class Mobile
 {
@@ -67,7 +69,7 @@ class Mobile
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
-        $ss = 'jsapi_ticket=' . $this->jsapi() .
+        $ss = 'jsapi_ticket=' . WxHanbj::jsapi() .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']
             . '&url=' . urldecode(input('get.url'));
@@ -76,37 +78,6 @@ class Mobile
         return json($wx);
     }
 
-    private function jsapi()
-    {
-        if (cache('?jsapi')) {
-            return cache('jsapi');
-        }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
-        $res = json_decode($res, true);
-        if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
-            return '';
-        }
-        cache('jsapi', $res['ticket'], $res['expires_in']);
-        return $res['ticket'];
-    }
-
-    private function ticketapi()
-    {
-        if (cache('?ticketapi')) {
-            return cache('ticketapi');
-        }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
-        $res = json_decode($res, true);
-        if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
-            return '';
-        }
-        cache('ticketapi', $res['ticket'], $res['expires_in']);
-        return $res['ticket'];
-    }
 
     public function access()
     {
@@ -171,7 +142,7 @@ class Mobile
         if ($card === false) {
             return json(['msg' => '没有未激活会员卡'], 400);
         }
-        return $this->active($card);
+        return CardOper::active($card);
     }
 
     public function json_addcard()
@@ -184,7 +155,7 @@ class Mobile
         $wx['nonce_str'] = getNonceStr();
         $ss = [$wx['nonce_str'],
             '' . $wx['timestamp'],
-            $this->ticketapi(),
+            WxHanbj::ticketapi(),
             $wx['card_id']];
         sort($ss);
         $ss = implode('', $ss);
@@ -218,7 +189,7 @@ class Mobile
             return new Response('', 404);
         }
 
-        $msg = $this->handle_msg($msg);
+        $msg = WxHanbj::handle_msg($msg);
         if (empty($msg)) {
             return '';
         }
@@ -232,128 +203,5 @@ class Mobile
         return $reply;
     }
 
-    private function handle_msg($msg)
-    {
-        $msg = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $type = (string)$msg->MsgType;
-        switch ($type) {
-            case 'event':
-                return $this->do_event($msg);
-            default:
-                trace(json_encode($msg));
-            case 'text':
-            case 'image':
-            case 'voice':
-            case 'video':
-            case 'shortvideo':
-            case 'location':
-            case 'link':
-                return $this->auto((string)$msg->FromUserName, (string)$msg->ToUserName, $type);
-        }
-    }
 
-    private function auto($to, $from, $type)
-    {
-        trace(implode(':', [
-            $to,
-            $type
-        ]));
-        $data = '<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[机器人自动回复：%s]]></Content></xml>';
-        return sprintf($data, $to, $from, time(), $type);
-    }
-
-    private function do_event($msg)
-    {
-        $type = (string)$msg->Event;
-        switch ($type) {
-            case 'user_del_card':
-                return $this->del_card($msg);
-            case 'user_get_card':
-                return $this->get_card($msg);
-            default:
-                trace(json_encode($msg));
-            case 'subscribe':
-            case 'SCAN':
-            case 'LOCATION':
-            case 'CLICK':
-            case 'VIEW':
-            case 'user_view_card':
-                //case 'card_pass_check':
-            case 'user_gifting_card':
-                //case 'user_pay_from_pay_cell':
-            case 'user_enter_session_from_card':
-                //case 'update_member_card':
-            case 'card_sku_remind':
-                //case 'card_pay_order':
-                //case 'submit_membercard_user_info':
-                return '';
-        }
-    }
-
-    private function del_card($msg)
-    {
-        $cardid = (string)$msg->UserCardCode;
-        $openid = (string)$msg->FromUserName;
-        $data = [
-            'openid' => $openid,
-            'code' => $cardid
-        ];
-        $res = Db::table('card')
-            ->where($data)
-            ->delete();
-        if ($res !== 1) {
-            $data['status'] = 'del fail';
-        } else {
-            $data['status'] = 'del OK';
-        }
-        trace(json_encode($data));
-        return '';
-    }
-
-    private function get_card($msg)
-    {
-        $cardid = (string)$msg->UserCardCode;
-        $openid = (string)$msg->FromUserName;
-        $data = [
-            'openid' => $openid,
-            'code' => $cardid
-        ];
-        $res = Db::table('card')
-            ->insert($data);
-        if ($res !== 1) {
-            trace($msg);
-        }
-        return '';
-    }
-
-    private function active($code)
-    {
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $url = 'https://api.weixin.qq.com/card/membercard/activate?access_token=' . $access;
-        $data = [
-            "membership_number" => $code,
-            "code" => $code,
-            "card_id" => config('hanbj_cardid'),
-            'init_bonus' => 0,
-            'init_custom_field_value1' => session('unique_name'),
-            'init_custom_field_value2' => FeeOper::cache_fee(session('unique_name'))
-        ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
-        if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
-            return json(['msg' => json_encode($res)], 400);
-        }
-        $map['status'] = 0;
-        $map['code'] = $code;
-        $map['openid'] = session('openid');
-        $res = Db::table('card')
-            ->where($map)
-            ->setField('status', 1);
-        if ($res !== 1) {
-            trace($data);
-            return json(['msg' => '更新失败'], 500);
-        }
-        return json(['msg' => 'OK']);
-    }
 }
