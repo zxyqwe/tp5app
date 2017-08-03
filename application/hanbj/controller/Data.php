@@ -147,6 +147,7 @@ class Data
             ->alias('f')
             ->where($map)
             ->limit($offset, $size)
+            ->cache(600)
             ->field([
                 'f.id',
                 'f.tieba_id as t',
