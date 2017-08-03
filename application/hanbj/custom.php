@@ -8,9 +8,6 @@ class FeeOper
 {
     public static function cache_fee($uname)
     {
-        if (cache('?fee' . $uname)) {
-            return cache('fee' . $uname);
-        }
         $map['unique_name'] = $uname;
         $res = Db::table('nfee')
             ->alias('f')
@@ -24,7 +21,6 @@ class FeeOper
             ->where($map)
             ->value('year_time');
         $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
-        cache('fee' . $uname, $fee, 600);
         return $fee;
     }
 }
@@ -132,12 +128,20 @@ class WxHanbj
 
 class CardOper
 {
-    public static function update($uni, $add_b, $b, $msg)
+    public static function update($uni, $openid, $add_b, $b, $msg)
     {
+        $map['openid'] = $openid;
+        $map['status'] = 1;
+        $card = Db::table('card')
+            ->where($map)
+            ->value('code');
+        if ($card === false) {
+            return json(['msg' => '没有激活会员卡'], 400);
+        }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/updateuser?access_token=' . $access;
         $data = [
-            'code',
+            'code' => $card,
             'card_id' => config('hanbj_cardid'),
             'background_pic_url' => config('hanbj_img1'),
             'record_bonus' => $msg,
