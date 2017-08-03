@@ -1,0 +1,56 @@
+{layout name="layout2" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <div id="body">
+            <div>
+                <table id="table"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="/hanbj/data/json_bonus"
+                       data-page-list="[20, 50, 100]">
+                    <thead>
+                    <tr>
+                        <th data-field="id" class="sr-only">ID</th>
+                        <th data-field="u">会员编号</th>
+                        <th data-field="t">昵称</th>
+                        <th data-field="m">积分变化</th>
+                        <th data-field="y">解释</th>
+                        <th data-field="c" data-formatter="codeFormatter">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var bonus = (function ($, w, undefined) {
+        'use strict';
+        var alert_msg;
+        var msgto = function (msg) {
+            alert_msg.html(msg);
+
+            alert_msg.fadeIn(100);
+            setTimeout(function () {
+                alert_msg.fadeOut(100);
+            }, 2000);
+        };
+        var init = function () {
+            alert_msg = $('#alert_msg');
+            w.codeFormatter = function () {
+                return '123';
+            };
+            var $table = $('#table');
+            $table.bootstrapTable({
+                'pageSize': 20
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    window.onload = function () {
+        bonus.init();
+    }
+</script>
