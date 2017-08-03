@@ -53,13 +53,11 @@ class Data
                 'm.year_time as t',
                 'sum(f.code) as n'
             ])
-            ->cache(600)
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('member')
             ->alias('m')
             ->where($map)
-            ->cache(600)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -90,11 +88,9 @@ class Data
                 'act_time as y',
                 'm.tieba_id as t'
             ])
-            ->cache(600)
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('activity')
-            ->cache(600)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -125,11 +121,9 @@ class Data
                 'f.code as c',
                 'm.tieba_id as t'
             ])
-            ->cache(600)
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('nfee')
-            ->cache(600)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -167,13 +161,11 @@ class Data
                 'f.web_name as w',
                 'f.year_time as y',
             ])
-            ->cache(600)
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('member')
             ->alias('f')
             ->where($map)
-            ->cache(600)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -197,7 +189,6 @@ class Data
                 'f.fee_time',
                 'f.code'
             ])
-            ->cache(600)
             ->select();
         $act = Db::table('member')
             ->alias('m')
@@ -209,7 +200,6 @@ class Data
                 'name',
                 'act_time'
             ])
-            ->cache(600)
             ->select();
         $data['fee'] = $fee;
         $data['act'] = $act;
@@ -237,5 +227,39 @@ class Data
             ->cache(600)
             ->select();
         return json($tmp);
+    }
+
+    public function fee_add()
+    {
+        $name = input('post.name/a', []);
+        if (empty($name)) {
+            return json(['msg' => 'empty name'], 400);
+        }
+        $type = input('post.type', 0, FILTER_VALIDATE_INT);
+        $type = $type == 0 ? 0 : 1;
+        $data = [];
+        foreach ($name as $tmp) {
+            $data[] = [
+                'unique_name' => $tmp['u'],
+                'oper' => session('name'),
+                'code' => $type,
+                'fee_time' => date("Y-m-d H:i:s")
+            ];
+        }
+        Db::startTrans();
+        try {
+            $res = Db::table('nfee')
+                ->insertAll($data);
+            if ($res === count($data)) {
+                Db::commit();
+            } else {
+                Db::rollback();
+                return json(['msg' => $res], 400);
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['msg' => json_encode($e)], 400);
+        }
+        return json(['msg' => 'ok']);
     }
 }

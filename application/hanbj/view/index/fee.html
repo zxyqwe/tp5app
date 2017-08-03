@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="panel panel-info" v-if="res.length > 0">
+                    <div class="panel panel-info" v-show="res.length > 0">
                         <div class="panel-heading">最终结果</div>
                         <table class="table table-bordered table-hover">
                             <tbody>
@@ -42,13 +42,19 @@
                                 <td>{{ item.t }}</td>
                                 <td>{{ item.u }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger btn-xs" v-on:click="del_candy(item)">删除
+                                    <button type="button" class="btn btn-danger btn-xs" v-on:click="del_candy($index)">
+                                        删除
                                     </button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                        <button id="res_up" type="button" class="btn btn-success btn-block">提交</button>
+                        <div class="col-sm-6">
+                            <button id="res_up" type="button" class="btn btn-success btn-block">缴费</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button id="res_down" type="button" class="btn btn-danger btn-block">撤销</button>
+                        </div>
                     </div>
                 </div>
                 <p></p>
@@ -79,11 +85,10 @@
                 },
                 methods: {
                     sel_candy: function (item) {
-                        this.res.push(item);
+                        this.res.push({t: item.t, u: item.u});
                     },
-                    del_candy: function (item) {
-                        this.candy = [];
-                        this.res = [];
+                    del_candy: function (n) {
+                        this.res.splice(n, 1);
                     }
                 }
             });
@@ -100,6 +105,42 @@
                     },
                     error: function (msg) {
                         vmain.candy = [];
+                        msg = JSON.parse(msg.responseText);
+                        msgto(msg.msg);
+                    }
+                });
+            });
+            $('#res_up').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/hanbj/data/fee_add",
+                    dataType: "json",
+                    data: {
+                        name: vmain.res,
+                        type: 0
+                    },
+                    success: function (msg) {
+                        location.href = '/hanbj/index/feelog';
+                    },
+                    error: function (msg) {
+                        msg = JSON.parse(msg.responseText);
+                        msgto(msg.msg);
+                    }
+                });
+            });
+            $('#res_down').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/hanbj/data/fee_add",
+                    dataType: "json",
+                    data: {
+                        name: vmain.res,
+                        type: 1
+                    },
+                    success: function (msg) {
+                        location.href = '/hanbj/index/feelog';
+                    },
+                    error: function (msg) {
                         msg = JSON.parse(msg.responseText);
                         msgto(msg.msg);
                     }

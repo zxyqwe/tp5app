@@ -132,6 +132,32 @@ class WxHanbj
 
 class CardOper
 {
+    public static function update($uni, $add_b, $b, $msg)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/card/membercard/updateuser?access_token=' . $access;
+        $data = [
+            'code',
+            'card_id' => config('hanbj_cardid'),
+            'background_pic_url' => config('hanbj_img1'),
+            'record_bonus' => $msg,
+            'bonus' => $b,
+            'add_bonus' => $add_b,
+            'custom_field_value2' => FeeOper::cache_fee($uni),
+            "notify_optional" => [
+                "is_notify_bonus" => true,
+                "is_notify_custom_field2" => true
+            ]
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
+            return json(['msg' => json_encode($res)], 400);
+        }
+        return json(['msg' => 'ok']);
+    }
+
     public static function active($code)
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
