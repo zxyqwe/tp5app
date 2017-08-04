@@ -161,6 +161,7 @@ class Data
                 'f.pref as e',
                 'f.web_name as w',
                 'f.year_time as y',
+                'f.bonus as b'
             ])
             ->select();
         $data['rows'] = $tmp;
