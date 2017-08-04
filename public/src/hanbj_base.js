@@ -1,0 +1,30 @@
+var home = (function ($, w, undefined) {
+    'use strict';
+    var $btt = $("#back-to-top"), $alert_html = $('#alert_html'), $alert_msg = $('#alert_msg');
+    var init = function () {
+        $btt.hide();
+        $(w).scroll(function () {
+            if ($(w).scrollTop() > 100) {
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    return;
+                }
+                $("#back-to-top").fadeIn(700);
+            }
+            else {
+                $("#back-to-top").fadeOut(700);
+            }
+        });
+        $btt.click(function () {
+            $('#htmlbody').animate({scrollTop: 0}, 1000);
+            return false;
+        });
+        w.msgto = function (msg) {
+            $alert_html.html(msg);
+
+            $alert_msg.modal('show');
+        };
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);

@@ -1,16 +1,7 @@
 var fee = (function ($, Vue, w, undefined) {
     'use strict';
-    var vmain, alert_msg;
-    var msgto = function (msg) {
-        alert_msg.html(msg);
-
-        alert_msg.fadeIn(100);
-        setTimeout(function () {
-            alert_msg.fadeOut(100);
-        }, 2000);
-    };
+    var vmain;
     var init = function () {
-        alert_msg = $('#alert_msg');
         vmain = new Vue({
             el: '#body',
             data: {
@@ -41,7 +32,7 @@ var fee = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     vmain.candy = [];
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });
@@ -59,7 +50,7 @@ var fee = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });
@@ -77,7 +68,7 @@ var fee = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    msgto(msg.msg);
+                    w.msgto(msg.msg);
                 }
             });
         });

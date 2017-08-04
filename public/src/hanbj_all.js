@@ -48,7 +48,7 @@ var all = (function ($, w, undefined) {
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
-                alert(msg.msg);
+                w.msgto(msg.msg);
             }
         });
     };

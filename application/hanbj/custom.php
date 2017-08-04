@@ -229,3 +229,21 @@ class CardOper
         return '';
     }
 }
+
+class BonusOper
+{
+    const FEE = 0;
+    const ACT = 1;
+
+    public static function getDesc($type)
+    {
+        switch ($type) {
+            case BonusOper::FEE:
+                return '缴纳会费';
+            case BonusOper::ACT:
+                return '活动签到';
+            default:
+                return '原因不明';
+        }
+    }
+}

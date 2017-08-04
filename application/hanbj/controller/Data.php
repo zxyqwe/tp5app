@@ -239,12 +239,14 @@ class Data
         $type = input('post.type', 0, FILTER_VALIDATE_INT);
         $type = $type == 0 ? 0 : 1;
         $data = [];
+        $oper = session('name');
+        $d = date("Y-m-d H:i:s");
         foreach ($name as $tmp) {
             $data[] = [
                 'unique_name' => $tmp['u'],
-                'oper' => session('name'),
+                'oper' => $oper,
                 'code' => $type,
-                'fee_time' => date("Y-m-d H:i:s")
+                'fee_time' => $d
             ];
         }
         Db::startTrans();

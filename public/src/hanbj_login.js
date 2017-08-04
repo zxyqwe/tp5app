@@ -22,7 +22,7 @@ var login = (function ($, w, undefined) {
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
-                    alert(msg.msg);
+                    w.msgto(msg.msg);
                     $('#capt_img').attr('src', '/captcha.html?' + new Date());
                     $('#mm').val('');
                     $('#capt').val('');
