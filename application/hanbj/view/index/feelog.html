@@ -4,6 +4,15 @@
         <h1>缴费日志</h1>
         <div id="body">
             <div>
+                <p>
+                    <button id="onlyup" type="button" class="btn btn-default" data-toggle="button"
+                            aria-pressed="false">
+                        不过滤微信事件
+                    </button>
+                    <button id="wxup" type="button" class="btn btn-success">
+                        更新5条微信事件
+                    </button>
+                </p>
                 <table id="table"
                        data-pagination="true"
                        data-side-pagination="server"
@@ -27,18 +36,32 @@
     </div>
 </div>
 <script>
-    var alr = $('#ggly').html() + '缴费';
-    var nye = $('#rgly').html() + '撤销';
-    function codeFormatter(value, row) {
-        return value === '0' ? alr : nye;
-    }
-    function wxFormatter(value, row) {
-        return value === '0' ? '未更新' : '';
-    }
+    var feelog = (function ($, w, undefined) {
+        'use strict';
+        var alr, nye, $table, $onlyup;
+        w.codeFormatter = function (value, row) {
+            return value === '0' ? alr : nye;
+        };
+        w.wxFormatter = function (value, row) {
+            return value === '0' ? '未更新' : '';
+        };
+        var init = function () {
+            alr = $('#ggly').html() + '缴费';
+            nye = $('#rgly').html() + '撤销';
+            $table = $('#table');
+            $table.bootstrapTable({
+                'pageSize': 20
+            });
+            $onlyup = $('#onlyup');
+            $onlyup.click(function () {
+                w.msgto($onlyup.prop('aria-pressed'));
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
     $(window).load(function () {
-        var $table = $('#table');
-        $table.bootstrapTable({
-            'pageSize': 20
-        });
+        feelog.init();
     });
 </script>
