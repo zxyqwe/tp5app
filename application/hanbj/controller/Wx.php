@@ -92,7 +92,7 @@ class Wx
         $cardup = CardOper::update(
             $uname,
             session('card'),
-            0,
+            $bonus,
             $bonus,
             '重新计算积分');
         if ($cardup !== true) {

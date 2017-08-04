@@ -225,7 +225,7 @@ class CardOper
 class BonusOper
 {
     const FEE = 15;
-    const ACT = 20;
+    const ACT = 30;
 
     public static function upFee()
     {
