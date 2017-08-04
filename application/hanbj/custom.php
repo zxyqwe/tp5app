@@ -128,16 +128,8 @@ class WxHanbj
 
 class CardOper
 {
-    public static function update($uni, $openid, $add_b, $b, $msg)
+    public static function update($uni, $card, $add_b, $b, $msg)
     {
-        $map['openid'] = $openid;
-        $map['status'] = 1;
-        $card = Db::table('card')
-            ->where($map)
-            ->value('code');
-        if ($card === false) {
-            return json(['msg' => '没有激活会员卡'], 400);
-        }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/updateuser?access_token=' . $access;
         $data = [
@@ -159,7 +151,7 @@ class CardOper
             trace(json_encode($res));
             return json(['msg' => json_encode($res)], 400);
         }
-        return json(['msg' => 'ok']);
+        return true;
     }
 
     public static function active($code)
@@ -235,6 +227,7 @@ class BonusOper
     public static function upFee()
     {
         $map['up'] = 0;
+        $map['f.unique_name'] = '坎丙午';
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
@@ -242,18 +235,34 @@ class BonusOper
         $res = Db::table('nfee')
             ->alias('f')
             ->order('f.id')
-            ->limit(5)
+            ->limit(1)
             ->where($map)
             ->join($join)
             ->field([
                 'f.id',
+                'f.code as c',
                 'm.unique_name',
+                'm.openid',
+                'm.bonus',
                 'c.code'
             ])
             ->select();
+        unset($map['f.unique_name']);
         foreach ($res as $item) {
+            $bonus = 15;
+            if ($item['c'] === 1) {
+                $bonus = -$bonus;
+            }
             if ($item['code'] !== null) {
-                continue;
+                $cardup = CardOper::update(
+                    $item['unique_name'],
+                    $item['code'],
+                    $bonus,
+                    intval($item['bonus']) + $bonus,
+                    '缴纳会费');
+                if ($cardup !== true) {
+                    return $cardup;
+                }
             }
             $map['id'] = $item['id'];
             Db::startTrans();
@@ -266,7 +275,7 @@ class BonusOper
                 }
                 $nfee = Db::table('member')
                     ->where(['unique_name' => $item['unique_name']])
-                    ->setInc('bonus', 15);
+                    ->setField('bonus', ['exp', 'bonus' . $bonus]);
                 if ($nfee !== 1) {
                     throw new \Exception('更新积分失败' . json_encode($item));
                 }
