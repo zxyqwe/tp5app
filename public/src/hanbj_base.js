@@ -1,7 +1,10 @@
 var home = (function ($, w, undefined) {
     'use strict';
-    var $btt = $("#back-to-top"), $alert_html = $('#alert_html'), $alert_msg = $('#alert_msg');
+    var $btt, $alert_html, $alert_msg;
     var init = function () {
+        $btt = $("#back-to-top");
+        $alert_html = $('#alert_html');
+        $alert_msg = $('#alert_msg');
         $btt.hide();
         $(w).scroll(function () {
             if ($(w).scrollTop() > 100) {
