@@ -25,7 +25,6 @@ class Mobile
         $res = Db::table('member')
             ->alias('m')
             ->where($map)
-            ->cache(600)
             ->field([
                 'unique_name',
                 'year_time',
