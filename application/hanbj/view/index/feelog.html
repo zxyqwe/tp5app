@@ -48,13 +48,20 @@
         var init = function () {
             alr = $('#ggly').html() + '缴费';
             nye = $('#rgly').html() + '撤销';
+            $onlyup = $('#onlyup');
+            $onlyup.click(function () {
+                var pressed = $onlyup.attr('aria-pressed');
+                if (pressed === 'false') {
+                    $onlyup.html('仅看未更新事件');
+                    $table.bootstrapTable('refresh', {query: {up: true}});
+                } else {
+                    $onlyup.html('不过滤微信事件');
+                    $table.bootstrapTable('refresh', {query: {up: false}});
+                }
+            });
             $table = $('#table');
             $table.bootstrapTable({
                 'pageSize': 20
-            });
-            $onlyup = $('#onlyup');
-            $onlyup.click(function () {
-                w.msgto($onlyup.prop('aria-pressed'));
             });
         };
         return {
