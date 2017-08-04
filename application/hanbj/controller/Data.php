@@ -242,6 +242,9 @@ class Data
 
     public function fee_add()
     {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
         $name = input('post.name/a', []);
         if (empty($name)) {
             return json(['msg' => 'empty name'], 400);
@@ -272,6 +275,39 @@ class Data
         } catch (\Exception $e) {
             Db::rollback();
             return json(['msg' => json_encode($e)], 400);
+        }
+        return json(['msg' => 'ok']);
+    }
+
+    public function bonus_add()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $type = input('post.type');
+        $map['up'] = 0;
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left'],
+            ['card c', 'c.openid=m.openid', 'left']
+        ];
+        if ($type === '0') {
+            $res = Db::table('nfee')
+                ->alias('f')
+                ->order('id')
+                ->limit(5)
+                ->where($map)
+                ->join($join)
+                ->field([
+                    'm.unique_name',
+                    'c.code'
+                ])
+                ->select();
+            foreach ($res as $item) {
+
+            }
+            return json(['msg' => json_encode($res)], 400);
+        } else {
+
         }
         return json(['msg' => 'ok']);
     }

@@ -63,6 +63,20 @@
             $table.bootstrapTable({
                 'pageSize': 20
             });
+            $('#wxup').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/hanbj/data/bonus_add",
+                    data: {type: 0},
+                    dataType: "json",
+                    success: function (msg) {
+                    },
+                    error: function (msg) {
+                        msg = JSON.parse(msg.responseText);
+                        w.msgto(msg.msg);
+                    }
+                });
+            });
         };
         return {
             init: init
