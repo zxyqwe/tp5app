@@ -227,7 +227,6 @@ class BonusOper
     public static function upFee()
     {
         $map['up'] = 0;
-        $map['f.unique_name'] = '坎丙午';
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
@@ -247,7 +246,6 @@ class BonusOper
                 'c.code'
             ])
             ->select();
-        unset($map['f.unique_name']);
         foreach ($res as $item) {
             $bonus = 15;
             if ($item['c'] === '1') {
