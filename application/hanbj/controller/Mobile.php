@@ -59,12 +59,13 @@ class Mobile
                 'status',
                 'code'
             ])
-            ->value('status');
-        if ($card['status'] === null) {
+            ->find();
+        if ($card === null) {
             $card = -1;
+        } else {
+            session('card', $card['code']);
         }
-        session('card', $card['code']);
-        return view('home', ['user' => $res, 'card' => $card]);
+        return view('home', ['user' => $res, 'card' => $card['status']]);
     }
 
     public function json_wx()

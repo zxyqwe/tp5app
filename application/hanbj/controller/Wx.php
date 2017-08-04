@@ -87,7 +87,7 @@ class Wx
             ->where($map)
             ->setField('bonus', $bonus);
         if ($res !== 1) {
-            return json(['msg' => '更新失败'], 400);
+            return json(['msg' => '更新失败，积分为' . $bonus], 400);
         }
         $cardup = CardOper::update(
             $uname,
