@@ -31,10 +31,10 @@
     function codeFormatter(value, row) {
         return value === '0' ? alr : nye;
     }
-    window.onload = function () {
+    $(window).load(function () {
         var $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20
         });
-    }
+    });
 </script>

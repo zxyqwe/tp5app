@@ -27,17 +27,7 @@
 <script>
     var bonus = (function ($, w, undefined) {
         'use strict';
-        var alert_msg;
-        var msgto = function (msg) {
-            alert_msg.html(msg);
-
-            alert_msg.fadeIn(100);
-            setTimeout(function () {
-                alert_msg.fadeOut(100);
-            }, 2000);
-        };
         var init = function () {
-            alert_msg = $('#alert_msg');
             w.codeFormatter = function () {
                 return '123';
             };
