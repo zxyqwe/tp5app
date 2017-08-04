@@ -106,12 +106,19 @@ class Data
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
+        $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        if ($up) {
+            $map['f.up'] = 0;
+        } else {
+            $map = array();
+        }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
         ];
         $tmp = Db::table('nfee')
             ->alias('f')
             ->limit($offset, $size)
+            ->where($map)
             ->join($join)
             ->order('fee_time', 'desc')
             ->field([
