@@ -250,19 +250,8 @@ class BonusOper
         unset($map['f.unique_name']);
         foreach ($res as $item) {
             $bonus = 15;
-            if ($item['c'] === 1) {
+            if ($item['c'] === '1') {
                 $bonus = -$bonus;
-            }
-            if ($item['code'] !== null) {
-                $cardup = CardOper::update(
-                    $item['unique_name'],
-                    $item['code'],
-                    $bonus,
-                    intval($item['bonus']) + $bonus,
-                    '缴纳会费');
-                if ($cardup !== true) {
-                    return $cardup;
-                }
             }
             $map['id'] = $item['id'];
             Db::startTrans();
@@ -275,14 +264,25 @@ class BonusOper
                 }
                 $nfee = Db::table('member')
                     ->where(['unique_name' => $item['unique_name']])
-                    ->setField('bonus', ['exp', 'bonus' . $bonus]);
+                    ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
                 if ($nfee !== 1) {
                     throw new \Exception('更新积分失败' . json_encode($item));
                 }
                 Db::commit();
+                if ($item['code'] !== null) {
+                    $cardup = CardOper::update(
+                        $item['unique_name'],
+                        $item['code'],
+                        $bonus,
+                        intval($item['bonus']) + $bonus,
+                        '会费记录');
+                    if ($cardup !== true) {
+                        return $cardup;
+                    }
+                }
             } catch (\Exception $e) {
                 Db::rollback();
-                return json(['msg' => json_encode($e)], 400);
+                return json(['msg' => '' . $e], 400);
             }
         }
         return json(['msg' => 'ok']);
