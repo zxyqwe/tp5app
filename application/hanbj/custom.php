@@ -273,7 +273,7 @@ class BonusOper
                         $item['code'],
                         $bonus,
                         intval($item['bonus']) + $bonus,
-                        '会费记录');
+                        '会费记录变更');
                     if ($cardup !== true) {
                         return $cardup;
                     }
@@ -288,6 +288,59 @@ class BonusOper
 
     public static function upAct()
     {
+        $map['up'] = 0;
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left'],
+            ['card c', 'c.openid=m.openid', 'left']
+        ];
+        $res = Db::table('activity')
+            ->alias('f')
+            ->order('f.id')
+            ->limit(1)
+            ->where($map)
+            ->join($join)
+            ->field([
+                'f.id',
+                'm.unique_name',
+                'm.openid',
+                'm.bonus',
+                'c.code'
+            ])
+            ->select();
+        foreach ($res as $item) {
+            $bonus = 30;
+            $map['id'] = $item['id'];
+            Db::startTrans();
+            try {
+                $nfee = Db::table('activity')
+                    ->where($map)
+                    ->update(['up' => 1]);
+                if ($nfee !== 1) {
+                    throw new \Exception('更新事件失败' . json_encode($map));
+                }
+                $nfee = Db::table('member')
+                    ->where(['unique_name' => $item['unique_name']])
+                    ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
+                if ($nfee !== 1) {
+                    throw new \Exception('更新活动失败' . json_encode($item));
+                }
+                Db::commit();
+                if ($item['code'] !== null) {
+                    $cardup = CardOper::update(
+                        $item['unique_name'],
+                        $item['code'],
+                        $bonus,
+                        intval($item['bonus']) + $bonus,
+                        '活动记录变更');
+                    if ($cardup !== true) {
+                        return $cardup;
+                    }
+                }
+            } catch (\Exception $e) {
+                Db::rollback();
+                return json(['msg' => '' . $e], 400);
+            }
+        }
         return json(['msg' => 'ok']);
     }
 }
