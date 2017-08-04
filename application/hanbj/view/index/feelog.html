@@ -17,7 +17,8 @@
                        data-pagination="true"
                        data-side-pagination="server"
                        data-url="/hanbj/data/json_fee"
-                       data-page-list="[20, 50, 100]">
+                       data-page-list="[20, 50, 100]"
+                       data-query-params="wxParams">
                     <thead>
                     <tr>
                         <th data-field="id" class="sr-only">ID</th>
@@ -38,12 +39,16 @@
 <script>
     var feelog = (function ($, w, undefined) {
         'use strict';
-        var alr, nye, $table, $onlyup;
+        var alr, nye, $table, $onlyup, pressedup = false;
         w.codeFormatter = function (value, row) {
             return value === '0' ? alr : nye;
         };
         w.wxFormatter = function (value, row) {
             return value === '0' ? '未更新' : '';
+        };
+        w.wxParams = function (params) {
+            params.up = pressedup;
+            return params;
         };
         var init = function () {
             alr = $('#ggly').html() + '缴费';
@@ -53,10 +58,12 @@
                 var pressed = $onlyup.attr('aria-pressed');
                 if (pressed === 'false') {
                     $onlyup.html('仅看未更新事件');
-                    $table.bootstrapTable('refresh', {query: {up: true}});
+                    pressedup = true;
+                    $table.bootstrapTable('refresh');
                 } else {
                     $onlyup.html('不过滤微信事件');
-                    $table.bootstrapTable('refresh', {query: {up: false}});
+                    pressedup = false;
+                    $table.bootstrapTable('refresh');
                 }
             });
             $table = $('#table');
@@ -70,6 +77,7 @@
                     data: {type: 0},
                     dataType: "json",
                     success: function (msg) {
+                        $table.bootstrapTable('refresh');
                     },
                     error: function (msg) {
                         msg = JSON.parse(msg.responseText);
