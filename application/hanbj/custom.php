@@ -224,6 +224,9 @@ class CardOper
 
 class BonusOper
 {
+    const FEE = 15;
+    const ACT = 30;
+
     public static function upFee()
     {
         $map['up'] = 0;
@@ -247,7 +250,7 @@ class BonusOper
             ])
             ->select();
         foreach ($res as $item) {
-            $bonus = 15;
+            $bonus = BonusOper::FEE;
             if ($item['c'] === '1') {
                 $bonus = -$bonus;
             }
@@ -308,7 +311,7 @@ class BonusOper
             ])
             ->select();
         foreach ($res as $item) {
-            $bonus = 30;
+            $bonus = BonusOper::ACT;
             $map['id'] = $item['id'];
             Db::startTrans();
             try {

@@ -134,6 +134,21 @@ var wx_home = (function ($, Vue, w, undefined) {
             }
         });
     };
+    var bonus = function () {
+        $('#renew_bonus').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/wx/json_renew",
+                dataType: "json",
+                success: function (msg) {
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                }
+            });
+        });
+    };
     var activity = function () {
         vact = new Vue({
             el: '#wx_activity',
@@ -172,6 +187,7 @@ var wx_home = (function ($, Vue, w, undefined) {
     return {
         init: init,
         activity: activity,
-        valid: valid
+        valid: valid,
+        bonus: bonus
     };
 })(Zepto, Vue, window);

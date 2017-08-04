@@ -37,6 +37,7 @@ class Mobile
                 'mail',
                 'pref',
                 'web_name',
+                'bonus'
             ])
             ->find();
         if (null === $res) {
@@ -54,10 +55,15 @@ class Mobile
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $card = Db::table('card')
             ->where($map)
+            ->field([
+                'status',
+                'code'
+            ])
             ->value('status');
-        if ($card === null) {
+        if ($card['status'] === null) {
             $card = -1;
         }
+        session('card', $card['code']);
         return view('home', ['user' => $res, 'card' => $card]);
     }
 
