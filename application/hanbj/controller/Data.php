@@ -86,7 +86,8 @@ class Data
                 'f.unique_name as u',
                 'oper as m',
                 'act_time as y',
-                'm.tieba_id as t'
+                'm.tieba_id as t',
+                'f.up'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -119,7 +120,8 @@ class Data
                 'oper as m',
                 'fee_time as y',
                 'f.code as c',
-                'm.tieba_id as t'
+                'm.tieba_id as t',
+                'f.up'
             ])
             ->select();
         $data['rows'] = $tmp;
