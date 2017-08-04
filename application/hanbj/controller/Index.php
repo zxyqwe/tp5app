@@ -68,14 +68,6 @@ class Index
         return view('fee');
     }
 
-    public function bonus()
-    {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
-        return view('bonus');
-    }
-
     public function create()
     {
         if ('succ' !== session('login')) {
