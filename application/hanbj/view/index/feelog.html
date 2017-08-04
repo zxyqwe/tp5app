@@ -78,7 +78,6 @@
                     dataType: "json",
                     success: function (msg) {
                         $table.bootstrapTable('refresh');
-                        msg = JSON.parse(msg.responseText);
                         if (msg.c > 0) {
                             $('#wxup').click();
                         }
