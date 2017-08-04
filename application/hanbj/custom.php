@@ -232,18 +232,55 @@ class CardOper
 
 class BonusOper
 {
-    const FEE = 0;
-    const ACT = 1;
-
-    public static function getDesc($type)
+    public static function upFee()
     {
-        switch ($type) {
-            case BonusOper::FEE:
-                return '缴纳会费';
-            case BonusOper::ACT:
-                return '活动签到';
-            default:
-                return '原因不明';
+        $map['up'] = 0;
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left'],
+            ['card c', 'c.openid=m.openid', 'left']
+        ];
+        $res = Db::table('nfee')
+            ->alias('f')
+            ->order('f.id')
+            ->limit(5)
+            ->where($map)
+            ->join($join)
+            ->field([
+                'f.id',
+                'm.unique_name',
+                'c.code'
+            ])
+            ->select();
+        foreach ($res as $item) {
+            if ($item['code'] !== null) {
+                continue;
+            }
+            $map['id'] = $item['id'];
+            Db::startTrans();
+            try {
+                $nfee = Db::table('nfee')
+                    ->where($map)
+                    ->update(['up' => 1]);
+                if ($nfee !== 1) {
+                    throw new \Exception('更新事件失败' . json_encode($map));
+                }
+                $nfee = Db::table('member')
+                    ->where(['unique_name' => $item['unique_name']])
+                    ->setInc('bonus', 15);
+                if ($nfee !== 1) {
+                    throw new \Exception('更新积分失败' . json_encode($item));
+                }
+                Db::commit();
+            } catch (\Exception $e) {
+                Db::rollback();
+                return json(['msg' => json_encode($e)], 400);
+            }
         }
+        return json(['msg' => 'ok']);
+    }
+
+    public static function upAct()
+    {
+        return json(['msg' => 'ok']);
     }
 }

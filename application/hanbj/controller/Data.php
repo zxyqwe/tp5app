@@ -2,6 +2,8 @@
 
 namespace app\hanbj\controller;
 
+include_once APP_PATH . 'hanbj/custom.php';
+use app\hanbj\BonusOper;
 use think\Db;
 
 
@@ -72,12 +74,19 @@ class Data
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
+        $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        if ($up) {
+            $map['f.up'] = 0;
+        } else {
+            $map = array();
+        }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
         ];
         $tmp = Db::table('activity')
             ->alias('f')
             ->limit($offset, $size)
+            ->where($map)
             ->join($join)
             ->order('act_time', 'desc')
             ->field([
@@ -92,6 +101,8 @@ class Data
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('activity')
+            ->alias('f')
+            ->where($map)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -133,6 +144,8 @@ class Data
             ->select();
         $data['rows'] = $tmp;
         $total = Db::table('nfee')
+            ->alias('f')
+            ->where($map)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -285,30 +298,10 @@ class Data
             return json(['msg' => '未登录'], 400);
         }
         $type = input('post.type');
-        $map['up'] = 0;
-        $join = [
-            ['member m', 'm.unique_name=f.unique_name', 'left'],
-            ['card c', 'c.openid=m.openid', 'left']
-        ];
         if ($type === '0') {
-            $res = Db::table('nfee')
-                ->alias('f')
-                ->order('id')
-                ->limit(5)
-                ->where($map)
-                ->join($join)
-                ->field([
-                    'm.unique_name',
-                    'c.code'
-                ])
-                ->select();
-            foreach ($res as $item) {
-
-            }
-            return json(['msg' => json_encode($res)], 400);
+            return BonusOper::upFee();
         } else {
-
+            return BonusOper::upAct();
         }
-        return json(['msg' => 'ok']);
     }
 }
