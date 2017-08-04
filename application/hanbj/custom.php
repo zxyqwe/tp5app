@@ -283,7 +283,7 @@ class BonusOper
                 return json(['msg' => '' . $e], 400);
             }
         }
-        return json(['msg' => 'ok']);
+        return json(['msg' => 'ok', 'c' => count($res)]);
     }
 
     public static function upAct()
@@ -341,6 +341,6 @@ class BonusOper
                 return json(['msg' => '' . $e], 400);
             }
         }
-        return json(['msg' => 'ok']);
+        return json(['msg' => 'ok', 'c' => count($res)]);
     }
 }
