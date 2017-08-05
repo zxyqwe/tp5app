@@ -238,7 +238,7 @@
                     w.cancelloading();
                 });
                 wx.error(function (res) {
-                    console.log(res);
+                    w.msgto(res);
                 });
             },
             error: function (msg) {

@@ -1,6 +1,7 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $cardDialog, $workerDialog;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $cardDialog, $workerDialog,
+        work_card_code;
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -93,6 +94,10 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
         $('#work_act').click(function () {
             $workerDialog.fadeIn(200);
+        });
+        $('#workerDialog').on('click', '.dialog__btn_reg', function () {
+            $(this).parents('.js_dialog').fadeOut(200);
+            w.msgto(123);
         });
         ticketapi();
     };
