@@ -84,7 +84,6 @@ class Mobile
         return json($wx);
     }
 
-
     public function access()
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');

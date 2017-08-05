@@ -8,6 +8,10 @@ class FeeOper
 {
     public static function cache_fee($uname)
     {
+        $cache_name = 'cache_fee' . $uname;
+        if (cache('?' . $cache_name)) {
+            return cache($cache_name);
+        }
         $map['unique_name'] = $uname;
         $res = Db::table('nfee')
             ->alias('f')
@@ -21,7 +25,13 @@ class FeeOper
             ->where($map)
             ->value('year_time');
         $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
+        cache($cache_name, $fee);
         return $fee;
+    }
+
+    public static function uncache($uname)
+    {
+        cache('cache_fee' . $uname, null);
     }
 }
 
@@ -59,7 +69,6 @@ class WxHanbj
         cache('ticketapi', $res['ticket'], $res['expires_in']);
         return $res['ticket'];
     }
-
 
     public static function handle_msg($msg)
     {

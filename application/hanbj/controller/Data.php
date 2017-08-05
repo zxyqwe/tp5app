@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 include_once APP_PATH . 'hanbj/custom.php';
 use app\hanbj\BonusOper;
+use app\hanbj\FeeOper;
 use think\Db;
 
 
@@ -48,6 +49,7 @@ class Data
             ->join($join)
             ->where($map)
             ->limit($offset, $size)
+            ->cache(600)
             ->group('m.unique_name')
             ->field([
                 'count(oper) as s',
@@ -60,6 +62,7 @@ class Data
         $total = Db::table('member')
             ->alias('m')
             ->where($map)
+            ->cache(600)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -274,6 +277,7 @@ class Data
                 'code' => $type,
                 'fee_time' => $d
             ];
+            FeeOper::uncache($tmp['u']);
         }
         Db::startTrans();
         try {
@@ -287,7 +291,7 @@ class Data
             }
         } catch (\Exception $e) {
             Db::rollback();
-            return json(['msg' => json_encode($e)], 400);
+            return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
     }
