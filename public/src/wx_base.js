@@ -232,13 +232,13 @@
                     timestamp: msg.timestamp,
                     nonceStr: msg.nonce,
                     signature: msg.signature,
-                    jsApiList: ['openCard', 'addCard']
+                    jsApiList: ['openCard', 'addCard', 'scanQRCode']
                 });
                 wx.ready(function () {
                     w.cancelloading();
                 });
                 wx.error(function (res) {
-                    w.msgto(res);
+                    w.msgto(JSON.stringify(res));
                 });
             },
             error: function (msg) {
@@ -269,7 +269,7 @@
             $toast.fadeIn(100);
             setTimeout(function () {
                 $toast.fadeOut(100);
-            }, 2000);
+            }, 3000);
         };
         var $loadingToast = $('#loadingToast');
         w.waitloading = function () {

@@ -23,7 +23,6 @@ var home = (function ($, w, undefined) {
         });
         w.msgto = function (msg) {
             $alert_html.html(msg);
-
             $alert_msg.modal('show');
         };
     };

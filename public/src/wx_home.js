@@ -93,11 +93,51 @@ var wx_home = (function ($, Vue, w, undefined) {
             });
         });
         $('#work_act').click(function () {
-            $workerDialog.fadeIn(200);
+            wx.scanQRCode({
+                needResult: 1,
+                scanType: ["qrCode"],
+                success: function (res) {
+                    w.waitloading();
+                    work_card_code = res.resultStr;
+                    $.ajax({
+                        type: "POST",
+                        url: "/hanbj/work/json_card",
+                        data: {code: work_card_code},
+                        dataType: "json",
+                        success: function (msg) {
+                            //ToDo
+                            $workerDialog.fadeIn(200);
+                        },
+                        error: function (msg) {
+                            msg = JSON.parse(msg.responseText);
+                            w.msgto(msg.msg);
+                        },
+                        complete: function () {
+                            w.cancelloading();
+                        }
+                    });
+                }
+            });
         });
         $('#workerDialog').on('click', '.dialog__btn_reg', function () {
             $(this).parents('.js_dialog').fadeOut(200);
-            w.msgto(123);
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: "/hanbj/work/json_act",
+                data: {code: work_card_code},
+                dataType: "json",
+                success: function (msg) {
+                    //ToDo
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
         });
         ticketapi();
     };

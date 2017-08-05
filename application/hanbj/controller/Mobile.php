@@ -67,7 +67,8 @@ class Mobile
         return view('home', [
             'user' => $res,
             'card' => $card['status'],
-            'worker' => in_array($res['unique_name'], config('hanbj_worker')) ? 1 : 0
+            'worker' => in_array($res['unique_name'], config('hanbj_worker')) ? 1 : 0,
+            'activity' => config('hanbj_activity')
         ]);
     }
 
