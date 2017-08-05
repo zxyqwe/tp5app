@@ -80,8 +80,9 @@ ul {
     font-size: 14px
 }
 
-.page.home .weui-flex {
-    margin-top: 20px;
+.placeholder {
+    margin: 5px;
+    padding: 0 10px;
 }
 
 @-webkit-keyframes a {
