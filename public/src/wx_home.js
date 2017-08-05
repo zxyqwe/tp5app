@@ -33,6 +33,9 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
     };
     var bindclick = function () {
+        if (w.worker === 1) {
+            $('#workarea').removeClass('sr-only');
+        }
         w.$status.removeClass('sr-only');
         $loading = w.$status.children('i');
         $('.js_dialog').on('click', '.weui-dialog__btn', function () {

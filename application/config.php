@@ -264,6 +264,6 @@ return [
     'aws_uri' => '/onca/xml',
     'hanbj_api' => 'wx8519c9fd7817dbcb',
     'hanbj_cardid' => 'pJkBfv06_x38RSmlhoR-2X7rWsxw',
-    'hanbj_worker' => []
+    'hanbj_worker' => ['坎丙午']
 
 ];
