@@ -64,7 +64,11 @@ class Mobile
         } else {
             session('card', $card['code']);
         }
-        return view('home', ['user' => $res, 'card' => $card['status']]);
+        return view('home', [
+            'user' => $res,
+            'card' => $card['status'],
+            'worker' => in_array($res['unique_name'], config('hanbj_worker'))
+        ]);
     }
 
     public function json_wx()

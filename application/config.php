@@ -260,11 +260,10 @@ return [
     // | 自定义设置
     // +----------------------------------------------------------------------
     'aws_access_key_id' => 'AKIAINRP42CA2BZNJ32Q',
-    'aws_secret_key' => '',
     'aws_end_point' => 'webservices.amazon.cn',
     'aws_uri' => '/onca/xml',
     'hanbj_api' => 'wx8519c9fd7817dbcb',
-    'hanbj_secret' => '',
     'hanbj_cardid' => 'pJkBfv06_x38RSmlhoR-2X7rWsxw',
+    'hanbj_worker' => []
 
 ];
