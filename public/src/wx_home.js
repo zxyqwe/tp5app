@@ -108,7 +108,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                             $('#workuni').html(msg.uni);
                             $('#worktie').html(msg.tie);
                             var s = '<i class="';
-                            if (msg.fee < vvalid.cur_year) {
+                            if (msg.fee < new Date().getFullYear()) {
                                 s += 'weui-icon-success';
                             } else {
                                 s += 'weui-icon-cancel'
