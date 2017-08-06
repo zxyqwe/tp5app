@@ -73,7 +73,11 @@ class Work
                 ->insert();
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
-            return json(['msg' => '' . $e], 400);
+            $e = '' . $e;
+            if (false != strpos($e, 'constraint')) {
+                return json(['msg' => 'ok']);
+            }
+            return json(['msg' => $e], 400);
         }
     }
 }

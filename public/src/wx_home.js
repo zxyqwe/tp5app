@@ -137,7 +137,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 data: {code: work_card_code},
                 dataType: "json",
                 success: function (msg) {
-                    //ToDo
+                    w.msgok();
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);

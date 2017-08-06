@@ -260,6 +260,7 @@
         };
         var $toast = $('#toast');
         var $old_msg = $('#old_msg');
+        var $onlyok = $('#onlyok');
         w.msgto = function (data) {
             $old_msg.html(data);
             var tdis = $toast.css('display');
@@ -270,6 +271,12 @@
             setTimeout(function () {
                 $toast.fadeOut(100);
             }, 3000);
+        };
+        w.msgok = function () {
+            $onlyok.fadeIn(100);
+            setTimeout(function () {
+                $onlyok.fadeOut(100);
+            }, 2000);
         };
         var $loadingToast = $('#loadingToast');
         w.waitloading = function () {
