@@ -14,7 +14,6 @@ class Work
             return json(['msg' => '非工作人员'], 400);
         }
         $code = input('post.code');
-        $code = 416521837905;//ToDo
         if (!is_numeric($code)) {
             $code = 0;
         }
@@ -44,7 +43,6 @@ class Work
             return json(['msg' => '非工作人员'], 400);
         }
         $code = input('post.code');
-        $code = 416521837905;//ToDo
         if (!is_numeric($code)) {
             $code = 0;
         }
