@@ -14,13 +14,14 @@ class Work
             return json(['msg' => '非工作人员'], 400);
         }
         $code = input('post.code', 0, FILTER_VALIDATE_INT);
-        $map['code'] = $code;
+        $map['f.code'] = $code;
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];
         $res = Db::table('card')
             ->alias('f')
             ->where($map)
+            ->join($join)
             ->field([
                 'm.unique_name as uni',
                 'm.tieba_id as tie'
