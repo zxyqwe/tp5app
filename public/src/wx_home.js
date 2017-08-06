@@ -111,9 +111,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                             if (msg.fee < new Date().getFullYear()) {
                                 s += 'weui-icon-success';
                             } else {
-                                s += 'weui-icon-cancel'
+                                s += 'weui-icon-cancel';
                             }
-                            s += "></i>" + msg.fee;
+                            s += '"></i>' + msg.fee;
                             $('#workfee').html(s);
                             $workerDialog.fadeIn(200);
                         },
