@@ -2,7 +2,7 @@
 
 namespace app\hanbj\controller;
 
-
+include_once APP_PATH . 'hanbj/custom.php';
 use app\hanbj\FeeOper;
 use think\Db;
 
@@ -13,7 +13,11 @@ class Work
         if (!in_array(session('unique_name'), config('hanbj_worker'))) {
             return json(['msg' => '非工作人员'], 400);
         }
-        $code = input('post.code', 0, FILTER_VALIDATE_INT);
+        $code = input('post.code');
+        $code = 416521837905;//ToDo
+        if (!is_numeric($code)) {
+            $code = 0;
+        }
         $map['f.code'] = $code;
         $join = [
             ['member m', 'm.openid=f.openid', 'left']

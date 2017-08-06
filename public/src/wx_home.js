@@ -107,7 +107,14 @@ var wx_home = (function ($, Vue, w, undefined) {
                         success: function (msg) {
                             $('#workuni').html(msg.uni);
                             $('#worktie').html(msg.tie);
-                            $('#workfee').html(msg.fee);
+                            var s = '<i class="';
+                            if (msg.fee < vvalid.cur_year) {
+                                s += 'weui-icon-success';
+                            } else {
+                                s += 'weui-icon-cancel'
+                            }
+                            s += "></i>" + msg.fee;
+                            $('#workfee').html(s);
                             $workerDialog.fadeIn(200);
                         },
                         error: function (msg) {
