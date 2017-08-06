@@ -109,9 +109,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                             $('#worktie').html(msg.tie);
                             var s = '<i class="';
                             if (msg.fee < new Date().getFullYear()) {
-                                s += 'weui-icon-success';
-                            } else {
                                 s += 'weui-icon-cancel';
+                            } else {
+                                s += 'weui-icon-success';
                             }
                             s += '"></i>' + msg.fee;
                             $('#workfee').html(s);
