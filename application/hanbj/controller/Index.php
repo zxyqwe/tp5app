@@ -2,9 +2,6 @@
 
 namespace app\hanbj\controller;
 
-use think\captcha;
-use think\Db;
-
 
 class Index
 {
