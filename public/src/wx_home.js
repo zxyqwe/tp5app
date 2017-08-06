@@ -105,7 +105,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                         data: {code: work_card_code},
                         dataType: "json",
                         success: function (msg) {
-                            //ToDo
+                            $('#workuni').html(msg.uni);
+                            $('#worktie').html(msg.tie);
+                            $('#workfee').html(msg.fee);
                             $workerDialog.fadeIn(200);
                         },
                         error: function (msg) {

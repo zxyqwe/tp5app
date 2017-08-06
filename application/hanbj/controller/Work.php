@@ -16,13 +16,13 @@ class Work
         $code = input('post.code', 0, FILTER_VALIDATE_INT);
         $map['code'] = $code;
         $join = [
-            ['member m', 'm.unique_name=f.unique_name', 'left']
+            ['member m', 'm.openid=f.openid', 'left']
         ];
         $res = Db::table('card')
             ->alias('f')
             ->where($map)
             ->field([
-                'f.unique_name as uni',
+                'm.unique_name as uni',
                 'm.tieba_id as tie'
             ])
             ->find();
