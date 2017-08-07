@@ -7,7 +7,7 @@ var gulp = require('gulp'),
     gulpSequence = require('gulp-sequence');
 
 gulp.task('js', function () {
-    gulp.src('public/src/*.js')
+    return gulp.src('public/src/*.js')
         .pipe(rev())
         .pipe(uglify({mangle: true}))
         .pipe(gulp.dest('public/static/'))
@@ -15,7 +15,7 @@ gulp.task('js', function () {
         .pipe(gulp.dest('public/static/rev/js'));
 });
 gulp.task('css', function () {
-    gulp.src('public/src/*.css')
+    return gulp.src('public/src/*.css')
         .pipe(rev())
         .pipe(cssnano())
         .pipe(gulp.dest('public/static/'))
@@ -23,7 +23,7 @@ gulp.task('css', function () {
         .pipe(gulp.dest('public/static/rev/css'));
 });
 gulp.task('hanbj_tpl', function () {
-    gulp.src(['public/static/rev/**/*.json', 'application/hanbj/tpl/*.html'])
+    return gulp.src(['public/static/rev/**/*.json', 'application/hanbj/tpl/*.html'])
         .pipe(revCollector({
             replaceReved: true
         }))
