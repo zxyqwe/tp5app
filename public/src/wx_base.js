@@ -222,9 +222,10 @@
     };
     var jsapi = function () {
         w.waitloading();
+        var cur_url = encodeURIComponent(location.href.split('#')[0]);
         $.ajax({
             type: "GET",
-            url: "/hanbj/mobile/json_wx?url=" + encodeURIComponent(location.href.split('#')[0]),
+            url: "/hanbj/mobile/json_wx?url=" + cur_url,
             dataType: "json",
             success: function (msg) {
                 wx.config({
@@ -238,10 +239,12 @@
                     w.cancelloading();
                 });
                 wx.error(function (res) {
-                    w.msgto(JSON.stringify(res));
+                    var msg = JSON.stringify(res);
+                    msg.url = cur_url;
+                    w.msgto(msg);
                     setTimeout(function () {
-                        w.location.href = 'https://app.zxyqwe.com/hanbj/mobile';
-                    }, 1500);
+                        w.location.href = cur_url;
+                    }, 3000);
                 });
             },
             error: function (msg) {
