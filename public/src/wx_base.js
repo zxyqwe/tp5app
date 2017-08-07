@@ -242,9 +242,6 @@
                     var msg = JSON.stringify(res);
                     msg.url = cur_url;
                     w.msgto(msg);
-                    setTimeout(function () {
-                        w.location.href = cur_url;
-                    }, 3000);
                 });
             },
             error: function (msg) {
