@@ -239,9 +239,8 @@
                     w.cancelloading();
                 });
                 wx.error(function (res) {
-                    var msg = JSON.stringify(res);
-                    msg.url = cur_url;
-                    w.msgto(msg);
+                    res.url = cur_url;
+                    w.msgto(JSON.stringify(res));
                 });
             },
             error: function (msg) {
