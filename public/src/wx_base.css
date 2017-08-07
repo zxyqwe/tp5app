@@ -136,13 +136,13 @@ ul {
 }
 
 .page.slideIn {
-    -webkit-animation: a .2s forwards;
-    animation: a .2s forwards
+    -webkit-animation: a 1s forwards;
+    animation: a 1s forwards
 }
 
 .page.slideOut {
-    -webkit-animation: b .2s forwards;
-    animation: b .2s forwards
+    -webkit-animation: b 1s forwards;
+    animation: b 1s forwards
 }
 
 .sr-only {

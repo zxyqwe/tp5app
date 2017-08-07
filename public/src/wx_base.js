@@ -239,6 +239,9 @@
                 });
                 wx.error(function (res) {
                     w.msgto(JSON.stringify(res));
+                    setTimeout(function () {
+                        w.location.href = 'https://app.zxyqwe.com/hanbj/mobile';
+                    }, 1500);
                 });
             },
             error: function (msg) {
