@@ -241,6 +241,9 @@
                 wx.error(function (res) {
                     res.url = cur_url;
                     w.msgto(JSON.stringify(res));
+                    setTimeout(function () {
+                        w.location.href = w.location.protocol + w.location.host + w.location.pathname;
+                    }, 3000);
                 });
             },
             error: function (msg) {
