@@ -60,13 +60,6 @@ ul {
     height: 19px
 }
 
-.page__ft.j_bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0
-}
-
 .page__title {
     text-align: left;
     font-size: 20px;
