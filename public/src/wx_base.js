@@ -241,7 +241,7 @@
                 wx.error(function (res) {
                     res.url = cur_url;
                     w.msgto(JSON.stringify(res));
-                    w.location.href = w.location.protocol + '//' + w.location.host + w.location.pathname;
+                    w.location.search = '';
                 });
             },
             error: function (msg) {
