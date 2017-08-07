@@ -17,9 +17,9 @@ gulp.task('install', function () {
         .pipe(gulp.dest('public/static/'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('public/static/rev/css'));
-    gulp.src(['public/static/rev/**/*.json', 'application/'])
+    gulp.src(['public/static/rev/**/*.json', 'application/hanbj/tpl/*.html'])
         .pipe( revCollector({
             replaceReved: true
         }) )
-        .pipe( gulp.dest(config.dest) );
+        .pipe( gulp.dest('application/hanbj/view/') );
 });
