@@ -16,7 +16,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     wx.addCard({
                         cardList: [{
                             cardId: msg.card_id,
-                            cardExt: msg
+                            cardExt: JSON.stringify(msg)
                         }],
                         success: function (res) {
                             w.location.search = '?g=123';
