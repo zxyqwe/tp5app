@@ -19,7 +19,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                             cardExt: msg
                         }],
                         success: function (res) {
-                            w.location.reload(true);
+                            w.location.search = '?g=123';
                         },
                         fail: function (msg) {
                             w.msgto(msg);
@@ -55,7 +55,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_active",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.reload(true);
+                    w.location.search = '?g=123';
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
