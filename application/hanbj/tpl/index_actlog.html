@@ -39,7 +39,7 @@
 <script>
     var actlog = (function ($, w, undefined) {
         'use strict';
-        var $table, $onlyup, pressedup = false;
+        var $table, $onlyup, pressedup = false, $wxup;
         w.wxFormatter = function (value, row) {
             return value === '0' ? '未更新' : '';
         };
@@ -65,7 +65,9 @@
             $table.bootstrapTable({
                 'pageSize': 20
             });
-            $('#wxup').click(function () {
+            $wxup = $('#wxup');
+            $wxup.click(function () {
+                $wxup.addClass('sr-only');
                 $.ajax({
                     type: "POST",
                     url: "/hanbj/data/bonus_add",
@@ -74,7 +76,7 @@
                     success: function (msg) {
                         $table.bootstrapTable('refresh');
                         if (msg.c > 0) {
-                            $('#wxup').click();
+                            $wxup.click();
                         }
                     },
                     error: function (msg) {
