@@ -60,7 +60,7 @@ class Mobile
             ])
             ->find();
         if ($card === null) {
-            $card = -1;
+            $card = ['status' => -1];
         } else {
             session('card', $card['code']);
         }
