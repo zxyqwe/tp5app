@@ -83,7 +83,7 @@ class Mobile
         $ss = 'jsapi_ticket=' . WxHanbj::jsapi() .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']
-            . '&url=' . urldecode(input('get.url'));
+            . '&url=' . urldecode($_GET['url']);
         $ss = sha1($ss);
         $wx['signature'] = $ss;
         return json($wx);
