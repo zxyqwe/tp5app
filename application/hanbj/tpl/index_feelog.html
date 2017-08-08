@@ -72,7 +72,9 @@
             });
             $wxup = $('#wxup');
             $wxup.click(function () {
-                $wxup.addClass('sr-only');
+                if (!$wxup.hasClass('sr-only')) {
+                    $wxup.addClass('sr-only');
+                }
                 $.ajax({
                     type: "POST",
                     url: "/hanbj/data/bonus_add",
