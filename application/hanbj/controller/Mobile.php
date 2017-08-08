@@ -164,7 +164,7 @@ class Mobile
         $wx['timestamp'] = '' . time();
         $wx['nonce_str'] = getNonceStr();
         $ss = [$wx['nonce_str'],
-            '' . $wx['timestamp'],
+            $wx['timestamp'],
             WxHanbj::ticketapi(),
             $wx['card_id']];
         sort($ss);
