@@ -65,24 +65,8 @@ class Wx
             return json(['msg' => '未登录'], 400);
         }
         $uname = session('unique_name');
-        $map['up'] = 1;
+        $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
-        $act = Db::table('activity')
-            ->where($map)
-            ->count('1');
-        $act = intval($act) * BonusOper::ACT;
-        $res = Db::table('nfee')
-            ->alias('f')
-            ->where($map)
-            ->field([
-                'count(oper) as s',
-                'sum(f.code) as n'
-            ])
-            ->find();
-        $fee = intval($res['s']) - 2 * intval($res['n']);
-        $fee *= BonusOper::FEE;
-        $bonus = $fee + $act;
-        unset($map['up']);
         $res = Db::table('member')
             ->where($map)
             ->setField('bonus', $bonus);

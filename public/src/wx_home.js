@@ -203,7 +203,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/wx/json_renew",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.href = location.href.split('#')[0];
+                    w.location.search = '?g=123';
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);

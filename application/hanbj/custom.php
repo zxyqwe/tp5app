@@ -165,15 +165,16 @@ class CardOper
 
     public static function active($code)
     {
+        $uname = session('unique_name');
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/activate?access_token=' . $access;
         $data = [
             "membership_number" => $code,
             "code" => $code,
             "card_id" => config('hanbj_cardid'),
-            'init_bonus' => 0,
-            'init_custom_field_value1' => session('unique_name'),
-            'init_custom_field_value2' => FeeOper::cache_fee(session('unique_name'))
+            'init_bonus' => BonusOper::reCalc($uname),
+            'init_custom_field_value1' => $uname,
+            'init_custom_field_value2' => FeeOper::cache_fee($uname)
         ];
         $res = Curl_Post($data, $url, false);
         $res = json_decode($res, true);
@@ -235,6 +236,28 @@ class BonusOper
 {
     const FEE = 15;
     const ACT = 30;
+
+    public static function reCalc($uname)
+    {
+        $map['up'] = 1;
+        $map['unique_name'] = $uname;
+        $act = Db::table('activity')
+            ->where($map)
+            ->count('1');
+        $act = intval($act) * BonusOper::ACT;
+        $res = Db::table('nfee')
+            ->alias('f')
+            ->where($map)
+            ->field([
+                'count(oper) as s',
+                'sum(f.code) as n'
+            ])
+            ->find();
+        $fee = intval($res['s']) - 2 * intval($res['n']);
+        $fee *= BonusOper::FEE;
+        $bonus = $fee + $act;
+        return $bonus;
+    }
 
     public static function upFee()
     {
