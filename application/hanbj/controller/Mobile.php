@@ -20,6 +20,9 @@ class Mobile
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
+        if (input('?get.encrypt_code')) {
+            return redirect('https://app.zxyqwe.com/hanbj/mobile');
+        }
         $openid = session('openid');
         $map['openid'] = $openid;
         $res = Db::table('member')
