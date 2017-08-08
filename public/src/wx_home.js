@@ -19,7 +19,10 @@ var wx_home = (function ($, Vue, w, undefined) {
                             cardExt: msg
                         }],
                         success: function (res) {
-                            w.location.href = location.href.split('#')[0];
+                            w.location.reload(true);
+                        },
+                        fail: function (msg) {
+                            w.msgto(msg);
                         }
                     });
                 },
@@ -52,7 +55,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_active",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.href = location.href.split('#')[0];
+                    w.location.reload(true);
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
