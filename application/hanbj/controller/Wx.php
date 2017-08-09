@@ -6,6 +6,7 @@ include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use app\hanbj\BonusOper;
+use app\hanbj\OrderOper;
 use app\HanbjRes;
 use think\Db;
 use app\HanbjNotify;
@@ -96,14 +97,14 @@ class Wx
         if (!session('?card')) {
             return json(['msg' => '没有会员卡'], 400);
         }
-        $openid = session('openid');
+        $opt = input('post.opt', 0, FILTER_VALIDATE_INT);
+        $type = input('post.type', 1, FILTER_VALIDATE_INT);
         $input = new WxPayUnifiedOrder();
-        $input->SetBody("设置商品简要描述");
-        $input->SetDetail('设置商品名称明细列表');
-        $input->SetOut_trade_no(session('card') . date("YmdHis"));
-        $input->SetTotal_fee("1");
-        $input->SetTrade_type("JSAPI");
-        $input->SetOpenid($openid);
+        if ($type === 1) {
+            $input = OrderOper::fee($input, $opt);
+        } else {
+            return json(['msg' => '参数错误'], 400);
+        }
         $order = WxPayApi::unifiedOrder($input);
         if (!array_key_exists('prepay_id', $order)) {
             $msg = $order['return_msg'] . $input->ToXml();

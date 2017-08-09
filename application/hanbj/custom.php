@@ -379,3 +379,30 @@ class BonusOper
         return json(['msg' => 'ok', 'c' => count($res)]);
     }
 }
+
+class OrderOper
+{
+    private static function feeMoney($year)
+    {
+        return $year * 1500;
+    }
+
+    /**
+     *
+     * @param \app\WxPayUnifiedOrder $input
+     * @param int $year
+     * @return \app\WxPayUnifiedOrder
+     */
+    public static function fee($input, $year)
+    {
+        $fee = OrderOper::feeMoney($year);
+        $openid = session('openid');
+        $input->SetBody("会员缴费");
+        $input->SetDetail('会员缴费' . $year . '年');
+        $input->SetOut_trade_no(session('card') . date("YmdHis"));
+        $input->SetTotal_fee('' . $fee);
+        $input->SetTrade_type("JSAPI");
+        $input->SetOpenid($openid);
+        return $input;
+    }
+}

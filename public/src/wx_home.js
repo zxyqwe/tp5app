@@ -243,13 +243,15 @@ var wx_home = (function ($, Vue, w, undefined) {
     var valid_fee = function () {
         $('#order').click(function () {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "/hanbj/wx/order",
                 dataType: "json",
-                data: {},
+                data: {
+                    type: 1
+                },
                 success: function (msg) {
                     msg.success = function (res) {
-                        console.log(res);
+                        w.msgok();
                     };
                     msg.fail = function (msg) {
                         w.msgto(msg);
