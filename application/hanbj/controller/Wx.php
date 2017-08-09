@@ -10,6 +10,8 @@ use think\Db;
 use app\HanbjNotify;
 use app\hanbj\FeeOper;
 use app\hanbj\CardOper;
+use app\WxPayUnifiedOrder;
+use app\WxPayApi;
 
 class Wx
 {
@@ -83,6 +85,26 @@ class Wx
             return $cardup;
         }
         return json(['msg' => $bonus]);
+    }
+
+    public function order()
+    {
+        if (!session('?openid')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        if (!session('?card')) {
+            return json(['msg' => '没有会员卡'], 400);
+        }
+        $openid = session('openid');
+        $input = new WxPayUnifiedOrder();
+        $input->SetBody("设置商品简要描述");
+        $input->SetDetail('设置商品名称明细列表');
+        $input->SetOut_trade_no(session('card') . date("YmdHis"));
+        $input->SetTotal_fee("1");
+        $input->SetTrade_type("JSAPI");
+        $input->SetOpenid($openid);
+        $order = WxPayApi::unifiedOrder($input);
+        return json();
     }
 
     public function notify()
