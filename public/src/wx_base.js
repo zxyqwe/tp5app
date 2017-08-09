@@ -254,11 +254,6 @@ var wx_init = (function ($, w, undefined) {
     };
 
     var init = function () {
-        fastClick();
-        androidInputBugFix();
-        setPageManager();
-
-        w.pageManager = pageManager;
         w.home = function () {
             location.hash = '';
         };
@@ -280,6 +275,10 @@ var wx_init = (function ($, w, undefined) {
         w.cancelloading = function () {
             loading.hide();
         };
+        fastClick();
+        androidInputBugFix();
+        setPageManager();
+        w.pageManager = pageManager;
         jsapi();
     };
     return {
