@@ -1,4 +1,4 @@
-var wx_home = (function ($, Vue, wx, w, undefined) {
+var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
     var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button;
     var add_card = function (msg) {
@@ -318,4 +318,4 @@ var wx_home = (function ($, Vue, wx, w, undefined) {
         bonus: bonus,
         valid_fee: valid_fee
     };
-})(Zepto, Vue, wx, window);
+})(Zepto, Vue, window);
