@@ -283,7 +283,6 @@ var wx_home = (function ($, Vue, w, undefined) {
                         defaultValue: [0],
                         onConfirm: function (result) {
                             result = result[0];
-                            console.log(result);
                             ft.html(result.label);
                             fm.html(result.fee);
                             sel_value = result.value;
