@@ -1,4 +1,4 @@
-(function ($, w, undefined) {
+var init = (function ($, w, undefined) {
     'use strict';
     var loading;
     var pageManager = {
@@ -282,6 +282,7 @@
         };
         jsapi();
     };
-
-    init();
-}(Zepto, window));
+    return {
+        init: init
+    };
+})(Zepto, window);
