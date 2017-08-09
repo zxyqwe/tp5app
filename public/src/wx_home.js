@@ -1,7 +1,34 @@
-var wx_home = (function ($, Vue, w, undefined) {
+var wx_home = (function ($, Vue, wx, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $workerDialog,
-        work_card_code;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button;
+    var add_card = function (msg) {
+        wx.addCard({
+            cardList: [{
+                cardId: msg.card_id,
+                cardExt: JSON.stringify(msg)
+            }],
+            success: function (res) {
+                w.location.search = '?g=123';
+            },
+            fail: function (msg) {
+                w.msgto(msg);
+            }
+        });
+    };
+    var open_card = function (msg) {
+        wx.openCard({
+            cardList: [{
+                cardId: msg.card,
+                code: msg.code
+            }],
+            fail: function (msg) {
+                weui.alert('请打开“微信-卡包”查看会员卡。');
+            },
+            complete: function () {
+                $loading.addClass('sr-only');
+            }
+        });
+    };
     var ticketapi = function () {
         $cardn.click(function () {
             if (!$loading.hasClass('sr-only')) {
@@ -13,18 +40,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_addcard",
                 dataType: "json",
                 success: function (msg) {
-                    wx.addCard({
-                        cardList: [{
-                            cardId: msg.card_id,
-                            cardExt: JSON.stringify(msg)
-                        }],
-                        success: function (res) {
-                            w.location.search = '?g=123';
-                        },
-                        fail: function (msg) {
-                            w.msgto(msg);
-                        }
-                    });
+                    add_card(msg)
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -36,15 +52,84 @@ var wx_home = (function ($, Vue, w, undefined) {
             });
         });
     };
+    var build_act = function (msg) {
+        var s = '<p>活动：';
+        s += msg.act;
+        s += '</p><p>编号：';
+        s += msg.uni;
+        s += '</p><p>昵称：';
+        s += msg.tie;
+        s += '</p><p>缴费：';
+        s += '<i class="';
+        if (msg.fee < new Date().getFullYear()) {
+            s += 'weui-icon-cancel';
+        } else {
+            s += 'weui-icon-success';
+        }
+        s += '"></i>';
+        s += msg.fee;
+        s += '</p>';
+        return s;
+    };
+    var get_act = function (work_card_code) {
+        w.waitloading();
+        $.ajax({
+            type: "POST",
+            url: "/hanbj/work/json_card",
+            data: {code: work_card_code},
+            dataType: "json",
+            success: function (msg) {
+                var s = build_act(msg);
+                weui.confirm(s, {
+                    title: '扫码结果',
+                    buttons: [{
+                        label: '取消',
+                        type: 'default',
+                        onClick: function () {
+                        }
+                    }, {
+                        label: '登记',
+                        type: 'primary',
+                        onClick: function () {
+                            up_act(work_card_code);
+                        }
+                    }]
+                });
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
+    var up_act = function (work_card_code) {
+        w.waitloading();
+        $.ajax({
+            type: "POST",
+            url: "/hanbj/work/json_act",
+            data: {code: work_card_code},
+            dataType: "json",
+            success: function (msg) {
+                w.msgok();
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
     var bindclick = function () {
         if (w.worker === 1) {
             $('#workarea').removeClass('sr-only');
         }
         w.$status.removeClass('sr-only');
         $loading = w.$status.children('i');
-        $('.js_dialog').on('click', '.weui-dialog__btn_primary', function () {
-            $(this).parents('.js_dialog').fadeOut(200);
-        });
         $card0.click(function () {
             if (!$loading.hasClass('sr-only')) {
                 return;
@@ -76,18 +161,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_card",
                 dataType: "json",
                 success: function (msg) {
-                    wx.openCard({
-                        cardList: [{
-                            cardId: msg.card,
-                            code: msg.code
-                        }],
-                        fail: function (msg) {
-                            weui.alert('请打开“微信-卡包”查看会员卡。');
-                        },
-                        complete: function () {
-                            $loading.addClass('sr-only');
-                        }
-                    });
+                    open_card(msg);
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -100,54 +174,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 needResult: 1,
                 scanType: ["qrCode"],
                 success: function (res) {
-                    w.waitloading();
-                    work_card_code = res.resultStr;
-                    $.ajax({
-                        type: "POST",
-                        url: "/hanbj/work/json_card",
-                        data: {code: work_card_code},
-                        dataType: "json",
-                        success: function (msg) {
-                            $('#workuni').html(msg.uni);
-                            $('#worktie').html(msg.tie);
-                            var s = '<i class="';
-                            if (msg.fee < new Date().getFullYear()) {
-                                s += 'weui-icon-cancel';
-                            } else {
-                                s += 'weui-icon-success';
-                            }
-                            s += '"></i>' + msg.fee;
-                            $('#workfee').html(s);
-                            $workerDialog.fadeIn(200);
-                        },
-                        error: function (msg) {
-                            msg = JSON.parse(msg.responseText);
-                            w.msgto(msg.msg);
-                        },
-                        complete: function () {
-                            w.cancelloading();
-                        }
-                    });
-                }
-            });
-        });
-        $('#workerDialog').on('click', '.dialog__btn_reg', function () {
-            $(this).parents('.js_dialog').fadeOut(200);
-            w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: "/hanbj/work/json_act",
-                data: {code: work_card_code},
-                dataType: "json",
-                success: function (msg) {
-                    w.msgok();
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                },
-                complete: function () {
-                    w.cancelloading();
+                    get_act(res.resultStr);
                 }
             });
         });
@@ -282,7 +309,6 @@ var wx_home = (function ($, Vue, w, undefined) {
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
-        $workerDialog = $('#workerDialog');
         bindclick();
     };
     return {
@@ -292,4 +318,4 @@ var wx_home = (function ($, Vue, w, undefined) {
         bonus: bonus,
         valid_fee: valid_fee
     };
-})(Zepto, Vue, window);
+})(Zepto, Vue, wx, window);

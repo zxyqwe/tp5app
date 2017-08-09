@@ -34,6 +34,7 @@ class Work
             return json(['msg' => '查无此人'], 400);
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
+        $res['act'] = config('hanbj_activity');
         return json($res);
     }
 
