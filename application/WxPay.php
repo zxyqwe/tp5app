@@ -3,7 +3,9 @@
 namespace app;
 
 use Exception;
+use think\Db;
 use WxPayConfig;
+use app\hanbj\FeeOper;
 
 
 /**
@@ -1781,7 +1783,71 @@ class HanbjNotify extends WxPayNotify
         if (!$this->Queryorder($data["out_trade_no"])) {
             return false;
         }
+        $d = date("Y-m-d H:i:s");
+        $outid = $data["out_trade_no"];
+        $map['outid'] = $outid;
+        $map['fee'] = $data['total_fee'];
+        $ins['trans'] = $data['transaction_id'];
+        $ins['time'] = $d;
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        Db::startTrans();
+        try {
+            $res = Db::table('order')
+                ->alias('f')
+                ->where($map)
+                ->join($join)
+                ->field([
+                    'f.type',
+                    'f.value',
+                    'f.label',
+                    'm.unique_name'
+                ])
+                ->find();
+            if (null === $res) {
+                throw new Exception(json_encode($map));
+            }
+            $map['trans'] = '';
+            $up = Db::table('order')
+                ->where($map)
+                ->data($ins)
+                ->update();
+            if ($up === 0) {
+                Db::rollback();
+                return true;
+            }
+            if ('1' === $res['type']) {
+                $this->handleFee($res['value'], $res['unique_name'], $data['transaction_id'], $d);
+                Db::commit();
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            trace('' . $e);
+            return false;
+        }
         return true;
+    }
+
+    private function handleFee($value, $uname, $trans, $d)
+    {
+        $value = intval($value) + 1;
+        $ins = [];
+        $oper = 'Weixin_' . substr($trans, 0, 7);
+        while (count($ins) < $value) {
+            $ins[] = [
+                'unique_name' => $uname,
+                'oper' => $oper,
+                'code' => 0,
+                'fee_time' => $d
+            ];
+        }
+        $up = Db::table('nfee')
+            ->insertAll($ins);
+        FeeOper::uncache($uname);
+        if ($up != $value) {
+            throw new Exception('nfee ' . $value);
+        }
     }
 }
 
