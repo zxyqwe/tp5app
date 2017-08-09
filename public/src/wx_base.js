@@ -233,7 +233,7 @@
                     timestamp: msg.timestamp,
                     nonceStr: msg.nonce,
                     signature: msg.signature,
-                    jsApiList: ['openCard', 'addCard', 'scanQRCode']
+                    jsApiList: ['openCard', 'addCard', 'scanQRCode', 'chooseWXPay']
                 });
                 wx.ready(function () {
                     w.cancelloading();

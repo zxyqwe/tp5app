@@ -1784,3 +1784,12 @@ class HanbjNotify extends WxPayNotify
         return true;
     }
 }
+
+class HanbjRes extends WxPayDataBase
+{
+    public function setValues($value)
+    {
+        $this->values = $value;
+        return $this->MakeSign();
+    }
+}

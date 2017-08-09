@@ -249,7 +249,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 data: {},
                 success: function (msg) {
                     msg.success = function (res) {
-                        // 支付成功后的回调函数
+                        console.log(res);
                     };
                     msg.fail = function (msg) {
                         w.msgto(msg);

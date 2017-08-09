@@ -6,6 +6,7 @@ include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use app\hanbj\BonusOper;
+use app\HanbjRes;
 use think\Db;
 use app\HanbjNotify;
 use app\hanbj\FeeOper;
@@ -104,7 +105,19 @@ class Wx
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openid);
         $order = WxPayApi::unifiedOrder($input);
-        return json();
+        if (!array_key_exists('prepay_id', $order)) {
+            $msg = json_encode($order);
+            trace($msg);
+            return json(['msg' => $msg], 400);
+        }
+        $data['appId'] = \WxPayConfig::APPID;
+        $data['timeStamp'] = time();
+        $data['nonceStr'] = getNonceStr();
+        $data['package'] = 'prepay_id=' . $order['prepay_id'];
+        $data['signType'] = 'MD5';
+        $res = new HanbjRes();
+        $data['paySign'] = $res->setValues($data);
+        return json($data);
     }
 
     public function notify()
