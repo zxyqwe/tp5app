@@ -1,4 +1,4 @@
-var init = (function ($, w, undefined) {
+var wx_init = (function ($, w, undefined) {
     'use strict';
     var loading;
     var pageManager = {
