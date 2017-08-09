@@ -106,7 +106,7 @@ class Wx
         $input->SetOpenid($openid);
         $order = WxPayApi::unifiedOrder($input);
         if (!array_key_exists('prepay_id', $order)) {
-            $msg = json_encode($order);
+            $msg = $order['return_msg'] . json_encode($input->GetValues());
             trace($msg);
             return json(['msg' => $msg], 400);
         }
