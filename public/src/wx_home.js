@@ -282,6 +282,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     weui.picker(msg, {
                         defaultValue: [0],
                         onConfirm: function (result) {
+                            console.log(result);
                             ft.html(result.label);
                             fm.html(result.fee);
                             sel_value = result.value;
@@ -300,6 +301,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         $('#order').click(function () {
             var year = fm.html();
             if (year < 15) {
+                w.msgto('请选择年数');
                 return;
             }
             w.waitloading();
