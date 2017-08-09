@@ -106,7 +106,13 @@ class Wx
         $type = input('post.type', 1, FILTER_VALIDATE_INT);
         $input = new WxPayUnifiedOrder();
         if ($type === 1) {
+            if ($opt < 0 || $opt >= count(OrderOper::FEE_YEAR)) {
+                return json(['msg' => '年数错误'], 400);
+            }
             $input = OrderOper::fee($input, $opt);
+            if (false === $input) {
+                return json(['msg' => '下单失败'], 400);
+            }
         } else {
             return json(['msg' => '参数错误'], 400);
         }

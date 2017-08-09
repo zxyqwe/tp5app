@@ -383,15 +383,10 @@ class BonusOper
 class OrderOper
 {
     const FEE_YEAR = [
-        ['label' => '一年', 'value' => 1, 'fee' => 15],
-        ['label' => '二年', 'value' => 2, 'fee' => 30],
-        ['label' => '三年', 'value' => 3, 'fee' => 45]
+        ['label' => '一年', 'value' => 0, 'fee' => 15],
+        ['label' => '二年', 'value' => 1, 'fee' => 30],
+        ['label' => '三年', 'value' => 2, 'fee' => 45]
     ];
-
-    private static function feeMoney($year)
-    {
-        return $year * 1500;
-    }
 
     /**
      *
@@ -401,7 +396,7 @@ class OrderOper
      */
     public static function fee($input, $year)
     {
-        $fee = OrderOper::feeMoney($year);
+        $fee = OrderOper::FEE_YEAR[$year]['fee'] * 100;
         $openid = session('openid');
         $input->SetBody("会员缴费");
         $input->SetDetail('会员缴费' . $year . '年');
