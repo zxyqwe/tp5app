@@ -89,6 +89,11 @@ class Wx
         return json(['msg' => $bonus]);
     }
 
+    public function fee_year()
+    {
+        return json(OrderOper::FEE_YEAR);
+    }
+
     public function order()
     {
         if (!session('?openid')) {

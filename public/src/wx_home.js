@@ -268,26 +268,46 @@ var wx_home = (function ($, Vue, w, undefined) {
         load_valid();
     };
     var valid_fee = function () {
-        $('#pick_fee').click(function () {
-            weui.picker([
-                {
-                    label: '飞机票',
-                    value: 0
-                }
-            ], {
-                defaultValue: [0],
-                onConfirm: function (result) {
-                    console.log(result)
-                }
-            });
+        var ft = $('#pick_fee .weui-cell__ft');
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/wx/fee_year",
+            data: {},
+            dataType: "json",
+            success: function (msg) {
+                $('#pick_fee').click(function () {
+                    weui.picker(msg, {
+                        defaultValue: [0],
+                        onConfirm: function (result) {
+                            console.log(result);
+                            ft.html(123);
+                            $('#fee_money').html(123);
+                        }
+                    });
+                });
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
         });
         $('#order').click(function () {
+            var year = ft.html();
+            if (year < 1) {
+                return;
+            }
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: "/hanbj/wx/order",
                 dataType: "json",
                 data: {
-                    type: 1
+                    type: 1,
+                    opt: year
                 },
                 success: function (msg) {
                     msg.success = function (res) {
@@ -301,6 +321,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

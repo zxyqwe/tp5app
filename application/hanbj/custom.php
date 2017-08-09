@@ -382,6 +382,12 @@ class BonusOper
 
 class OrderOper
 {
+    const FEE_YEAR = [
+        ['label' => '一年', 'value' => 1, 'fee' => 15],
+        ['label' => '二年', 'value' => 2, 'fee' => 30],
+        ['label' => '三年', 'value' => 3, 'fee' => 45]
+    ];
+
     private static function feeMoney($year)
     {
         return $year * 1500;
