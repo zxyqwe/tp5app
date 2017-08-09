@@ -117,6 +117,7 @@ class Wx
         $data['signType'] = 'MD5';
         $res = new HanbjRes();
         $data['paySign'] = $res->setValues($data);
+        $data['timestamp'] = $data['timeStamp'];
         return json($data);
     }
 
