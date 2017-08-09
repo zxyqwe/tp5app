@@ -1,6 +1,6 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $cardDialog, $workerDialog,
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, $workerDialog,
         work_card_code;
     var ticketapi = function () {
         $cardn.click(function () {
@@ -82,7 +82,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                             code: msg.code
                         }],
                         fail: function (msg) {
-                            $cardDialog.fadeIn(200);
+                            weui.alert('请打开“微信-卡包”查看会员卡。');
                         },
                         complete: function () {
                             $loading.addClass('sr-only');
@@ -282,7 +282,6 @@ var wx_home = (function ($, Vue, w, undefined) {
         $cardn = $("#card-1");
         $card0 = $("#card0");
         $card1 = $("#card1");
-        $cardDialog = $('#cardDialog');
         $workerDialog = $('#workerDialog');
         bindclick();
     };
