@@ -1,5 +1,6 @@
 (function ($, w, undefined) {
     'use strict';
+    var loading;
     var pageManager = {
         $container: $('#container'),
         _pageStack: [],
@@ -261,18 +262,8 @@
         w.home = function () {
             location.hash = '';
         };
-        var $toast = $('#toast');
-        var $old_msg = $('#old_msg');
         w.msgto = function (data) {
-            $old_msg.html(data);
-            var tdis = $toast.css('display');
-            if ('none' !== tdis)
-                return;
-
-            $toast.fadeIn(100);
-            setTimeout(function () {
-                $toast.fadeOut(100);
-            }, 3000);
+            weui.alert(data, {title: '错误'});
         };
         w.msgok = function (data) {
             if (undefined === data) {
@@ -284,12 +275,10 @@
         };
         var $loadingToast = $('#loadingToast');
         w.waitloading = function () {
-            if ($loadingToast.css('display') !== 'none') return;
-
-            $loadingToast.fadeIn(100);
+            loading = weui.loading('数据加载中');
         };
         w.cancelloading = function () {
-            $loadingToast.fadeOut(100);
+            loading.hide();
         };
         jsapi();
     };
