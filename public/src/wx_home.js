@@ -240,6 +240,29 @@ var wx_home = (function ($, Vue, w, undefined) {
         $valid_button.click(load_valid);
         load_valid();
     };
+    var valid_fee = function () {
+        $('#order').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/wx/order",
+                dataType: "json",
+                data: {},
+                success: function (msg) {
+                    msg.success = function (res) {
+                        // 支付成功后的回调函数
+                    };
+                    msg.fail = function (msg) {
+                        w.msgto(msg);
+                    };
+                    wx.chooseWXPay(msg);
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                }
+            });
+        });
+    };
     var init = function () {
         $cardn = $("#card-1");
         $card0 = $("#card0");
@@ -252,6 +275,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         init: init,
         activity: activity,
         valid: valid,
-        bonus: bonus
+        bonus: bonus,
+        valid_fee: valid_fee
     };
 })(Zepto, Vue, window);
