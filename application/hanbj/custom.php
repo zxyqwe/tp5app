@@ -392,18 +392,41 @@ class OrderOper
      *
      * @param \app\WxPayUnifiedOrder $input
      * @param int $year
-     * @return \app\WxPayUnifiedOrder
+     * @return bool|\app\WxPayUnifiedOrder
      */
     public static function fee($input, $year)
     {
         $fee = OrderOper::FEE_YEAR[$year]['fee'] * 100;
+        $label = OrderOper::FEE_YEAR[$year]['label'];
         $openid = session('openid');
         $input->SetBody("会员缴费");
-        $input->SetDetail('会员缴费' . $year . '年');
-        $input->SetOut_trade_no(session('card') . date("YmdHis"));
+        $input->SetDetail('会员缴费：' . $label);
         $input->SetTotal_fee('' . $fee);
         $input->SetTrade_type("JSAPI");
         $input->SetOpenid($openid);
+        $map['openid'] = $openid;
+        $map['fee'] = $fee;
+        $map['type'] = 1;
+        $map['value'] = $year;
+        $res = Db::table('order')
+            ->where($map)
+            ->field([
+                'outid'
+            ])
+            ->find();
+        if (null === $res) {
+            $outid = session('card') . date("YmdHis");
+            $map['label'] = $label;
+            $map['outid'] = $outid;
+            $res = Db::table('order')
+                ->insert($map);
+            if (1 != $res) {
+                return false;
+            }
+            $input->SetOut_trade_no($outid);
+        } else {
+            $input->SetOut_trade_no($res['outid']);
+        }
         return $input;
     }
 }

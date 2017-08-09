@@ -318,7 +318,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                         w.msgok();
                     };
                     msg.fail = function (msg) {
-                        w.msgto(msg);
+                        w.msgto(msg.errMsg);
                     };
                     wx.chooseWXPay(msg);
                 },
