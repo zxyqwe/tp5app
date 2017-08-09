@@ -1833,7 +1833,7 @@ class HanbjNotify extends WxPayNotify
     {
         $value = intval($value) + 1;
         $ins = [];
-        $oper = 'Weixin_' . substr($trans, 0, 7);
+        $oper = 'Weixin_' . substr($trans, strlen($trans) - 6);
         while (count($ins) < $value) {
             $ins[] = [
                 'unique_name' => $uname,
