@@ -241,6 +241,19 @@ var wx_home = (function ($, Vue, w, undefined) {
         load_valid();
     };
     var valid_fee = function () {
+        $('#pick_fee').click(function () {
+            weui.picker([
+                {
+                    label: '飞机票',
+                    value: 0
+                }
+            ], {
+                defaultValue: [0],
+                onConfirm: function (result) {
+                    console.log(result)
+                }
+            });
+        });
         $('#order').click(function () {
             $.ajax({
                 type: "POST",
