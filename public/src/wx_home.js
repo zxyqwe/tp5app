@@ -269,6 +269,8 @@ var wx_home = (function ($, Vue, w, undefined) {
     };
     var valid_fee = function () {
         var ft = $('#pick_fee .weui-cell__ft');
+        var fm = $('#fee_money');
+        var sel_value;
         w.waitloading();
         $.ajax({
             type: "GET",
@@ -280,9 +282,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                     weui.picker(msg, {
                         defaultValue: [0],
                         onConfirm: function (result) {
-                            console.log(result);
-                            ft.html(123);
-                            $('#fee_money').html(123);
+                            ft.html(result.label);
+                            fm.html(result.fee);
+                            sel_value = result.value;
                         }
                     });
                 });
@@ -296,8 +298,8 @@ var wx_home = (function ($, Vue, w, undefined) {
             }
         });
         $('#order').click(function () {
-            var year = ft.html();
-            if (year < 1) {
+            var year = fm.html();
+            if (year < 15) {
                 return;
             }
             w.waitloading();
@@ -307,7 +309,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 dataType: "json",
                 data: {
                     type: 1,
-                    opt: year
+                    opt: sel_value
                 },
                 success: function (msg) {
                     msg.success = function (res) {
