@@ -43,15 +43,15 @@
                 g = svg.append("g").attr("transform", "translate(" + dragx + "," + dragy + ")");
 
             var drag = d3.drag()
+                .subject(function () {
+                    return {x: dragx, y: dragy};
+                })
                 .on("drag", function () {
                     dragx = d3.event.x;
                     dragy = d3.event.y;
                     d3.select("svg g").attr("transform", "translate(" + dragx + "," + dragy + ")");
-                })
-                .origin(function () {
-                    return {x: dragx, y: dragy};
                 });
-
+            svg.call(drag);
             var stratify = d3.stratify()
                 .parentId(function (d) {
                     return d.m;
@@ -60,7 +60,7 @@
                 });
 
             var tree = d3.tree()
-                .size([2 * Math.PI, 1000])
+                .size([2 * Math.PI, 1200])
                 .separation(function (a, b) {
                     return (a.parent === b.parent ? 1 : 2) / a.depth;
                 });
@@ -108,7 +108,7 @@
                     })
                     .attr("transform", function (d) {
                         return "translate(" + radialPoint(d.x, d.y) + ")";
-                    }).call(drag);
+                    });
 
                 node.append("circle")
                     .attr("r", 2.5);
