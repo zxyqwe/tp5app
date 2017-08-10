@@ -72,4 +72,12 @@ class Index
         }
         return view('create');
     }
+
+    public function tree()
+    {
+        if ('succ' !== session('login')) {
+            return redirect('/hanbj/index/bulletin');
+        }
+        return view('tree');
+    }
 }

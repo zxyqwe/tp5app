@@ -154,6 +154,23 @@ class Data
         return json($data);
     }
 
+    public function json_tree()
+    {
+        if ('succ' !== session('login')) {
+            return json(['msg' => '未登录'], 400);
+        }
+        $tmp = Db::table('member')
+            ->alias('f')
+            ->cache(600)
+            ->field([
+                'f.tieba_id as t',
+                'f.unique_name as u',
+                'f.master as m'
+            ])
+            ->select();
+        return json($tmp);
+    }
+
     public function json_all()
     {
         if ('succ' !== session('login')) {
