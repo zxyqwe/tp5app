@@ -34,18 +34,23 @@
     var tree = (function ($, w, undefined) {
         'use strict';
         var init = function () {
-            function dragmove(d) {
-                var x = d3.event.x;
-                var y = d3.event.y;
-                console.log(d);
-                console.log(x + ',' + y);
-                d3.select("svg g").attr("transform", "translate(" + x + "," + y + ")");
-            }
 
             var svg = d3.select("svg"),
                 width = +$('#container').width(),
                 height = +svg.attr("height"),
-                g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+                dragx = (width / 2 + 40),
+                dragy = (height / 2 + 90),
+                g = svg.append("g").attr("transform", "translate(" + dragx + "," + dragy + ")");
+
+            var drag = d3.drag()
+                .on("drag", function () {
+                    dragx = d3.event.x;
+                    dragy = d3.event.y;
+                    d3.select("svg g").attr("transform", "translate(" + dragx + "," + dragy + ")");
+                })
+                .origin(function () {
+                    return {x: dragx, y: dragy};
+                });
 
             var stratify = d3.stratify()
                 .parentId(function (d) {
@@ -103,7 +108,7 @@
                     })
                     .attr("transform", function (d) {
                         return "translate(" + radialPoint(d.x, d.y) + ")";
-                    }).call(d3.drag().on("drag", dragmove));
+                    }).call(drag);
 
                 node.append("circle")
                     .attr("r", 2.5);
