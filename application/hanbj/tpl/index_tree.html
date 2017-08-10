@@ -34,6 +34,13 @@
     var tree = (function ($, w, undefined) {
         'use strict';
         var init = function () {
+            function dragmove(d) {
+                var x = d3.event.x;
+                var y = d3.event.y;
+                console.log(d);
+                console.log(x + ',' + y);
+                d3.select("svg g").attr("transform", "translate(" + x + "," + y + ")");
+            }
 
             var svg = d3.select("svg"),
                 width = +$('#container').width(),
@@ -96,7 +103,7 @@
                     })
                     .attr("transform", function (d) {
                         return "translate(" + radialPoint(d.x, d.y) + ")";
-                    });
+                    }).call(d3.drag().on("drag", dragmove));
 
                 node.append("circle")
                     .attr("r", 2.5);
