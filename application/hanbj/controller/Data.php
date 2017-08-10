@@ -166,8 +166,9 @@ class Data
         $search = input('get.search');
         if (!empty($search)) {
             $map['tieba_id'] = ['like', '%' . $search . '%'];
+        } else {
+            $map = array();
         }
-        $map['f.code'] = 0;
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
@@ -186,7 +187,8 @@ class Data
                 'f.pref as e',
                 'f.web_name as w',
                 'f.year_time as y',
-                'f.bonus as b'
+                'f.bonus as b',
+                'f.code'
             ])
             ->select();
         $data['rows'] = $tmp;

@@ -58,6 +58,9 @@ var all = (function ($, w, undefined) {
         str = str.replace('act', 'act' + row.id);
         return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
     };
+    w.codeFormatter = function (value, row) {
+        return value === '0' ? '正常' : '注销';
+    };
     var init = function () {
         var $table = $('#table');
         $table.bootstrapTable({
