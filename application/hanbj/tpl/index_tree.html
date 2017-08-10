@@ -71,11 +71,9 @@
                             }
                         }
                     }
-                    console.log(real);
-                    console.log(data.length);
                 }
                 console.log(real);
-                var root = tree(stratify(data));
+                var root = tree(stratify(real));
 
                 var link = g.selectAll(".link")
                     .data(root.links())
@@ -127,7 +125,7 @@
         };
     })(jQuery, window);
     $(window).load(function () {
-        //tree.init();
+        tree.init();
     });
 </script>
 <script type="text/javascript" src="//zxyqwe.oss-cn-beijing.aliyuncs.com/js/d3.v4.min.js"></script>
