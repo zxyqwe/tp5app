@@ -120,6 +120,11 @@ class WxHanbj
                     trace(json_encode($msg));
                 }
                 return '';
+            case 'update_member_card':
+                $UserCardCode = (string)$msg->UserCardCode;
+                $ModifyBonus = (string)$msg->ModifyBonus;
+                trace($UserCardCode . ' --> ' . $ModifyBonus);
+                return '';
             default:
                 trace(json_encode($msg));
             case 'subscribe':
@@ -389,9 +394,9 @@ class BonusOper
 class OrderOper
 {
     const FEE_YEAR = [
-        ['label' => '一年', 'value' => 0, 'fee' => 15],
-        ['label' => '二年', 'value' => 1, 'fee' => 30],
-        ['label' => '三年', 'value' => 2, 'fee' => 45]
+        ['label' => '续费一年-原价', 'value' => 0, 'fee' => 30],
+        ['label' => '续费二年-83折', 'value' => 1, 'fee' => 50],
+        ['label' => '续费三年-66折', 'value' => 2, 'fee' => 60]
     ];
 
     /**
