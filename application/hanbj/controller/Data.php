@@ -54,7 +54,7 @@ class Data
             ->field([
                 'm.unique_name as u',
                 'm.year_time as t',
-                'sum(f.bonus) as b'
+                'sum(f.code) as b'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -297,7 +297,7 @@ class Data
                 'oper' => $oper,
                 'code' => $type,
                 'fee_time' => $d,
-                'bonus' => BonusOper::FEE
+                'bonus' => $type * BonusOper::FEE
             ];
             FeeOper::uncache($tmp['u']);
         }
