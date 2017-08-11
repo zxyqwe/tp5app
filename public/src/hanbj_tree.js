@@ -34,7 +34,7 @@ var tree = (function ($, w, undefined) {
 
         d3.json("/hanbj/data/json_tree", function (error, data) {
             if (error) throw error;
-            var real = [{m: '', t: '汉.梦里水乡', u: '汉.梦里水乡'}];
+            var real = [{m: '', t: '始祖', u: '汉.梦里水乡'}];
             var real_par = ['汉.梦里水乡'];
             while (data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
@@ -92,7 +92,7 @@ var tree = (function ($, w, undefined) {
                     return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ")";
                 })
                 .text(function (d) {
-                    return d.data.t;
+                    return d.data.u + ':' + d.data.t;
                 });
         });
 
