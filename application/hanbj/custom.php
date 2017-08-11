@@ -263,21 +263,20 @@ class BonusOper
         return intval($act) + intval($res);
     }
 
-    public static function upFee()
+    private static function up($table, $label)
     {
         $map['up'] = 0;
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
         ];
-        $item = Db::table('nfee')
+        $item = Db::table($table)
             ->alias('f')
             ->order('f.id')
             ->where($map)
             ->join($join)
             ->field([
                 'f.id',
-                'f.code as c',
                 'm.unique_name',
                 'm.openid',
                 'm.bonus',
@@ -290,7 +289,7 @@ class BonusOper
             $map['id'] = $item['id'];
             Db::startTrans();
             try {
-                $nfee = Db::table('nfee')
+                $nfee = Db::table($table)
                     ->where($map)
                     ->update(['up' => 1]);
                 if ($nfee !== 1) {
@@ -300,7 +299,7 @@ class BonusOper
                     ->where(['unique_name' => $item['unique_name']])
                     ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
                 if ($nfee !== 1) {
-                    throw new \Exception('更新积分失败' . json_encode($item));
+                    throw new \Exception($label . '失败' . json_encode($item));
                 }
                 Db::commit();
                 if ($item['code'] !== null) {
@@ -309,7 +308,7 @@ class BonusOper
                         $item['code'],
                         $bonus,
                         intval($item['bonus']) + $bonus,
-                        '会费记录变更');
+                        $label);
                     if ($cardup !== true) {
                         return $cardup;
                     }
@@ -322,62 +321,14 @@ class BonusOper
         return json(['msg' => 'ok', 'c' => count($item)]);
     }
 
+    public static function upFee()
+    {
+        return BonusOper::up('nfee', '会费积分更新');
+    }
+
     public static function upAct()
     {
-        $map['up'] = 0;
-        $join = [
-            ['member m', 'm.unique_name=f.unique_name', 'left'],
-            ['card c', 'c.openid=m.openid', 'left']
-        ];
-        $item = Db::table('activity')
-            ->alias('f')
-            ->order('f.id')
-            ->where($map)
-            ->join($join)
-            ->field([
-                'f.id',
-                'm.unique_name',
-                'm.openid',
-                'm.bonus',
-                'c.code',
-                'f.bonus as b'
-            ])
-            ->find();
-        if (null!=$item) {
-            $bonus = intval($item['b']);
-            $map['id'] = $item['id'];
-            Db::startTrans();
-            try {
-                $nfee = Db::table('activity')
-                    ->where($map)
-                    ->update(['up' => 1]);
-                if ($nfee !== 1) {
-                    throw new \Exception('更新事件失败' . json_encode($map));
-                }
-                $nfee = Db::table('member')
-                    ->where(['unique_name' => $item['unique_name']])
-                    ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
-                if ($nfee !== 1) {
-                    throw new \Exception('更新活动失败' . json_encode($item));
-                }
-                Db::commit();
-                if ($item['code'] !== null) {
-                    $cardup = CardOper::update(
-                        $item['unique_name'],
-                        $item['code'],
-                        $bonus,
-                        intval($item['bonus']) + $bonus,
-                        '活动记录变更');
-                    if ($cardup !== true) {
-                        return $cardup;
-                    }
-                }
-            } catch (\Exception $e) {
-                Db::rollback();
-                return json(['msg' => '' . $e], 400);
-            }
-        }
-        return json(['msg' => 'ok', 'c' => count($item)]);
+        return BonusOper::up('activity', '活动积分更新');
     }
 }
 
