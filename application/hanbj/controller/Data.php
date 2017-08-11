@@ -98,7 +98,8 @@ class Data
                 'oper as m',
                 'act_time as y',
                 'm.tieba_id as t',
-                'f.up'
+                'f.up',
+                'f.bonus'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -141,7 +142,8 @@ class Data
                 'fee_time as y',
                 'f.code as c',
                 'm.tieba_id as t',
-                'f.up'
+                'f.up',
+                'f.bonus'
             ])
             ->select();
         $data['rows'] = $tmp;
