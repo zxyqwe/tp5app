@@ -1802,7 +1802,8 @@ class HanbjNotify extends WxPayNotify
                     'f.type',
                     'f.value',
                     'f.label',
-                    'm.unique_name'
+                    'm.unique_name',
+                    'm.openid'
                 ])
                 ->find();
             if (null === $res) {
@@ -1820,6 +1821,11 @@ class HanbjNotify extends WxPayNotify
             if ('1' === $res['type']) {
                 $this->handleFee($res['value'], $res['unique_name'], $data['transaction_id'], $d);
                 Db::commit();
+                $this->notifyFee($res['openid'],
+                    $res['unique_name'],
+                    intval($data['total_fee']) / 100,
+                    FeeOper::cache_fee($res['unique_name']),
+                    $res['label']);
             }
         } catch (\Exception $e) {
             Db::rollback();
@@ -1847,6 +1853,45 @@ class HanbjNotify extends WxPayNotify
         FeeOper::uncache($uname);
         if ($up != $value) {
             throw new Exception('nfee ' . $value);
+        }
+    }
+
+    private function notifyFee($openid, $uname, $fee, $cache_fee, $label)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
+        $data = [
+            "touser" => $openid,
+            "template_id" => "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "您好，您已成功进行北京汉服协会（筹）会员缴费。"
+                ],
+                "accountType" => [
+                    "value" => '会员编号'
+                ],
+                'account' => [
+                    'value' => $uname,
+                    "color" => "#173177"
+                ],
+                'amount' => [
+                    'value' => $fee . '元'
+                ],
+                'result' => [
+                    'value' => '缴至' . $cache_fee,
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => '明细：' . $label
+                ]
+            ]
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
         }
     }
 }
