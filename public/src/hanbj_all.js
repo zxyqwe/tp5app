@@ -18,7 +18,7 @@ var all = (function ($, w, undefined) {
         var data = [];
         for (var i in fee) {
             var tmp = fee[i];
-            if (tmp.code === '0')
+            if (tmp.code === '1')
                 data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time]));
             else
                 data.push(listitem(nye + '撤销', [jsr + tmp.oper, sj + tmp.fee_time]));

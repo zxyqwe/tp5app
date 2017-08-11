@@ -2,7 +2,7 @@ var feelog = (function ($, w, undefined) {
     'use strict';
     var alr, nye, $table, $onlyup, pressedup = false, $wxup;
     w.codeFormatter = function (value, row) {
-        return value === '0' ? alr : nye;
+        return value === '1' ? alr : nye;
     };
     w.wxFormatter = function (value, row) {
         return value === '0' ? '未更新' : '';
