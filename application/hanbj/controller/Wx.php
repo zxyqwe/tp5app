@@ -68,11 +68,11 @@ class Wx
         if (!session('?openid')) {
             return json(['msg' => '未登录'], 400);
         }
-        if (session('?json_renew')) {
+        $uname = session('unique_name');
+        if (cache('?json_renew' . $uname)) {
             return json(['msg' => '每十分钟可以重新核算一次'], 400);
         }
-        session('json_renew', 1, 600);
-        $uname = session('unique_name');
+        cache('json_renew' . $uname, 1, 600);
         $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
         $res = Db::table('member')
