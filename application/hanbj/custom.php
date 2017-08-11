@@ -114,6 +114,12 @@ class WxHanbj
                 return CardOper::del_card($msg);
             case 'user_get_card':
                 return CardOper::get_card($msg);
+            case 'TEMPLATESENDJOBFINISH':
+                $Status = (string)$msg->Status;
+                if ('success' != $Status) {
+                    trace(json_encode($msg));
+                }
+                return '';
             default:
                 trace(json_encode($msg));
             case 'subscribe':
