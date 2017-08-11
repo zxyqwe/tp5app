@@ -159,13 +159,16 @@ class Data
         if ('succ' !== session('login')) {
             return json(['msg' => '未登录'], 400);
         }
+        $map['f.master'] = ['neq', ''];
         $tmp = Db::table('member')
             ->alias('f')
+            ->where($map)
             ->cache(600)
             ->field([
                 'f.tieba_id as t',
                 'f.unique_name as u',
-                'f.master as m'
+                'f.master as m',
+                'f.code as c'
             ])
             ->select();
         return json($tmp);

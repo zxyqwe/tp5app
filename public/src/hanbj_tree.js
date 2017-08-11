@@ -71,7 +71,7 @@ var tree = (function ($, w, undefined) {
                 .data(root.descendants())
                 .enter().append("g")
                 .attr("class", function (d) {
-                    return "node" + (d.children ? " node--internal" : " node--leaf");
+                    return "node" + (d.children ? " node--internal" : "") + (d.data.c > 0 ? " node-gone" : "");
                 })
                 .attr("transform", function (d) {
                     return "translate(" + radialPoint(d.x, d.y) + ")";
