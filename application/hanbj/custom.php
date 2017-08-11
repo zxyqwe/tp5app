@@ -408,6 +408,7 @@ class OrderOper
         $map['fee'] = $fee;
         $map['type'] = 1;
         $map['value'] = $year;
+        $map['trans'] = '';
         $res = Db::table('order')
             ->where($map)
             ->field([
