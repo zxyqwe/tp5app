@@ -17,14 +17,13 @@ class FeeOper
             ->alias('f')
             ->where($map)
             ->field([
-                'count(oper) as s',
                 'sum(f.code) as n'
             ])
             ->find();
         $year = Db::table('member')
             ->where($map)
             ->value('year_time');
-        $fee = intval($year) + intval($res['s']) - 2 * intval($res['n']) - 1;
+        $fee = intval($year) + intval($res['n']) - 1;
         cache($cache_name, $fee);
         return $fee;
     }
@@ -245,8 +244,10 @@ class CardOper
 
 class BonusOper
 {
-    const FEE = 15;
+    const FEE = 30;
     const ACT = 30;
+    const ACT_NAME = '2017七夕';
+    const WORKER = ['坎丙午'];
 
     public static function reCalc($uname)
     {
@@ -254,20 +255,12 @@ class BonusOper
         $map['unique_name'] = $uname;
         $act = Db::table('activity')
             ->where($map)
-            ->count('1');
-        $act = intval($act) * BonusOper::ACT;
+            ->sum('bonus');
         $res = Db::table('nfee')
             ->alias('f')
             ->where($map)
-            ->field([
-                'count(oper) as s',
-                'sum(f.code) as n'
-            ])
-            ->find();
-        $fee = intval($res['s']) - 2 * intval($res['n']);
-        $fee *= BonusOper::FEE;
-        $bonus = $fee + $act;
-        return $bonus;
+            ->sum('f.bonus');
+        return intval($act) + intval($res);
     }
 
     public static function upFee()
@@ -277,10 +270,9 @@ class BonusOper
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
         ];
-        $res = Db::table('nfee')
+        $item = Db::table('nfee')
             ->alias('f')
             ->order('f.id')
-            ->limit(1)
             ->where($map)
             ->join($join)
             ->field([
@@ -289,14 +281,12 @@ class BonusOper
                 'm.unique_name',
                 'm.openid',
                 'm.bonus',
-                'c.code'
+                'c.code',
+                'f.bonus as b'
             ])
-            ->select();
-        foreach ($res as $item) {
-            $bonus = BonusOper::FEE;
-            if ($item['c'] === '1') {
-                $bonus = -$bonus;
-            }
+            ->find();
+        if (null != $item) {
+            $bonus = intval($item['b']);
             $map['id'] = $item['id'];
             Db::startTrans();
             try {
@@ -329,7 +319,7 @@ class BonusOper
                 return json(['msg' => '' . $e], 400);
             }
         }
-        return json(['msg' => 'ok', 'c' => count($res)]);
+        return json(['msg' => 'ok', 'c' => count($item)]);
     }
 
     public static function upAct()
@@ -339,10 +329,9 @@ class BonusOper
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
         ];
-        $res = Db::table('activity')
+        $item = Db::table('activity')
             ->alias('f')
             ->order('f.id')
-            ->limit(1)
             ->where($map)
             ->join($join)
             ->field([
@@ -350,11 +339,12 @@ class BonusOper
                 'm.unique_name',
                 'm.openid',
                 'm.bonus',
-                'c.code'
+                'c.code',
+                'f.bonus as b'
             ])
-            ->select();
-        foreach ($res as $item) {
-            $bonus = BonusOper::ACT;
+            ->find();
+        if (null!=$item) {
+            $bonus = intval($item['b']);
             $map['id'] = $item['id'];
             Db::startTrans();
             try {
@@ -387,7 +377,7 @@ class BonusOper
                 return json(['msg' => '' . $e], 400);
             }
         }
-        return json(['msg' => 'ok', 'c' => count($res)]);
+        return json(['msg' => 'ok', 'c' => count($item)]);
     }
 }
 

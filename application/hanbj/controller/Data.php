@@ -52,10 +52,9 @@ class Data
             ->cache(600)
             ->group('m.unique_name')
             ->field([
-                'count(oper) as s',
                 'm.unique_name as u',
                 'm.year_time as t',
-                'sum(f.code) as n'
+                'sum(f.bonus) as b'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -297,7 +296,8 @@ class Data
                 'unique_name' => $tmp['u'],
                 'oper' => $oper,
                 'code' => $type,
-                'fee_time' => $d
+                'fee_time' => $d,
+                'bonus' => BonusOper::FEE
             ];
             FeeOper::uncache($tmp['u']);
         }

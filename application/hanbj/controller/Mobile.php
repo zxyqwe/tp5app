@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'wx.php';
 
+use app\hanbj\BonusOper;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Db;
@@ -70,7 +71,7 @@ class Mobile
         return view('home', [
             'user' => $res,
             'card' => $card['status'],
-            'worker' => in_array($res['unique_name'], config('hanbj_worker')) ? 1 : 0
+            'worker' => in_array($res['unique_name'], BonusOper::WORKER) ? 1 : 0
         ]);
     }
 

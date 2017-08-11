@@ -2,6 +2,7 @@
 
 namespace app;
 
+use app\hanbj\BonusOper;
 use Exception;
 use think\Db;
 use WxPayConfig;
@@ -1845,7 +1846,8 @@ class HanbjNotify extends WxPayNotify
                 'unique_name' => $uname,
                 'oper' => $oper,
                 'code' => 0,
-                'fee_time' => $d
+                'fee_time' => $d,
+                'bonus' => BonusOper::FEE
             ];
         }
         $up = Db::table('nfee')

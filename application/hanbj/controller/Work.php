@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 include_once APP_PATH . 'hanbj/custom.php';
+use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use think\Db;
 
@@ -10,7 +11,7 @@ class Work
 {
     public function json_card()
     {
-        if (!in_array(session('unique_name'), config('hanbj_worker'))) {
+        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
             return json(['msg' => '非工作人员'], 400);
         }
         $code = input('post.code');
@@ -34,13 +35,13 @@ class Work
             return json(['msg' => '查无此人'], 400);
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
-        $res['act'] = config('hanbj_activity');
+        $res['act'] = BonusOper::ACT_NAME;
         return json($res);
     }
 
     public function json_act()
     {
-        if (!in_array(session('unique_name'), config('hanbj_worker'))) {
+        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
             return json(['msg' => '非工作人员'], 400);
         }
         $code = input('post.code');
@@ -65,7 +66,8 @@ class Work
         $data['unique_name'] = $res['unique_name'];
         $data['oper'] = session('unique_name');
         $data['act_time'] = date("Y-m-d H:i:s");
-        $data['name'] = config('hanbj_activity');
+        $data['name'] = BonusOper::ACT_NAME;
+        $data['bonus'] = BonusOper::ACT;
         try {
             Db::table('activity')
                 ->data($data)
