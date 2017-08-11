@@ -257,9 +257,8 @@ class BonusOper
             ->where($map)
             ->sum('bonus');
         $res = Db::table('nfee')
-            ->alias('f')
             ->where($map)
-            ->sum('f.bonus');
+            ->sum('bonus');
         return intval($act) + intval($res);
     }
 
