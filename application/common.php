@@ -34,8 +34,8 @@ function Curl_Post($curlPost, $url, $easy = true)
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $easy ? http_build_query($curlPost) : json_encode($curlPost, JSON_UNESCAPED_UNICODE));
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
     if ($return_str === false) {
         $num = curl_errno($curl);
@@ -52,8 +52,8 @@ function Curl_Get($url)
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 3);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
     if ($return_str === false) {
         $num = curl_errno($curl);
