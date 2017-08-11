@@ -1,13 +1,26 @@
 var tree = (function ($, w, undefined) {
     'use strict';
+    var dragx, dragy, g, scale = 0.5;
+    var changeScale = function (step) {
+        scale += step;
+        updateG();
+    };
+    var updateG = function () {
+        g.attr("transform", "translate(" + dragx + "," + dragy + ")scale(" + scale + ")");
+    };
+    var radialPoint = function (x, y) {
+        return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
+    };
     var init = function () {
 
         var svg = d3.select("svg"),
             width = +$('#container').width(),
-            height = +svg.attr("height"),
-            dragx = (width / 2 + 40),
-            dragy = (height / 2 + 90),
-            g = svg.append("g").attr("transform", "translate(" + dragx + "," + dragy + ")");
+            height = +svg.attr("height");
+
+        dragx = (width / 2 + 40);
+        dragy = (height / 2 + 90);
+        g = svg.append("g");
+        updateG();
 
         var drag = d3.drag()
             .subject(function () {
@@ -16,7 +29,7 @@ var tree = (function ($, w, undefined) {
             .on("drag", function () {
                 dragx = d3.event.x;
                 dragy = d3.event.y;
-                d3.select("svg g").attr("transform", "translate(" + dragx + "," + dragy + ")");
+                updateG();
             });
         svg.call(drag);
         var stratify = d3.stratify()
@@ -96,11 +109,9 @@ var tree = (function ($, w, undefined) {
                 });
         });
 
-        function radialPoint(x, y) {
-            return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
-        }
     };
     return {
-        init: init
+        init: init,
+        change: changeScale
     };
 })(jQuery, window);
