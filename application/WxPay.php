@@ -1845,7 +1845,7 @@ class HanbjNotify extends WxPayNotify
             $ins[] = [
                 'unique_name' => $uname,
                 'oper' => $oper,
-                'code' => 0,
+                'code' => 1,
                 'fee_time' => $d,
                 'bonus' => BonusOper::FEE
             ];

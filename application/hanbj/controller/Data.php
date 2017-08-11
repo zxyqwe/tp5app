@@ -287,7 +287,7 @@ class Data
             return json(['msg' => 'empty name'], 400);
         }
         $type = input('post.type', 0, FILTER_VALIDATE_INT);
-        $type = $type == 0 ? 0 : 1;
+        $type = $type == 0 ? 1 : -1;
         $data = [];
         $oper = session('name');
         $d = date("Y-m-d H:i:s");
