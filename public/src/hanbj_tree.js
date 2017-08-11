@@ -1,8 +1,8 @@
 var tree = (function ($, w, undefined) {
     'use strict';
-    var dragx, dragy, g, scale = 0.5;
+    var dragx, dragy, g, scale = 1;
     var changeScale = function (step) {
-        scale += step;
+        scale *= 1 + step;
         updateG();
     };
     var updateG = function () {
