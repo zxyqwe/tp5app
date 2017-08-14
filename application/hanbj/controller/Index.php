@@ -98,7 +98,7 @@ class Index
         $map['会费积分'] = BonusOper::FEE;
         $map['活动积分'] = BonusOper::ACT;
         $map['活动名称'] = BonusOper::ACT_NAME;
-        $map['工作人员'] = BonusOper::WORKER;
+        $map['工作人员'] = json_encode(BonusOper::WORKER);
         return view('token', ['data' => $map]);
     }
 }
