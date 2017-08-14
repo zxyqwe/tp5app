@@ -95,10 +95,10 @@ class Index
         $map['Access Key'] = substr($access, 0, $length);
         $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
         $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
-        $map['会费积分'] = BonusOper::FEE;
-        $map['活动积分'] = BonusOper::ACT;
-        $map['活动名称'] = BonusOper::ACT_NAME;
-        $map['工作人员'] = json_encode(BonusOper::WORKER);
+        $map['会费增加积分'] = BonusOper::FEE;
+        $map['活动增加积分'] = BonusOper::ACT;
+        $map['活动预置名称'] = BonusOper::ACT_NAME;
+        $map['当前工作人员'] = implode('，', BonusOper::WORKER);
         return view('token', ['data' => $map]);
     }
 }
