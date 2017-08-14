@@ -4,16 +4,14 @@
         <h1>系统内部各大Token Key</h1>
 
         <div id="body">
-            <code>
-                <div class="list-group">
-                    {foreach name="data" item="vo" }
-                    <div class="list-group-item">
-                        <h4 class="list-group-item-heading">{$key}</h4>
-                        <p class="list-group-item-text">{$vo}</p>
-                    </div>
-                    {/foreach}
+            <div class="list-group">
+                {foreach name="data" item="vo" }
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">{$key}</h4>
+                    <p class="list-group-item-text">{$vo}</p>
                 </div>
-            </code>
+                {/foreach}
+            </div>
         </div>
     </div>
 </div>

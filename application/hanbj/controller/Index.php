@@ -89,10 +89,11 @@ class Index
         if ('succ' !== session('login')) {
             return redirect('/hanbj/index/bulletin');
         }
+        $length = 10;
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $map['Access'] = substr($access, 0, 5);
-        $map['Js'] = substr(WxHanbj::jsapi($access), 0, 5);
-        $map['Ticket'] = substr(WxHanbj::ticketapi($access), 0, 5);
+        $map['Access Key'] = substr($access, 0, $length);
+        $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
+        $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
         return view('token', ['data' => $map]);
     }
 }
