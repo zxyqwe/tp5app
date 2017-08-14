@@ -1,6 +1,7 @@
-var nav = (function ($, w, undefined) {
+var nav_active = (function ($, w, undefined) {
     'use strict';
     var init = function () {
+        var nav = w.nav;
         if (nav === undefined)
             return;
         while (nav.length > 0) {
