@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 
 include_once APP_PATH . 'hanbj/custom.php';
+use app\hanbj\BonusOper;
 use app\hanbj\WxHanbj;
 
 class Index
@@ -94,6 +95,10 @@ class Index
         $map['Access Key'] = substr($access, 0, $length);
         $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
         $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
+        $map['会费积分'] = BonusOper::FEE;
+        $map['活动积分'] = BonusOper::ACT;
+        $map['活动名称'] = BonusOper::ACT_NAME;
+        $map['工作人员'] = BonusOper::WORKER;
         return view('token', ['data' => $map]);
     }
 }
