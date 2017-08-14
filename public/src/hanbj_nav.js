@@ -6,7 +6,7 @@ var nav_active = (function ($, w, undefined) {
             return;
         while (nav.length > 0) {
             $('#' + nav).addClass('active');
-            nav = nav.substring(0, nav.lastIndexOf('.'));
+            nav = nav.substring(0, nav.lastIndexOf('_'));
         }
     };
     return {
