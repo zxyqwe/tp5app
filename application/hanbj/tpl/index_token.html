@@ -4,7 +4,13 @@
         <h1>系统内部各大Token Key</h1>
 
         <div id="body">
-            <code>{$name}</code>
+            <code>
+                <ul>
+                    {foreach name="data" item="vo" }
+                    <li>{$key}|{$vo}</li>
+                    {/foreach}
+                </ul>
+            </code>
         </div>
     </div>
 </div>
