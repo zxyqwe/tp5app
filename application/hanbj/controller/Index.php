@@ -3,6 +3,8 @@
 namespace app\hanbj\controller;
 
 
+use app\hanbj\WxHanbj;
+
 class Index
 {
     public function index()
@@ -79,5 +81,17 @@ class Index
             return redirect('/hanbj/index/bulletin');
         }
         return view('tree');
+    }
+
+    public function token()
+    {
+        if ('succ' !== session('login')) {
+            return redirect('/hanbj/index/bulletin');
+        }
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $map['Access'] = substr($access, 0, 5);
+        $map['Js'] = substr(WxHanbj::jsapi($access), 0, 5);
+        $map['Ticket'] = substr(WxHanbj::ticketapi($access), 0, 5);
+        return view('token', ['data' => $map]);
     }
 }

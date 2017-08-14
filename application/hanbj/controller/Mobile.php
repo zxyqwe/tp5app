@@ -83,19 +83,14 @@ class Mobile
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
-        $ss = 'jsapi_ticket=' . WxHanbj::jsapi() .
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $ss = 'jsapi_ticket=' . WxHanbj::jsapi($access) .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']
             . '&url=' . urldecode($_GET['url']);
         $ss = sha1($ss);
         $wx['signature'] = $ss;
         return json($wx);
-    }
-
-    public function access()
-    {
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        return substr($access, 0, 5);
     }
 
     public function json_old()
@@ -166,9 +161,10 @@ class Mobile
         $wx['card_id'] = config('hanbj_cardid');
         $wx['timestamp'] = '' . time();
         $wx['nonce_str'] = getNonceStr();
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $ss = [$wx['nonce_str'],
             $wx['timestamp'],
-            WxHanbj::ticketapi(),
+            WxHanbj::ticketapi($access),
             $wx['card_id']];
         sort($ss);
         $ss = implode('', $ss);

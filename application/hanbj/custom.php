@@ -37,12 +37,11 @@ class FeeOper
 class WxHanbj
 {
 
-    public static function jsapi()
+    public static function jsapi($access)
     {
         if (cache('?jsapi')) {
             return cache('jsapi');
         }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
         $res = json_decode($res, true);
         if ($res['errcode'] !== 0) {
@@ -53,12 +52,11 @@ class WxHanbj
         return $res['ticket'];
     }
 
-    public static function ticketapi()
+    public static function ticketapi($access)
     {
         if (cache('?ticketapi')) {
             return cache('ticketapi');
         }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
         $res = json_decode($res, true);
         if ($res['errcode'] !== 0) {
