@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 
+include_once APP_PATH . 'hanbj/custom.php';
 use app\hanbj\WxHanbj;
 
 class Index
