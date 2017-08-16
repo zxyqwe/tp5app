@@ -2,7 +2,6 @@
 
 namespace app\hanbj\controller;
 
-include_once APP_PATH . 'hanbj/custom.php';
 include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use app\hanbj\BonusOper;

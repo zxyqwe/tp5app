@@ -2,7 +2,6 @@
 
 namespace app\hanbj\controller;
 
-include_once APP_PATH . 'hanbj/custom.php';
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use think\Db;
