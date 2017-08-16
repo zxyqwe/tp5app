@@ -6,7 +6,7 @@ use Endroid\QrCode\QrCode;
 
 class Index
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }
@@ -22,9 +22,8 @@ class Index
             ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
             ->setLabelFontSize(25)
             ->setLabel("中文asd");
-        response($qrCode->get(QrCode::IMAGE_TYPE_PNG))
-            ->cacheControl("no-store, no-cache, must-revalidate, post-check=0, pre-check=0")
-            ->contentType("image/png")
-            ->send();
+        return response($qrCode->get(QrCode::IMAGE_TYPE_PNG), 200,
+            ['Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0"],
+            "image/png");
     }
 }

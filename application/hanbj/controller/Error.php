@@ -4,7 +4,7 @@ namespace app\hanbj\controller;
 
 class Error
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }

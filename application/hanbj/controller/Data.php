@@ -9,7 +9,7 @@ use think\Db;
 
 class Data
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }

@@ -8,7 +8,7 @@ use app\hanbj\WxHanbj;
 
 class Index
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }

@@ -16,7 +16,7 @@ use app\WxPayApi;
 
 class Wx
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }

@@ -15,7 +15,7 @@ use app\hanbj\CardOper;
 
 class Mobile
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }

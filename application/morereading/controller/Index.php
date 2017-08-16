@@ -4,7 +4,7 @@ namespace app\morereading\controller;
 
 class Index
 {
-    public function _empty($name)
+    public function _empty()
     {
         return '';
     }
