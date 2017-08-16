@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
+use app\hanbj\WxTemp;
 use think\Db;
 
 class Work
@@ -61,7 +62,8 @@ class Work
             ->where($map)
             ->join($join)
             ->field([
-                'm.unique_name'
+                'm.unique_name',
+                'm.openid'
             ])
             ->find();
         if (null === $res) {
@@ -76,6 +78,7 @@ class Work
             Db::table('activity')
                 ->data($data)
                 ->insert();
+            WxTemp::regAct($res['openid'], $res['unique_name'], BonusOper::ACT_NAME);
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
             $e = '' . $e;

@@ -417,7 +417,39 @@ class WxTemp
                     "color" => "#173177"
                 ],
                 'remark' => [
-                    'value' => '明细：' . $label
+                    'value' => '明细：' . $label . '。积分将在核实后到账，请稍后。'
+                ]
+            ]
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
+        }
+    }
+
+    public static function regAct($openid, $uname, $act)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
+        $data = [
+            "touser" => $openid,
+            "template_id" => "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "您好，您已成功进行北京汉服协会（筹）活动登记。"
+                ],
+                "keyword1" => [
+                    "value" => $act
+                ],
+                'keyword2' => [
+                    'value' => $uname . '-成功',
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => '积分将在核实后到账，请稍后。'
                 ]
             ]
         ];
