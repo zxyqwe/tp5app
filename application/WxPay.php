@@ -2,11 +2,8 @@
 
 namespace app;
 
-use app\hanbj\BonusOper;
 use Exception;
-use think\Db;
 use WxPayConfig;
-use app\hanbj\FeeOper;
 
 
 /**
