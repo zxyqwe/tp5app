@@ -44,7 +44,7 @@ class Mobile
             ])
             ->find();
         if (null === $res) {
-            return view('reg');
+            return redirect('https://app.zxyqwe.com/hanbj/mobile/reg');
         }
         session('unique_name', $res['unique_name']);
         switch ($res['code']) {
@@ -73,6 +73,11 @@ class Mobile
             'card' => $card['status'],
             'worker' => in_array($res['unique_name'], BonusOper::WORKER) ? 1 : 0
         ]);
+    }
+
+    public function reg()
+    {
+        return view('reg');
     }
 
     public function json_wx()
