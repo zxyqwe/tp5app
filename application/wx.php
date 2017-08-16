@@ -2,8 +2,8 @@
 
 namespace app;
 
-use \DOMDocument;
-use \Exception;
+use DOMDocument;
+use Exception;
 
 /**
  * XMLParse class
@@ -40,15 +40,16 @@ class XMLParse
      * @param string $signature 安全签名
      * @param string $timestamp 时间戳
      * @param string $nonce 随机字符串
+     * @return string
      */
     public function generate($encrypt, $signature, $timestamp, $nonce)
     {
-        $format = "<xml>
-<Encrypt><![CDATA[%s]]></Encrypt>
-<MsgSignature><![CDATA[%s]]></MsgSignature>
-<TimeStamp>%s</TimeStamp>
-<Nonce><![CDATA[%s]]></Nonce>
-</xml>";
+        $format = '<xml>' .
+            '<Encrypt><![CDATA[%s]]></Encrypt>' .
+            '<MsgSignature><![CDATA[%s]]></MsgSignature>' .
+            '<TimeStamp>%s</TimeStamp>' .
+            '<Nonce><![CDATA[%s]]></Nonce>' .
+            '</xml>';
         return sprintf($format, $encrypt, $signature, $timestamp, $nonce);
     }
 
@@ -164,7 +165,7 @@ class WXBizMsgCrypt
         }
 
         $encrypt = $array[1];
-        $touser_name = $array[2];
+        //$touser_name = $array[2];
 
         //验证安全签名
         $sha1 = new SHA1;
@@ -204,7 +205,8 @@ class SHA1
      * @param string $token 票据
      * @param string $timestamp 时间戳
      * @param string $nonce 随机字符串
-     * @param string $encrypt 密文消息
+     * @param string $encrypt_msg 密文消息
+     * @return array
      */
     public function getSHA1($token, $timestamp, $nonce, $encrypt_msg)
     {
@@ -233,8 +235,8 @@ class PKCS7Encoder
 
     /**
      * 对需要加密的明文进行填充补位
-     * @param $text 需要进行填充补位操作的明文
-     * @return 补齐明文字符串
+     * @param string $text 需要进行填充补位操作的明文
+     * @return string 补齐明文字符串
      */
     function encode($text)
     {
@@ -243,7 +245,7 @@ class PKCS7Encoder
         //计算需要填充的位数
         $amount_to_pad = PKCS7Encoder::$block_size - ($text_length % PKCS7Encoder::$block_size);
         if ($amount_to_pad == 0) {
-            $amount_to_pad = PKCS7Encoder::block_size;
+            $amount_to_pad = $block_size;
         }
         //获得补位所用的字符
         $pad_chr = chr($amount_to_pad);
@@ -288,6 +290,7 @@ class Prpcrypt
     /**
      * 对明文进行加密
      * @param string $text 需要加密的明文
+     * @param string $appid
      * @return string 加密后的密文
      */
     public function encrypt($text, $appid)
@@ -298,7 +301,7 @@ class Prpcrypt
             $random = $this->getRandomStr();
             $text = $random . pack("N", strlen($text)) . $text . $appid;
             // 网络字节序
-            $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+            //$size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
             $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
             $iv = substr($this->key, 0, 16);
             //使用自定义的填充方式对明文进行补位填充
@@ -322,6 +325,7 @@ class Prpcrypt
     /**
      * 对密文进行解密
      * @param string $encrypted 需要解密的密文
+     * @param string $appid
      * @return string 解密得到的明文
      */
     public function decrypt($encrypted, $appid)
