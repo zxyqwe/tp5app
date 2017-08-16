@@ -8,7 +8,7 @@ var wx_Old = (function ($, w, undefined) {
         $("#oldok").click(function () {
             var weagree = $weuiAgree.prop('checked');
             if (!weagree) {
-                w.msgto('《相关条款》');
+                w.msgto('请阅读并同意《相关条款》');
                 return;
             }
             var old_eid = eid.val();
