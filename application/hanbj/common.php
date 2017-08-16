@@ -3,6 +3,11 @@
 namespace app\hanbj;
 
 use think\Db;
+use app\WxPayOrderQuery;
+use app\WxPayApi;
+use app\WxPayDataBase;
+use app\WxPayNotify;
+use Exception;
 
 class FeeOper
 {
@@ -378,5 +383,158 @@ class OrderOper
             $input->SetOut_trade_no($res['outid']);
         }
         return $input;
+    }
+}
+
+class WxTemp
+{
+    public static function notifyFee($openid, $uname, $fee, $cache_fee, $label)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
+        $data = [
+            "touser" => $openid,
+            "template_id" => "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "您好，您已成功进行北京汉服协会（筹）会员缴费。"
+                ],
+                "accountType" => [
+                    "value" => '会员编号'
+                ],
+                'account' => [
+                    'value' => $uname,
+                    "color" => "#173177"
+                ],
+                'amount' => [
+                    'value' => $fee . '元'
+                ],
+                'result' => [
+                    'value' => '缴至' . $cache_fee,
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => '明细：' . $label
+                ]
+            ]
+        ];
+        $res = Curl_Post($data, $url, false);
+        $res = json_decode($res, true);
+        if ($res['errcode'] !== 0) {
+            trace(json_encode($res));
+        }
+    }
+}
+
+class HanbjNotify extends WxPayNotify
+{
+    public function Queryorder($out_trade_no)
+    {
+        $input = new WxPayOrderQuery();
+        $input->SetOut_trade_no($out_trade_no);
+        $result = WxPayApi::orderQuery($input);
+        if (array_key_exists("return_code", $result)
+            && array_key_exists("result_code", $result)
+            && $result["return_code"] == "SUCCESS"
+            && $result["result_code"] == "SUCCESS"
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function NotifyProcess($data, &$msg)
+    {
+        $msg = 'OK';
+        if (!array_key_exists("out_trade_no", $data)) {
+            return false;
+        }
+        //查询订单，判断订单真实性
+        if (!$this->Queryorder($data["out_trade_no"])) {
+            return false;
+        }
+        $d = date("Y-m-d H:i:s");
+        $outid = $data["out_trade_no"];
+        $map['outid'] = $outid;
+        $map['fee'] = $data['total_fee'];
+        $ins['trans'] = $data['transaction_id'];
+        $ins['time'] = $d;
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        Db::startTrans();
+        try {
+            $res = Db::table('order')
+                ->alias('f')
+                ->where($map)
+                ->join($join)
+                ->field([
+                    'f.type',
+                    'f.value',
+                    'f.label',
+                    'm.unique_name',
+                    'm.openid'
+                ])
+                ->find();
+            if (null === $res) {
+                throw new Exception(json_encode($map));
+            }
+            $map['trans'] = '';
+            $up = Db::table('order')
+                ->where($map)
+                ->data($ins)
+                ->update();
+            if ($up === 0) {
+                Db::rollback();
+                return true;
+            }
+            if ('1' === $res['type']) {
+                $this->handleFee($res['value'], $res['unique_name'], $data['transaction_id'], $d);
+                Db::commit();
+                WxTemp::notifyFee($res['openid'],
+                    $res['unique_name'],
+                    intval($data['total_fee']) / 100,
+                    FeeOper::cache_fee($res['unique_name']),
+                    $res['label']);
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            trace('' . $e);
+            return false;
+        }
+        return true;
+    }
+
+    private function handleFee($value, $uname, $trans, $d)
+    {
+        $value = intval($value) + 1;
+        $ins = [];
+        $oper = 'Weixin_' . substr($trans, strlen($trans) - 6);
+        while (count($ins) < $value) {
+            $ins[] = [
+                'unique_name' => $uname,
+                'oper' => $oper,
+                'code' => 1,
+                'fee_time' => $d,
+                'bonus' => BonusOper::FEE
+            ];
+        }
+        $up = Db::table('nfee')
+            ->insertAll($ins);
+        FeeOper::uncache($uname);
+        if ($up != $value) {
+            throw new Exception('nfee ' . $value);
+        }
+    }
+}
+
+class HanbjRes extends WxPayDataBase
+{
+    public function setValues($value)
+    {
+        $this->values = $value;
+        return $this->MakeSign();
     }
 }
