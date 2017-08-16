@@ -1,8 +1,8 @@
 <?php
 
-namespace app\morereading\controller;
+namespace app\hanbj\controller;
 
-class Index
+class Error
 {
     public function _empty($name)
     {

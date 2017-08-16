@@ -16,6 +16,11 @@ use app\hanbj\CardOper;
 
 class Mobile
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function index()
     {
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {

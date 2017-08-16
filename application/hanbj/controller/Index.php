@@ -9,6 +9,11 @@ use app\hanbj\WxHanbj;
 
 class Index
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function index()
     {
         if ('succ' === session('login')) {

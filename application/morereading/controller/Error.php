@@ -2,7 +2,7 @@
 
 namespace app\morereading\controller;
 
-class Index
+class Error
 {
     public function _empty($name)
     {

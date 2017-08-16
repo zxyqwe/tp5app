@@ -10,6 +10,11 @@ use think\Db;
 
 class Data
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function json_login()
     {
         $capt = input('post.capt');

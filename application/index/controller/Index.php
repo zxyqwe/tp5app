@@ -6,6 +6,11 @@ use Endroid\QrCode\QrCode;
 
 class Index
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function index()
     {
         $qrCode = new QrCode('Life is too short to be generating QR codes');

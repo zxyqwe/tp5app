@@ -17,6 +17,11 @@ use app\WxPayApi;
 
 class Wx
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function json_activity()
     {
         if (!session('?openid')) {

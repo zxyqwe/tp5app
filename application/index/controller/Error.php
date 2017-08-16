@@ -1,8 +1,8 @@
 <?php
 
-namespace app\morereading\controller;
+namespace app\index\controller;
 
-class Index
+class Error
 {
     public function _empty($name)
     {

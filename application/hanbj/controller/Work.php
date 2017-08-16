@@ -9,6 +9,11 @@ use think\Db;
 
 class Work
 {
+    public function _empty($name)
+    {
+        return '';
+    }
+
     public function json_card()
     {
         if (!in_array(session('unique_name'), BonusOper::WORKER)) {
