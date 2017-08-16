@@ -22,8 +22,9 @@ class Index
             ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
             ->setLabelFontSize(25)
             ->setLabel("中文asd");
-        return response($qrCode->get(QrCode::IMAGE_TYPE_PNG), 200,
-            ['Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0"],
-            "image/png");
+        return response($qrCode->get(QrCode::IMAGE_TYPE_PNG), 200, [
+            'Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+            'Content-Type' => "image/png; charset=utf-8"
+        ]);
     }
 }
