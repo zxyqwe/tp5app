@@ -2,6 +2,7 @@
 
 namespace app\hanbj;
 
+include_once APP_PATH . 'WxPay.php';
 use think\Db;
 use app\WxPayOrderQuery;
 use app\WxPayApi;
