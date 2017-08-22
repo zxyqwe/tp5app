@@ -95,10 +95,14 @@ class Work
             return json(['msg' => '非工作人员'], 400);
         }
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $own = input('get.own', false, FILTER_VALIDATE_BOOLEAN);
         $size = 5;
         $offset = max(0, $offset);
         $act = BonusOper::ACT_NAME;
         $map['name'] = $act;
+        if ($own) {
+            $map['f.oper'] = session('unique_name');
+        }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
         ];

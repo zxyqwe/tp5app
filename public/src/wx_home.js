@@ -1,7 +1,7 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
     var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, vwork_act_log,
-        $work_act_log_button;
+        $work_act_log_button, $switchCP;
     var add_card = function (msg) {
         wx.addCard({
             cardList: [{
@@ -142,7 +142,8 @@ var wx_home = (function ($, Vue, w, undefined) {
             url: "/hanbj/work/act_log",
             dataType: "json",
             data: {
-                offset: vwork_act_log.items.length
+                offset: vwork_act_log.items.length,
+                own: vwork_act_log.own
             },
             success: function (msg) {
                 var da = msg.list;
@@ -159,9 +160,16 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
     };
     var work_act_log = function () {
+        $switchCP = $('#switchCP');
+        $switchCP.click(function () {
+            vwork_act_log.own = $switchCP.prop('checked');
+            vwork_act_log.items = [];
+            load_act_log();
+        });
         vwork_act_log = new Vue({
             el: '#wx_work_act_log',
             data: {
+                own: false,
                 name: '',
                 items: []
             },
