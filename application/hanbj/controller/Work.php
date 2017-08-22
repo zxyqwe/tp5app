@@ -99,16 +99,22 @@ class Work
         $offset = max(0, $offset);
         $act = BonusOper::ACT_NAME;
         $map['name'] = $act;
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
         $card = Db::table('activity')
+            ->alias('f')
             ->where($map)
+            ->join($join)
             ->limit($offset, $size)
             ->order('act_time', 'desc')
             ->field([
-                'oper as o',
-                'unique_name as u',
-                'act_time as ot'
+                'f.oper as o',
+                'f.unique_name as u',
+                'f.act_time as ot',
+                'm.tieba_id as t'
             ])
             ->select();
-        return json(['list' => $card]);
+        return json(['list' => $card, 'name' => $act]);
     }
 }

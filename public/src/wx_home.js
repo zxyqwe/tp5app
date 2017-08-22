@@ -149,7 +149,8 @@ var wx_home = (function ($, Vue, w, undefined) {
                 if (da.length < msg.size) {
                     $work_act_log_button.addClass('sr-only');
                 }
-                vwork_act_log.items.push.apply(vvalid.items, da);
+                vwork_act_log.items.push.apply(vwork_act_log.items, da);
+                vwork_act_log.name = msg.name;
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
@@ -161,6 +162,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         vwork_act_log = new Vue({
             el: '#wx_work_act_log',
             data: {
+                name: '',
                 items: []
             },
             ready: function () {
