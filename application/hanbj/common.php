@@ -251,7 +251,7 @@ class BonusOper
     const FEE = 30;
     const ACT = 30;
     const ACT_NAME = '2017七夕';
-    const WORKER = ['坎丙午'];
+    const WORKER = ['坎丙午', '兑癸卯', '兑癸巳', '乾壬申'];
 
     public static function reCalc($uname)
     {
