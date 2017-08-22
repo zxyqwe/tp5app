@@ -2,6 +2,8 @@
 
 namespace app\hanbj;
 
+include_once APP_PATH . 'wx.php';
+include_once APP_PATH . 'hanbj/WxConfig.php';
 include_once APP_PATH . 'WxPay.php';
 use think\Db;
 use app\WxPayOrderQuery;
@@ -12,6 +14,8 @@ use Exception;
 
 class FeeOper
 {
+    const ADD = 0;
+
     public static function cache_fee($uname)
     {
         $cache_name = 'cache_fee' . $uname;
@@ -337,6 +341,8 @@ class BonusOper
 
 class OrderOper
 {
+    const FEE = 1;
+    const ACT = 2;
     const FEE_YEAR = [
         ['label' => '续费一年-原价', 'value' => 0, 'fee' => 30],
         ['label' => '续费二年-83折', 'value' => 1, 'fee' => 50],
@@ -361,7 +367,7 @@ class OrderOper
         $input->SetOpenid($openid);
         $map['openid'] = $openid;
         $map['fee'] = $fee;
-        $map['type'] = 1;
+        $map['type'] = OrderOper::FEE;
         $map['value'] = $year;
         $map['trans'] = '';
         $res = Db::table('order')

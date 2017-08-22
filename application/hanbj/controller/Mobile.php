@@ -2,8 +2,6 @@
 
 namespace app\hanbj\controller;
 
-include_once APP_PATH . 'wx.php';
-
 use app\hanbj\BonusOper;
 use app\SHA1;
 use app\WXBizMsgCrypt;

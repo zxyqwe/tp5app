@@ -2,8 +2,6 @@
 
 namespace app\hanbj\controller;
 
-include_once APP_PATH . 'hanbj/WxConfig.php';
-include_once APP_PATH . 'WxPay.php';
 use app\hanbj\BonusOper;
 use app\hanbj\OrderOper;
 use app\hanbj\HanbjRes;
@@ -111,9 +109,9 @@ class Wx
             return json(['msg' => '没有会员卡'], 400);
         }
         $opt = input('post.opt', 0, FILTER_VALIDATE_INT);
-        $type = input('post.type', 1, FILTER_VALIDATE_INT);
+        $type = input('post.type', OrderOper::FEE, FILTER_VALIDATE_INT);
         $input = new WxPayUnifiedOrder();
-        if ($type === 1) {
+        if ($type === OrderOper::FEE) {
             if ($opt < 0 || $opt >= count(OrderOper::FEE_YEAR)) {
                 return json(['msg' => '年数错误'], 400);
             }
