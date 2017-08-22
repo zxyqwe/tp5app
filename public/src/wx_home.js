@@ -1,6 +1,7 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
-    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button;
+    var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, vwork_act_log,
+        $work_act_log_button;
     var add_card = function (msg) {
         wx.addCard({
             cardList: [{
@@ -124,9 +125,55 @@ var wx_home = (function ($, Vue, w, undefined) {
             }
         });
     };
+    var work_act_add = function () {
+        $('#work_act').click(function () {
+            wx.scanQRCode({
+                needResult: 1,
+                scanType: ["qrCode"],
+                success: function (res) {
+                    get_act(res.resultStr);
+                }
+            });
+        });
+    };
+    var load_act_log = function () {
+        $.ajax({
+            type: "GET",
+            url: "/hanbj/work/act_log",
+            dataType: "json",
+            data: {
+                offset: vwork_act_log.items.length
+            },
+            success: function (msg) {
+                var da = msg.list;
+                if (da.length < msg.size) {
+                    $work_act_log_button.addClass('sr-only');
+                }
+                vwork_act_log.items.push.apply(vvalid.items, da);
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            }
+        });
+    };
+    var work_act_log = function () {
+        vwork_act_log = new Vue({
+            el: '#wx_work_act_log',
+            data: {
+                items: []
+            },
+            ready: function () {
+            }
+        });
+        $work_act_log_button = $('#wx_work_act_log_load');
+        $work_act_log_button.click(load_act_log);
+        load_act_log();
+    };
     var bindclick = function () {
         if (w.worker === 1) {
             $('#workarea').removeClass('sr-only');
+            work_act_add();
         }
         w.$status.removeClass('sr-only');
         $loading = w.$status.children('i');
@@ -166,15 +213,6 @@ var wx_home = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
-                }
-            });
-        });
-        $('#work_act').click(function () {
-            wx.scanQRCode({
-                needResult: 1,
-                scanType: ["qrCode"],
-                success: function (res) {
-                    get_act(res.resultStr);
                 }
             });
         });
@@ -343,6 +381,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         activity: activity,
         valid: valid,
         bonus: bonus,
-        valid_fee: valid_fee
+        valid_fee: valid_fee,
+        work_act_log: work_act_log
     };
 })(Zepto, Vue, window);

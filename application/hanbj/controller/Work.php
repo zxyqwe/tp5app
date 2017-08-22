@@ -88,4 +88,27 @@ class Work
             return json(['msg' => $e], 400);
         }
     }
+
+    public function act_log()
+    {
+        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
+            return json(['msg' => '非工作人员'], 400);
+        }
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = 5;
+        $offset = max(0, $offset);
+        $act = BonusOper::ACT_NAME;
+        $map['name'] = $act;
+        $card = Db::table('activity')
+            ->where($map)
+            ->limit($offset, $size)
+            ->order('act_time', 'desc')
+            ->field([
+                'oper as o',
+                'unique_name as u',
+                'act_time as ot'
+            ])
+            ->select();
+        return json(['list' => $card]);
+    }
 }

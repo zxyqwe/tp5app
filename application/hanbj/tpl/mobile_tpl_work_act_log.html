@@ -1,0 +1,32 @@
+<div class="page">
+    <div class="page__hd">
+        <h1 class="page__title">登记日志</h1>
+    </div>
+    <div class="page__bd page__bd_spacing">
+        <div id="wx_work_act_log" class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">
+            </div>
+            <div class="weui-panel__bd">
+                <template v-for="item in items">
+                    <div class="weui-media-box weui-media-box_text">
+                        <h4 class="weui-media-box__title">
+                            <div>编号：{{ item.u }} 昵称：{{ item.t }}</div>
+                        </h4>
+                        <p class="weui-media-box__desc">时间：{{ item.ot }} 登记者：{{ item.o }}</p>
+                    </div>
+                </template>
+            </div>
+            <div class="weui-panel__ft">
+                <a id="wx_work_act_log_load" href="javascript:;" class="weui-cell weui-cell_access weui-cell_link">
+                    <div class="weui-cell__bd">查看更多</div>
+                    <span class="weui-cell__ft"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="page__ft">
+    </div>
+</div>
+<script type="text/javascript">
+    wx_home.work_act_log();
+</script>
