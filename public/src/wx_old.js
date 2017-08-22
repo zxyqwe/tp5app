@@ -12,6 +12,10 @@ var wx_Old = (function ($, w, undefined) {
                 return;
             }
             var old_eid = eid.val();
+            if (old_eid.length !== 6) {
+                w.msgto('身份证输入的不是6位？当前是' + old_eid + '位！');
+                return;
+            }
             var old_phone = phone.val();
             $.ajax({
                 type: "POST",
