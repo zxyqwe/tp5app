@@ -115,6 +115,6 @@ class Work
                 'm.tieba_id as t'
             ])
             ->select();
-        return json(['list' => $card, 'name' => $act]);
+        return json(['list' => $card, 'name' => $act, 'size' => $size]);
     }
 }
