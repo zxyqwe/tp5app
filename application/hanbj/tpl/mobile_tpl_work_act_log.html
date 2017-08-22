@@ -11,7 +11,7 @@
                 <div class="weui-cell weui-cell_switch">
                     <div class="weui-cell__bd">只看自己</div>
                     <div class="weui-cell__ft">
-                        <input id="switchCP" class="weui-switch" type="checkbox"/>
+                        <input class="weui-switch" type="checkbox" v-model="own"/>
                     </div>
                 </div>
                 <template v-for="item in items">
