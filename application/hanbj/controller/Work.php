@@ -37,7 +37,7 @@ class Work
             ])
             ->find();
         if (null === $res) {
-            return json(['msg' => '查无此人'], 400);
+            return json(['msg' => '查无此人：' . $code], 400);
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
         $res['act'] = BonusOper::ACT_NAME;
@@ -67,7 +67,7 @@ class Work
             ])
             ->find();
         if (null === $res) {
-            return json(['msg' => '查无此人'], 400);
+            return json(['msg' => '查无此人：' . $code], 400);
         }
         $data['unique_name'] = $res['unique_name'];
         $data['oper'] = session('unique_name');
