@@ -33,7 +33,10 @@
                 <div class="weui-cell__bd">
                     <p>最近缴费</p>
                 </div>
-                <div class="weui-cell__ft">{$user.fee_code}</div>
+                <div class="weui-cell__ft">
+                    <i class="{$status? 'weui-icon-success' : 'weui-icon-warn'}"></i>
+                    {$user.fee_code}
+                </div>
             </div>
             <a class="weui-cell weui-cell_access" href="#bonus">
                 <div class="weui-cell__bd">

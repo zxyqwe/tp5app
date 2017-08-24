@@ -135,19 +135,15 @@ class WxHanbj
             default:
                 trace(json_encode($msg));
             case 'subscribe':
+            case 'unsubscribe':
             case 'SCAN':
             case 'LOCATION':
             case 'CLICK':
             case 'VIEW':
             case 'user_view_card':
-                //case 'card_pass_check':
             case 'user_gifting_card':
-                //case 'user_pay_from_pay_cell':
             case 'user_enter_session_from_card':
-                //case 'update_member_card':
             case 'card_sku_remind':
-                //case 'card_pay_order':
-                //case 'submit_membercard_user_info':
                 return '';
         }
     }
