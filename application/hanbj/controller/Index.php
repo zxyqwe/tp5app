@@ -11,7 +11,7 @@ use think\exception\HttpResponseException;
 class Index extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,old,bulletin']
+        'valid_id' => ['except' => 'index,old,bulletin,fame']
     ];
 
     protected function valid_id()

@@ -1,7 +1,11 @@
-{layout name="layout2" /}
+{layout name="layout" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="fame" class="col-md-10 col-md-offset-1 column">
-        <h1>名人堂</h1>
+        <h1>
+            <button type="button" id="back" class="btn btn-sm btn-primary"><i
+                    class="glyphicon glyphicon-log-in"></i><i>登录</i></button>
+            名人堂
+        </h1>
         <div class="fame-container" v-for="item in fames">
             <h1>{{ item.name }}</h1>
             <div class="row fame-row">
@@ -29,111 +33,20 @@
             vmain = new Vue({
                 el: '#fame',
                 data: {
-                    fames: [
-                        {
-                            name: 'aaa',
-                            teams: [
-                                {
-                                    name: 'a1',
-                                    ms: [
-                                        {
-                                            t: 't',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: 'a2',
-                                    ms: [
-                                        {
-                                            t: 't1',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't2',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                }
-                            ]
-                        }, {
-                            name: 'bbbb',
-                            teams: [
-                                {
-                                    name: 'b1',
-                                    ms: [
-                                        {
-                                            t: 't3',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't4',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: 'b2',
-                                    ms: [
-                                        {
-                                            t: 't5',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't6',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                }
-                            ]
-                        }, {
-                            name: 'ccc',
-                            teams: [
-                                {
-                                    name: 'c1',
-                                    ms: [
-                                        {
-                                            t: 't7',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't8',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                },
-                                {
-                                    name: 'c2',
-                                    ms: [
-                                        {
-                                            t: 't9',
-                                            id: 'id',
-                                            u: 'u'
-                                        },
-                                        {
-                                            t: 't0',
-                                            id: 'id',
-                                            u: 'u'
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    fames: []
+                }
+            });
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/data/json_fame",
+                dataType: "json",
+                success: function (msg) {
+                    vmain.fames = msg;
+                },
+                error: function (msg) {
+                    vmain.fames = [];
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
                 }
             });
         };
@@ -141,7 +54,6 @@
             init: init
         };
     })(jQuery, Vue, window);
-    var nav = 'nav2_6';
     $(window).load(function () {
         fame.init();
     });

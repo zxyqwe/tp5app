@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Data extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'json_login,json_bulletin']
+        'valid_id' => ['except' => 'json_login,json_bulletin,json_fame']
     ];
 
     protected function valid_id()
@@ -325,5 +325,10 @@ class Data extends Controller
         } else {
             return BonusOper::upAct();
         }
+    }
+
+    public function json_fame()
+    {
+        return json(['msg' => []]);
     }
 }
