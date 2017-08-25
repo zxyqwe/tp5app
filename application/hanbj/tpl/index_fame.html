@@ -30,6 +30,9 @@
         'use strict';
         var vmain;
         var init = function () {
+            $('#back').click(function () {
+                location.href = '/hanbj';
+            });
             vmain = new Vue({
                 el: '#fame',
                 data: {
