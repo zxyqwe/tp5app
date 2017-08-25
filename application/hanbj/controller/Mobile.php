@@ -188,6 +188,9 @@ class Mobile extends Controller
 
     public function event()
     {
+        if (!isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
+            return '';
+        }
         $token = config('hanbj_token');
         $aes = config('hanbj_EncodingAESKey');
         $api = config('hanbj_api');

@@ -143,6 +143,9 @@ class Wx extends Controller
 
     public function notify()
     {
+        if (!isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
+            return '';
+        }
         $hand = new HanbjNotify();
         $hand->Handle(false);
     }
