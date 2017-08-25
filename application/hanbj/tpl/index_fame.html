@@ -1,0 +1,23 @@
+{layout name="layout2" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div class="col-md-10 col-md-offset-1 column">
+        <h1>名人堂</h1>
+        <div class="fame-container">
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/hanbj_fame.js"></script>
+<script>
+    var fame = (function ($, Vue, w, undefined) {
+        'use strict';
+        var init = function () {
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
+    var nav = 'nav2_6';
+    $(window).load(function () {
+        fame.init();
+    });
+</script>

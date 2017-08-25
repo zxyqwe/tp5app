@@ -82,6 +82,11 @@ class Index extends Controller
         return view('tree');
     }
 
+    public function fame()
+    {
+        return view('fame');
+    }
+
     public function token()
     {
         $length = 10;
