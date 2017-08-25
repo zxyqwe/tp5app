@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\OrderOper;
 use app\hanbj\HanbjRes;
+use think\Controller;
 use think\Db;
 use app\hanbj\HanbjNotify;
 use app\hanbj\FeeOper;
@@ -13,8 +14,12 @@ use app\WxPayUnifiedOrder;
 use app\WxPayApi;
 use think\exception\HttpResponseException;
 
-class Wx
+class Wx extends Controller
 {
+    protected $beforeActionList = [
+        'valid_id' => ['except' => 'notify']
+    ];
+
     protected function valid_id()
     {
         if (!session('?openid')) {
@@ -30,7 +35,6 @@ class Wx
 
     public function json_activity()
     {
-        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
@@ -51,7 +55,6 @@ class Wx
 
     public function json_valid()
     {
-        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
@@ -72,7 +75,6 @@ class Wx
 
     public function json_renew()
     {
-        $this->valid_id();
         $uname = session('unique_name');
         if (cache('?json_renew' . $uname)) {
             return json(['msg' => '每十分钟可以重新核算一次'], 400);
@@ -105,7 +107,6 @@ class Wx
 
     public function order()
     {
-        $this->valid_id();
         if (!session('?card')) {
             return json(['msg' => '没有会员卡'], 400);
         }
