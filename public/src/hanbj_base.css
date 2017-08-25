@@ -95,8 +95,12 @@ p.footer {
 }
 
 .fame-panel {
-    margin-left: 20px;
+    margin-left: 10px;
     padding: 0;
+}
+
+.fame-row {
+    margin: 0;
 }
 
 .rgly {

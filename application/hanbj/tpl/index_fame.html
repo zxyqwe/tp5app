@@ -4,8 +4,8 @@
         <h1>名人堂</h1>
         <div class="fame-container" v-for="item in fames">
             <h1>{{ item.name }}</h1>
-            <div class="row">
-                <div class="panel panel-success fame-panel col-md-3" v-for="team in item.teams">
+            <div class="row fame-row">
+                <div class="panel panel-success fame-panel col-md-2" v-for="team in item.teams">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ team.name }}</h3>
                     </div>
