@@ -5,9 +5,18 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\WxHanbj;
+use think\exception\HttpResponseException;
 
 class Index
 {
+    protected function valid_id()
+    {
+        if ('succ' !== session('login')) {
+            $res = redirect('/hanbj/index/bulletin');
+            throw new HttpResponseException($res);
+        }
+    }
+
     public function _empty()
     {
         return '';
@@ -23,14 +32,6 @@ class Index
         return view('login', ['nonstr' => $nonstr]);
     }
 
-    public function home()
-    {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
-        return view('home', ['name' => session('name')]);
-    }
-
     public function old()
     {
         return redirect('/hanbj/index/bulletin');
@@ -41,59 +42,51 @@ class Index
         return view('bulletin');
     }
 
+    public function home()
+    {
+        $this->valid_id();
+        return view('home', ['name' => session('name')]);
+    }
+
     public function all()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('all');
     }
 
     public function feelog()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('feelog');
     }
 
     public function actlog()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('actlog');
     }
 
     public function fee()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('fee');
     }
 
     public function create()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('create');
     }
 
     public function tree()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         return view('tree');
     }
 
     public function token()
     {
-        if ('succ' !== session('login')) {
-            return redirect('/hanbj/index/bulletin');
-        }
+        $this->valid_id();
         $length = 10;
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $map['Access Key'] = substr($access, 0, $length);

@@ -6,9 +6,18 @@ use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use app\hanbj\WxTemp;
 use think\Db;
+use think\exception\HttpResponseException;
 
 class Work
 {
+    protected function valid_id()
+    {
+        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
+            $res = json(['msg' => '非工作人员'], 400);
+            throw new HttpResponseException($res);
+        }
+    }
+
     public function _empty()
     {
         return '';
@@ -16,9 +25,7 @@ class Work
 
     public function json_card()
     {
-        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
-            return json(['msg' => '非工作人员'], 400);
-        }
+        $this->valid_id();
         $code = input('post.code');
         if (!is_numeric($code)) {
             $code = 0;
@@ -46,9 +53,7 @@ class Work
 
     public function json_act()
     {
-        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
-            return json(['msg' => '非工作人员'], 400);
-        }
+        $this->valid_id();
         $code = input('post.code');
         if (!is_numeric($code)) {
             $code = 0;
@@ -91,9 +96,7 @@ class Work
 
     public function act_log()
     {
-        if (!in_array(session('unique_name'), BonusOper::WORKER)) {
-            return json(['msg' => '非工作人员'], 400);
-        }
+        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $own = input('get.own', false, FILTER_VALIDATE_BOOLEAN);
         $size = 5;

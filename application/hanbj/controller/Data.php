@@ -5,10 +5,19 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use think\Db;
+use think\exception\HttpResponseException;
 
 
 class Data
 {
+    protected function valid_id()
+    {
+        if ('succ' !== session('login')) {
+            $res = json(['msg' => '未登录'], 400);
+            throw new HttpResponseException($res);
+        }
+    }
+
     public function _empty()
     {
         return '';
@@ -73,9 +82,7 @@ class Data
 
     public function json_act()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -117,9 +124,7 @@ class Data
 
     public function json_fee()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -161,9 +166,7 @@ class Data
 
     public function json_tree()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $map['f.master'] = ['neq', ''];
         $tmp = Db::table('member')
             ->alias('f')
@@ -181,9 +184,7 @@ class Data
 
     public function json_all()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -227,9 +228,7 @@ class Data
 
     public function json_detail()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $id = input('post.id', 1, FILTER_VALIDATE_INT);
         $map['m.code'] = 0;
         $map['m.id'] = $id;
@@ -262,9 +261,7 @@ class Data
 
     public function fee_search()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $name = input('get.name');
         if (empty($name)) {
             return json();
@@ -285,9 +282,7 @@ class Data
 
     public function fee_add()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $name = input('post.name/a', []);
         if (empty($name)) {
             return json(['msg' => 'empty name'], 400);
@@ -326,9 +321,7 @@ class Data
 
     public function bonus_add()
     {
-        if ('succ' !== session('login')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $type = input('post.type');
         if ($type === '0') {
             return BonusOper::upFee();

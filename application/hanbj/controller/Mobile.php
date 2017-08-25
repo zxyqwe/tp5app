@@ -6,6 +6,7 @@ use app\hanbj\BonusOper;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Db;
+use think\exception\HttpResponseException;
 use think\Response;
 use app\hanbj\FeeOper;
 use app\hanbj\WxHanbj;
@@ -13,6 +14,14 @@ use app\hanbj\CardOper;
 
 class Mobile
 {
+    protected function valid_id()
+    {
+        if (!session('?openid')) {
+            $res = json(['msg' => '未登录'], 400);
+            throw new HttpResponseException($res);
+        }
+    }
+
     public function _empty()
     {
         return '';
@@ -91,9 +100,7 @@ class Mobile
 
     public function json_wx()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
@@ -109,9 +116,7 @@ class Mobile
 
     public function json_old()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $phone = input('post.phone', FILTER_VALIDATE_INT);
         $eid = input('post.eid');
         $map['phone'] = $phone;
@@ -137,9 +142,7 @@ class Mobile
 
     public function json_card()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $openid = session('openid');
         $map['openid'] = $openid;
         $card = Db::table('card')
@@ -152,9 +155,7 @@ class Mobile
 
     public function json_active()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $openid = session('openid');
         $map['openid'] = $openid;
         $map['status'] = 0;
@@ -169,9 +170,7 @@ class Mobile
 
     public function json_addcard()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $wx['card_id'] = config('hanbj_cardid');
         $wx['timestamp'] = '' . time();
         $wx['nonce_str'] = getNonceStr();

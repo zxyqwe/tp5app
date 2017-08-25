@@ -11,9 +11,18 @@ use app\hanbj\FeeOper;
 use app\hanbj\CardOper;
 use app\WxPayUnifiedOrder;
 use app\WxPayApi;
+use think\exception\HttpResponseException;
 
 class Wx
 {
+    protected function valid_id()
+    {
+        if (!session('?openid')) {
+            $res = json(['msg' => '未登录'], 400);
+            throw new HttpResponseException($res);
+        }
+    }
+
     public function _empty()
     {
         return '';
@@ -21,9 +30,7 @@ class Wx
 
     public function json_activity()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
@@ -44,9 +51,7 @@ class Wx
 
     public function json_valid()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
@@ -67,9 +72,7 @@ class Wx
 
     public function json_renew()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         $uname = session('unique_name');
         if (cache('?json_renew' . $uname)) {
             return json(['msg' => '每十分钟可以重新核算一次'], 400);
@@ -102,9 +105,7 @@ class Wx
 
     public function order()
     {
-        if (!session('?openid')) {
-            return json(['msg' => '未登录'], 400);
-        }
+        $this->valid_id();
         if (!session('?card')) {
             return json(['msg' => '没有会员卡'], 400);
         }
