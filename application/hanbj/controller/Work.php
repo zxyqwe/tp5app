@@ -5,11 +5,16 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use app\hanbj\WxTemp;
+use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 
-class Work
+class Work extends Controller
 {
+    protected $beforeActionList = [
+        'valid_id'
+    ];
+
     protected function valid_id()
     {
         if (!in_array(session('unique_name'), BonusOper::WORKER)) {
@@ -25,7 +30,6 @@ class Work
 
     public function json_card()
     {
-        $this->valid_id();
         $code = input('post.code');
         if (!is_numeric($code)) {
             $code = 0;
@@ -53,7 +57,6 @@ class Work
 
     public function json_act()
     {
-        $this->valid_id();
         $code = input('post.code');
         if (!is_numeric($code)) {
             $code = 0;
@@ -96,7 +99,6 @@ class Work
 
     public function act_log()
     {
-        $this->valid_id();
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $own = input('get.own', false, FILTER_VALIDATE_BOOLEAN);
         $size = 5;
