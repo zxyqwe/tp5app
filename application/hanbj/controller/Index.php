@@ -5,10 +5,15 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\WxHanbj;
+use think\Controller;
 use think\exception\HttpResponseException;
 
-class Index
+class Index extends Controller
 {
+    protected $beforeActionList = [
+        'valid_id' => ['except' => 'index,old,bulletin']
+    ];
+
     protected function valid_id()
     {
         if ('succ' !== session('login')) {
@@ -44,49 +49,41 @@ class Index
 
     public function home()
     {
-        $this->valid_id();
         return view('home', ['name' => session('name')]);
     }
 
     public function all()
     {
-        $this->valid_id();
         return view('all');
     }
 
     public function feelog()
     {
-        $this->valid_id();
         return view('feelog');
     }
 
     public function actlog()
     {
-        $this->valid_id();
         return view('actlog');
     }
 
     public function fee()
     {
-        $this->valid_id();
         return view('fee');
     }
 
     public function create()
     {
-        $this->valid_id();
         return view('create');
     }
 
     public function tree()
     {
-        $this->valid_id();
         return view('tree');
     }
 
     public function token()
     {
-        $this->valid_id();
         $length = 10;
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $map['Access Key'] = substr($access, 0, $length);
