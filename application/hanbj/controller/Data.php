@@ -4,12 +4,17 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
+use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 
 
-class Data
+class Data extends Controller
 {
+    protected $beforeActionList = [
+        'valid_id' => ['except' => 'json_login,json_bulletin']
+    ];
+
     protected function valid_id()
     {
         if ('succ' !== session('login')) {
@@ -82,7 +87,6 @@ class Data
 
     public function json_act()
     {
-        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -124,7 +128,6 @@ class Data
 
     public function json_fee()
     {
-        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -166,7 +169,6 @@ class Data
 
     public function json_tree()
     {
-        $this->valid_id();
         $map['f.master'] = ['neq', ''];
         $tmp = Db::table('member')
             ->alias('f')
@@ -184,7 +186,6 @@ class Data
 
     public function json_all()
     {
-        $this->valid_id();
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -228,7 +229,6 @@ class Data
 
     public function json_detail()
     {
-        $this->valid_id();
         $id = input('post.id', 1, FILTER_VALIDATE_INT);
         $map['m.code'] = 0;
         $map['m.id'] = $id;
@@ -261,7 +261,6 @@ class Data
 
     public function fee_search()
     {
-        $this->valid_id();
         $name = input('get.name');
         if (empty($name)) {
             return json();
@@ -282,7 +281,6 @@ class Data
 
     public function fee_add()
     {
-        $this->valid_id();
         $name = input('post.name/a', []);
         if (empty($name)) {
             return json(['msg' => 'empty name'], 400);
@@ -321,7 +319,6 @@ class Data
 
     public function bonus_add()
     {
-        $this->valid_id();
         $type = input('post.type');
         if ($type === '0') {
             return BonusOper::upFee();
