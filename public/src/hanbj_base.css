@@ -94,6 +94,11 @@ p.footer {
     -webkit-box-shadow: 0 0 8px #D0D0D0;
 }
 
+.fame-panel {
+    margin-left: 20px;
+    padding: 0;
+}
+
 .rgly {
     color: red;
 }
