@@ -4,7 +4,7 @@
         <h1>名人堂</h1>
         <div class="fame-container" v-for="item in fames">
             <h1>{{ item.name }}</h1>
-            <div class="panel panel-success" v-for="team in item.teams">
+            <div class="panel panel-success col-md-3" v-for="team in item.teams" style="margin-left: 20px">
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ team.name }}</h3>
                 </div>
