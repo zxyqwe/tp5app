@@ -88,7 +88,7 @@ p.footer {
     background: #979797 url(/static/arrow-up.png) no-repeat center center;
 }
 
-#container, fame-container {
+#container, .fame-container {
     margin-top: 10px;
     border: 1px solid #D0D0D0;
     -webkit-box-shadow: 0 0 8px #D0D0D0;

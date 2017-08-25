@@ -1,8 +1,20 @@
 {layout name="layout2" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
-    <div class="col-md-10 col-md-offset-1 column">
+    <div id="fame" class="col-md-10 col-md-offset-1 column">
         <h1>名人堂</h1>
-        <div class="fame-container">
+        <div class="fame-container" v-for="item in fames">
+            <h1>{{ item.name }}</h1>
+            <div class="panel panel-success" v-for="team in item.teams">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ team.name }}</h3>
+                </div>
+                <ul class="list-group">
+                    <a href="#" class="list-group-item" v-for="m in team.ms">
+                        <h4 class="list-group-item-heading">{{ m.t }}</h4>
+                        <p class="list-group-item-text">{{ m.id }} {{ m.u }}</p>
+                    </a>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -10,7 +22,118 @@
 <script>
     var fame = (function ($, Vue, w, undefined) {
         'use strict';
+        var vmain;
         var init = function () {
+            vmain = new Vue({
+                el: '#fame',
+                data: {
+                    fames: [
+                        {
+                            name: 'aaa',
+                            team: [
+                                {
+                                    name: 'a1',
+                                    ms: [
+                                        {
+                                            t: 't',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'a2',
+                                    ms: [
+                                        {
+                                            t: 't1',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't2',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }, {
+                            name: 'bbbb',
+                            team: [
+                                {
+                                    name: 'b1',
+                                    ms: [
+                                        {
+                                            t: 't3',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't4',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'b2',
+                                    ms: [
+                                        {
+                                            t: 't5',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't6',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }, {
+                            name: 'ccc',
+                            team: [
+                                {
+                                    name: 'c1',
+                                    ms: [
+                                        {
+                                            t: 't7',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't8',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                },
+                                {
+                                    name: 'c2',
+                                    ms: [
+                                        {
+                                            t: 't9',
+                                            id: 'id',
+                                            u: 'u'
+                                        },
+                                        {
+                                            t: 't0',
+                                            id: 'id',
+                                            u: 'u'
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            });
         };
         return {
             init: init
