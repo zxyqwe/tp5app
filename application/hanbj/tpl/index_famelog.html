@@ -77,7 +77,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="panel-footer">
+                        <div>
                             <button id="res_up" type="button" class="btn btn-success btn-block">提交</button>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
                         label: vmain.labelname
                     },
                     success: function (msg) {
-                        location.href = '/hanbj/index/fame';
+                       // location.href = '/hanbj/index/fame';
                     },
                     error: function (msg) {
                         msg = JSON.parse(msg.responseText);
