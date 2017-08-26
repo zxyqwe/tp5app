@@ -406,4 +406,9 @@ class Data extends Controller
         }
         return json(['msg' => 'ok']);
     }
+
+    public function fame_img()
+    {
+        return redirect('https://app.zxyqwe.com/static/arrow-up.png');
+    }
 }
