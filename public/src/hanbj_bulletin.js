@@ -16,9 +16,6 @@ var bulletin = (function ($, w, undefined) {
         return total;
     };
     var init = function () {
-        $('#back').click(function () {
-            location.href = '/hanbj';
-        });
         var $table = $('#table');
         var alr = $('#ggly').html();
         var nye = $('#rgly').html();

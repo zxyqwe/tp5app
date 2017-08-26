@@ -2,8 +2,6 @@
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="fame" class="col-md-10 col-md-offset-1 column">
         <h1>
-            <button type="button" id="back" class="btn btn-sm btn-primary"><i
-                    class="glyphicon glyphicon-log-in"></i><i>登录</i></button>
             名人堂
         </h1>
         <div class="fame-container" v-for="item in fames">
@@ -30,9 +28,6 @@
         'use strict';
         var vmain;
         var init = function () {
-            $('#back').click(function () {
-                location.href = '/hanbj';
-            });
             vmain = new Vue({
                 el: '#fame',
                 data: {
@@ -57,6 +52,7 @@
             init: init
         };
     })(jQuery, Vue, window);
+    var nav = 'nav1_3';
     $(window).load(function () {
         fame.init();
     });
