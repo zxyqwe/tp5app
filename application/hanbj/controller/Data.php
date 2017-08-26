@@ -329,8 +329,20 @@ class Data extends Controller
 
     public function json_fame()
     {
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
         $res = Db::table('fame')
+            ->alias('f')
+            ->join($join)
             ->order('year,grade')
+            ->field([
+                'f.unique_name',
+                'tieba_id',
+                'year',
+                'grade',
+                'label'
+            ])
             ->select();
         $data = [];
         foreach ($res as $item) {
@@ -339,12 +351,16 @@ class Data extends Controller
                 $data[$year] = ['name' => $year];
                 $data[$year]['teams'] = [];
             }
-            $team = $item['grade'];
+            $team = $item['label'];
             if (!isset($data[$year]['teams'][$team])) {
                 $data[$year]['teams'][$team] = ['name' => $team];
                 $data[$year]['teams'][$team]['ms'] = [];
             }
-            $data[$year]['teams'][$team]['ms'][] = $item['unique_name'];
+            $data[$year]['teams'][$team]['ms'][] = [
+                'u' => $item['unique_name'],
+                't' => $item['tieba_id'],
+                'id' => $item['grade']
+            ];
         }
         return json(['msg' => $data]);
     }
