@@ -179,7 +179,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         load_act_log();
     };
     var bindclick = function () {
-        if (w.worker === 1) {
+        if (w.worker === '1') {
             $('#workarea').removeClass('sr-only');
             work_act_add();
         }
