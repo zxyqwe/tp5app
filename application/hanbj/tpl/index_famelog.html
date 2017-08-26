@@ -1,0 +1,133 @@
+{layout name="layout2" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <div id="body">
+            <h1>
+                吧务组登记
+            </h1>
+            <div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="feesearch" class="col-sm-2 control-label">搜索</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="feesearch" placeholder="昵称或会员编号" v-model="uname"
+                                   debounce="500">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <tr v-for="item in candy">
+                                <td>{{ item.t }}</td>
+                                <td>{{ item.u }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-xs" v-on:click="sel_candy(item)">选择
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="panel panel-info" v-show="res.length > 0">
+                        <div class="panel-heading">最终结果</div>
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                            <tr v-for="item in res">
+                                <td>{{ item.t }}</td>
+                                <td>{{ item.u }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs" v-on:click="del_candy($index)">
+                                        删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="panel-footer">
+                            <input type="number" class="form-control" placeholder="昵称或会员编号" v-model="year">
+                            <input type="number" class="form-control" placeholder="昵称或会员编号" v-model="grade">
+                            <input type="number" class="form-control" placeholder="昵称或会员编号" v-model="label">
+                            <button id="res_up" type="button" class="btn btn-success btn-block">提交</button>
+                        </div>
+                    </div>
+                </div>
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/hanbj_famelog.js"></script>
+<script>
+    var famelog = (function ($, Vue, w, undefined) {
+        'use strict';
+        var vmain;
+        var init = function () {
+            vmain = new Vue({
+                el: '#body',
+                data: {
+                    uname: '',
+                    year: 0,
+                    grade: 0,
+                    labelname: '',
+                    candy: [],
+                    res: []
+                },
+                methods: {
+                    sel_candy: function (item) {
+                        this.res.push({t: item.t, u: item.u});
+                    },
+                    del_candy: function (n) {
+                        this.res.splice(n, 1);
+                    }
+                }
+            });
+            vmain.$watch('uname', function (nv) {
+                $.ajax({
+                    type: "GET",
+                    url: "/hanbj/data/fee_search",
+                    dataType: "json",
+                    data: {
+                        name: nv
+                    },
+                    success: function (msg) {
+                        vmain.candy = msg;
+                    },
+                    error: function (msg) {
+                        vmain.candy = [];
+                        msg = JSON.parse(msg.responseText);
+                        w.msgto(msg.msg);
+                    }
+                });
+            });
+            $('#res_up').click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/hanbj/data/fame_add",
+                    dataType: "json",
+                    data: {
+                        name: vmain.res,
+                        year: vmain.year,
+                        grade: vmain.grade,
+                        label: vmain.labelname
+                    },
+                    success: function (msg) {
+                        location.href = '/hanbj/index/fame';
+                    },
+                    error: function (msg) {
+                        msg = JSON.parse(msg.responseText);
+                        w.msgto(msg.msg);
+                    }
+                });
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
+    var nav = 'nav3_3';
+    $(window).load(function () {
+        famelog.init();
+    });
+</script>

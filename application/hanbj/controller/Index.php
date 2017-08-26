@@ -87,6 +87,11 @@ class Index extends Controller
         return view('fame');
     }
 
+    public function famelog()
+    {
+        return view('famelog');
+    }
+
     public function logout()
     {
         session(null);
