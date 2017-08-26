@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">部门</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" placeholder="名称" v-model="label">
+                                        <input type="text" class="form-control" placeholder="名称" v-model="labelname">
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@
             $('#res_up').click(function () {
                 $.ajax({
                     type: "POST",
-                    url: "/hanbj/data/fame_add2",
+                    url: "/hanbj/data/fame_add",
                     dataType: "json",
                     data: {
                         name: vmain.res,
@@ -142,7 +142,7 @@
                         label: vmain.labelname
                     },
                     success: function (msg) {
-                       // location.href = '/hanbj/index/fame';
+                        location.href = '/hanbj/index/fame';
                     },
                     error: function (msg) {
                         msg = JSON.parse(msg.responseText);
