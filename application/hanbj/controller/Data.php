@@ -330,5 +330,38 @@ class Data extends Controller
     public function json_fame()
     {
         return json(['msg' => []]);
+    public function fame_add()
+    {
+        $name = input('post.name/a', []);
+        if (empty($name)) {
+            return json(['msg' => 'empty name'], 400);
+        }
+        $year = input('post.year', 1, FILTER_VALIDATE_INT);
+        $grade = input('post.grade', 0, FILTER_VALIDATE_INT);
+        $label = input('post.label', '');
+        $data = [];
+        foreach ($name as $tmp) {
+            $data[] = [
+                'unique_name' => $tmp['u'],
+                'year' => $year,
+                'grade' => $grade,
+                'label' => $label
+            ];
+        }
+        Db::startTrans();
+        try {
+            $res = Db::table('fame')
+                ->insertAll($data);
+            if ($res === count($data)) {
+                Db::commit();
+            } else {
+                Db::rollback();
+                return json(['msg' => $res], 400);
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['msg' => '' . $e], 400);
+        }
+        return json(['msg' => 'ok']);
     }
 }
