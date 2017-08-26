@@ -14,7 +14,7 @@
                     <ul class="list-group">
                         <a href="javascript:;" class="list-group-item media" v-for="m in team.ms">
                             <div class="media-left media-middle">
-                                <img class="media-object" v-bind:src="/hanbj/data/fame_img?id={{ m.id }}">
+                                <img class="media-object" v-bind:src="'/hanbj/data/fame_img?id='+m.id">
                             </div>
                             <div class="media-body">
                                 <p class="list-group-item-heading media-heading">{{ m.t }}</p>
