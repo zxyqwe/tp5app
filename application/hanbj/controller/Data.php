@@ -362,6 +362,10 @@ class Data extends Controller
                 'id' => $item['grade']
             ];
         }
+        $data = array_values($data);
+        foreach ($data as &$item) {
+            $item['teams'] = array_values($item['teams']);
+        }
         return json(['msg' => $data]);
     }
 
