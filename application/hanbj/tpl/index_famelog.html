@@ -142,7 +142,7 @@
                         label: vmain.labelname
                     },
                     success: function (msg) {
-                        location.href = '/hanbj/index/fame';
+                        vmain.res = [];
                     },
                     error: function (msg) {
                         msg = JSON.parse(msg.responseText);
