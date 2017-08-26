@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Data extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'json_login,json_bulletin,json_fame']
+        'valid_id' => ['except' => 'json_login,json_bulletin,json_fame,fame_img']
     ];
 
     protected function valid_id()
