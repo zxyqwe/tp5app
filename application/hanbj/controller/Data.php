@@ -339,13 +339,12 @@ class Data extends Controller
                 $data[$year] = ['name' => $year];
                 $data[$year]['teams'] = [];
             }
-            $teams = $data[$year]['teams'];
             $team = $item['grade'];
-            if (!isset($teams[$team])) {
-                $teams[$team] = ['name' => $team];
-                $teams[$team]['ms'] = [];
+            if (!isset($data[$year]['teams'][$team])) {
+                $data[$year]['teams'][$team] = ['name' => $team];
+                $data[$year]['teams'][$team]['ms'] = [];
             }
-            $teams[$team]['ms'][] = $item['unique_name'];
+            $data[$year]['teams'][$team]['ms'][] = $item['unique_name'];
         }
         return json(['msg' => $data]);
     }
