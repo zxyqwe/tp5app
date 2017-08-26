@@ -329,7 +329,27 @@ class Data extends Controller
 
     public function json_fame()
     {
-        return json(['msg' => []]);
+        $res = Db::table('fame')
+            ->order('year,grade')
+            ->select();
+        $data = [];
+        foreach ($res as $item) {
+            $year = $item['year'];
+            if (!isset($data[$year])) {
+                $data[$year] = ['name' => $year];
+                $data[$year]['teams'] = [];
+            }
+            $teams = $data[$year]['teams'];
+            $team = $item['grade'];
+            if (!isset($teams[$team])) {
+                $teams[$team] = ['name' => $team];
+                $teams[$team]['ms'] = [];
+            }
+            $teams[$team]['ms'][] = $item['unique_name'];
+        }
+        return json(['msg' => $data]);
+    }
+
     public function fame_add()
     {
         $name = input('post.name/a', []);
