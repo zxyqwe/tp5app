@@ -14,11 +14,12 @@
                     <ul class="list-group">
                         <a href="javascript:;" class="list-group-item media" v-for="m in team.ms">
                             <div class="media-left media-middle">
-                                <img class="media-object" v-bind:src="'/hanbj/data/fame_img?id='+m.id">
+                                <img class="media-object" v-bind:src="fame_img(m.id)">
                             </div>
                             <div class="media-body">
-                                <p class="list-group-item-heading media-heading">{{ m.t }}</p>
+                                <h4 class="list-group-item-heading media-heading">{{ m.t }}</h4>
                                 <p class="list-group-item-text">{{ m.u }}</p>
+                                <p class="list-group-item-text">{{ fame_name(m.id) }}</p>
                             </div>
                         </a>
                     </ul>
@@ -37,6 +38,14 @@
                 el: '#fame',
                 data: {
                     fames: []
+                },
+                methods: {
+                    fame_img: function (n) {
+                        return '/static/arrow-up.png';
+                    },
+                    fame_name: function (n) {
+                        return 'asd' + n;
+                    }
                 }
             });
             $.ajax({

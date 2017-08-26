@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Data extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'json_login,json_bulletin,json_fame,fame_img']
+        'valid_id' => ['except' => 'json_login,json_bulletin,json_fame']
     ];
 
     protected function valid_id()
@@ -405,10 +405,5 @@ class Data extends Controller
             return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
-    }
-
-    public function fame_img()
-    {
-        return redirect('https://app.zxyqwe.com/static/arrow-up.png');
     }
 }
