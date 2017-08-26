@@ -359,6 +359,9 @@ class Data extends Controller
         $year = input('post.year', 1, FILTER_VALIDATE_INT);
         $grade = input('post.grade', 0, FILTER_VALIDATE_INT);
         $label = input('post.label', '');
+        if (empty($label) || $year < 1 || $year > 12 || $grade < 0 || $grade > 4) {
+            return json(['msg' => '参数错误'], 400);
+        }
         $data = [];
         foreach ($name as $tmp) {
             $data[] = [
