@@ -87,6 +87,12 @@ class Index extends Controller
         return view('fame');
     }
 
+    public function logout()
+    {
+        session(null);
+        return redirect('/hanbj/index/home');
+    }
+
     public function token()
     {
         $length = 10;
