@@ -366,7 +366,7 @@ class Data extends Controller
         foreach ($data as &$item) {
             $item['teams'] = array_values($item['teams']);
         }
-        return json(['msg' => $data]);
+        return json($data);
     }
 
     public function fame_add()

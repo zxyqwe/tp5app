@@ -5,16 +5,23 @@
             名人堂
         </h1>
         <div class="fame-container" v-for="item in fames">
-            <h1>{{ item.name }}</h1>
+            <h1>汉服北京第{{ item.name }}届吧务组</h1>
             <div class="row fame-row">
                 <div class="panel panel-success fame-panel col-md-2" v-for="team in item.teams">
                     <div class="panel-heading">
                         <h3 class="panel-title">{{ team.name }}</h3>
                     </div>
                     <ul class="list-group">
-                        <a href="javascript:;" class="list-group-item" v-for="m in team.ms">
-                            <p class="list-group-item-heading">{{ m.t }}</p>
-                            <p class="list-group-item-text">{{ m.id }} {{ m.u }}</p>
+                        <a href="javascript:;" class="list-group-item media" v-for="m in team.ms">
+                            <div class="media-left media-middle">
+                                <a href="javascript:;">
+                                    <img class="media-object" src="/hanbj/data/fame_img?id={{ m.id }}">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <p class="list-group-item-heading media-heading">{{ m.t }}</p>
+                                <p class="list-group-item-text">{{ m.u }}</p>
+                            </div>
                         </a>
                     </ul>
                 </div>
