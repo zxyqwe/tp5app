@@ -58,6 +58,7 @@ class WxHanbj
             trace(json_encode($res));
             return '';
         }
+        trace("WxHanbj JsApi " . $res['ticket']);
         cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -73,6 +74,7 @@ class WxHanbj
             trace(json_encode($res));
             return '';
         }
+        trace("WxHanbj TicketApi " . $res['ticket']);
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
