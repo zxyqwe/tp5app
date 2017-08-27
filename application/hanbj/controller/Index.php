@@ -24,6 +24,18 @@ class Index extends Controller
 
     public function _empty()
     {
+        $action = $this->request->action();
+        if (in_array($action, [
+            'all',
+            'feelog',
+            'actlog',
+            'fee',
+            'create',
+            'tree',
+            'famelog'
+        ])) {
+            return view($action);
+        }
         return '';
     }
 
@@ -52,44 +64,9 @@ class Index extends Controller
         return view('home', ['name' => session('name')]);
     }
 
-    public function all()
-    {
-        return view('all');
-    }
-
-    public function feelog()
-    {
-        return view('feelog');
-    }
-
-    public function actlog()
-    {
-        return view('actlog');
-    }
-
-    public function fee()
-    {
-        return view('fee');
-    }
-
-    public function create()
-    {
-        return view('create');
-    }
-
-    public function tree()
-    {
-        return view('tree');
-    }
-
     public function fame()
     {
         return view('fame');
-    }
-
-    public function famelog()
-    {
-        return view('famelog');
     }
 
     public function logout()
