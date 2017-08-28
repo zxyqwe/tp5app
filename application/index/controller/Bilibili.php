@@ -11,10 +11,22 @@ class Bilibili
 
     public function index()
     {
+        $past = cache('cron_user_past');
+        $cur = cache('cron_user');
+        $past = json_decode($past, true);
+        $cur = json_decode($cur, true);
+        $past_intimacy = 0;
+        $cur_intimacy = 0;
+        if (isset($past['data']) && isset($past['data']['user_intimacy'])) {
+            $past_intimacy = $past['data']['user_intimacy'];
+        }
+        if (isset($cur['data']) && isset($cur['data']['user_intimacy'])) {
+            $cur_intimacy = $cur['data']['user_intimacy'];
+        }
         $time = date("Y-m-d H:i:s");
         return json([
-            'past' => cache('cron_user_past'),
-            'cur' => cache('cron_user'),
+            'past' => $past_intimacy,
+            'cur' => $cur_intimacy,
             'time' => $time
         ]);
     }
