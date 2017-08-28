@@ -24,10 +24,12 @@ class Bilibili
             $cur_intimacy = $cur['data']['user_intimacy'];
         }
         $time = date("Y-m-d H:i:s");
+        $cron_time = cache('bili_cron_time');
         return json([
             'past' => $past_intimacy,
             'cur' => $cur_intimacy,
-            'time' => $time
+            'time' => $time,
+            'cron' => $cron_time
         ]);
     }
 
