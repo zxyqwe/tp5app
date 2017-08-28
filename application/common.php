@@ -46,6 +46,28 @@ function Curl_Post($curlPost, $url, $easy = true)
     return $return_str;
 }
 
+function bili_Post($url, $cookie, $room)
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_COOKIE, $cookie);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_REFERER, 'http://live.bilibili.com/' . $room);
+    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36');
+    $return_str = curl_exec($curl);
+    if ($return_str === false) {
+        $num = curl_errno($curl);
+        $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
+        trace(json_encode(array('url' => $url, 'res' => $return_str)));
+    }
+    curl_close($curl);
+    return $return_str;
+}
+
 function Curl_Get($url)
 {
     $curl = curl_init();
