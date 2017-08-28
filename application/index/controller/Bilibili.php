@@ -48,7 +48,7 @@ class Bilibili
             trace(json_encode($res));
         }
         cache('bili_cron_user_past', cache('bili_cron_user'));
-        $urlapi = 'http://live.bilibili.com/User/getUserInfo';
+        $urlapi = 'https://api.live.bilibili.com/User/getUserInfo';
         $res = bili_Post($urlapi, $cookie, 218);
         cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
