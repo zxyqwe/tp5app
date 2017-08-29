@@ -2,6 +2,8 @@
 
 namespace app\index\controller;
 
+use app\index\BiliHelper;
+
 class Bilibili
 {
     public function _empty()
@@ -40,16 +42,10 @@ class Bilibili
             return json(['msg' => 'too fast', 'time' => $time]);
         }
         cache('bili_cron_cookie', 'bili_cron_cookie', 290);
-        $cookie = config('bili_cron_cookie');
-        $urlapi = 'https://api.live.bilibili.com/User/userOnlineHeart';
-        $res = bili_Post($urlapi, $cookie, 218);
-        $res = json_decode($res, true);
-        if ($res['code'] !== 0) {
-            trace(json_encode($res));
-        }
+        $bili = new BiliHelper();
+        $bili->online();
         cache('bili_cron_user_past', cache('bili_cron_user'));
-        $urlapi = 'https://api.live.bilibili.com/User/getUserInfo';
-        $res = bili_Post($urlapi, $cookie, 218);
+        $res = $bili->getInfo();
         cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
         return json(['msg' => 'ok', 'time' => $time]);
