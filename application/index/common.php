@@ -85,7 +85,7 @@ class BiliHelper
                 trace($res);
                 return '';
             case -10017:
-                trace('day empty');
+                trace("day empty $res");
                 cache('bili_cron_day_empty', 'bili_cron_day_empty', 8 * 3600);
                 return '';
         }
