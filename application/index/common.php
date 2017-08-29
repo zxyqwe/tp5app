@@ -146,7 +146,7 @@ class BiliHelper
             }
         }
         $ans = eval("return $result;");
-        trace("(๑•̀ㅂ•́)و✧ $result = $ans");
+        trace("(～￣▽￣)～ $result = $ans");
         return $ans;
     }
 
