@@ -80,13 +80,13 @@ function WX_union($access_token, $openid)
      * {"openid":"ov3ult_HuJrCd8GjaC6HaPkLRFUU","nickname":"shiyuka","sex":1,"language":"zh_CN","city":"Hebei","province":"Tianjin","country":"CN","headimgurl":"http:\/\/wx.qlogo.cn\/mmopen\/aPSbIhPARHAaWgYobs1H3m8OEaFoZiaVibRJnoFqDJFwUDqQE5KiaZichyst3Iq5pNia8dpbJugEHbdIm5RkentqQ1zoFzDicotXGb\/0","privilege":[],"unionid":"ohT2YuN9miDm3ZSKnnSuamgsw4qw"}
     * 和openid无关，只用accesstoken
     */
-    $data = Curl_Get("https://api.weixin.qq.com/sns/userinfo?" .
+    $raw = Curl_Get("https://api.weixin.qq.com/sns/userinfo?" .
         "access_token=" . $access_token .
         "&openid=" . $openid .
         "&lang=zh_CN");
-    $data = json_decode($data, true);
+    $data = json_decode($raw, true);
     if (!isset($data['openid'])) {
-        trace("Weixin Exception " . json_encode($data));
+        trace("Weixin Exception $raw");
         return $data;
     }
     return $data['openid'];
@@ -94,12 +94,12 @@ function WX_union($access_token, $openid)
 
 function WX_code($code, $api, $sec)
 {
-    $res = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?' .
+    $raw = Curl_Get('https://api.weixin.qq.com/sns/oauth2/access_token?' .
         'appid=' . $api .
         '&secret=' . $sec .
         '&code=' . $code .
         '&grant_type=authorization_code');
-    $res = json_decode($res, true);
+    $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
         return $res;
     }
@@ -123,8 +123,8 @@ function WX_access($api, $sec, $name)
     $tmp = cache($name);
     if (false !== $tmp)
         return $tmp;
-    $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec);
-    $res = json_decode($res, true);
+    $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec);
+    $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
         return $res;
     }

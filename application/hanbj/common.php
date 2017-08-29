@@ -52,10 +52,10 @@ class WxHanbj
         if (cache('?jsapi')) {
             return cache('jsapi');
         }
-        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
-        $res = json_decode($res, true);
+        $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
+            trace($raw);
             return '';
         }
         trace("WxHanbj JsApi " . $res['ticket']);
@@ -68,10 +68,10 @@ class WxHanbj
         if (cache('?ticketapi')) {
             return cache('ticketapi');
         }
-        $res = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
-        $res = json_decode($res, true);
+        $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
+            trace($raw);
             return '';
         }
         trace("WxHanbj TicketApi " . $res['ticket']);
@@ -170,11 +170,11 @@ class CardOper
                 "is_notify_custom_field2" => true
             ]
         ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
-            return json(['msg' => json_encode($res)], 400);
+            trace($raw);
+            return json(['msg' => $raw], 400);
         }
         return true;
     }
@@ -192,11 +192,11 @@ class CardOper
             'init_custom_field_value1' => $uname,
             'init_custom_field_value2' => FeeOper::cache_fee($uname)
         ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
-            return json(['msg' => json_encode($res)], 400);
+            trace($raw);
+            return json(['msg' => $raw], 400);
         }
         $map['status'] = 0;
         $map['code'] = $code;
@@ -425,10 +425,10 @@ class WxTemp
                 ]
             ]
         ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
+            trace($raw);
         }
     }
 
@@ -457,10 +457,10 @@ class WxTemp
                 ]
             ]
         ];
-        $res = Curl_Post($data, $url, false);
-        $res = json_decode($res, true);
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace(json_encode($res));
+            trace($raw);
         }
     }
 }

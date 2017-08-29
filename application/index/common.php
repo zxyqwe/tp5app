@@ -31,9 +31,9 @@ class BiliHelper
     {
         $urlapi = $this->prefix . 'User/userOnlineHeart';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-        $res = json_decode($res, true);
-        if ($res['code'] !== 0) {
-            trace(json_encode($res));
+        $data = json_decode($res, true);
+        if ($data['code'] !== 0) {
+            trace($res);
         }
     }
 
@@ -93,7 +93,7 @@ class BiliHelper
         $end = date("Y-m-d H:i:s", $data['data']['time_end']);
         $str = "领取宝箱，{$data['data']['silver']}瓜子，{$data['data']['minute']}分钟，$start --> $end";
         trace($str);
-        cache('bili_cron_silverTask', json_encode($data));
+        cache('bili_cron_silverTask', $res);
         return cache('bili_cron_silverTask');
     }
 
