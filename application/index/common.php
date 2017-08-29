@@ -63,7 +63,7 @@ class BiliHelper
         $urlapi = $this->prefix . "freeSilver/getAward?time_start={$start}&time_end={$end}&captcha=$captcha";
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
-        if ($data['code'] == 0) {
+        if ($data['code'] === 0) {
             trace("领取成功：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
             cache('bili_cron_silverTask', null);
             $this->silverTask();
@@ -89,7 +89,7 @@ class BiliHelper
                 cache('bili_cron_day_empty', 'bili_cron_day_empty', 8 * 3600);
                 return '';
         }
-        cache('bili_cron_silverTask', json_encode($data), $data['data']['time_end'] + 5);
+        cache('bili_cron_silverTask', json_encode($data));
         return cache('bili_cron_silverTask');
     }
 
