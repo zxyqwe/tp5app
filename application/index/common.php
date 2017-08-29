@@ -60,7 +60,7 @@ class BiliHelper
             return;
         }
         $captcha = $this->captcha();
-        $urlapi = $this->prefix . "freeSilver/getAward?time_start={$start}&time_end={$end}&captcha=$captcha";
+        $urlapi = $this->prefix . "freeSilver/getAward?time_start=$start&time_end=$end&captcha=$captcha";
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
@@ -89,6 +89,10 @@ class BiliHelper
                 cache('bili_cron_day_empty', 'bili_cron_day_empty', 8 * 3600);
                 return '';
         }
+        $start = date("Y-m-d H:i:s", $data['data']['time_start']);
+        $end = date("Y-m-d H:i:s", $data['data']['time_end']);
+        $str = "领取宝箱，{$data['data']['silver']}瓜子，{$data['data']['minute']}分钟，$start --> $end";
+        trace($str);
         cache('bili_cron_silverTask', json_encode($data));
         return cache('bili_cron_silverTask');
     }
