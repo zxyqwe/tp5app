@@ -48,6 +48,7 @@ class Bilibili
         $res = $bili->getInfo();
         cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
+        $bili->silver();
         return json(['msg' => 'ok', 'time' => $time]);
     }
 }
