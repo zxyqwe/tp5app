@@ -138,6 +138,7 @@ class Mobile extends Controller
                 trace([$phone, session('openid')]);
                 return json(['msg' => '绑定失败'], 500);
             }
+            trace("绑定 $phone " . session('openid'));
             return json(['msg' => 'OK']);
         }
         return json(['msg' => '身份证错误'], 400);

@@ -1,6 +1,9 @@
 <?php
 
 namespace app\index;
+
+use think\exception\HttpResponseException;
+
 class BiliHelper
 {
     private $prefix = 'https://api.live.bilibili.com/';
@@ -167,6 +170,7 @@ class BiliHelper
             $num = curl_errno($curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
             trace(json_encode(array('url' => $url, 'res' => $return_str)));
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
         curl_close($curl);
         return $return_str;
