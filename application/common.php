@@ -40,7 +40,7 @@ function Curl_Post($curlPost, $url, $easy = true)
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-        trace(json_encode(array('method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str)));
+        trace(['method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str]);
         throw new think\exception\HttpResponseException(json(['msg' => 'Curl_Post ' . $return_str]));
     }
     curl_close($curl);
@@ -59,7 +59,7 @@ function Curl_Get($url)
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-        trace(json_encode(array('method' => 'get', 'url' => $url, 'res' => $return_str)));
+        trace(['method' => 'get', 'url' => $url, 'res' => $return_str]);
         throw new think\exception\HttpResponseException(json(['msg' => 'Curl_Get ' . $return_str]));
     }
     curl_close($curl);

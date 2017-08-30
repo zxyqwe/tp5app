@@ -87,7 +87,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg);
             default:
-                trace(json_encode($msg));
+                trace($msg);
             case 'text':
             case 'image':
             case 'voice':
@@ -126,7 +126,7 @@ class WxHanbj
             case 'TEMPLATESENDJOBFINISH':
                 $Status = (string)$msg->Status;
                 if ('success' != $Status) {
-                    trace(json_encode($msg));
+                    trace($msg);
                 }
                 return '';
             case 'update_member_card':
@@ -135,7 +135,7 @@ class WxHanbj
                 trace($UserCardCode . ' --> ' . $ModifyBonus);
                 return '';
             default:
-                trace(json_encode($msg));
+                trace($msg);
             case 'subscribe':
             case 'unsubscribe':
             case 'SCAN':
@@ -227,7 +227,7 @@ class CardOper
         } else {
             $data['status'] = 'del OK';
         }
-        trace(json_encode($data));
+        trace($data);
         return '';
     }
 
