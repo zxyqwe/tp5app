@@ -417,7 +417,7 @@ class Data extends Controller
         $search = input('get.search');
         $map['f.code'] = ['EXP', 'IS NOT NULL'];
         if (!empty($search)) {
-            $map['m.unique_name'] = ['like', '%' . $search . '%'];
+            $map['m.tieba_id|m.unique_name'] = ['like', '%' . $search . '%'];
         }
         $join = [
             ['card f', 'm.openid=f.openid', 'left']

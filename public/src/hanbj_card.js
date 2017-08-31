@@ -5,9 +5,15 @@ var card = (function ($, w, undefined) {
         $table.bootstrapTable({
             'pageSize': 20,
             formatSearch: function () {
-                return '搜索会员编号';
+                return '搜索昵称或会员编号';
             }
         });
+        w.codeFormatter = function (value, row) {
+            return value === '0' ? '正常' : '注销';
+        };
+        w.cardFormatter = function (value, row) {
+            return value === '0' ? '' : '激活';
+        };
     };
     return {
         init: init
