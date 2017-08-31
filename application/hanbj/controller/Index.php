@@ -32,7 +32,8 @@ class Index extends Controller
             'fee',
             'create',
             'tree',
-            'famelog'
+            'famelog',
+            'card'
         ])) {
             return view($action);
         }
