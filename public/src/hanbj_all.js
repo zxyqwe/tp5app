@@ -64,7 +64,10 @@ var all = (function ($, w, undefined) {
     var init = function () {
         var $table = $('#table');
         $table.bootstrapTable({
-            'pageSize': 20
+            'pageSize': 20,
+            formatSearch: function () {
+                return '搜索昵称';
+            }
         });
     };
     return {
