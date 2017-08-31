@@ -1,0 +1,36 @@
+{layout name="layout" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <div id="body">
+            <h1>
+                会员卡情况
+            </h1>
+            <div>
+                <table id="table"
+                       data-pagination="true"
+                       data-search="true"
+                       data-side-pagination="server"
+                       data-url="/hanbj/data/json_card"
+                       data-page-list="[20, 50, 100]">
+                    <thead>
+                    <tr>
+                        <th data-field="u">会员编号</th>
+                        <th data-field="t">昵称</th>
+                        <th data-field="c">会员状态</th>
+                        <th data-field="o">会员卡</th>
+                        <th data-field="s">状态</th>
+                    </tr>
+                    </thead>
+                </table>
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/hanbj_card.js"></script>
+<script>
+    var nav = 'nav2_6';
+    $(window).load(function () {
+        card.init();
+    });
+</script>

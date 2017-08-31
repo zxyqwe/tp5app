@@ -215,7 +215,8 @@ class Data extends Controller
                 'f.web_name as w',
                 'f.year_time as y',
                 'f.bonus as b',
-                'f.code'
+                'f.code',
+                'f.openid'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -405,5 +406,45 @@ class Data extends Controller
             return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
+    }
+
+    public function json_card()
+    {
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $search = input('get.search');
+        $map['f.code'] = ['EXP', 'IS NOT NULL'];
+        if (!empty($search)) {
+            $map['m.unique_name'] = ['like', '%' . $search . '%'];
+        }
+        $join = [
+            ['card f', 'm.openid=f.openid', 'left']
+        ];
+        $tmp = Db::table('member')
+            ->alias('m')
+            ->join($join)
+            ->where($map)
+            ->limit($offset, $size)
+            ->cache(600)
+            ->group('m.unique_name')
+            ->field([
+                'm.unique_name as u',
+                'm.tieba_id as t',
+                'm.code as c',
+                'f.code as o',
+                'f.status as s'
+            ])
+            ->select();
+        $data['rows'] = $tmp;
+        $total = Db::table('member')
+            ->alias('m')
+            ->join($join)
+            ->where($map)
+            ->cache(600)
+            ->count();
+        $data['total'] = $total;
+        return json($data);
     }
 }

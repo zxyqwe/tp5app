@@ -61,6 +61,9 @@ var all = (function ($, w, undefined) {
     w.codeFormatter = function (value, row) {
         return value === '0' ? '正常' : '注销';
     };
+    w.openidFormatter = function (str, row) {
+        return !str || str.length === 0 ? '' : '有';
+    };
     var init = function () {
         var $table = $('#table');
         $table.bootstrapTable({
