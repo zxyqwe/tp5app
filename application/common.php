@@ -149,5 +149,3 @@ function WX_iter($api, $sec)
     }
     return false;
 }
-
-\think\Route::rule('index.php/hyb', 'hanbj/index/old');
