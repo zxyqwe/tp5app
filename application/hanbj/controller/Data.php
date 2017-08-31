@@ -426,6 +426,7 @@ class Data extends Controller
             ->alias('m')
             ->join($join)
             ->where($map)
+            ->order('f.id', 'desc')
             ->limit($offset, $size)
             ->cache(600)
             ->group('m.unique_name')
