@@ -31,6 +31,9 @@ var bulletin = (function ($, w, undefined) {
                     msg[i].o = repeat(alr, msg[i].b) + repeat(nye, tmp);
                 }
                 return res;
+            },
+            formatSearch: function () {
+                return '搜索会员编号';
             }
         });
     };
