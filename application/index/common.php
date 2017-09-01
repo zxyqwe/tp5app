@@ -9,6 +9,7 @@ class BiliHelper
     private $prefix = 'https://api.live.bilibili.com/';
     private $cookie = '';
     private $room_id = 218;
+    private $ruid = 116683;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
     private $OCR = array(
         '0' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111111111111111111111',
@@ -45,6 +46,30 @@ class BiliHelper
         $urlapi = $this->prefix . 'User/getUserInfo';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         return $res;
+    }
+
+    public function freeGift()
+    {
+        if (cache('?bili_cron_free_gift')) {
+            return;
+        }
+        $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] === 0) {
+            $gift = end($data['data']['gift']);
+            trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
+            return;
+        }
+        if ($data['code'] === -403 && $data['data']['heart'] === false) {
+            cache('bili_cron_free_gift', 'bili_cron_free_gift', 8 * 3600);
+            trace('day empty ' . $raw);
+            return;
+        } elseif ($data['msg'] === '非法心跳') {
+            $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
+            $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        }
+        trace($raw);
     }
 
     public function silver()
