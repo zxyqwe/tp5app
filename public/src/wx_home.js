@@ -9,7 +9,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 cardExt: JSON.stringify(msg)
             }],
             success: function (res) {
-                w.location.search = '?g=123';
+                w.location.search = '?g=' + $.now();
             },
             fail: function (msg) {
                 w.msgto(msg);
@@ -195,7 +195,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_active",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=123';
+                    w.location.search = '?g=' + $.now();
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -276,7 +276,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/wx/json_renew",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=123';
+                    w.location.search = '?g=' + $.now();
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
