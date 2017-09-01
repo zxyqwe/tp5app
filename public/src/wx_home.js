@@ -1,7 +1,7 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
     var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, vwork_act_log,
-        $work_act_log_button;
+        $work_act_log_button, rand = new Date().getTime();
     var add_card = function (msg) {
         wx.addCard({
             cardList: [{
@@ -9,7 +9,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 cardExt: JSON.stringify(msg)
             }],
             success: function (res) {
-                w.location.search = '?g=' + $.now();
+                w.location.search = '?g=' + rand;
             },
             fail: function (msg) {
                 w.msgto(msg);
@@ -195,7 +195,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/mobile/json_active",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=' + $.now();
+                    w.location.search = '?g=' + rand;
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -276,7 +276,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: "/hanbj/wx/json_renew",
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=' + $.now();
+                    w.location.search = '?g=' + rand;
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
