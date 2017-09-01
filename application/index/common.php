@@ -56,7 +56,7 @@ class BiliHelper
         $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        $timeout = 600;
+        $timeout = 590;
         if ($data['code'] === 0) {
             $gift = end($data['data']['gift']);
             trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
