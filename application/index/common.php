@@ -56,21 +56,21 @@ class BiliHelper
         $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
+        $timeout = 600;
         if ($data['code'] === 0) {
             $gift = end($data['data']['gift']);
             trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
-            cache('bili_cron_free_gift', 'bili_cron_free_gift', 600);
         } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
-            cache('bili_cron_free_gift', 'bili_cron_free_gift', 8 * 3600);
+            $timeout = 8 * 3600;
             trace("free gift empty {$data['msg']}");
         } elseif ($data['msg'] === '非法心跳') {
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
             $this->bili_Post($urlapi, $this->cookie, $this->room_id);
             trace("心跳 {$data['data']['heart']}");
-            cache('bili_cron_free_gift', 'bili_cron_free_gift', 600);
         } else {
-            trace($raw);
+            trace("{$data['msg']}");
         }
+        cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
     }
 
     public function silver()
