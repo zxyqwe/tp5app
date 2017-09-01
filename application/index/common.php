@@ -61,11 +61,11 @@ class BiliHelper
             trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
         } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
             cache('bili_cron_free_gift', 'bili_cron_free_gift', 8 * 3600);
-            trace('day empty ' . $raw);
+            trace("free gift empty {$data['msg']}");
         } elseif ($data['msg'] === '非法心跳') {
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
             $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-            trace('心跳 ' . $raw);
+            trace("心跳 {$data['data']['heart']}");
         } else {
             trace($raw);
         }
