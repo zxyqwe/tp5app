@@ -68,7 +68,7 @@ class BiliHelper
             $this->bili_Post($urlapi, $this->cookie, $this->room_id);
             trace("心跳 {$data['data']['heart']}");
         } else {
-            trace("{$data['msg']}");
+            trace($data['msg']);
         }
         cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
     }
