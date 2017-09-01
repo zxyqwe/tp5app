@@ -59,6 +59,7 @@ class BiliHelper
         if ($data['code'] === 0) {
             $gift = end($data['data']['gift']);
             trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
+            cache('bili_cron_free_gift', 'bili_cron_free_gift', 600);
         } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
             cache('bili_cron_free_gift', 'bili_cron_free_gift', 8 * 3600);
             trace("free gift empty {$data['msg']}");
@@ -66,6 +67,7 @@ class BiliHelper
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
             $this->bili_Post($urlapi, $this->cookie, $this->room_id);
             trace("心跳 {$data['data']['heart']}");
+            cache('bili_cron_free_gift', 'bili_cron_free_gift', 600);
         } else {
             trace($raw);
         }
