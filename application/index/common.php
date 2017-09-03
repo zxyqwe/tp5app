@@ -97,10 +97,12 @@ class BiliHelper
             cache('bili_cron_silverTask', null);
             $this->silverTask();
         } else {
-            trace("领取失败：{$data['msg']}");
             if (in_array('过期', $data['msg'])) {
+                trace("领取失败：{$data['msg']}");
                 cache('bili_cron_silverTask', null);
                 $this->silverTask();
+            } else {
+                trace("领取失败：$res");
             }
         }
     }
