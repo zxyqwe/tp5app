@@ -65,8 +65,8 @@ class BiliHelper
             trace("free gift empty {$data['msg']}");
         } elseif ($data['msg'] === '非法心跳') {
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
-            $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-            trace("心跳 {$data['data']['heart']}");
+            $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+            trace("心跳 $raw");
         } else {
             trace($data['msg']);
         }
