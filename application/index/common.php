@@ -66,7 +66,7 @@ class BiliHelper
         } elseif ($data['msg'] === '非法心跳') {
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-            trace("心跳 $raw");
+            trace("心跳 {$data['msg']}");
         } else {
             trace($data['msg']);
         }
@@ -93,7 +93,7 @@ class BiliHelper
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
-            trace("领取成功：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
+            trace("领取银瓜子：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
             cache('bili_cron_silverTask', null);
             $this->silverTask();
         } else {
