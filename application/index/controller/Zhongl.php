@@ -19,6 +19,9 @@ class Zhongl
     public function geocode()
     {
         $pos = input('post.pos');
+        if (empty($pos)) {
+            return json(['msg' => 'pos']);
+        }
         $geo = new GeoHelper();
         return $geo->getPos($pos);
     }

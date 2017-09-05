@@ -221,6 +221,9 @@ class GeoHelper
 
     public function getPos($pos)
     {
+        if (cache('?baidu_limit_geopos')) {
+            return json_encode(['msg' => 1]);
+        }
         $prefix = 'baidu_' . $pos;
         if (cache('?' . $prefix)) {
             return cache($prefix);
@@ -230,6 +233,9 @@ class GeoHelper
         $data = json_decode($raw, true);
         if ($data['status'] === 0) {
             cache($prefix, $raw);
+        } elseif ($data['status'] === 302) {
+            cache('baidu_limit_geopos', 'baidu_limit_geopos', 8 * 3600);
+            return json_encode(['msg' => 1]);
         }
         return $raw;
     }
