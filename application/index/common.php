@@ -209,3 +209,28 @@ class BiliHelper
         return $return_str;
     }
 }
+
+class GeoHelper
+{
+    private $ak = '';
+
+    public function __construct()
+    {
+        $this->ak = config('baidu_ak');
+    }
+
+    public function getPos($pos)
+    {
+        $prefix = 'baidu_' . $pos;
+        if (cache('?' . $prefix)) {
+            return cache($prefix);
+        }
+        $urlapi = "http://api.map.baidu.com/geocoder/v2/?address=$pos&output=json&city=北京市&ak={$this->ak}";
+        $raw = Curl_Get($urlapi);
+        $data = json_decode($raw, true);
+        if ($data['status'] === 0) {
+            cache($prefix, $raw);
+        }
+        return $raw;
+    }
+}
