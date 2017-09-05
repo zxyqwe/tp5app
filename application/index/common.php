@@ -66,6 +66,7 @@ class BiliHelper
         } elseif ($data['msg'] === '非法心跳') {
             $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+            $data = json_decode($raw, true);
             trace("心跳 {$data['msg']}");
         } else {
             trace($data['msg']);
