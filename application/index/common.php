@@ -221,12 +221,12 @@ class GeoHelper
 
     public function getPos($pos)
     {
-        if (cache('?baidu_limit_geopos')) {
-            return json_encode(['msg' => 1]);
-        }
         $prefix = 'baidu_' . $pos;
         if (cache('?' . $prefix)) {
             return cache($prefix);
+        }
+        if (cache('?baidu_limit_geopos')) {
+            return json_encode(['msg' => 1]);
         }
         $urlapi = "http://api.map.baidu.com/geocoder/v2/?address=$pos&output=json&city=北京市&ak={$this->ak}";
         $raw = Curl_Get($urlapi);
