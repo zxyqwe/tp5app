@@ -165,7 +165,7 @@ class Mobile extends Controller
         if (cache("?json_tempid" . $uniq)) {
             $tempid = cache("json_tempid" . $uniq);
         } else {
-            while ($tempid !== 0) {
+            while ($tempid === 0) {
                 $tempnum = rand(1000, 9999);
                 if (cache('?tempnum' . $tempnum)) {
                     $tempid = $tempnum;
