@@ -115,10 +115,10 @@ class WxHanbj
 
     private static function auto($to, $from, $type)
     {
-        trace(implode(':', [
-            $to,
-            $type
-        ]));
+        trace([
+            'TO' => $to,
+            'TEXT' => $type
+        ]);
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
