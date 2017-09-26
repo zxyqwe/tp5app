@@ -167,10 +167,10 @@ class Mobile extends Controller
         } else {
             while ($tempid === 0) {
                 $tempnum = rand(1000, 9999);
-                if (cache('?tempnum' . $tempnum)) {
+                if (!cache('?tempnum' . $tempnum)) {
+                    cache('tempnum' . $tempnum, '', 1800);
                     $tempid = $tempnum;
                     cache("json_tempid" . $uniq, $tempid, 1700);
-                    cache('tempnum' . $tempnum, '', 1800);
                 }
             }
         }
