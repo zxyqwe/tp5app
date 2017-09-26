@@ -89,6 +89,13 @@ class WxHanbj
             default:
                 trace($msg);
             case 'text':
+                $cont = (string)$msg->Content;
+                if (cache('?tempnum' . $cont)) {
+                    $cont = cache('tempnum' . $cont);
+                } else {
+                    $cont = '文字信息：' . $cont;
+                }
+                return self::auto((string)$msg->FromUserName, (string)$msg->ToUserName, $cont);
             case 'image':
             case 'voice':
             case 'video':
@@ -97,6 +104,10 @@ class WxHanbj
             case 'link':
                 return self::auto((string)$msg->FromUserName, (string)$msg->ToUserName, $type);
         }
+    }
+
+    private static function tempid()
+    {
     }
 
     private static function auto($to, $from, $type)
@@ -253,7 +264,7 @@ class BonusOper
     const FEE = 30;
     const ACT = 30;
     const ACT_NAME = '2017中秋';
-    const WORKER = ['坎丙午','乾壬申','兑甲辰','兑丙子'];
+    const WORKER = ['坎丙午', '乾壬申', '兑甲辰', '兑丙子'];
 
     public static function reCalc($uname)
     {
