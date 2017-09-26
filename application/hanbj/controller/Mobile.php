@@ -56,7 +56,8 @@ class Mobile extends Controller
                 'mail',
                 'pref',
                 'web_name',
-                'bonus'
+                'bonus',
+                'phone'
             ])
             ->find();
         if (null === $res) {
@@ -72,6 +73,7 @@ class Mobile extends Controller
                 break;
         }
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
+        $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "****", $res['phone']);
         $card = Db::table('card')
             ->where($map)
             ->field([
