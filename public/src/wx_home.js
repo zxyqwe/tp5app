@@ -224,6 +224,21 @@ var wx_home = (function ($, Vue, w, undefined) {
                 }
             });
         });
+        $('#tempid').click(function () {
+            $.ajax({
+                type: "GET",
+                url: "/hanbj/mobile/json_tempid",
+                dataType: "json",
+                success: function (msg) {
+                    var temp = msg.temp;
+                    weui.alert('<p>临时身份码</p><p>' + temp + '</p>');
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                }
+            });
+        });
         ticketapi();
     };
     var load_act = function () {

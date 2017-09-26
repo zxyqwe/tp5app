@@ -158,6 +158,28 @@ class Mobile extends Controller
         return json($wx);
     }
 
+    public function json_tempid()
+    {
+        $uniq = session('unique_name');
+        $tempid = 0;
+        if (cache("?json_tempid" . $uniq)) {
+            $tempid = cache("json_tempid" . $uniq);
+        } else {
+            while ($tempid !== 0) {
+                $tempnum = rand(1000, 9999);
+                if (cache('?tempnum' . $tempnum)) {
+                    $tempid = $tempnum;
+                    cache("json_tempid" . $uniq, $tempid, 1700);
+                    cache('tempnum' . $tempnum, '', 1800);
+                }
+            }
+        }
+        $data['time'] = date("Y-m-d H:i:s");
+        $data['uniq'] = $uniq;
+        cache('tempnum' . $tempid, json_encode($data), 1800);
+        return json(['msg' => 'OK', 'temp' => $tempid]);
+    }
+
     public function json_active()
     {
         $openid = session('openid');
