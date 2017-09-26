@@ -231,7 +231,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 dataType: "json",
                 success: function (msg) {
                     var temp = msg.temp;
-                    weui.alert('<p>临时身份码</p><p>' + temp + '</p>');
+                    weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
