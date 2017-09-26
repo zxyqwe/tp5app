@@ -109,7 +109,11 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "会员编号：{$data['uniq']}\n生成时间：{$data['time']}\n有效期：30分钟";
+        $cont = "会员编号：{$data['uniq']}\n" .
+            "昵称：{$data['nick']}\n" .
+            "生成日期：{$data['time']}\n" .
+            "生成时间：{$data['time2']}\n" .
+            "有效期：30分钟";
         return $cont;
     }
 

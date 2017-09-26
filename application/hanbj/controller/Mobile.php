@@ -64,6 +64,7 @@ class Mobile extends Controller
             return redirect('https://app.zxyqwe.com/hanbj/mobile/reg');
         }
         session('unique_name', $res['unique_name']);
+        session('tieba_id', $res['tieba_id']);
         switch ($res['code']) {
             case 0:
                 $res['code'] = '正常';
@@ -174,8 +175,10 @@ class Mobile extends Controller
                 }
             }
         }
-        $data['time'] = date("Y-m-d H:i:s");
+        $data['time'] = date("Y-m-d");
+        $data['time2'] = date("H:i:s");
         $data['uniq'] = $uniq;
+        $data['nick'] = session('tieba_id');
         cache('tempnum' . $tempid, json_encode($data), 1800);
         return json(['msg' => 'OK', 'temp' => $tempid]);
     }
