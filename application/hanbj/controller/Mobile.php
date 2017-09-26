@@ -73,7 +73,7 @@ class Mobile extends Controller
                 break;
         }
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
-        $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "****", $res['phone']);
+        $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
         $card = Db::table('card')
             ->where($map)
             ->field([
