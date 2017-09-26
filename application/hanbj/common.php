@@ -92,6 +92,7 @@ class WxHanbj
                 $cont = (string)$msg->Content;
                 if (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
+                    $cont = self::tempid(json_decode($cont, true));
                 } else {
                     $cont = '文字信息：' . $cont;
                 }
@@ -106,8 +107,10 @@ class WxHanbj
         }
     }
 
-    private static function tempid()
+    private static function tempid($data)
     {
+        $cont = "会员编号：{$data['uniq']}\n生成时间：{$data['time']}有效期：30分钟";
+        return $cont;
     }
 
     private static function auto($to, $from, $type)
@@ -121,7 +124,7 @@ class WxHanbj
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
             '<CreateTime>%s</CreateTime>' .
             '<MsgType><![CDATA[text]]></MsgType>' .
-            '<Content><![CDATA[机器人自动回复：%s]]></Content>' .
+            '<Content><![CDATA[机器人自动回复：\n%s]]></Content>' .
             '</xml>';
         return sprintf($data, $to, $from, time(), $type);
     }
