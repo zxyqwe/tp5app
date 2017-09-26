@@ -109,7 +109,7 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "会员编号：{$data['uniq']}\n生成时间：{$data['time']}有效期：30分钟";
+        $cont = "会员编号：{$data['uniq']}\n生成时间：{$data['time']}\n有效期：30分钟";
         return $cont;
     }
 
@@ -124,9 +124,9 @@ class WxHanbj
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
             '<CreateTime>%s</CreateTime>' .
             '<MsgType><![CDATA[text]]></MsgType>' .
-            '<Content><![CDATA[机器人自动回复：\n%s]]></Content>' .
+            '<Content><![CDATA[机器人自动回复：%s]]></Content>' .
             '</xml>';
-        return sprintf($data, $to, $from, time(), $type);
+        return sprintf($data, $to, $from, time(), "\n" . $type);
     }
 
     private static function do_event($msg)
