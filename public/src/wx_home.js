@@ -412,6 +412,8 @@ var wx_home = (function ($, Vue, w, undefined) {
         bonus: bonus,
         valid_fee: valid_fee,
         work_act_log: work_act_log,
-        build: get_act('416521837905')
+        build: function () {
+            get_act('416521837905');
+        }
     };
 })(Zepto, Vue, window);
