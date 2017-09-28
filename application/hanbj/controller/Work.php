@@ -44,7 +44,8 @@ class Work extends Controller
             ->join($join)
             ->field([
                 'm.unique_name as uni',
-                'm.tieba_id as tie'
+                'm.tieba_id as tie',
+                'm.code'
             ])
             ->find();
         if (null === $res) {
@@ -62,6 +63,7 @@ class Work extends Controller
             $code = 0;
         }
         $map['f.code'] = $code;
+        $map['m.code'] = 0;
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];

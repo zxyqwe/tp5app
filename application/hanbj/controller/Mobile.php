@@ -70,7 +70,7 @@ class Mobile extends Controller
                 $res['code'] = '正常';
                 break;
             case 1:
-                $res['code'] = '注销';
+                $res['code'] = '<span class="temp-text">注销</span>';
                 break;
         }
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));

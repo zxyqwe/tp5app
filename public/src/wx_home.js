@@ -56,6 +56,12 @@ var wx_home = (function ($, Vue, w, undefined) {
     var build_act = function (msg) {
         var s = '<p>活动：';
         s += msg.act;
+        s += '</p>';
+        if (msg.code === '1') {
+            s += '<p class="temp-text">状态：注销';
+        } else {
+            s += '<p>状态：正常';
+        }
         s += '</p><p>编号：';
         s += msg.uni;
         s += '</p><p>昵称：';
@@ -405,6 +411,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         valid: valid,
         bonus: bonus,
         valid_fee: valid_fee,
-        work_act_log: work_act_log
+        work_act_log: work_act_log,
+        build: get_act
     };
 })(Zepto, Vue, window);
