@@ -387,9 +387,7 @@ class Data extends Controller
                 'label as l'
             ])
             ->select();
-        $data['rows'] = $res;
-        $data['total'] = count($res);
-        return json($data);
+        return json($res);
     }
 
     public function fame_add()
