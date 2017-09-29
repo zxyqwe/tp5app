@@ -1,6 +1,20 @@
 var fame = (function ($, Vue, w, undefined) {
     'use strict';
     var vmain;
+    var grade = function (n) {
+        switch (n) {
+            case '0':
+                return '会长';
+            case '1':
+                return '副会长';
+            case '2':
+                return '部长';
+            case '3':
+                return '副部长';
+            case '4':
+                return '干事';
+        }
+    };
     var init = function () {
         vmain = new Vue({
             el: '#fame',
@@ -22,20 +36,7 @@ var fame = (function ($, Vue, w, undefined) {
                             return '/static/arrow-up.png';
                     }
                 },
-                fame_name: function (n) {
-                    switch (n) {
-                        case '0':
-                            return '会长';
-                        case '1':
-                            return '副会长';
-                        case '2':
-                            return '部长';
-                        case '3':
-                            return '副部长';
-                        case '4':
-                            return '干事';
-                    }
-                }
+                fame_name: grade
             }
         });
         $.ajax({
@@ -112,6 +113,9 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var fameori = function () {
+        w.codeFormatter = function (value, row) {
+            return grade(value);
+        };
         var $table = $('#table');
         $table.bootstrapTable();
     };
