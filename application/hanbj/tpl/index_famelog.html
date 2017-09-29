@@ -87,76 +87,10 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/static/hanbj_famelog.js"></script>
+<script type="text/javascript" src="/static/hanbj_fame.js"></script>
 <script>
-    var famelog = (function ($, Vue, w, undefined) {
-        'use strict';
-        var vmain;
-        var init = function () {
-            vmain = new Vue({
-                el: '#body',
-                data: {
-                    uname: '',
-                    year: 0,
-                    grade: 0,
-                    labelname: '',
-                    candy: [],
-                    res: []
-                },
-                methods: {
-                    sel_candy: function (item) {
-                        this.res.push({t: item.t, u: item.u});
-                    },
-                    del_candy: function (n) {
-                        this.res.splice(n, 1);
-                    }
-                }
-            });
-            vmain.$watch('uname', function (nv) {
-                $.ajax({
-                    type: "GET",
-                    url: "/hanbj/data/fee_search",
-                    dataType: "json",
-                    data: {
-                        name: nv
-                    },
-                    success: function (msg) {
-                        vmain.candy = msg;
-                    },
-                    error: function (msg) {
-                        vmain.candy = [];
-                        msg = JSON.parse(msg.responseText);
-                        w.msgto(msg.msg);
-                    }
-                });
-            });
-            $('#res_up').click(function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/hanbj/data/fame_add",
-                    dataType: "json",
-                    data: {
-                        name: vmain.res,
-                        year: vmain.year,
-                        grade: vmain.grade,
-                        label: vmain.labelname
-                    },
-                    success: function (msg) {
-                        vmain.res = [];
-                    },
-                    error: function (msg) {
-                        msg = JSON.parse(msg.responseText);
-                        w.msgto(msg.msg);
-                    }
-                });
-            });
-        };
-        return {
-            init: init
-        };
-    })(jQuery, Vue, window);
     var nav = 'nav3_3';
     $(window).load(function () {
-        famelog.init();
+        fame.initlog();
     });
 </script>

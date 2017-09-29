@@ -29,64 +29,6 @@
 </div>
 <script type="text/javascript" src="/static/hanbj_fame.js"></script>
 <script>
-    var fame = (function ($, Vue, w, undefined) {
-        'use strict';
-        var vmain;
-        var init = function () {
-            vmain = new Vue({
-                el: '#fame',
-                data: {
-                    fames: []
-                },
-                methods: {
-                    fame_img: function (n) {
-                        switch (n) {
-                            case '0':
-                                return '/static/arrow-up.png';
-                            case '1':
-                                return '/static/arrow-up.png';
-                            case '2':
-                                return '/static/arrow-up.png';
-                            case '3':
-                                return '/static/arrow-up.png';
-                            case '4':
-                                return '/static/arrow-up.png';
-                        }
-                    },
-                    fame_name: function (n) {
-                        switch (n) {
-                            case '0':
-                                return '会长';
-                            case '1':
-                                return '副会长';
-                            case '2':
-                                return '部长';
-                            case '3':
-                                return '副部长';
-                            case '4':
-                                return '干事';
-                        }
-                    }
-                }
-            });
-            $.ajax({
-                type: "GET",
-                url: "/hanbj/data/json_fame",
-                dataType: "json",
-                success: function (msg) {
-                    vmain.fames = msg;
-                },
-                error: function (msg) {
-                    vmain.fames = [];
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                }
-            });
-        };
-        return {
-            init: init
-        };
-    })(jQuery, Vue, window);
     var nav = 'nav1_3';
     $(window).load(function () {
         fame.init();

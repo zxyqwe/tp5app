@@ -33,7 +33,11 @@ class Index extends Controller
             'create',
             'tree',
             'famelog',
-            'card'
+            'card',
+            'fameinit',
+            'fame',
+            'bulletin',
+            'home'
         ])) {
             return view($action);
         }
@@ -53,21 +57,6 @@ class Index extends Controller
     public function old()
     {
         return redirect('/hanbj/index/bulletin');
-    }
-
-    public function bulletin()
-    {
-        return view('bulletin');
-    }
-
-    public function home()
-    {
-        return view('home', ['name' => session('name')]);
-    }
-
-    public function fame()
-    {
-        return view('fame');
     }
 
     public function logout()

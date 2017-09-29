@@ -370,6 +370,28 @@ class Data extends Controller
         return json($data);
     }
 
+    public function json_fameinit()
+    {
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
+        $res = Db::table('fame')
+            ->alias('f')
+            ->join($join)
+            ->order('year desc,grade')
+            ->field([
+                'f.unique_name as u',
+                'tieba_id as t',
+                'year as y',
+                'grade as g',
+                'label as l'
+            ])
+            ->select();
+        $data['rows'] = $res;
+        $data['total'] = count($res);
+        return json($data);
+    }
+
     public function fame_add()
     {
         $name = input('post.name/a', []);
