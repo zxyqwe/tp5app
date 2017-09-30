@@ -162,6 +162,10 @@ class Mobile extends Controller
     public function json_tempid()
     {
         $uniq = session('unique_name');
+        $fee = FeeOper::cache_fee($uniq) < date('Y');
+        if ($fee) {
+            return json(['msg' => '欠费'], 400);
+        }
         $tempid = 0;
         if (cache("?json_tempid" . $uniq)) {
             $tempid = cache("json_tempid" . $uniq);

@@ -117,7 +117,11 @@ var fame = (function ($, Vue, w, undefined) {
             return grade(value);
         };
         var $table = $('#table');
-        $table.bootstrapTable();
+        $table.bootstrapTable({
+            formatSearch: function () {
+                return '搜索昵称或会员编号';
+            }
+        });
     };
     return {
         init: init,
