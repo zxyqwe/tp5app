@@ -109,7 +109,7 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "会员编号：{$data['uniq']}\n" .
+        $cont = "临时身份信息验证\n会员编号：{$data['uniq']}\n" .
             "昵称：{$data['nick']}\n" .
             "生成日期：{$data['time']}\n" .
             "生成时间：{$data['time2']}\n" .
@@ -128,7 +128,7 @@ class WxHanbj
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
             '<CreateTime>%s</CreateTime>' .
             '<MsgType><![CDATA[text]]></MsgType>' .
-            '<Content><![CDATA[机器人自动回复：%s]]></Content>' .
+            '<Content><![CDATA[***机器人自动回复***%s]]></Content>' .
             '</xml>';
         return sprintf($data, $to, $from, time(), "\n" . $type);
     }
