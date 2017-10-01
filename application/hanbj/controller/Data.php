@@ -468,4 +468,38 @@ class Data extends Controller
         $data['total'] = $total;
         return json($data);
     }
+
+    public function json_order()
+    {
+        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        $res = Db::table('order')
+            ->alias('f')
+            ->join($join)
+            ->order('f.id', 'desc')
+            ->limit($offset, $size)
+            ->field([
+                'm.unique_name as u',
+                'm.tieba_id as e',
+                'f.outid as o',
+                'f.trans as t',
+                'f.fee as f',
+                'f.type as y',
+                'f.value as v',
+                'f.label as l',
+                'f.time as i'
+            ])
+            ->select();
+        $data['rows'] = $res;
+        $total = Db::table('order')
+            ->alias('f')
+            ->count();
+        $data['total'] = $total;
+        return json($data);
+    }
 }

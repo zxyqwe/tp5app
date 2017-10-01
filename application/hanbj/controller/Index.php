@@ -26,18 +26,8 @@ class Index extends Controller
     {
         $action = $this->request->action();
         if (in_array($action, [
-            'all',
-            'feelog',
-            'actlog',
-            'fee',
-            'create',
-            'tree',
-            'famelog',
-            'card',
-            'fameinit',
-            'fame',
-            'bulletin',
-            'home'
+            'all', 'feelog', 'actlog', 'fee', 'create', 'tree', 'famelog',
+            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order'
         ])) {
             return view($action);
         }
