@@ -380,6 +380,7 @@ class Data extends Controller
             ->join($join)
             ->order('year desc,grade')
             ->field([
+                'f.id',
                 'f.unique_name as u',
                 'tieba_id as t',
                 'year as y',
@@ -440,10 +441,10 @@ class Data extends Controller
             $map['m.tieba_id|m.unique_name'] = ['like', '%' . $search . '%'];
         }
         $join = [
-            ['card f', 'm.openid=f.openid', 'left']
+            ['member m', 'm.openid=f.openid', 'left']
         ];
-        $tmp = Db::table('member')
-            ->alias('m')
+        $tmp = Db::table('card')
+            ->alias('f')
             ->join($join)
             ->where($map)
             ->order('f.id', 'desc')
@@ -451,6 +452,7 @@ class Data extends Controller
             ->cache(600)
             ->group('m.unique_name')
             ->field([
+                'f.id',
                 'm.unique_name as u',
                 'm.tieba_id as t',
                 'm.code as c',
@@ -459,8 +461,8 @@ class Data extends Controller
             ])
             ->select();
         $data['rows'] = $tmp;
-        $total = Db::table('member')
-            ->alias('m')
+        $total = Db::table('card')
+            ->alias('f')
             ->join($join)
             ->where($map)
             ->cache(600)
@@ -484,6 +486,7 @@ class Data extends Controller
             ->order('f.id', 'desc')
             ->limit($offset, $size)
             ->field([
+                'f.id',
                 'm.unique_name as u',
                 'm.tieba_id as e',
                 'f.outid as o',
