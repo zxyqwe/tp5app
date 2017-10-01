@@ -2,7 +2,7 @@ var order = (function ($, w, undefined) {
     'use strict';
     var $table;
     var fee_handle = function (n, v) {
-        return n + (parseInt(v) + 1) + '年';
+        return n + ' → ' + (parseInt(v) + 1) + '年';
     };
     var handle = function (y, v) {
         switch (y) {
