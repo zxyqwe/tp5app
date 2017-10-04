@@ -6,6 +6,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\WxHanbj;
 use think\Controller;
+use think\Db;
 use think\exception\HttpResponseException;
 
 class Index extends Controller
@@ -66,6 +67,19 @@ class Index extends Controller
         $map['活动增加积分'] = BonusOper::ACT;
         $map['活动预置名称'] = BonusOper::ACT_NAME;
         $map['当前工作人员'] = implode('，', BonusOper::WORKER);
+        $tables = Db::query('SHOW TABLES;');
+        $Tables_in_hanbj = [];
+        foreach ($tables as $item) {
+            $tmp = $item['Tables_in_hanbj'];
+            $Tables_in_hanbj[] = $tmp;
+            $tabledesc = Db::query("DESC `hanbj`.`$tmp`");
+            $tablename = [];
+            foreach ($tabledesc as $item) {
+                $tablename[] = $item['Field'];
+            }
+            $map["Table $tmp"] = implode(', ', $tablename);
+        }
+        $map['Tables'] = implode(', ', $Tables_in_hanbj);
         return view('token', ['data' => $map]);
     }
 }
