@@ -271,7 +271,12 @@ class BonusOper
     const FEE = 30;
     const ACT = 30;
     const ACT_NAME = '2017中秋';
-    const WORKER = ['坎丙午', '乾壬申', '兑甲辰', '兑丙子', '兑乙亥'];
+    const _WORKER = [];
+
+    public static function getWorkers()
+    {
+        return array_combine(self::_WORKER, ['坎丙午', '乾壬申']);//zxyqwe, 魁儿
+    }
 
     public static function reCalc($uname)
     {

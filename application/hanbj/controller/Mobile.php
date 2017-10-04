@@ -90,7 +90,7 @@ class Mobile extends Controller
         return view('home', [
             'user' => $res,
             'card' => $card['status'],
-            'worker' => in_array($res['unique_name'], BonusOper::WORKER) ? 1 : 0,
+            'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y')
         ]);
     }
