@@ -275,7 +275,7 @@ class BonusOper
 
     public static function getWorkers()
     {
-        return array_combine(self::_WORKER, ['坎丙午', '乾壬申']);//zxyqwe, 魁儿
+        return array_merge(self::_WORKER, ['坎丙午', '乾壬申']);//zxyqwe, 魁儿
     }
 
     public static function reCalc($uname)
