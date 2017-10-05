@@ -270,7 +270,7 @@ class BonusOper
 {
     const FEE = 30;
     const ACT = 30;
-    const ACT_NAME = '2017秋季认知团建';
+    const ACT_NAME = '2017秋季仓库整理';
     const _WORKER = [];
 
     public static function getWorkers()
