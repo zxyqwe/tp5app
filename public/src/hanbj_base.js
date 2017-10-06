@@ -18,7 +18,7 @@ var home = (function ($, w, undefined) {
             }
         });
         $btt.click(function () {
-            $('#htmlbody').animate({scrollTop: 0}, 1000);
+            $('html,body').animate({scrollTop: 0}, 1000);
             return false;
         });
         w.msgto = function (msg) {
