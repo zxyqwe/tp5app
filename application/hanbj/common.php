@@ -608,16 +608,16 @@ class WxOrg
 
     public static function getAll()
     {
-        return array_merge(self::top, self::vice, self::leader, self::member);
+        return array_merge(self::top, self::vice, self::leader, self::member, ['坎丙午']);
     }
 
     public static function getUpper()
     {
-        return array_merge(self::top, self::vice);
+        return array_merge(self::top, self::vice, ['坎丙午']);
     }
 
     public static function getLower()
     {
-        return array_merge(self::leader, self::member);
+        return array_merge(self::leader, self::member, ['坎丙午']);
     }
 }
