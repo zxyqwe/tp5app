@@ -7,7 +7,7 @@
         </div>
         <div class="page__bd page__bd_spacing">
             <template v-for="item in uname">
-                <a href="#new" class="weui-btn weui-btn_primary" v-on:click="sel_name(item)">{{ item }}</a>
+                <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="sel_name(item)">{{ item }}</a>
             </template>
         </div>
         <div class="page__ft">
@@ -43,6 +43,7 @@
                 methods: {
                     sel_name: function (item) {
                         vtest.uname = item;
+                        w.hash = 'new';
                     }
                 }
             });
