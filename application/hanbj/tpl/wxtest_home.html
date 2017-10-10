@@ -1,22 +1,23 @@
 {layout name="wxlayout" /}
 <script type="text/html" id="tpl_home">
-    <div class="page">
+    <div class="page" id="objmain">
         <div class="page__hd">
-            <h1 class="page__title">主页</h1>
-            <p class="page__desc">会员注册及绑定</p>
+            <h1 class="page__title">问卷</h1>
+            <p class="page__desc">评分</p>
         </div>
         <div class="page__bd page__bd_spacing">
-            <a href="#old" class="weui-btn weui-btn_primary">绑定老会员</a>
-            <a href="#new" class="weui-btn weui-btn_primary">注册新会员</a>
+            <template v-for="item in uname">
+                <a href="#new" class="weui-btn weui-btn_primary" v-on:click="sel_name(item)">{{ item }}</a>
+            </template>
         </div>
         <div class="page__ft">
         </div>
     </div>
 </script>
 <script type="text/html" id="tpl_new">
-    <div class="page">
+    <div class="page" id="testmain">
         <div class="page__hd">
-            <h1 class="page__title">没写呢</h1>
+            <h1 class="page__title">{{ uname }}</h1>
         </div>
         <div class="page__bd page__bd_spacing">
         </div>
@@ -27,6 +28,7 @@
 <script type="text/javascript" src="/static/wx_test.js"></script>
 <script>
     $(window).on("load", function () {
+        wx_init.init();
         wx_test.init();
     });
 </script>
