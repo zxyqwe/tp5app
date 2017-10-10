@@ -3,7 +3,7 @@ var wx_test = (function ($, Vue, w, undefined) {
     var vmain, vtest;
     var answer = [];
     var init = function () {
-        var testdata = $('#testdata').innerHTML();
+        var testdata = $('#testdata').html();
         testdata = JSON.parse(testdata);
         vmain = new Vue({
             el: '#objmain',
