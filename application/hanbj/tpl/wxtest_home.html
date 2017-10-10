@@ -20,20 +20,22 @@
             <h1 class="page__title">{{ uname }}</h1>
         </div>
         <div class="page__bd page__bd_spacing">
+            {{ test }}
         </div>
         <div class="page__ft">
         </div>
     </div>
+    <script>
+            wx_test.test();</script>
 </script>
-<script type="text/javascript" src="/static/wx_test.js"></script>
+<!-- <script type="text/javascript" src="/static/wx_test.js"></script> -->
 <div id="testdata" class="sr-only">{$obj}</div>
 <script>
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, vtest;
-        var answer = [];
+        var vmain, vtest,testdata;
         var init = function () {
-            var testdata = $('#testdata').html();
+            testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
             vmain = new Vue({
                 el: '#objmain',
@@ -42,22 +44,26 @@
                 },
                 methods: {
                     sel_name: function (item) {
-                        vtest.uname = item;
-                        w.hash = 'new';
+                        w.obj = item;
+                        w.location.hash = 'new';
                     }
                 }
             });
+        };
+        var test = function () {
             vtest = new Vue({
                 el: '#testmain',
                 data: {
-                    uname: '',
-                    test: answer
+                    uname: w.obj,
+                    test: testdata.name,
+                    quer:testdata.test
                 },
                 methods: {}
             });
         };
         return {
-            init: init
+            init: init,
+            test: test
         };
     })(Zepto, Vue, window);
     $(window).on("load", function () {

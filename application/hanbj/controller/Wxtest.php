@@ -28,7 +28,16 @@ class Wxtest extends Controller
 
     public function index()
     {
-        $data['uname'] = WxOrg::obj;
+        $uname = session('unique_name');
+        $obj = [];
+        foreach (WxOrg::obj as $item) {
+            if (!cache($item . WxOrg::name . $uname)) {
+                $obj[] = $item;
+            }
+        }
+        $data['uname'] = $obj;
+        $data['name'] = WxOrg::name;
+        $data['test'] = WxOrg::test;
         return view('home', ['obj' => json_encode($data)]);
     }
 }

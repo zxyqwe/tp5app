@@ -606,6 +606,8 @@ class WxOrg
     const leader = [];
     const member = [];
     const obj = ['素问', '采峦'];
+    const name = '2017???';
+    const test = [];
 
     public static function getAll()
     {
