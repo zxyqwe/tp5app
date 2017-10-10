@@ -598,3 +598,26 @@ class HanbjRes extends WxPayDataBase
         return $this->MakeSign();
     }
 }
+
+class WxOrg
+{
+    const top = [];
+    const vice = [];
+    const leader = [];
+    const member = [];
+
+    public static function getAll()
+    {
+        return array_merge(self::top, self::vice, self::leader, self::member);
+    }
+
+    public static function getUpper()
+    {
+        return array_merge(self::top, self::vice);
+    }
+
+    public static function getLower()
+    {
+        return array_merge(self::leader, self::member);
+    }
+}
