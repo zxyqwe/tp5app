@@ -28,6 +28,7 @@ class Wxtest extends Controller
 
     public function index()
     {
-        return view('home');
+        $data['uname'] = WxOrg::obj;
+        return view('home', ['obj' => json_encode($data)]);
     }
 }

@@ -1,25 +1,26 @@
 var wx_test = (function ($, Vue, w, undefined) {
     'use strict';
-    var vmain, vtest, obj;
-    var test2017 = {uname: ['素问', '采峦'], test: []};
+    var vmain, vtest;
+    var answer = [];
     var init = function () {
-        var answer = test2017;
+        var testdata = $('#testdata').innerHTML();
+        testdata = JSON.parse(testdata);
         vmain = new Vue({
             el: '#objmain',
             data: {
-                uname: answer.uname
+                uname: testdata.uname
             },
             methods: {
                 sel_name: function (item) {
-                    obj = item;
+                    vtest.uname = item;
                 }
             }
         });
         vtest = new Vue({
             el: '#testmain',
             data: {
-                uname: obj,
-                test: answer.test
+                uname: '',
+                test: answer
             },
             methods: {}
         });

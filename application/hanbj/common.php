@@ -605,6 +605,7 @@ class WxOrg
     const vice = [];
     const leader = [];
     const member = [];
+    const obj = ['素问', '采峦'];
 
     public static function getAll()
     {
