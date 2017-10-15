@@ -32,7 +32,7 @@ class Mobile extends Controller
         return '';
     }
 
-    public function index()
+    public function index($obj = '')
     {
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
@@ -86,6 +86,9 @@ class Mobile extends Controller
             $card = ['status' => -1];
         } else {
             session('card', $card['code']);
+        }
+        if (!empty($obj)) {
+            return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/' . $obj);
         }
         return view('home', [
             'user' => $res,

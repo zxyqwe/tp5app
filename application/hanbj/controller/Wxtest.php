@@ -28,14 +28,7 @@ class Wxtest extends Controller
 
     public function index($obj = '')
     {
-        if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
-            return WX_redirect('https://app.zxyqwe.com/hanbj/wxtest/obj/' . $obj, config('hanbj_api'));
-        }
-        if (input('?get.encrypt_code')) {
-            return redirect('https://app.zxyqwe.com/hanbj/wxtest/obj/' . $obj);
-        }
         $uname = session('unique_name');
-        $obj = htmlspecialchars_decode($obj);
         if (!in_array($obj, WxOrg::obj)) {
             return json(['msg' => '参数错误'], 400);
         }

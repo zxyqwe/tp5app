@@ -253,7 +253,7 @@ var wx_init = (function ($, w, undefined) {
         });
     };
 
-    var init = function () {
+    var init = function (jssign) {
         w.home = function () {
             location.hash = '';
         };
@@ -279,7 +279,9 @@ var wx_init = (function ($, w, undefined) {
         androidInputBugFix();
         setPageManager();
         w.pageManager = pageManager;
-        jsapi();
+        if (undefined === jssign) {
+            jsapi();
+        }
     };
     return {
         init: init

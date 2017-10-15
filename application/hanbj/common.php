@@ -630,7 +630,7 @@ class WxOrg
     {
         $ret = "有以下投票\n";
         foreach (self::obj as $item) {
-            $ret .= '<a href="https://app.zxyqwe.com/hanbj/wxtest/obj/' . $item . '">' . $item . "</a>\n";
+            $ret .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">' . $item . "</a>\n";
         }
         return $ret;
     }
