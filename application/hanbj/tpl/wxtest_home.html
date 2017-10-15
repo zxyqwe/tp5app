@@ -27,12 +27,19 @@
                     uname: testdata.uname,
                     name: testdata.name,
                     test: testdata.test,
-                    ans: testdata.ans
+                    ans: testdata.ans,
+                    cur_q: '',
+                    cur_a: [],
+                    cur_i: 0,
+                    user_a: 0
                 },
                 methods: {
-                    sel_name: function (item) {
-                        w.obj = item;
-                        w.location.hash = 'new';
+                    next: function (n) {
+                        vmain.cur_i = vmain.cur_i + n;
+                        var tmp = vmain.test[vmain.cur_i];
+                        vmain.cur_q = tmp.q;
+                        vmain.cur_a = tmp.a;
+                        vmain.user_a = vmain.ans[vmain.cur_i];
                     }
                 }
             });

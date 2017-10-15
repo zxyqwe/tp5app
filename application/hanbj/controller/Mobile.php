@@ -88,7 +88,7 @@ class Mobile extends Controller
             session('card', $card['code']);
         }
         if (!empty($obj)) {
-            return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/' . $obj);
+            return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $obj);
         }
         return view('home', [
             'user' => $res,
