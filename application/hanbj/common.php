@@ -628,10 +628,10 @@ class WxOrg
 
     public static function listobj($uname)
     {
-        $ret = '';
+        $ret = "有以下投票\n";
         foreach (self::obj as $item) {
-            $ret .= '<a href="https://app.zxyqwe.com/hanbj/wxtest/' . $item . '">' . $item . '</a>';
+            $ret .= '<a href="https://app.zxyqwe.com/hanbj/wxtest/obj/' . $item . '">' . $item . "</a>\n";
         }
-        return htmlspecialchars($ret);
+        return $ret;
     }
 }
