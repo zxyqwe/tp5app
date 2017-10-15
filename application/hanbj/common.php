@@ -90,7 +90,9 @@ class WxHanbj
                 trace($msg);
             case 'text':
                 $cont = (string)$msg->Content;
-                if (cache('?tempnum' . $cont)) {
+                if ($cont === '投票') {
+                    $cont = WxOrg::listobj('');
+                } elseif (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
                 } else {
@@ -622,5 +624,14 @@ class WxOrg
     public static function getLower()
     {
         return array_merge(self::leader, self::member, ['坎丙午']);
+    }
+
+    public static function listobj($uname)
+    {
+        $ret = '';
+        foreach (self::obj as $item) {
+            $ret .= '<a href="https://app.zxyqwe.com/hanbj/wxtest/' . $item . '">' . $item . '</a>';
+        }
+        return htmlspecialchars($ret);
     }
 }

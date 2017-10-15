@@ -26,18 +26,16 @@ class Wxtest extends Controller
         return '';
     }
 
-    public function index()
+    public function index($obj = '')
     {
         $uname = session('unique_name');
-        $obj = [];
-        foreach (WxOrg::obj as $item) {
-            if (!cache($item . WxOrg::name . $uname)) {
-                $obj[] = $item;
-            }
+        if (!in_array($obj, WxOrg::obj)) {
+            return json(['msg' => '参数错误'], 400);
         }
         $data['uname'] = $obj;
         $data['name'] = WxOrg::name;
         $data['test'] = WxOrg::test;
+        $data['ans'] = cache($uname . $obj . WxOrg::name);
         return view('home', ['obj' => json_encode($data)]);
     }
 }

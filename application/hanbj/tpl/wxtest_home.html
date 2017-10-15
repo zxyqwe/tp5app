@@ -2,45 +2,32 @@
 <script type="text/html" id="tpl_home">
     <div class="page" id="objmain">
         <div class="page__hd">
-            <h1 class="page__title">问卷</h1>
-            <p class="page__desc">评分</p>
-        </div>
-        <div class="page__bd page__bd_spacing">
-            <template v-for="item in uname">
-                <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="sel_name(item)">{{ item }}</a>
-            </template>
-        </div>
-        <div class="page__ft">
-        </div>
-    </div>
-</script>
-<script type="text/html" id="tpl_new">
-    <div class="page" id="testmain">
-        <div class="page__hd">
             <h1 class="page__title">{{ uname }}</h1>
+            <p class="page__desc">{{ name }}</p>
         </div>
         <div class="page__bd page__bd_spacing">
-            {{ test }}
+
         </div>
         <div class="page__ft">
         </div>
     </div>
-    <script>
-            wx_test.test();</script>
 </script>
-<!-- <script type="text/javascript" src="/static/wx_test.js"></script> -->
+<script type="text/javascript" src="/static/wx_test.js"></script>
 <div id="testdata" class="sr-only">{$obj}</div>
 <script>
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, vtest,testdata;
+        var vmain, vtest, testdata;
         var init = function () {
             testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
             vmain = new Vue({
                 el: '#objmain',
                 data: {
-                    uname: testdata.uname
+                    uname: testdata.uname,
+                    name: testdata.name,
+                    test: testdata.test,
+                    ans: testdata.ans
                 },
                 methods: {
                     sel_name: function (item) {
@@ -50,20 +37,8 @@
                 }
             });
         };
-        var test = function () {
-            vtest = new Vue({
-                el: '#testmain',
-                data: {
-                    uname: w.obj,
-                    test: testdata.name,
-                    quer:testdata.test
-                },
-                methods: {}
-            });
-        };
         return {
-            init: init,
-            test: test
+            init: init
         };
     })(Zepto, Vue, window);
     $(window).on("load", function () {
