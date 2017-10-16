@@ -34,8 +34,12 @@ class Wxtest extends Controller
         }
         $data['uname'] = $obj;
         $data['name'] = WxOrg::name;
-        $data['test'] = WxOrg::test;
-        $data['ans'] = cache($uname . $obj . WxOrg::name);
+        $c_name = $uname . $obj . WxOrg::name;
+        if (!cache('?' . $c_name)) {
+            $data['ans'] = [];
+        } else {
+            $data['ans'] = json_decode(cache($c_name), true);
+        }
         return view('home', ['obj' => json_encode($data)]);
     }
 }

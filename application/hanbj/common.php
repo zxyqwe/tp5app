@@ -608,8 +608,7 @@ class WxOrg
     const leader = [];
     const member = [];
     const obj = ['素问', '采峦'];
-    const name = '2017???';
-    const test = [];
+    const name = '2017???问卷调查';
 
     public static function getAll()
     {
@@ -629,9 +628,16 @@ class WxOrg
     public static function listobj($uname)
     {
         $ret = "有以下投票\n";
+        $finish = "\n";
+        $unfinish = "\n";
         foreach (self::obj as $item) {
-            $ret .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">' . $item . "</a>\n";
+            $c_name = $uname . $item . self::name;
+            if (!cache('?' . $c_name)) {
+                $unfinish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">' . $item . "</a>\n";
+            } else {
+                $finish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">已完成-' . $item . "</a>\n";
+            }
         }
-        return $ret;
+        return $ret . $unfinish . $finish;
     }
 }
