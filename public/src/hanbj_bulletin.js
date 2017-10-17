@@ -64,7 +64,6 @@ var bonus = (function ($, w, undefined) {
                     msg[i].i = base;
                     data.push(msg[i]);
                 }
-                console.log(data);
                 return data;
             }
         });
