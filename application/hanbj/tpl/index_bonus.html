@@ -26,31 +26,6 @@
 </div>
 <script type="text/javascript" src="/static/hanbj_bulletin.js"></script>
 <script>
-    var bonus = (function ($, w, undefined) {
-        'use strict';
-        var init = function () {
-            var $table = $('#table');
-            $table.bootstrapTable({
-                responseHandler: function (res) {
-                    var base = 0;
-                    var tmpb = 0;
-                    var msg = res.rows;
-                    for (var i in msg) {
-                        var bonus = parseInt(msg[i].o);
-                        if (bonus !== tmpb) {
-                            base = i + 1;
-                            tmpb = bonus;
-                        }
-                        msg[i].i = base;
-                    }
-                    return res;
-                }
-            });
-        };
-        return {
-            init: init
-        };
-    })(jQuery, window);
     var nav = 'nav1_4';
     $(window).load(function () {
         bonus.init();

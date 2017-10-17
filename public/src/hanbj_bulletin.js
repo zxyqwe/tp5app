@@ -41,3 +41,35 @@ var bulletin = (function ($, w, undefined) {
         init: init
     };
 })(jQuery, window);
+
+var bonus = (function ($, w, undefined) {
+    'use strict';
+    var init = function () {
+        var $table = $('#table');
+        $table.bootstrapTable({
+            responseHandler: function (res) {
+                var base = 0;
+                var tmpb = 0;
+                var msg = res;
+                var data = [];
+                for (var i in msg) {
+                    var bonus = parseInt(msg[i].o);
+                    if (bonus !== tmpb) {
+                        base = parseInt(i) + 1;
+                        if (base > 50) {
+                            break;
+                        }
+                        tmpb = bonus;
+                    }
+                    msg[i].i = base;
+                    data.push(msg[i]);
+                }
+                console.log(data);
+                return data;
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);
