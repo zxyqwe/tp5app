@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Index extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,old,bulletin,fame']
+        'valid_id' => ['except' => 'index,old,bulletin,fame,bonus']
     ];
 
     protected function valid_id()
@@ -28,7 +28,7 @@ class Index extends Controller
         $action = $this->request->action();
         if (in_array($action, [
             'all', 'feelog', 'actlog', 'fee', 'create', 'tree', 'famelog',
-            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order'
+            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order','bonus'
         ])) {
             return view($action);
         }
