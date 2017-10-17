@@ -118,7 +118,17 @@ class Dataopen extends Controller
             ->alias('m')
             ->cache(600)
             ->order('m.bonus', 'desc')
-            ->limit(0, 50)
+            ->limit(50, 1)
+            ->field([
+                'm.bonus as o'
+            ])
+            ->find();
+        $map['bonus'] = ['>=', intval($tmp['o'])];
+        $tmp = Db::table('member')
+            ->alias('m')
+            ->cache(600)
+            ->order('m.bonus', 'desc')
+            ->where($map)
             ->field([
                 'm.unique_name as u',
                 'm.tieba_id as t',
