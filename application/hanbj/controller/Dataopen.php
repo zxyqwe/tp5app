@@ -2,11 +2,8 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\BonusOper;
-use app\hanbj\FeeOper;
 use think\Controller;
 use think\Db;
-use think\exception\HttpResponseException;
 
 
 class Dataopen extends Controller
@@ -113,5 +110,22 @@ class Dataopen extends Controller
             $item['teams'] = array_values($item['teams']);
         }
         return json($data);
+    }
+
+    public function json_bonus()
+    {
+        $tmp = Db::table('member')
+            ->alias('m')
+            ->cache(600)
+            ->order('m.bonus', 'desc')
+            ->limit(0, 50)
+            ->field([
+                'm.unique_name as u',
+                'm.tieba_id as t',
+                'm.bonus as o',
+                'm.year_time as y'
+            ])
+            ->select();
+        return json($tmp);
     }
 }
