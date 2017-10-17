@@ -122,8 +122,8 @@ class Dataopen extends Controller
             ->field([
                 'm.bonus as o'
             ])
-            ->find();
-        $map['bonus'] = ['>=', intval($tmp['o'])];
+            ->select();
+        $map['bonus'] = ['>=', intval($tmp[0]['o'])];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
