@@ -41,7 +41,7 @@ var fame = (function ($, Vue, w, undefined) {
         });
         $.ajax({
             type: "GET",
-            url: "/hanbj/data/json_fame",
+            url: "/hanbj/dataopen/json_fame",
             dataType: "json",
             success: function (msg) {
                 vmain.fames = msg;
