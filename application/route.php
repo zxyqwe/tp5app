@@ -10,6 +10,6 @@
 // +----------------------------------------------------------------------
 
 return [
-    'index.php/hyb' => 'hanbj/index/bulletin',
-    'hanfubj' => 'hanbj/index/bulletin'
+    'index.php/hyb' => 'hanbj/index/old',
+    'hanfubj' => 'hanbj/index/old'
 ];

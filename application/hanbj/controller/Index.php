@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Index extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,bulletin,fame,bonus']
+        'valid_id' => ['except' => 'index,old,bulletin,fame,bonus']
     ];
 
     protected function valid_id()
@@ -43,6 +43,11 @@ class Index extends Controller
         $nonstr = getNonceStr();
         session('nonstr', $nonstr);
         return view('login', ['nonstr' => $nonstr]);
+    }
+
+    public function old()//需要这个，不然route就会屏蔽入口
+    {
+        return redirect('/hanbj/index/bulletin');
     }
 
     public function logout()
