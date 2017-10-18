@@ -41,7 +41,7 @@
         </div>
     </div>
 </script>
-<script type="text/javascript" src="/static/wx_test.js"></script>
+<!--<script type="text/javascript" src="/static/wx_test.js"></script>-->
 <div id="testdata" class="sr-only">{$obj}</div>
 <script>
     window.test = [
@@ -135,19 +135,15 @@
     ];
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, testdata, v_slide, $slider, $slideValue;
+        var vmain, testdata, $slideValue, v_slide, slidePos, step;
+        var changePercent = function (percent) {
+            slidePos = percent / step;
+            $slideValue.html(slidePos);
+        };
         var init = function () {
             testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
-            $slider = $('#slider');
             $slideValue = $('#sliderValue');
-            v_slide = w.slider('#slider', {
-                step: 10,
-                defaultValue: 0,
-                onChange: function (percent, step) {
-                    $slideValue.html(percent / step);
-                }
-            });
             vmain = new Vue({
                 el: '#objmain',
                 data: {
@@ -166,7 +162,7 @@
                         if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
                             vmain.next(-n);
                         }
-                        vmain.ans[vmain.cur_i - n] = v_slide.getValue();
+                        vmain.ans[vmain.cur_i - n] = slidePos;
                         console.log(vmain.ans);
                         var tmp = vmain.test[vmain.cur_i];
                         vmain.cur_q = tmp.q;
@@ -175,12 +171,17 @@
 
                         }
                         vmain.user_a = vmain.ans[vmain.cur_i];
-                        var step = 10;
+                        step = 10;
                         if (tmp.s) {
                             step = 100 / tmp.s;
                         }
-                        v_slide.setStep(step);
-                        v_slide.setValue(vmain.user_a);
+                        v_slide = weui.slider('#slider', {
+                            step: step,
+                            defaultValue: vmain.user_a,
+                            onChange: function (percent) {
+                                changePercent(percent);
+                            }
+                        });
                     }
                 }
             });
