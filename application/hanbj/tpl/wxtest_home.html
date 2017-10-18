@@ -13,7 +13,6 @@
                         <p>{{ item }}</p>
                     </div>
                     <div class="weui-cell__ft"></div>
-                    <span class="weui-icon-checked"></span>
                 </div>
             </div>
             <div class="weui-slider-box">
@@ -25,7 +24,18 @@
                 </div>
                 <div id="sliderValue" class="weui-slider-box__value"></div>
             </div>
-            <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <div class="placeholder">
+                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
+                    </div>
+                </div>
+                <div class="weui-flex__item">
+                    <div class="placeholder">
+                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(-1)">上一题</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="page__ft">
         </div>
@@ -83,7 +93,8 @@
                 '主动协调、指导和配合会务或活动组织（4分）',
                 '遵守会议纪律和活动纪律（5分）',
                 '及时批复签报，参与或作出决策（5分）'
-            ]
+            ],
+            s: 20
         },
         {
             q: '工作态度（10分）',
@@ -124,10 +135,19 @@
     ];
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, testdata;
+        var vmain, testdata, v_slide, $slider, $slideValue;
         var init = function () {
             testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
+            $slider = $('#slider');
+            $slideValue = $('#sliderValue');
+            v_slide = w.slider('#slider', {
+                step: 10,
+                defaultValue: 0,
+                onChange: function (percent, step) {
+                    $slideValue.html(percent / step);
+                }
+            });
             vmain = new Vue({
                 el: '#objmain',
                 data: {
@@ -143,17 +163,24 @@
                 methods: {
                     next: function (n) {
                         vmain.cur_i = vmain.cur_i + n;
+                        if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
+                            vmain.next(-n);
+                        }
+                        vmain.ans[vmain.cur_i - n] = v_slide.getValue();
+                        console.log(vmain.ans);
                         var tmp = vmain.test[vmain.cur_i];
                         vmain.cur_q = tmp.q;
                         vmain.cur_a = tmp.a;
+                        if (undefined === vmain.cur_a) {
+
+                        }
                         vmain.user_a = vmain.ans[vmain.cur_i];
-                        weui.slider('#slider', {
-                            step: 10,
-                            defaultValue: 0,
-                            onChange: function (percent) {
-                                $('#sliderValue').html(percent / 10);
-                            }
-                        });
+                        var step = 10;
+                        if (tmp.s) {
+                            step = 100 / tmp.s;
+                        }
+                        v_slide.setStep(step);
+                        v_slide.setValue(vmain.user_a);
                     }
                 }
             });

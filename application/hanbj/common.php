@@ -628,8 +628,8 @@ class WxOrg
     public static function listobj($uname)
     {
         $ret = "有以下投票\n";
-        $finish = "\n";
-        $unfinish = "\n";
+        $finish = "-----\n";
+        $unfinish = "-----\n";
         foreach (self::obj as $item) {
             $c_name = $uname . $item . self::name;
             if (!cache('?' . $c_name)) {
