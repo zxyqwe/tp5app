@@ -15,24 +15,23 @@
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>
-            <div class="weui-flex">
+            <div class="weui-flex" v-show="cur_a">
                 <div class="weui-flex__item">
                     <div class="placeholder">
-                        <h1>请打分：</h1>
+                        <h1>请打分：{{ slidepos }}</h1>
                     </div>
                 </div>
             </div>
-            <div class="weui-flex">
+            <div class="weui-flex" v-show="cur_a">
                 <div class="weui-flex__item">
                     <div class="placeholder">
-                        <div class="weui-slider-box" v-show="cur_a">
+                        <div class="weui-slider-box">
                             <div id="slider" class="weui-slider">
                                 <div class="weui-slider__inner">
                                     <div class="weui-slider__track"></div>
                                     <div class="weui-slider__handler"></div>
                                 </div>
                             </div>
-                            <div id="sliderValue" class="weui-slider-box__value"></div>
                         </div>
                     </div>
                 </div>
@@ -40,7 +39,7 @@
             <div class="weui-flex">
                 <div class="weui-flex__item">
                     <div class="placeholder">
-                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(-1)">上一题</a>
+                        <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="next(-1)">上一题</a>
                     </div>
                 </div>
                 <div class="weui-flex__item">
@@ -148,24 +147,19 @@
     ];
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, testdata, $slideValue, v_slide, slidePos = 0, step;
+        var vmain, testdata, v_slide, step;
         var waitSlide = function () {
             v_slide = weui.slider('#slider', {
                 step: step,
                 defaultValue: vmain.user_a * step,
                 onChange: function (percent) {
-                    changePercent(percent);
+                    vmain.setPos(percent);
                 }
             });
-        };
-        var changePercent = function (percent) {
-            slidePos = Math.round(percent / step);
-            $slideValue.html(slidePos);
         };
         var init = function () {
             testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
-            $slideValue = $('#sliderValue');
             vmain = new Vue({
                 el: '#objmain',
                 data: {
@@ -176,11 +170,15 @@
                     cur_q: '',//问题
                     cur_a: undefined,//选项
                     cur_i: 0,//第几题
-                    user_a: undefined//用户的选择
+                    user_a: undefined,//用户的选择
+                    slidepos: 0
                 },
                 methods: {
+                    setPos: function (percent) {
+                        vmain.slidePos = Math.round(percent / step);
+                    },
                     next: function (n) {
-                        vmain.ans[vmain.cur_i] = slidePos;
+                        vmain.ans[vmain.cur_i] = vmain.slidePos;
                         vmain.cur_i = vmain.cur_i + n;
                         if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
                             vmain.cur_i = vmain.cur_i - n;
@@ -191,13 +189,13 @@
                         vmain.cur_q = tmp.q;
                         vmain.cur_a = tmp.a;
                         if (undefined === vmain.cur_a) {
-                            slidePos = 0;
+                            vmain.slidePos = 0;
                             return;
                         }
                         vmain.user_a = vmain.ans[vmain.cur_i];
                         if (undefined === vmain.user_a) {
                             vmain.user_a = 0;
-                            slidePos = 0;
+                            vmain.slidePos = 0;
                         }
                         step = 10;
                         if (tmp.s) {
