@@ -176,15 +176,15 @@
                 methods: {
                     setPos: function (percent) {
                         vmain.slidepos = Math.round(percent / step);
-                        vmain.ans[vmain.cur_i] = vmain.slidepos;
                     },
                     next: function (n) {
+                        vmain.ans[vmain.cur_i] = vmain.slidepos;
+                        console.log(vmain.ans);
                         vmain.cur_i = vmain.cur_i + n;
                         if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
                             vmain.cur_i = vmain.cur_i - n;
                             return;
                         }
-                        console.log(vmain.ans);
                         var tmp = vmain.test[vmain.cur_i];
                         vmain.cur_q = tmp.q;
                         vmain.cur_a = tmp.a;
@@ -195,9 +195,8 @@
                         vmain.user_a = vmain.ans[vmain.cur_i];
                         if (undefined === vmain.user_a) {
                             vmain.user_a = 0;
-                            vmain.slidepos = 0;
                         }
-                        console.log(vmain.user_a);
+                        vmain.slidepos = vmain.user_a;
                         step = 10;
                         if (tmp.s) {
                             step = 100 / tmp.s;
