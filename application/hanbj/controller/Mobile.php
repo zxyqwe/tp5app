@@ -34,11 +34,15 @@ class Mobile extends Controller
 
     public function index($obj = '')
     {
+        $prefix = '';
+        if (!empty($obj)) {
+            $prefix = '/index/obj/' . $obj;
+        }
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
-            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix, config('hanbj_api'));
         }
         if (input('?get.encrypt_code')) {
-            return redirect('https://app.zxyqwe.com/hanbj/mobile');
+            return redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix);
         }
         $openid = session('openid');
         $map['openid'] = $openid;
