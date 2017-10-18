@@ -47,7 +47,8 @@ class Wx extends Controller
             ->field([
                 'oper',
                 'name',
-                'act_time'
+                'act_time',
+                'bonus'
             ])
             ->select();
         return json(['list' => $card, 'size' => $size]);
@@ -67,7 +68,8 @@ class Wx extends Controller
             ->field([
                 'oper',
                 'code',
-                'fee_time'
+                'fee_time',
+                'bonus'
             ])
             ->select();
         return json(['list' => $card, 'size' => $size, 'real_year' => FeeOper::cache_fee($uname)]);
