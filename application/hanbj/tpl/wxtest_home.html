@@ -6,7 +6,7 @@
             <p class="page__desc">批次：{{ name }}</p>
         </div>
         <div class="page__bd page__bd_spacing">
-            <div class="weui-cells__title">{{ cur_q }}</div>
+            <div class="weui-cells__title"><h1>{{ cur_q }}</h1></div>
             <div class="weui-cells" v-show="cur_a">
                 <div class="weui-cell" v-for="item in cur_a">
                     <div class="weui-cell__bd">
@@ -15,7 +15,7 @@
                     <div class="weui-cell__ft"></div>
                 </div>
             </div>
-            <div class="weui-slider-box">
+            <div class="weui-slider-box" v-show="cur_a">
                 <div id="slider" class="weui-slider">
                     <div class="weui-slider__inner">
                         <div class="weui-slider__track"></div>
@@ -27,12 +27,12 @@
             <div class="weui-flex">
                 <div class="weui-flex__item">
                     <div class="placeholder">
-                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
+                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(-1)">上一题</a>
                     </div>
                 </div>
                 <div class="weui-flex__item">
                     <div class="placeholder">
-                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(-1)">上一题</a>
+                        <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
                     </div>
                 </div>
             </div>
@@ -135,9 +135,9 @@
     ];
     var wx_test = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, testdata, $slideValue, v_slide, slidePos, step;
+        var vmain, testdata, $slideValue, v_slide, slidePos = 0, step;
         var changePercent = function (percent) {
-            slidePos = percent / step;
+            slidePos = Math.round(percent / step);
             $slideValue.html(slidePos);
         };
         var init = function () {
@@ -160,7 +160,7 @@
                     next: function (n) {
                         vmain.cur_i = vmain.cur_i + n;
                         if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
-                            vmain.next(-n);
+                            return;
                         }
                         vmain.ans[vmain.cur_i - n] = slidePos;
                         console.log(vmain.ans);
@@ -177,7 +177,7 @@
                         }
                         v_slide = weui.slider('#slider', {
                             step: step,
-                            defaultValue: vmain.user_a,
+                            defaultValue: vmain.user_a * step,
                             onChange: function (percent) {
                                 changePercent(percent);
                             }
