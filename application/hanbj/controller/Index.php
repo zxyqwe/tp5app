@@ -12,7 +12,7 @@ use think\exception\HttpResponseException;
 class Index extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,old,bulletin,fame,bonus']
+        'valid_id' => ['except' => 'index,bulletin,fame,bonus']
     ];
 
     protected function valid_id()
@@ -28,7 +28,7 @@ class Index extends Controller
         $action = $this->request->action();
         if (in_array($action, [
             'all', 'feelog', 'actlog', 'fee', 'create', 'tree', 'famelog',
-            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order','bonus'
+            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order', 'bonus'
         ])) {
             return view($action);
         }
@@ -43,11 +43,6 @@ class Index extends Controller
         $nonstr = getNonceStr();
         session('nonstr', $nonstr);
         return view('login', ['nonstr' => $nonstr]);
-    }
-
-    public function old()
-    {
-        return redirect('/hanbj/index/bulletin');
     }
 
     public function logout()
@@ -74,8 +69,8 @@ class Index extends Controller
             $Tables_in_hanbj[] = $tmp;
             $tabledesc = Db::query("DESC `hanbj`.`$tmp`");
             $tablename = [];
-            foreach ($tabledesc as $item) {
-                $tablename[] = $item['Field'];
+            foreach ($tabledesc as $item2) {
+                $tablename[] = $item2['Field'];
             }
             $map["Table $tmp"] = implode(', ', $tablename);
         }
