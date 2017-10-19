@@ -213,6 +213,7 @@
                         requestAnimationFrame(waitSlide);
                     },
                     up: function () {
+                        vmain.next(0);
                         $.ajax({
                             type: "POST",
                             url: "/hanbj/wxtest/up",

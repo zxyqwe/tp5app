@@ -83,6 +83,8 @@ class WxHanbj
     {
         $msg = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
         $type = (string)$msg->MsgType;
+        $from = (string)$msg->FromUserName;
+        $to = (string)$msg->ToUserName;
         switch ($type) {
             case 'event':
                 return self::do_event($msg);
@@ -91,21 +93,21 @@ class WxHanbj
             case 'text':
                 $cont = (string)$msg->Content;
                 if ($cont === '投票') {
-                    $cont = WxOrg::listobj('');
+                    $cont = WxOrg::listobj($from);
                 } elseif (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
                 } else {
                     $cont = '文字信息：' . $cont;
                 }
-                return self::auto((string)$msg->FromUserName, (string)$msg->ToUserName, $cont);
+                return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
             case 'video':
             case 'shortvideo':
             case 'location':
             case 'link':
-                return self::auto((string)$msg->FromUserName, (string)$msg->ToUserName, $type);
+                return self::auto($from, $to, $type);
         }
     }
 
@@ -625,8 +627,18 @@ class WxOrg
         return array_merge(self::leader, self::member, ['坎丙午']);
     }
 
-    public static function listobj($uname)
+    public static function listobj($from)
     {
+        $map['openid'] = $from;
+        $res = Db::table('member')
+            ->alias('m')
+            ->where($map)
+            ->field('unique_name')
+            ->find();
+        $uname = $res['unique_name'];
+        if (!in_array($uname, self::getAll())) {
+            return '文字信息：投票';
+        }
         $ret = "有以下投票\n";
         $finish = "-----\n";
         $unfinish = "-----\n";
