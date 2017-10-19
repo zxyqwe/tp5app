@@ -42,4 +42,20 @@ class Wxtest extends Controller
         }
         return view('home', ['obj' => json_encode($data)]);
     }
+
+    public function up()
+    {
+        $obj = input('post.obj');
+        if (!in_array($obj, WxOrg::obj)) {
+            return json(['msg' => '参数错误'], 400);
+        }
+        $ans = input('post.ans/a', []);
+        if (empty($name)) {
+            return json(['msg' => 'empty ans'], 400);
+        }
+        $uname = session('unique_name');
+        $c_name = $uname . $obj . WxOrg::name;
+        cache($c_name, json_encode($ans));
+        return json(['msg' => 'OK']);
+    }
 }

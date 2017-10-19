@@ -37,14 +37,19 @@
                 </div>
             </div>
             <div class="weui-flex">
-                <div class="weui-flex__item">
+                <div class="weui-flex__item" v-show="cur_i > 0">
                     <div class="placeholder">
                         <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="next(-1)">上一题</a>
                     </div>
                 </div>
-                <div class="weui-flex__item">
+                <div class="weui-flex__item" v-show="cur_i < test.length - 1">
                     <div class="placeholder">
                         <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
+                    </div>
+                </div>
+                <div class="weui-flex__item" v-show="cur_i === test.length - 1">
+                    <div class="placeholder">
+                        <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="up()">提交</a>
                     </div>
                 </div>
             </div>
@@ -149,9 +154,13 @@
         'use strict';
         var vmain, testdata, v_slide, step;
         var waitSlide = function () {
+            var v = vmain.user_a * step;
+            if (v === 0) {
+                v = 1;
+            }
             v_slide = weui.slider('#slider', {
                 step: step,
-                defaultValue: vmain.user_a * step,
+                defaultValue: v,
                 onChange: function (percent) {
                     vmain.setPos(percent);
                 }
@@ -202,6 +211,24 @@
                             step = 100 / tmp.s;
                         }
                         requestAnimationFrame(waitSlide);
+                    },
+                    up: function () {
+                        $.ajax({
+                            type: "POST",
+                            url: "/hanbj/wxtest/up",
+                            dataType: "json",
+                            data: {
+                                ans: vmain.ans,
+                                obj: vmain.uname
+                            },
+                            success: function (msg) {
+                                location.href = '/hanbj/mobile';
+                            },
+                            error: function (msg) {
+                                msg = JSON.parse(msg.responseText);
+                                w.msgto(msg.msg);
+                            }
+                        });
                     }
                 }
             });
