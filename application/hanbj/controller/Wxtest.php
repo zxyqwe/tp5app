@@ -28,6 +28,9 @@ class Wxtest extends Controller
 
     public function index($obj = '')
     {
+        $obj = cache('jump' . $obj);
+        $obj = json_decode($obj, true);
+        $obj = $obj['val'];
         $uname = session('unique_name');
         if (!in_array($obj, WxOrg::obj)) {
             return json(['msg' => '参数错误'], 400);
