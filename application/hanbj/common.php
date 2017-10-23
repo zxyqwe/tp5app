@@ -749,7 +749,7 @@ class WxOrg
         $nonce = md5($nonce);
         $data['event'] = 'wxtest';
         $data['val'] = $item;
-        cache('jump' . $nonce, json_encode($data), 60000);
+        cache('jump' . $nonce, json_encode($data), 60000);//TODO
         return $nonce;
     }
 
@@ -807,9 +807,9 @@ class WxOrg
             $c_name = $uname . $item . self::name;
             $nonce = self::setJump($item, $uname);
             if (!cache('?' . $c_name)) {
-                $unfinish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $nonce . '">' . $item . "</a>\n";
+                $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
-                $finish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $nonce . '">已完成-' . $item . "</a>\n";
+                $finish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">已完成-$item</a>\n";
             }
         }
         return $ret . $unfinish . $finish;
