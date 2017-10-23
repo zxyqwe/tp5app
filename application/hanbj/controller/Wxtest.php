@@ -37,6 +37,7 @@ class Wxtest extends Controller
         }
         $data['uname'] = $obj;
         $data['name'] = WxOrg::name;
+        $data['test'] = WxOrg::test;
         $c_name = $uname . $obj . WxOrg::name;
         if (!cache('?' . $c_name)) {
             $data['ans'] = [];
