@@ -632,6 +632,27 @@ class WxOrg
         return array_merge(self::leader, self::member, ['坎丙午']);
     }
 
+    public static function progress()
+    {
+        $all = self::getAll();
+        $len = count($all) * count(self::obj);
+        $acc = 0;
+        foreach (self::obj as $obj) {
+            foreach ($all as $item) {
+                $c_name = $item . $obj . self::name;
+                if (cache('?' . $c_name)) {
+                    $acc++;
+                }
+            }
+        }
+        if ($acc !== $len) {
+            $acc = $acc * 100.0 / $len;
+            return '投票总进度：' . round($acc, 2) . "%\n";
+        } else {
+            return false;
+        }
+    }
+
     public static function listobj($from)
     {
         $map['openid'] = $from;
@@ -644,7 +665,11 @@ class WxOrg
         if (!in_array($uname, self::getAll())) {
             return '文字信息：投票';
         }
-        $ret = "有以下投票\n";
+        $prog = self::progress();
+        if (false === $prog) {
+            return '已完成';
+        }
+        $ret = "有以下投票\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
         foreach (self::obj as $item) {
