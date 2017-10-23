@@ -53,10 +53,9 @@ class Wxtest extends Controller
             return json(['msg' => '参数错误'], 400);
         }
         $ans = input('post.ans/a', []);
-        if (empty($ans)) {
-            return json(['msg' => 'empty ans'], 400);
-        } elseif (count($ans) !== 11) {
-            return json(['msg' => 'lens ans'], 400);
+        $check = WxOrg::checkAns($ans);
+        if (true !== $check) {
+            json(['msg' => $check], 400);
         }
         $uname = session('unique_name');
         $c_name = $uname . $obj . WxOrg::name;

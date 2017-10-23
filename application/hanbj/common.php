@@ -664,6 +664,21 @@ class WxOrg
         return $nonce;
     }
 
+    public static function checkAns($ans)
+    {
+        if (!is_array($ans)) {
+            return 'array';
+        }
+        if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== 11) {
+            return 'sel';
+        }
+        if (!isset($ans['sel_add']) || !is_array($ans['sel_add'])) {
+            return 'sel_add';
+        }
+
+        return true;
+    }
+
     public static function listobj($from)
     {
         $map['openid'] = $from;
