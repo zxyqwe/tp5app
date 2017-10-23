@@ -758,13 +758,27 @@ class WxOrg
         if (!is_array($ans)) {
             return 'array';
         }
-        if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== 11) {
+        $len = count(self::test);
+        if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
             return 'sel';
         }
         if (!isset($ans['sel_add']) || !is_array($ans['sel_add'])) {
             return 'sel_add';
         }
-
+        foreach (range(0, $len - 1) as $i) {
+            $tmp = self::test[$i];
+            if (!isset($tmp['a'])) {
+                continue;
+            }
+            $s = 10;
+            if (isset($tmp['s'])) {
+                $s = $tmp['s'];
+            }
+            $s *= 0.6;
+            if ($ans['sel'][$i] < $s && !isset($ans['sel_add'][$i])) {
+                return 'sel ' . $i;
+            }
+        }
         return true;
     }
 
