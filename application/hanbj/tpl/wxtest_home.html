@@ -42,12 +42,12 @@
                         <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="next(-1)">上一题</a>
                     </div>
                 </div>
-                <div class="weui-flex__item" v-show="cur_i < test.length - 1">
+                <div class="weui-flex__item" v-show="cur_i < test.length - 1 && slidepos > 0">
                     <div class="placeholder">
                         <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
                     </div>
                 </div>
-                <div class="weui-flex__item" v-show="cur_i === test.length - 1">
+                <div class="weui-flex__item" v-show="cur_i === test.length - 1 && slidepos > 0">
                     <div class="placeholder">
                         <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="up()">提交</a>
                     </div>
@@ -180,7 +180,8 @@
                     cur_a: undefined,//选项
                     cur_i: 0,//第几题
                     user_a: undefined,//用户的选择
-                    slidepos: 0
+                    slidepos: 0,
+                    max_score: 10
                 },
                 methods: {
                     setPos: function (percent) {
@@ -207,7 +208,9 @@
                         }
                         vmain.slidepos = vmain.user_a;
                         step = 10;
+                        vmain.max_score = 10;
                         if (tmp.s) {
+                            vmain.max_score = tmp.s;
                             step = 100 / tmp.s;
                         }
                         requestAnimationFrame(waitSlide);
