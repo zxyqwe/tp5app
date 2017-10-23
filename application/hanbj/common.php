@@ -775,7 +775,9 @@ class WxOrg
                 $s = $tmp['s'];
             }
             $s *= 0.6;
-            if ($ans['sel'][$i] < $s && !isset($ans['sel_add'][$i])) {
+            if ($ans['sel'][$i] < $s
+                && (!isset($ans['sel_add'][$i]) || count($ans['sel_add'][$i]) < 15)
+            ) {
                 return 'sel ' . $i;
             }
         }
