@@ -605,7 +605,7 @@ class HanbjRes extends WxPayDataBase
 
 class WxOrg
 {
-    const top = [];
+    const top = ['乾甲申'];
     const vice = [];
     const leader = [];
     const member = [];

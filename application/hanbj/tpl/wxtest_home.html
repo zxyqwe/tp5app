@@ -226,7 +226,7 @@
                                 w.msgok('提交成功');
                                 setTimeout(function () {
                                     WeixinJSBridge.call('closeWindow');
-                                }, 2000);
+                                }, 1000);
                             },
                             error: function (msg) {
                                 msg = JSON.parse(msg.responseText);
