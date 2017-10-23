@@ -223,7 +223,10 @@
                                 obj: vmain.uname
                             },
                             success: function (msg) {
-                                location.href = '/hanbj/mobile';
+                                w.msgok('提交成功');
+                                setTimeout(function () {
+                                    WeixinJSBridge.call('closeWindow');
+                                }, 2000);
                             },
                             error: function (msg) {
                                 msg = JSON.parse(msg.responseText);

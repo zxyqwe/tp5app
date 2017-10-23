@@ -609,7 +609,7 @@ class WxOrg
     const vice = [];
     const leader = [];
     const member = [];
-    const obj = ['素问', '采峦'];
+    const obj = ['素问', '采娈', '少卿', '魁儿'];
     const name = '2017???问卷调查';
 
     public static function getAll()
