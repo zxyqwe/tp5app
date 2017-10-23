@@ -660,7 +660,7 @@ class WxOrg
         $nonce = md5($nonce);
         $data['event'] = 'wxtest';
         $data['val'] = $item;
-        cache('jump' . $nonce, json_encode($data), 600);
+        cache('jump' . $nonce, json_encode($data), 60000);
         return $nonce;
     }
 

@@ -36,13 +36,14 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="weui-cells__title">文本域</div>
+            <div v-show="slidepos < 0.6 * max_score && slidepos > 0">
+                <div class="weui-cells__title">不及格的理由</div>
                 <div class="weui-cells weui-cells_form">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="请输入至少15字"></textarea>
-                            <div class="weui-textarea-counter"><span>0</span>/200</div>
+                            <textarea class="weui-textarea" placeholder="请输入至少15字" rows="10"
+                                      v-model="user_add"></textarea>
+                            <div class="weui-textarea-counter"><span>{{ user_add_len }}</span>字</div>
                         </div>
                     </div>
                 </div>
@@ -53,7 +54,7 @@
                         <a href="javascript:" class="weui-btn weui-btn_plain-primary" v-on:click="next(-1)">上一题</a>
                     </div>
                 </div>
-                <div class="weui-flex__item" v-show="cur_i < test.length - 1 && slidepos > 0">
+                <div class="weui-flex__item" v-show="cur_i < test.length - 1 && (!cur_a || slidepos > 0)">
                     <div class="placeholder">
                         <a href="javascript:" class="weui-btn weui-btn_primary" v-on:click="next(1)">下一题</a>
                     </div>
@@ -180,61 +181,79 @@
         var init = function () {
             testdata = $('#testdata').html();
             testdata = JSON.parse(testdata);
+            if (undefined === testdata.ans.sel) {
+                testdata.ans.sel = [];
+            }
+            if (undefined === testdata.ans.sel_add) {
+                testdata.ans.sel_add = [];
+            }
             vmain = new Vue({
                 el: '#objmain',
                 data: {
                     uname: testdata.uname,
                     name: testdata.name,
                     test: w.test,//问卷
-                    ans: testdata.ans,//答案
+                    ans: testdata.ans.sel,//答案
+                    ans_add: testdata.ans.sel_add,//答案补充
                     cur_q: '',//问题
                     cur_a: undefined,//选项
                     cur_i: 0,//第几题
                     user_a: undefined,//用户的选择
+                    user_add: '',
                     slidepos: 0,
                     max_score: 10
                 },
+                computed: {
+                    user_add_len: function () {
+                        return this.user_add.length;
+                    }
+                },
                 methods: {
                     setPos: function (percent) {
-                        vmain.slidepos = Math.round(percent / step);
+                        this.slidepos = Math.round(percent / step);
                     },
                     next: function (n) {
-                        vmain.ans[vmain.cur_i] = vmain.slidepos;
-                        console.log(vmain.ans);
-                        vmain.cur_i = vmain.cur_i + n;
-                        if (vmain.cur_i >= vmain.test.length || vmain.cur_i < 0) {
-                            vmain.cur_i = vmain.cur_i - n;
+                        this.ans[this.cur_i] = this.slidepos;
+                        this.cur_i = this.cur_i + n;
+                        var i_tmp = this.cur_i;
+                        if (i_tmp >= this.test.length || i_tmp < 0) {
+                            this.cur_i = i_tmp - n;
                             return;
                         }
-                        var tmp = vmain.test[vmain.cur_i];
-                        vmain.cur_q = tmp.q;
-                        vmain.cur_a = tmp.a;
-                        if (undefined === vmain.cur_a) {
-                            vmain.slidepos = 0;
+
+                        var tmp = this.test[i_tmp];
+                        this.cur_q = tmp.q;
+                        this.cur_a = tmp.a;
+                        if (undefined === this.cur_a) {
+                            this.slidepos = 0;
                             return;
                         }
-                        vmain.user_a = vmain.ans[vmain.cur_i];
-                        if (undefined === vmain.user_a) {
-                            vmain.user_a = 0;
+                        this.user_a = this.ans[i_tmp];
+                        if (undefined === this.user_a) {
+                            this.user_a = 0;
                         }
-                        vmain.slidepos = vmain.user_a;
+                        this.slidepos = this.user_a;
                         step = 10;
-                        vmain.max_score = 10;
+                        this.max_score = 10;
                         if (tmp.s) {
-                            vmain.max_score = tmp.s;
+                            this.max_score = tmp.s;
                             step = 100 / tmp.s;
                         }
+
                         requestAnimationFrame(waitSlide);
                     },
                     up: function () {
-                        vmain.next(0);
+                        this.next(0);
                         $.ajax({
                             type: "POST",
                             url: "/hanbj/wxtest/up",
                             dataType: "json",
                             data: {
-                                ans: vmain.ans,
-                                obj: vmain.uname
+                                ans: {
+                                    sel: this.ans,
+                                    sel_add: this.ans_add
+                                },
+                                obj: this.uname
                             },
                             success: function (msg) {
                                 w.msgok('提交成功');
