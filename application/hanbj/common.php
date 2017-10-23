@@ -610,10 +610,10 @@ class HanbjRes extends WxPayDataBase
 
 class WxOrg
 {
-    const top = ['乾甲申'];
-    const vice = ['坤丁酉', '乾乙丑'];
-    const leader = ['离庚寅'];
-    const member = ['艮甲辰', '兑癸卯'];
+    const top = ['乾甲申', '坤丁酉', '乾乙丑', '离庚寅', '艮甲辰', '兑癸卯'];
+    const vice = [];
+    const leader = [];
+    const member = [];
     const obj = ['素问', '采娈', '少卿', '魁儿'];
     const name = '2017???问卷调查';
 
