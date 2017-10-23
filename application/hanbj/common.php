@@ -94,13 +94,14 @@ class WxHanbj
                 $cont = (string)$msg->Content;
                 if ($cont === '投票') {
                     $cont = WxOrg::listobj($from);
+                    return self::auto($from, $to, $cont, false, '投票');
                 } elseif (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
                 } else {
                     $cont = '文字信息：' . $cont;
                 }
-                return self::auto($from, $to, $cont, false);
+                return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
             case 'video':
@@ -121,7 +122,7 @@ class WxHanbj
         return $cont;
     }
 
-    private static function auto($to, $from, $type, $debug = true)
+    private static function auto($to, $from, $type, $debug = true, $debug_msg = '')
     {
         if ($debug) {
             trace([
@@ -129,7 +130,7 @@ class WxHanbj
                 'TEXT' => $type
             ]);
         } else {
-            trace($to);
+            trace($to . ' ' . $debug_msg);
         }
 
         $data = '<xml>' .
