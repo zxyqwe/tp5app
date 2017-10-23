@@ -656,7 +656,7 @@ class WxOrg
 
     public static function setJump($item, $uname)
     {
-        $nonce = getNonceStr() . $uname;
+        $nonce = getNonceStr() . $uname . $item;
         $nonce = md5($nonce);
         $data['event'] = 'wxtest';
         $data['val'] = $item;
