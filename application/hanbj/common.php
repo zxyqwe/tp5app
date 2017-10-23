@@ -647,8 +647,8 @@ class WxOrg
             }
         }
         if ($acc !== $len) {
-            $acc = $acc * 100.0 / $len;
-            return '投票总进度：' . round($acc, 2) . "%\n";
+            $res = $acc * 100.0 / $len;
+            return "投票数量：$acc/$len\n总进度：" . round($res, 2) . "%\n";
         } else {
             return false;
         }
