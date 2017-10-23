@@ -611,7 +611,7 @@ class HanbjRes extends WxPayDataBase
 
 class WxOrg
 {
-    const top = ['乾甲申', '坤丁酉', '乾乙丑', '离庚寅', '艮甲辰', '兑癸卯'];
+    const top = ['乾甲申', '坤丁酉', '乾乙丑', '离庚寅', '艮甲辰', '兑癸卯', '乾戊辰', '夏癸酉'];
     const vice = [];
     const leader = [];
     const member = [];
@@ -654,6 +654,16 @@ class WxOrg
         }
     }
 
+    public static function setJump($item, $uname)
+    {
+        $nonce = getNonceStr() . $uname;
+        $nonce = md5($nonce);
+        $data['event'] = 'wxtest';
+        $data['val'] = $item;
+        cache('jump' . $nonce, json_encode($data), 600);
+        return $nonce;
+    }
+
     public static function listobj($from)
     {
         $map['openid'] = $from;
@@ -670,15 +680,16 @@ class WxOrg
         if (false === $prog) {
             return '已完成';
         }
-        $ret = "有以下投票\n" . $prog;
+        $ret = "有以下投票，十分钟有效\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
         foreach (self::obj as $item) {
             $c_name = $uname . $item . self::name;
+            $nonce = self::setJump($item, $uname);
             if (!cache('?' . $c_name)) {
-                $unfinish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">' . $item . "</a>\n";
+                $unfinish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $nonce . '">' . $item . "</a>\n";
             } else {
-                $finish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $item . '">已完成-' . $item . "</a>\n";
+                $finish .= '<a href="https://app.zxyqwe.com/hanbj/mobile/index/obj/' . $nonce . '">已完成-' . $item . "</a>\n";
             }
         }
         return $ret . $unfinish . $finish;

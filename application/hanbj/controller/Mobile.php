@@ -92,7 +92,7 @@ class Mobile extends Controller
             session('card', $card['code']);
         }
         if (!empty($obj)) {
-            return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $obj);
+            return redirect('https://app.zxyqwe.com/hanbj/mobile/jump/obj/' . $obj);
         }
         return view('home', [
             'user' => $res,
@@ -100,6 +100,19 @@ class Mobile extends Controller
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y')
         ]);
+    }
+
+    public function jump($obj)
+    {
+        $obj = cache('jump' . $obj);
+        if (false !== $obj) {
+            $obj = json_decode($obj, true);
+            switch ($obj['event']) {
+                case 'wxtest':
+                    return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $obj['val']);
+            }
+        }
+        return view('jump');
     }
 
     public function reg()
