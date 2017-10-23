@@ -100,7 +100,7 @@ class WxHanbj
                 } else {
                     $cont = '文字信息：' . $cont;
                 }
-                return self::auto($from, $to, $cont);
+                return self::auto($from, $to, $cont, false);
             case 'image':
             case 'voice':
             case 'video':
@@ -121,12 +121,17 @@ class WxHanbj
         return $cont;
     }
 
-    private static function auto($to, $from, $type)
+    private static function auto($to, $from, $type, $debug = true)
     {
-        trace([
-            'TO' => $to,
-            'TEXT' => $type
-        ]);
+        if ($debug) {
+            trace([
+                'TO' => $to,
+                'TEXT' => $type
+            ]);
+        } else {
+            trace($to);
+        }
+
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
@@ -608,7 +613,7 @@ class WxOrg
     const top = ['乾甲申'];
     const vice = ['坤丁酉', '乾乙丑'];
     const leader = ['离庚寅'];
-    const member = ['艮甲辰'];
+    const member = ['艮甲辰', '兑癸卯'];
     const obj = ['素问', '采娈', '少卿', '魁儿'];
     const name = '2017???问卷调查';
 
