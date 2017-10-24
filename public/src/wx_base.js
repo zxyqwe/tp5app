@@ -222,7 +222,7 @@ var wx_init = (function ($, w, undefined) {
             .init();
     };
     var jsapi = function () {
-        w.waitloading();
+        w.waitloading('微信授权中');
         var msg = $('#json_wx').html();
         msg = JSON.parse(msg);
         wx.config({
@@ -259,8 +259,11 @@ var wx_init = (function ($, w, undefined) {
             });
         };
         var $loadingToast = $('#loadingToast');
-        w.waitloading = function () {
-            loading = weui.loading('数据加载中');
+        w.waitloading = function (data) {
+            if (undefined === data) {
+                data = '数据加载中';
+            }
+            loading = weui.loading(data);
         };
         w.cancelloading = function () {
             loading.hide();
