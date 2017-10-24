@@ -46,6 +46,21 @@ class FeeOper
 
 class WxHanbj
 {
+    public static function json_wx($url)
+    {
+        $wx['api'] = config('hanbj_api');
+        $wx['timestamp'] = time();
+        $wx['nonce'] = getNonceStr();
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $ss = 'jsapi_ticket=' . self::jsapi($access) .
+            '&noncestr=' . $wx['nonce'] .
+            '&timestamp=' . $wx['timestamp']
+            . '&url=' . $url;
+        $ss = sha1($ss);
+        $wx['signature'] = $ss;
+        $wx['cur_url'] = $url;
+        return json_encode($wx);
+    }
 
     public static function jsapi($access)
     {
