@@ -94,6 +94,8 @@ class Mobile extends Controller
         if (!empty($obj)) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile/jump/nonce/' . $obj);
         }
+        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING'];
+        session('json_wx', $this->json_wx($url));
         return view('home', [
             'user' => $res,
             'card' => $card['status'],
@@ -126,7 +128,7 @@ class Mobile extends Controller
         return view('reg');
     }
 
-    public function json_wx()
+    private function json_wx($url)
     {
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
@@ -135,10 +137,10 @@ class Mobile extends Controller
         $ss = 'jsapi_ticket=' . WxHanbj::jsapi($access) .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']
-            . '&url=' . urldecode($_GET['url']);
+            . '&url=' . $url;
         $ss = sha1($ss);
         $wx['signature'] = $ss;
-        return json($wx);
+        return json_encode($wx);
     }
 
     public function json_old()

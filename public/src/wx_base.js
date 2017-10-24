@@ -223,33 +223,22 @@ var wx_init = (function ($, w, undefined) {
     };
     var jsapi = function () {
         w.waitloading();
-        var cur_url = encodeURIComponent(location.href.split('#')[0]);
-        $.ajax({
-            type: "GET",
-            url: "/hanbj/mobile/json_wx?url=" + cur_url,
-            dataType: "json",
-            success: function (msg) {
-                wx.config({
-                    appId: msg.api,
-                    timestamp: msg.timestamp,
-                    nonceStr: msg.nonce,
-                    signature: msg.signature,
-                    jsApiList: ['openCard', 'addCard', 'scanQRCode', 'chooseWXPay']
-                });
-                wx.ready(function () {
-                    w.cancelloading();
-                });
-                wx.error(function (res) {
-                    res.url = cur_url;
-                    w.msgto(JSON.stringify(res));
-                    w.location.search = '';
-                });
-            },
-            error: function (msg) {
-                w.cancelloading();
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
-            }
+        var msg = $('#json_wx').html();
+        msg = JSON.parse(msg);
+        wx.config({
+            appId: msg.api,
+            timestamp: msg.timestamp,
+            nonceStr: msg.nonce,
+            signature: msg.signature,
+            jsApiList: ['openCard', 'addCard', 'scanQRCode', 'chooseWXPay']
+        });
+        wx.ready(function () {
+            w.cancelloading();
+        });
+        wx.error(function (res) {
+            res.url = cur_url;
+            w.msgto(JSON.stringify(res));
+            w.location.search = '';
         });
     };
 
