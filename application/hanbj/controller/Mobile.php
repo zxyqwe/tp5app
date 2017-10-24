@@ -140,6 +140,7 @@ class Mobile extends Controller
             . '&url=' . $url;
         $ss = sha1($ss);
         $wx['signature'] = $ss;
+        $wx['cur_url'] = $url;
         return json_encode($wx);
     }
 
