@@ -94,7 +94,7 @@ class Mobile extends Controller
         if (!empty($obj)) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile/jump/nonce/' . $obj);
         }
-        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING'];
+        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
         session('json_wx', $this->json_wx($url));
         return view('home', [
             'user' => $res,

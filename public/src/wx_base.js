@@ -237,6 +237,7 @@ var wx_init = (function ($, w, undefined) {
         });
         wx.error(function (res) {
             res.url = location.href.split('#')[0];
+            console.log(res);
             w.msgto(JSON.stringify(res));
             w.location.search = '';
         });
