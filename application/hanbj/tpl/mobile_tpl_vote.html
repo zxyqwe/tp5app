@@ -9,7 +9,7 @@
             <div class="weui-panel__bd">
                 <div class="weui-grids">
                     <div class="weui-grid-sm" v-for="t in tiles"
-                         v-bind:style="{ color : t_clr(t) }"></div>
+                         v-bind:style="{ color : t_clr(t), height : t_ht }"></div>
                 </div>
             </div>
             <div class="weui-panel__ft">
@@ -22,29 +22,53 @@
 <script type="text/javascript">
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
-        var tiles = [], vmain;
-        var init = function () {
+        var tiles = [], vmain, col = [
+            '#913173',
+            '#013673',
+            '#917603'];
+        var shuffle = function (a) {
+            var j, x, i;
+            for (i = a.length - 1; i > 0; i--) {
+                j = Math.floor(Math.random() * (i + 1));
+                x = a[i];
+                a[i] = a[j];
+                a[j] = x;
+            }
+        };
+        var sh_t = function () {
+            shuffle(tiles);
+            vmain.tiles = tiles;
+        };
+        var gen_tiles = function () {
             var i = 100;
             while (i--) {
-                tiles.push(0);
+                tiles.push(Math.floor(Math.random() * 3));
             }
+        };
+        var init = function () {
+            gen_tiles();
             vmain = new Vue({
                 el: '#objmain',
                 data: {
                     tiles: tiles
                 },
                 computed: {
-                    t_clr: function (i) {
-                        return '#913673';
+                    t_ht: function () {
+                        return '34.5px';
                     }
                 },
-                methods: {},
+                methods: {
+                    t_clr: function (i) {
+                        return col[i];
+                    }
+                },
                 ready: function () {
                 }
             });
         };
         return {
-            init: init
+            init: init,
+            shuffle: sh_t
         };
     })(Zepto, Vue, window);
     vote.init();
