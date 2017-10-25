@@ -120,7 +120,7 @@
                     },
                     next_cond: function () {
                         return !this.cur_a
-                            || this.slidepos >= 0.6 * this.max_score
+                            || (this.slidepos >= 0.6 * this.max_score && this.slidepos < this.max_score)
                             || (this.slidepos > 0 && this.user_add_len > 15);
                     }
                 },
@@ -168,6 +168,15 @@
                     },
                     up: function () {
                         this.next(0);
+                        var sum = 0;
+                        var i = this.ans.length;
+                        while (i--) {
+                            sum += this.ans[i];
+                        }
+                        if (sum === 100) {
+                            w.msgto('全满分');
+                            return;
+                        }
                         $.ajax({
                             type: "POST",
                             url: "/hanbj/wxtest/up",

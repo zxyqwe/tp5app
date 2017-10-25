@@ -777,6 +777,9 @@ class WxOrg
         if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
             return 'sel';
         }
+        if (array_sum($ans['sel']) === 100) {
+            return '满分';
+        }
         if (!isset($ans['sel_add']) || !is_array($ans['sel_add'])) {
             return 'sel_add';
         }
