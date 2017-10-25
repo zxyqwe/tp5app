@@ -2,14 +2,18 @@
     <div class="page__hd">
         <h1 class="page__title">投票</h1>
     </div>
-    <div class="page__bd page__bd_spacing" id="objmain">
+    <div class="page__bd page__bd_spacing" id="votemain">
         <div class="weui-panel">
             <div class="weui-panel__hd">
+                投票结果
             </div>
             <div class="weui-panel__bd">
                 <div class="weui-grids">
-                    <div class="weui-grid-sm" v-for="t in tiles"
-                         v-bind:style="{ color : t_clr(t), height : t_ht }"></div>
+                    <template v-for="n in ns">
+                        <div class="weui-grid-sm"
+                             v-bind:style="{ background : t_clr(n.clr), height : t_ht }">
+                        </div>
+                    </template>
                 </div>
             </div>
             <div class="weui-panel__ft">
@@ -22,53 +26,60 @@
 <script type="text/javascript">
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
-        var tiles = [], vmain, col = [
+        var vmain, col = [
+            '#ddd',
             '#913173',
             '#013673',
             '#917603'];
-        var shuffle = function (a) {
-            var j, x, i;
-            for (i = a.length - 1; i > 0; i--) {
-                j = Math.floor(Math.random() * (i + 1));
-                x = a[i];
-                a[i] = a[j];
-                a[j] = x;
-            }
-        };
-        var sh_t = function () {
-            shuffle(tiles);
-            vmain.tiles = tiles;
-        };
-        var gen_tiles = function () {
-            var i = 100;
-            while (i--) {
-                tiles.push(Math.floor(Math.random() * 3));
-            }
-        };
         var init = function () {
-            gen_tiles();
             vmain = new Vue({
-                el: '#objmain',
+                el: '#votemain',
                 data: {
-                    tiles: tiles
+                    ns: []
                 },
                 computed: {
                     t_ht: function () {
-                        return '34.5px';
+                        return '3.45px';//ToDo
                     }
                 },
                 methods: {
                     t_clr: function (i) {
                         return col[i];
+                    },
+                    shuffle: function () {
+                        var a = this.ns;
+                        this.ns = [];
+                        var j, x, i;
+                        for (i = a.length - 1; i > 0; i--) {
+                            j = Math.floor(Math.random() * (i + 1));
+                            x = a[i];
+                            a[i] = a[j];
+                            a[j] = x;
+                        }
+                        this.ns = a;
+                        return this.ns;
+                    },
+                    gen_tiles: function () {
+                        var i = 10000;
+                        while (i--) {
+                            this.ns.push({
+                                id: i,
+                                clr: Math.floor(Math.random() * 4)
+                            });
+                        }
                     }
                 },
                 ready: function () {
+                    this.gen_tiles();
                 }
-            });
+            })
+            ;
         };
         return {
             init: init,
-            shuffle: sh_t
+            shuffle: function () {
+                return vmain.shuffle();
+            }
         };
     })(Zepto, Vue, window);
     vote.init();
