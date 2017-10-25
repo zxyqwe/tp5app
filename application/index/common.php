@@ -69,7 +69,7 @@ class BiliHelper
             $data = json_decode($raw, true);
             trace("心跳 {$data['msg']}");
         } else {
-            trace($data['msg']);
+            trace("奇怪 $raw");
         }
         cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
     }

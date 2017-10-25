@@ -295,8 +295,8 @@ class BonusOper
 {
     const FEE = 30;
     const ACT = 30;
-    const ACT_NAME = '2017秋季仓库整理';
-    const _WORKER = [];
+    const ACT_NAME = '2017重阳';
+    const _WORKER = ['兑庚午'];
 
     public static function getWorkers()
     {
