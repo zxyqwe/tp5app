@@ -36,12 +36,12 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-bottom:1em" v-show="slidepos < 0.6 * max_score && slidepos > 0">
+            <div style="margin-bottom:1em" v-show="!well_score && slidepos > 0">
                 <div class="weui-cells__title">不及格的理由</div>
                 <div class="weui-cells weui-cells_form">
                     <div class="weui-cell">
                         <div class="weui-cell__bd">
-                            <textarea class="weui-textarea" placeholder="请输入至少15字" rows="10"
+                            <textarea class="weui-textarea" placeholder="请输入不少于15字" rows="10"
                                       v-model="user_add"></textarea>
                             <div class="weui-textarea-counter"><span>{{ user_add_len }}</span>字</div>
                         </div>
@@ -118,9 +118,12 @@
                     user_add_len: function () {
                         return this.user_add.length;
                     },
+                    well_score: function () {
+                        return this.slidepos >= 0.6 * this.max_score && this.slidepos < this.max_score;
+                    },
                     next_cond: function () {
                         return !this.cur_a
-                            || (this.slidepos >= 0.6 * this.max_score && this.slidepos < this.max_score)
+                            || this.well_score
                             || (this.slidepos > 0 && this.user_add_len > 15);
                     }
                 },
