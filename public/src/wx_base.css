@@ -189,3 +189,7 @@ ul {
     background-color: #FFFFCC;
     color: #B22222;
 }
+
+.weui-grid-sm {
+    width: 10%;
+}

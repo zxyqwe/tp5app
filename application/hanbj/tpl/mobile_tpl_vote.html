@@ -1,0 +1,51 @@
+<div class="page">
+    <div class="page__hd">
+        <h1 class="page__title">投票</h1>
+    </div>
+    <div class="page__bd page__bd_spacing" id="objmain">
+        <div class="weui-panel">
+            <div class="weui-panel__hd">
+            </div>
+            <div class="weui-panel__bd">
+                <div class="weui-grids">
+                    <div class="weui-grid-sm" v-for="t in tiles"
+                         v-bind:style="{ color : t_clr(t) }"></div>
+                </div>
+            </div>
+            <div class="weui-panel__ft">
+            </div>
+        </div>
+    </div>
+    <div class="page__ft">
+    </div>
+</div>
+<script type="text/javascript">
+    var vote = (function ($, Vue, w, undefined) {
+        'use strict';
+        var tiles = [], vmain;
+        var init = function () {
+            var i = 100;
+            while (i--) {
+                tiles.push(0);
+            }
+            vmain = new Vue({
+                el: '#objmain',
+                data: {
+                    tiles: tiles
+                },
+                computed: {
+                    t_clr: function (i) {
+                        return '#913673';
+                    }
+                },
+                methods: {},
+                ready: function () {
+                }
+            });
+        };
+        return {
+            init: init
+        };
+    })(Zepto, Vue, window);
+    vote.init();
+</script>
