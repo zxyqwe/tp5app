@@ -143,6 +143,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
     };
     var load_act_log = function () {
+        w.waitloading();
         $.ajax({
             type: "GET",
             url: "/hanbj/work/act_log",
@@ -162,6 +163,9 @@ var wx_home = (function ($, Vue, w, undefined) {
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
             }
         });
     };
@@ -231,6 +235,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             });
         });
         $('#tempid').click(function () {
+            w.waitloading();
             $.ajax({
                 type: "GET",
                 url: "/hanbj/mobile/json_tempid",
@@ -242,12 +247,16 @@ var wx_home = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });
         ticketapi();
     };
     var load_act = function () {
+        w.waitloading();
         $.ajax({
             type: "GET",
             url: "/hanbj/wx/json_activity",
@@ -265,10 +274,14 @@ var wx_home = (function ($, Vue, w, undefined) {
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
             }
         });
     };
     var load_valid = function () {
+        w.waitloading();
         $.ajax({
             type: "GET",
             url: "/hanbj/wx/json_valid",
@@ -287,11 +300,15 @@ var wx_home = (function ($, Vue, w, undefined) {
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
             }
         });
     };
     var bonus = function () {
         $('#renew_bonus').click(function () {
+            w.waitloading();
             $.ajax({
                 type: "GET",
                 url: "/hanbj/wx/json_renew",
@@ -302,6 +319,9 @@ var wx_home = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

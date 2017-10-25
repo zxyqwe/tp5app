@@ -170,6 +170,7 @@
                         requestAnimationFrame(waitSlide);
                     },
                     up: function () {
+                        w.waitloading();
                         this.next(0);
                         var sum = 0;
                         var i = this.ans.length;
@@ -200,12 +201,17 @@
                             error: function (msg) {
                                 msg = JSON.parse(msg.responseText);
                                 w.msgto(msg.msg);
+                            },
+                            complete: function () {
+                                w.cancelloading();
                             }
                         });
                     }
+                },
+                ready: function () {
+                    this.next(0);
                 }
             });
-            vmain.next(0);
         };
         return {
             init: init
