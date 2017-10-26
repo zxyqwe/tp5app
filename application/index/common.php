@@ -48,6 +48,14 @@ class BiliHelper
         return $res;
     }
 
+    private function heartbeat()
+    {
+        $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        trace("心跳 {$data['msg']}");
+    }
+
     public function freeGift()
     {
         if (cache('?bili_cron_free_gift')) {
@@ -64,12 +72,10 @@ class BiliHelper
             $timeout = 8 * 3600;
             trace("free gift empty {$data['msg']}");
         } elseif ($data['msg'] === '非法心跳') {
-            $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
-            $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-            $data = json_decode($raw, true);
-            trace("心跳 {$data['msg']}");
+            $this->heartbeat();
         } else {
             trace("奇怪 $raw");
+            $this->heartbeat();
         }
         cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
     }
