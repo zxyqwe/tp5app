@@ -49,8 +49,26 @@ class BiliHelper
         return $res;
     }
 
+    private function sign()
+    {
+        $urlapi = $this->prefix . 'sign/doSign';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] == -500) {
+            trace('已签到');
+            return;
+        }
+        $urlapi = $this->prefix . 'giftBag/sendDaily?_=' . round(microtime(true) * 1000);
+        $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $urlapi = $this->prefix . 'sign/GetSignInfo';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}");
+    }
+
     private function getSendGift()
     {
+        $this->sign();
         $urlapi = $this->prefix . 'giftBag/getSendGift';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
@@ -70,7 +88,7 @@ class BiliHelper
             return;
         }
         $this->getSendGift();
-        $urlapi = 'http://api.live.bilibili.com/gift/playerBag?_=' . round(microtime(true) * 1000);
+        $urlapi = $this->prefix . 'gift/playerBag?_=' . round(microtime(true) * 1000);
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (empty($data)) {
