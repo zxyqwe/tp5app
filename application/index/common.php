@@ -30,6 +30,8 @@ class BiliHelper
     public function __construct()
     {
         $this->cookie = config('bili_cron_cookie');
+        preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
+        $this->token = isset($token[1]) ? $token[1] : '';
     }
 
     public function online()
@@ -98,8 +100,6 @@ class BiliHelper
             cache('bili_cron_send_gift', 'bili_cron_send_gift', 3600);
             return;
         }
-        preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
-        $this->token = isset($token[1]) ? $token[1] : '';
         foreach ($data['data'] as $vo) {
             $payload = [
                 'giftId' => $vo['gift_id'],
