@@ -21,7 +21,7 @@ var fee = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             $.ajax({
                 type: "GET",
-                url: "/hanbj/data/fee_search",
+                url: w.u1,
                 dataType: "json",
                 data: {
                     name: nv
@@ -39,14 +39,14 @@ var fee = (function ($, Vue, w, undefined) {
         $('#res_up').click(function () {
             $.ajax({
                 type: "POST",
-                url: "/hanbj/data/fee_add",
+                url: w.u2,
                 dataType: "json",
                 data: {
                     name: vmain.res,
                     type: 0
                 },
                 success: function (msg) {
-                    location.href = '/hanbj/index/feelog';
+                    location.href = w.u3;
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -57,14 +57,14 @@ var fee = (function ($, Vue, w, undefined) {
         $('#res_down').click(function () {
             $.ajax({
                 type: "POST",
-                url: "/hanbj/data/fee_add",
+                url: w.u2,
                 dataType: "json",
                 data: {
                     name: vmain.res,
                     type: 1
                 },
                 success: function (msg) {
-                    location.href = '/hanbj/index/feelog';
+                    location.href = w.u3;
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
