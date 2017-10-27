@@ -116,8 +116,8 @@ class BiliHelper
             $urlapi = 'http://api.live.bilibili.com/giftBag/send';
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
-            if ($res['code']) {
-                trace("投喂 {$data['msg']}");
+            if (0 !== $res['code']) {
+                trace("投喂 $raw");
             } else {
                 trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
             }
