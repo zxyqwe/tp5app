@@ -10,7 +10,7 @@ class BiliHelper
     private $cookie = '';
     private $token = '';
     private $csrf_token = '';
-    private $room_id = 218;
+    private $room_id = 218;//5294
     private $ruid = 116683;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
     private $OCR = array(
@@ -120,7 +120,7 @@ class BiliHelper
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
             if (0 !== $res['code']) {
-                trace("投喂 {$this->token} $raw");
+                trace("投喂 {$this->token} {$this->csrf_token} $raw");
             } else {
                 trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
             }
