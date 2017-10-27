@@ -55,13 +55,12 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] == -500) {
-            trace('已签到');
             return;
         }
         $urlapi = $this->prefix . 'giftBag/sendDaily?_=' . round(microtime(true) * 1000);
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        if ($data['code']) {
+        if (0 !== $data['code']) {
             trace('sendDaily ' . $raw);
         }
         $urlapi = $this->prefix . 'sign/GetSignInfo';
@@ -113,11 +112,11 @@ class BiliHelper
                 'rnd' => mt_rand() % 10000000000,
                 'token' => $this->token,
             ];
-            $urlapi = 'http://api.live.bilibili.com/giftBag/send';
+            $urlapi = $this->prefix . 'giftBag/send';
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
             if (0 !== $res['code']) {
-                trace("投喂 $raw");
+                trace("投喂 {$this->token} $raw");
             } else {
                 trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
             }
