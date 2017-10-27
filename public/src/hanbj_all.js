@@ -37,7 +37,7 @@ var all = (function ($, w, undefined) {
     w.loaddetail = function (id) {
         $.ajax({
             type: "POST",
-            url: "/hanbj/data/json_detail",
+            url: w.u7,
             data: {
                 id: id
             },

@@ -14,7 +14,7 @@ var login = (function ($, w, undefined) {
             var d = $('#form').serializeArray();
             $.ajax({
                 type: "POST",
-                url: "/hanbj/dataopen/json_login",
+                url: w.u11,
                 data: d,
                 dataType: "json",
                 success: function (msg) {

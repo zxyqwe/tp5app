@@ -41,7 +41,7 @@ var fame = (function ($, Vue, w, undefined) {
         });
         $.ajax({
             type: "GET",
-            url: "/hanbj/dataopen/json_fame",
+            url: w.u9,
             dataType: "json",
             success: function (msg) {
                 vmain.fames = msg;
@@ -76,7 +76,7 @@ var fame = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             $.ajax({
                 type: "GET",
-                url: "/hanbj/data/fee_search",
+                url: w.u1,
                 dataType: "json",
                 data: {
                     name: nv
@@ -94,7 +94,7 @@ var fame = (function ($, Vue, w, undefined) {
         $('#res_up').click(function () {
             $.ajax({
                 type: "POST",
-                url: "/hanbj/data/fame_add",
+                url: w.u10,
                 dataType: "json",
                 data: {
                     name: vmain.res,

@@ -38,7 +38,7 @@ var feelog = (function ($, w, undefined) {
             }
             $.ajax({
                 type: "POST",
-                url: "/hanbj/data/bonus_add",
+                url:  w.u6,
                 data: {type: 0},
                 dataType: "json",
                 success: function (msg) {

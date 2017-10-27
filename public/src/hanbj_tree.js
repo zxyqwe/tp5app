@@ -45,7 +45,7 @@ var tree = (function ($, w, undefined) {
                 return (a.parent === b.parent ? 1 : 2) / a.depth;
             });
 
-        d3.json("/hanbj/data/json_tree", function (error, data) {
+        d3.json(w.u8, function (error, data) {
             if (error) throw error;
             var real = [{m: '', t: '始祖', u: '汉.梦里水乡', c: 1}];
             var real_par = ['汉.梦里水乡'];

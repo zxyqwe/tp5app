@@ -21,7 +21,7 @@ var volunteer = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             $.ajax({
                 type: "GET",
-                url: "/hanbj/data/fee_search",
+                url: w.u1,
                 dataType: "json",
                 data: {
                     name: nv
@@ -39,13 +39,13 @@ var volunteer = (function ($, Vue, w, undefined) {
         $('#res_up').click(function () {
             $.ajax({
                 type: "POST",
-                url: "/hanbj/data/vol_add",
+                url: w.u4,
                 dataType: "json",
                 data: {
                     name: vmain.res
                 },
                 success: function (msg) {
-                    location.href = '/hanbj/index/actlog';
+                    location.href = w.u5;
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
