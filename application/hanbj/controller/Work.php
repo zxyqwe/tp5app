@@ -53,6 +53,7 @@ class Work extends Controller
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
         $res['act'] = BonusOper::ACT_NAME;
+        $res['bonus'] = BonusOper::ACT;
         return json($res);
     }
 

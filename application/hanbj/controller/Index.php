@@ -64,6 +64,7 @@ class Index extends Controller
         $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
         $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
         $map['会费增加积分'] = BonusOper::FEE;
+        $map['志愿者增加积分'] = BonusOper::VOLUNTEER;
         $map['活动增加积分'] = BonusOper::ACT;
         $map['活动预置名称'] = BonusOper::ACT_NAME;
         $map['当前工作人员'] = implode('，', BonusOper::getWorkers());

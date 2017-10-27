@@ -56,6 +56,8 @@ var wx_home = (function ($, Vue, w, undefined) {
     var build_act = function (msg) {
         var s = '<p>活动：';
         s += msg.act;
+        s += '</p><p>积分：';
+        s += msg.bonus;
         s += '</p>';
         if (msg.code === '1') {
             s += '<p class="temp-text">状态：注销';
