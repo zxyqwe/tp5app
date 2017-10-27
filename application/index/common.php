@@ -59,7 +59,11 @@ class BiliHelper
             return;
         }
         $urlapi = $this->prefix . 'giftBag/sendDaily?_=' . round(microtime(true) * 1000);
-        $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code']) {
+            trace('sendDaily ' . $raw);
+        }
         $urlapi = $this->prefix . 'sign/GetSignInfo';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
