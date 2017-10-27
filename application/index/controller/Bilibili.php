@@ -50,6 +50,7 @@ class Bilibili
         cache('bili_cron_time', $time);
         $bili->silver();
         $bili->freeGift();
+        $bili->send();
         return json(['msg' => 'ok', 'time' => $time]);
     }
 }
