@@ -294,7 +294,7 @@ class CardOper
 class BonusOper
 {
     const FEE = 30;
-    const ACT = 30;
+    const ACT = 5;
     const ACT_NAME = '2017重阳';
     const _WORKER = ['兑庚午'];
 
