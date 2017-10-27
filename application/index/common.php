@@ -8,6 +8,7 @@ class BiliHelper
 {
     private $prefix = 'https://api.live.bilibili.com/';
     private $cookie = '';
+    private $token = '';
     private $room_id = 218;
     private $ruid = 116683;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
@@ -46,6 +47,59 @@ class BiliHelper
         $urlapi = $this->prefix . 'User/getUserInfo';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         return $res;
+    }
+
+    private function getSendGift()
+    {
+        $urlapi = $this->prefix . 'giftBag/getSendGift';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if (0 === $data['code']) {
+            foreach ($data['data'] as $item) {
+                $str = 'getSendGift' . $item['giftTypeName'];
+                trace($str);
+            }
+        } else {
+            trace($raw);
+        }
+    }
+
+    public function send()
+    {
+        if (cache('?bili_cron_send_gift')) {
+            return;
+        }
+        $this->getSendGift();
+        $urlapi = 'http://api.live.bilibili.com/gift/playerBag?_=' . round(microtime(true) * 1000);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if (empty($data)) {
+            cache('bili_cron_send_gift', 'bili_cron_send_gift', 3600);
+            return;
+        }
+        preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
+        $this->token = isset($token[1]) ? $token[1] : '';
+        foreach ($data['data'] as $vo) {
+            $payload = [
+                'giftId' => $vo['gift_id'],
+                'roomid' => $this->room_id,
+                'ruid' => $this->ruid,
+                'num' => $vo['gift_num'],
+                'coinType' => 'silver',
+                'Bag_id' => $vo['id'],
+                'timestamp' => time(),
+                'rnd' => mt_rand() % 10000000000,
+                'token' => $this->token,
+            ];
+            $urlapi = 'http://api.live.bilibili.com/giftBag/send';
+            $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
+            $res = json_decode($raw, true);
+            if ($res['code']) {
+                trace("投喂 {$data['msg']}");
+            } else {
+                trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
+            }
+        }
     }
 
     private function heartbeat()
@@ -192,7 +246,7 @@ class BiliHelper
         return $ans;
     }
 
-    private function bili_Post($url, $cookie, $room)
+    private function bili_Post($url, $cookie, $room, $data = false)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -202,7 +256,10 @@ class BiliHelper
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
         curl_setopt($curl, CURLOPT_TIMEOUT, 1);
         curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_REFERER, 'http://live.bilibili.com/' . $room);
+        if ($data !== false) {
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+        curl_setopt($curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         curl_setopt($curl, CURLOPT_USERAGENT, $this->agent);
         $return_str = curl_exec($curl);
         if ($return_str === false) {
