@@ -5,20 +5,25 @@
             <h1>
                 志愿者登记
             </h1>
-            <p>
-                <i>活动名称：</i>
-                <i>{$data.name}</i>
-                <i>会员积分：</i>
-                <i>{$data.act}</i>
-                <i>志愿者积分：</i>
-                <i>{$data.vol}</i>
-            </p>
             <div>
                 <div class="form-horizontal">
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">活动名称</label>
+                        <div class="col-sm-10"><i>{$data.name}</i></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">会员积分</label>
+                        <div class="col-sm-10"><i>{$data.act}</i></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">志愿者积分</label>
+                        <div class="col-sm-10"><i>{$data.vol}</i></div>
+                    </div>
+                    <div class="form-group">
                         <label for="feesearch" class="col-sm-2 control-label">搜索</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="feesearch" placeholder="昵称或会员编号" v-model="uname"
+                            <input type="text" class="form-control" id="feesearch" placeholder="昵称或会员编号"
+                                   v-model="uname"
                                    debounce="500">
                         </div>
                     </div>
@@ -30,7 +35,8 @@
                                 <td>{{ item.t }}</td>
                                 <td>{{ item.u }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary btn-xs" v-on:click="sel_candy(item)">选择
+                                    <button type="button" class="btn btn-primary btn-xs"
+                                            v-on:click="sel_candy(item)">选择
                                     </button>
                                 </td>
                             </tr>
@@ -46,14 +52,15 @@
                                 <td>{{ item.t }}</td>
                                 <td>{{ item.u }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-danger btn-xs" v-on:click="del_candy($index)">
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            v-on:click="del_candy($index)">
                                         删除
                                     </button>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
-                        <div class="col-sm-offset-1 col-sm-10">
+                        <div class="col-sm-12">
                             <button id="res_up" type="button" class="btn btn-success btn-block">登记</button>
                         </div>
                     </div>
