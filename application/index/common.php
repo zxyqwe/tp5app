@@ -10,7 +10,7 @@ class BiliHelper
     private $cookie = '';
     private $token = '';
     private $csrf_token = '';
-    private $room_id = 218;//5294
+    private $room_id = 5294;//218
     private $ruid = 116683;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
     private $OCR = array(
@@ -154,7 +154,7 @@ class BiliHelper
             $this->heartbeat();
         } else {
             trace("奇怪 $raw");
-            $this->heartbeat();
+            //$this->heartbeat();
         }
         cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
     }
