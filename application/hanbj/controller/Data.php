@@ -261,6 +261,41 @@ class Data extends Controller
         return json(['msg' => 'ok']);
     }
 
+    public function vol_add()
+    {
+        $name = input('post.name/a', []);
+        if (empty($name)) {
+            return json(['msg' => 'empty name'], 400);
+        }
+        $data = [];
+        $oper = session('name');
+        $d = date("Y-m-d H:i:s");
+        foreach ($name as $tmp) {
+            $data[] = [
+                'unique_name' => $tmp['u'],
+                'oper' => $oper,
+                'act_time' => $d,
+                'bonus' => BonusOper::VOLUNTEER,
+                'name' => BonusOper::ACT_NAME . '志愿者'
+            ];
+        }
+        Db::startTrans();
+        try {
+            $res = Db::table('activity')
+                ->insertAll($data);
+            if ($res === count($data)) {
+                Db::commit();
+            } else {
+                Db::rollback();
+                return json(['msg' => $res], 400);
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['msg' => '' . $e], 400);
+        }
+        return json(['msg' => 'ok']);
+    }
+
     public function bonus_add()
     {
         $type = input('post.type');
