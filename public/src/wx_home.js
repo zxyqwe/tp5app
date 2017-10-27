@@ -38,7 +38,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             $loading.removeClass('sr-only');
             $.ajax({
                 type: "GET",
-                url: "/hanbj/mobile/json_addcard",
+                url: w.u1,
                 dataType: "json",
                 success: function (msg) {
                     add_card(msg)
@@ -84,7 +84,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "POST",
-            url: "/hanbj/work/json_card",
+            url: w.u2,
             data: {code: work_card_code},
             dataType: "json",
             success: function (msg) {
@@ -118,7 +118,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "POST",
-            url: "/hanbj/work/json_act",
+            url: w.u3,
             data: {code: work_card_code},
             dataType: "json",
             success: function (msg) {
@@ -148,7 +148,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: "/hanbj/work/act_log",
+            url: w.u4,
             dataType: "json",
             data: {
                 offset: vwork_act_log.items.length,
@@ -204,7 +204,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             $loading.removeClass('sr-only');
             $.ajax({
                 type: "GET",
-                url: "/hanbj/mobile/json_active",
+                url: w.u5,
                 dataType: "json",
                 success: function (msg) {
                     w.location.search = '?g=' + rand;
@@ -225,7 +225,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             $loading.removeClass('sr-only');
             $.ajax({
                 type: "GET",
-                url: "/hanbj/mobile/json_card",
+                url: w.u6,
                 dataType: "json",
                 success: function (msg) {
                     open_card(msg);
@@ -240,7 +240,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             w.waitloading();
             $.ajax({
                 type: "GET",
-                url: "/hanbj/mobile/json_tempid",
+                url: w.u7,
                 dataType: "json",
                 success: function (msg) {
                     var temp = msg.temp;
@@ -261,7 +261,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: "/hanbj/wx/json_activity",
+            url: w.u8,
             dataType: "json",
             data: {
                 offset: vact.items.length
@@ -286,7 +286,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: "/hanbj/wx/json_valid",
+            url: w.u9,
             dataType: "json",
             data: {
                 offset: vvalid.items.length
@@ -313,7 +313,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             w.waitloading();
             $.ajax({
                 type: "GET",
-                url: "/hanbj/wx/json_renew",
+                url: w.u10,
                 dataType: "json",
                 success: function (msg) {
                     w.location.search = '?g=' + rand;
@@ -363,7 +363,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: "/hanbj/wx/fee_year",
+            url: w.u11,
             data: {},
             dataType: "json",
             success: function (msg) {
@@ -396,7 +396,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             w.waitloading();
             $.ajax({
                 type: "POST",
-                url: "/hanbj/wx/order",
+                url: w.u12,
                 dataType: "json",
                 data: {
                     type: 1,

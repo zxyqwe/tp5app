@@ -242,8 +242,27 @@ var wx_init = (function ($, w, undefined) {
             w.location.search = '';
         });
     };
-
+    var dict = function () {
+        var hanbj = '/hanbj/';
+        var mobile = 'mobile/';
+        var wx = 'wx/';
+        var work = 'work/';
+        w.u1 = hanbj + mobile + 'json_addcard';
+        w.u2 = hanbj + work + 'json_card';
+        w.u3 = hanbj + work + 'json_act';
+        w.u4 = hanbj + work + 'act_log';
+        w.u5 = hanbj + mobile + 'json_active';
+        w.u5 = hanbj + mobile + 'json_card';
+        w.u7 = hanbj + mobile + 'json_tempid';
+        w.u8 = hanbj + wx + 'json_activity';
+        w.u9 = hanbj + wx + 'json_valid';
+        w.u10 = hanbj + wx + 'json_renew';
+        w.u11 = hanbj + wx + 'fee_year';
+        w.u12 = hanbj + wx + 'order';
+        w.u13 = hanbj + mobile + 'json_old';
+    };
     var init = function (jssign) {
+        dict();
         w.home = function () {
             location.hash = '';
         };

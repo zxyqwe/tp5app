@@ -19,7 +19,7 @@ var wx_Old = (function ($, w, undefined) {
             var old_phone = phone.val();
             $.ajax({
                 type: "POST",
-                url: "/hanbj/mobile/json_old",
+                url: w.u13,
                 data: {
                     phone: old_phone,
                     eid: old_eid
