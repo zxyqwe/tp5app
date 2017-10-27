@@ -9,6 +9,7 @@ class BiliHelper
     private $prefix = 'https://api.live.bilibili.com/';
     private $cookie = '';
     private $token = '';
+    private $csrf_token = '';
     private $room_id = 218;
     private $ruid = 116683;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
@@ -32,6 +33,8 @@ class BiliHelper
         $this->cookie = config('bili_cron_cookie');
         preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
         $this->token = isset($token[1]) ? $token[1] : '';
+        preg_match('/bili_jct=(.{32})/', $this->cookie, $token);
+        $this->csrf_token = isset($token[1]) ? $token[1] : '';
     }
 
     public function online()
@@ -111,6 +114,7 @@ class BiliHelper
                 'timestamp' => time(),
                 'rnd' => mt_rand() % 10000000000,
                 'token' => $this->token,
+                'csrf_token' => $this->csrf_token
             ];
             $urlapi = $this->prefix . 'giftBag/send';
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
