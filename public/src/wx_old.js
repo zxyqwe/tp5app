@@ -17,6 +17,7 @@ var wx_Old = (function ($, w, undefined) {
                 return;
             }
             var old_phone = phone.val();
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u13,
@@ -31,6 +32,9 @@ var wx_Old = (function ($, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });
