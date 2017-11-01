@@ -277,7 +277,7 @@ class Mobile extends Controller
         if ($map[$action] === $data[$action]) {
             return json(['msg' => '内容相同'], 400);
         }
-        if (strlen($data[$action]) > 30) {
+        if (strlen($data[$action]) > 60) {
             return json(['msg' => '字数太多'], 400);
         }
         $res = Db::table('member')

@@ -427,17 +427,11 @@ var wx_home = (function ($, Vue, w, undefined) {
             '</label></div><div class="weui-cell__bd">' + name +
             '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新' + type +
             '</label></div><div class="weui-cell__bd"><textarea style="background-color: yellow" class="weui-textarea" ' +
-            'placeholder="请输入" rows="5">' + name + '</textarea></div></div></div>';
+            'placeholder="请输入" rows="3">' + name + '</textarea></div></div></div>';
         return weui.confirm(str, function () {
             var val = $('.weui-dialog textarea').val();
             if (val === name) {
-                return;
-            }
-            if (val.length > 30) {
-                setTimeout(function () {
-                    w.msgto('请小于30字');
-                }, 100);
-                return;
+                return false;
             }
             w.waitloading();
             $.ajax({
