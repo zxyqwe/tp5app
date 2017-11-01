@@ -34,11 +34,8 @@ class Mobile extends Controller
 
     public function index($obj = '')
     {
-        $prefix = '';
-        if (!empty($obj)) {
-            $prefix = '/index/obj/' . $obj;
-        }
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
+            $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix, config('hanbj_api'));
         }
         $openid = session('openid');
