@@ -264,5 +264,14 @@ class Mobile extends Controller
         return $reply;
     }
 
-
+    public function change()
+    {
+        $action = input('get.action');
+        if (!in_array($action, ['pref', 'web'])) {
+            return json(['msg' => '操作未知' . $action], 400);
+        }
+        $old = input('post.old');
+        $new = input('post.new');
+        return json(['msg' => 'OK']);
+    }
 }

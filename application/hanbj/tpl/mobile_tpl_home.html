@@ -49,18 +49,18 @@
                 </div>
                 <div class="weui-cell__ft">{$user.gender}</div>
             </div>
-            <div class="weui-cell">
+            <a class="weui-cell weui-cell_access" href="javascript:wx_home.pref('{$user.pref}')">
                 <div class="weui-cell__bd">
                     <p>偏好</p>
                 </div>
                 <div class="weui-cell__ft">{$user.pref}</div>
-            </div>
-            <div class="weui-cell">
+            </a>
+            <a class="weui-cell weui-cell_access" href="javascript:wx_home.web('{$user.web_name}')">
                 <div class="weui-cell__bd">
                     <p>常用网名</p>
                 </div>
                 <div class="weui-cell__ft">{$user.web_name}</div>
-            </div>
+            </a>
         </div>
         <div class="weui-cells__title">联系方式</div>
         <div class="weui-cells">

@@ -260,6 +260,7 @@ var wx_init = (function ($, w, undefined) {
         w.u11 = hanbj + wx + 'fee_year';
         w.u12 = hanbj + wx + 'order';
         w.u13 = hanbj + mobile + 'json_old';
+        w.u14 = hanbj + mobile + 'change';
     };
     var init = function (jssign) {
         dict();

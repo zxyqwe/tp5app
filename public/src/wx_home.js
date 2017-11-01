@@ -421,6 +421,47 @@ var wx_home = (function ($, Vue, w, undefined) {
             });
         });
     };
+    var change_item = function (name, url, type) {
+        var str = '<div class="weui-cells weui-cells_form" style="background-color: #efeff4"><div class="weui-cell">' +
+            '<div class="weui-cell__hd"><label class="weui-label">旧' + type +
+            '</label></div><div class="weui-cell__bd">' + name +
+            '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新' + type +
+            '</label></div><div class="weui-cell__bd"><input class="weui-input" type="text" placeholder="请输入">' +
+            '</div></div></div>';
+        return weui.confirm(str, function () {
+            var val = $('.weui-dialog input').val();
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: {
+                    old: name,
+                    new: val
+                },
+                success: function (msg) {
+                    w.msgok();
+                    w.location.search = '?g=' + rand;
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+            console.log(val);
+        }, {
+            title: '修改' + type
+        });
+    };
+    var pref = function (name) {
+        change_item(name, w.u14 + '?action=pref', '偏好');
+    };
+    var web = function (name) {
+        change_item(name, w.u14 + '?action=web', '网名');
+    };
     var init = function () {
         $cardn = $("#card-1");
         $card0 = $("#card0");
@@ -434,6 +475,8 @@ var wx_home = (function ($, Vue, w, undefined) {
         bonus: bonus,
         valid_fee: valid_fee,
         work_act_log: work_act_log,
+        pref: pref,
+        web: web,
         build: function () {
             get_act('416521837905');
         }
