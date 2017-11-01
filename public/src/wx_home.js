@@ -430,8 +430,13 @@ var wx_home = (function ($, Vue, w, undefined) {
             'placeholder="请输入" rows="5">' + name + '</textarea></div></div></div>';
         return weui.confirm(str, function () {
             var val = $('.weui-dialog textarea').val();
+            if (val === name) {
+                return;
+            }
             if (val.length > 30) {
-                w.msgto('请小于30字');
+                setTimeout(function () {
+                    w.msgto('请小于30字');
+                }, 100);
                 return;
             }
             w.waitloading();
@@ -455,7 +460,6 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.cancelloading();
                 }
             });
-            console.log(val);
         }, {
             title: '修改' + type
         });
