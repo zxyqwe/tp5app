@@ -118,12 +118,13 @@ class Dataopen extends Controller
             ->alias('m')
             ->cache(600)
             ->order('m.bonus', 'desc')
-            ->limit(50, 1)
+            ->limit(51, 1)
             ->field([
                 'm.bonus as o'
             ])
             ->select();
         $map['bonus'] = ['>=', intval($tmp[0]['o'])];
+        $map['unique_name'] = ['neq', '坎丙午'];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
