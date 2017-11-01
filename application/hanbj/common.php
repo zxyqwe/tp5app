@@ -113,9 +113,9 @@ class WxHanbj
                 } elseif (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
-                } else {
-                    $cont = '文字信息：' . $cont;
+                    return self::auto($from, $to, $cont, false, '临时身份');
                 }
+                $cont = '文字信息：' . $cont;
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
