@@ -422,12 +422,13 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
     };
     var change_item = function (name, url, type) {
-        var str = '<div class="weui-cells weui-cells_form" style="background-color: #efeff4"><div class="weui-cell">' +
+        var str = '<div class="weui-cells weui-cells_form" style="margin-top: 0"><div class="weui-cell">' +
             '<div class="weui-cell__hd"><label class="weui-label">旧' + type +
             '</label></div><div class="weui-cell__bd">' + name +
             '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新' + type +
-            '</label></div><div class="weui-cell__bd"><input class="weui-input" type="text" placeholder="请输入">' +
-            '</div></div></div>';
+            '</label></div><div class="weui-cell__bd"><input style="background-color: yellow;"' +
+            ' class="weui-input" type="text" placeholder="请输入" value="' + name +
+            '"></div></div></div>';
         return weui.confirm(str, function () {
             var val = $('.weui-dialog input').val();
             w.waitloading();
@@ -460,7 +461,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         change_item(name, w.u14 + '?action=pref', '偏好');
     };
     var web = function (name) {
-        change_item(name, w.u14 + '?action=web', '网名');
+        change_item(name, w.u14 + '?action=web_name', '网名');
     };
     var init = function () {
         $cardn = $("#card-1");

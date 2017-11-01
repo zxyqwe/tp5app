@@ -267,11 +267,20 @@ class Mobile extends Controller
     public function change()
     {
         $action = input('get.action');
-        if (!in_array($action, ['pref', 'web'])) {
+        if (!in_array($action, ['pref', 'web_name'])) {
             return json(['msg' => '操作未知' . $action], 400);
         }
-        $old = input('post.old');
-        $new = input('post.new');
+        $map['openid'] = session('openid');
+        $map['unique_name'] = session('unique_name');
+        $map[$action] = input('post.old');
+        $data[$action] = input('post.new');
+        $res = Db::table('member')
+            ->where($map)
+            ->update($data);
+        if ($res === 0) {
+            return json(['msg' => '更新失败'], 400);
+        }
+        trace("{$map['unique_name']} {$map[$action]} -> {$data[$action]}");
         return json(['msg' => 'OK']);
     }
 }
