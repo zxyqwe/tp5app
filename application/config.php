@@ -212,6 +212,8 @@ return [
         'type' => '',
         // 是否自动开启 SESSION
         'auto_start' => true,
+        'secure' => true,
+        'name' => 'w_zxy'
     ],
 
     // +----------------------------------------------------------------------
@@ -227,7 +229,7 @@ return [
         // cookie 有效域名
         'domain' => '',
         //  cookie 启用安全传输
-        'secure' => false,
+        'secure' => true,
         // httponly设置
         'httponly' => '',
         // 是否使用 setcookie
