@@ -116,9 +116,6 @@ class Mobile extends Controller
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
-        if (input('?get.encrypt_code')) {
-            return redirect('https://app.zxyqwe.com/hanbj/mobile');
-        }
         return view('reg');
     }
 
