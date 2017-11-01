@@ -77,6 +77,9 @@ class BiliHelper
     private function getSendGift()
     {
         $this->sign();
+        if (cache('?bili_getSendGift')) {
+            return;
+        }
         $urlapi = $this->prefix . 'giftBag/getSendGift';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
@@ -85,6 +88,7 @@ class BiliHelper
                 $str = 'getSendGift' . $item['giftTypeName'];
                 trace($str);
             }
+            cache('bili_getSendGift', 'bili_getSendGift', 3600);
         } else {
             trace($raw);
         }
@@ -290,7 +294,9 @@ class BiliHelper
         if ($return_str === false) {
             $num = curl_errno($curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-            trace(['url' => $url, 'res' => $return_str]);
+            if (false !== strpos($return_str, 'Timeout')) {
+                trace(['url' => $url, 'res' => $return_str]);
+            }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
         curl_close($curl);
