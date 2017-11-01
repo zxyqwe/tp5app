@@ -426,11 +426,14 @@ var wx_home = (function ($, Vue, w, undefined) {
             '<div class="weui-cell__hd"><label class="weui-label">旧' + type +
             '</label></div><div class="weui-cell__bd">' + name +
             '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新' + type +
-            '</label></div><div class="weui-cell__bd"><input style="background-color: yellow;"' +
-            ' class="weui-input" type="text" placeholder="请输入" value="' + name +
-            '"></div></div></div>';
+            '</label></div><div class="weui-cell__bd"><textarea style="background-color: yellow" class="weui-textarea" ' +
+            'placeholder="请输入" rows="5">' + name + '</textarea></div></div></div>';
         return weui.confirm(str, function () {
-            var val = $('.weui-dialog input').val();
+            var val = $('.weui-dialog textarea').val();
+            if (val.length > 30) {
+                w.msgto('请小于30字');
+                return;
+            }
             w.waitloading();
             $.ajax({
                 type: "POST",

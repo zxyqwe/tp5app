@@ -274,6 +274,9 @@ class Mobile extends Controller
         $map['unique_name'] = session('unique_name');
         $map[$action] = input('post.old');
         $data[$action] = input('post.new');
+        if (strlen($data[$action]) > 30) {
+            return json(['msg' => '字数太多'], 400);
+        }
         $res = Db::table('member')
             ->where($map)
             ->update($data);
