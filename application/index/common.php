@@ -77,7 +77,7 @@ class BiliHelper
     private function getSendGift()
     {
         $this->sign();
-        if (cache('?bili_getSendGift')) {
+        if ($this->lock('getSendGift')) {
             return;
         }
         $urlapi = $this->prefix . 'giftBag/getSendGift';
@@ -88,7 +88,7 @@ class BiliHelper
                 $str = 'getSendGift' . $item['giftTypeName'];
                 trace($str);
             }
-            cache('bili_getSendGift', 'bili_getSendGift', 3600);
+            $this->lock('getSendGift', 3600);
         } else {
             trace($raw);
         }
@@ -96,7 +96,7 @@ class BiliHelper
 
     public function send()
     {
-        if (cache('?bili_cron_send_gift')) {
+        if ($this->lock('send_gift')) {
             return;
         }
         $this->getSendGift();
@@ -104,7 +104,7 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (empty($data)) {
-            cache('bili_cron_send_gift', 'bili_cron_send_gift', 3600);
+            $this->lock('send_gift', 3600);
             return;
         }
         foreach ($data['data'] as $vo) {
@@ -141,7 +141,7 @@ class BiliHelper
 
     public function freeGift()
     {
-        if (cache('?bili_cron_free_gift')) {
+        if ($this->lock('free_gift')) {
             return;
         }
         $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
@@ -152,7 +152,7 @@ class BiliHelper
             $gift = end($data['data']['gift']);
             trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
         } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
-            $timeout = 8 * 3600;
+            $timeout = $this->long_timeout();
             trace("free gift empty {$data['msg']}");
         } elseif ($data['msg'] === '非法心跳') {
             $this->heartbeat();
@@ -160,12 +160,12 @@ class BiliHelper
             trace("奇怪 $raw");
             //$this->heartbeat();
         }
-        cache('bili_cron_free_gift', 'bili_cron_free_gift', $timeout);
+        $this->lock('free_gift', $timeout);
     }
 
     public function silver()
     {
-        if (cache('?bili_cron_day_empty')) {
+        if ($this->lock('day_empty')) {
             return;
         }
         $data = $this->silverTask();
@@ -184,12 +184,12 @@ class BiliHelper
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
             trace("领取银瓜子：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
-            cache('bili_cron_silverTask', null);
+            $this->lock('silverTask', null);
             $this->silverTask();
         } else {
             if (false !== strstr($data['msg'], '过期')) {
                 trace("领取失败：{$data['msg']}");
-                cache('bili_cron_silverTask', null);
+                $this->lock('silverTask', null);
                 $this->silverTask();
             } else {
                 trace("领取失败：$res");
@@ -199,8 +199,8 @@ class BiliHelper
 
     private function silverTask()
     {
-        if (cache('?bili_cron_silverTask')) {
-            return cache('bili_cron_silverTask');
+        if ($this->lock('silverTask')) {
+            return $this->lock('silverTask', true);
         }
         $urlapi = $this->prefix . 'FreeSilver/getCurrentTask';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
@@ -211,15 +211,15 @@ class BiliHelper
                 return '';
             case -10017:
                 trace("day empty {$data['msg']}");
-                cache('bili_cron_day_empty', 'bili_cron_day_empty', 8 * 3600);
+                $this->lock('day_empty', $this->long_timeout());
                 return '';
         }
         $start = date("Y-m-d H:i:s", $data['data']['time_start']);
         $end = date("Y-m-d H:i:s", $data['data']['time_end']);
         $str = "领取宝箱，{$data['data']['silver']}瓜子，{$data['data']['minute']}分钟，$start --> $end";
         trace($str);
-        cache('bili_cron_silverTask', $res);
-        return cache('bili_cron_silverTask');
+        $this->lock('silverTask', true, $res);
+        return $this->lock('silverTask', true);
     }
 
     private function captcha()
@@ -294,13 +294,37 @@ class BiliHelper
         if ($return_str === false) {
             $num = curl_errno($curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-            if (false !== strpos($return_str, 'Timeout')) {
+            if (false === strpos($return_str, 'Timeout')) {
                 trace(['url' => $url, 'res' => $return_str]);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
         curl_close($curl);
         return $return_str;
+    }
+
+    private function lock($name, $time = 0, $res = null)
+    {
+        if ($time === 0) {
+            return cache("?$name");
+        } elseif ($time === null) {
+            cache("bili_cron_$name", null);
+            return null;
+        } elseif ($time === true) {
+            if (null !== $res) {
+                cache("bili_cron_$name", $res);
+                return $res;
+            }
+            return cache("bili_cron_$name");
+        }
+        cache("bili_cron_$name", $name, $time);
+        return $name;
+    }
+
+    private function long_timeout()
+    {
+        $timeout = strtotime(date("Y-m-d")) + 9 * 3600 - time();
+        return min(8 * 3600, $timeout);
     }
 }
 
