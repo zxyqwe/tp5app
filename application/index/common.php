@@ -83,15 +83,15 @@ class BiliHelper
         $urlapi = $this->prefix . 'giftBag/getSendGift';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        if (0 === $data['code']) {
-            foreach ($data['data'] as $item) {
-                $str = 'getSendGift' . $item['giftTypeName'];
-                trace($str);
-            }
-            $this->lock('getSendGift', 3600);
-        } else {
+        if (0 !== $data['code']) {
             trace($raw);
+            return;
         }
+        foreach ($data['data'] as $item) {
+            $str = 'getSendGift ' . $item['giftTypeName'];
+            trace($str);
+        }
+        $this->lock('getSendGift', 3600);
     }
 
     public function send()
@@ -138,9 +138,9 @@ class BiliHelper
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace($raw);
-        } else {
-
+            return;
         }
+        //TODO
     }
 
     public function heart_gift_receive()
@@ -150,16 +150,19 @@ class BiliHelper
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace($raw);
-        } else {
-            $data = $data['data'];
-            $list = $data['gift_list'];
-            if (is_array($list)) {
-                foreach ($list as $item) {
-                    trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
-                }
-            } else {
-                trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
+            return;
+        }
+        $data = $data['data'];
+        $list = $data['gift_list'];
+        if (is_array($list)) {
+            foreach ($list as $item) {
+                trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
             }
+        } else {
+            if (1 === $data['heart_status']) {
+                return;
+            }
+            trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
         }
     }
 
@@ -219,13 +222,13 @@ class BiliHelper
             $this->lock('silverTask', null);
             $this->silverTask();
         } else {
-            if (false !== strstr($data['msg'], '过期')) {
-                trace("领取失败：{$data['msg']}");
-                $this->lock('silverTask', null);
-                $this->silverTask();
-            } else {
+            if (false === strstr($data['msg'], '过期')) {
                 trace("领取失败：$res");
+                return;
             }
+            trace("领取失败：{$data['msg']}");
+            $this->lock('silverTask', null);
+            $this->silverTask();
         }
     }
 
@@ -326,7 +329,7 @@ class BiliHelper
         if ($return_str === false) {
             $num = curl_errno($curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-            if (false === strpos($return_str, 'Timeout')) {
+            if (false === strstr($return_str, 'Timeout')) {
                 trace(['url' => $url, 'res' => $return_str]);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
@@ -335,20 +338,21 @@ class BiliHelper
         return $return_str;
     }
 
-    private function lock($name, $time = 0, $res = null)
+    public function lock($name, $time = 0, $res = null)
     {
         $name = "bili_cron_$name";
-        if ($time === 0) {
-            return cache("?$name");
-        } elseif ($time === null) {
-            cache($name, null);
-            return null;
-        } elseif ($time === true) {
-            if (null !== $res) {
-                cache($name, $res);
-                return $res;
-            }
-            return cache($name);
+        switch ($time) {
+            case 0:
+                return cache("?$name");
+            case null:
+                cache($name, null);
+                return null;
+            case true:
+                if (null !== $res) {
+                    cache($name, $res);
+                    return $res;
+                }
+                return cache($name);
         }
         cache($name, $name, $time);
         return $name;

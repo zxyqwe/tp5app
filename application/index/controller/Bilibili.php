@@ -38,11 +38,11 @@ class Bilibili
     public function cron()
     {
         $time = date("Y-m-d H:i:s");
-        if (cache('?bili_cron_cookie')) {
+        $bili = new BiliHelper();
+        if ($bili->lock('cookie')) {
             return json(['msg' => 'too fast', 'time' => $time]);
         }
-        cache('bili_cron_cookie', 'bili_cron_cookie', 290);
-        $bili = new BiliHelper();
+        $bili->lock('cookie', 290);
         $bili->online();
         cache('bili_cron_user_past', cache('bili_cron_user'));
         $res = $bili->getInfo();
