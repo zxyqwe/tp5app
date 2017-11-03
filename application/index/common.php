@@ -337,19 +337,20 @@ class BiliHelper
 
     private function lock($name, $time = 0, $res = null)
     {
+        $name = "bili_cron_$name";
         if ($time === 0) {
             return cache("?$name");
         } elseif ($time === null) {
-            cache("bili_cron_$name", null);
+            cache($name, null);
             return null;
         } elseif ($time === true) {
             if (null !== $res) {
-                cache("bili_cron_$name", $res);
+                cache($name, $res);
                 return $res;
             }
-            return cache("bili_cron_$name");
+            return cache($name);
         }
-        cache("bili_cron_$name", $name, $time);
+        cache($name, $name, $time);
         return $name;
     }
 
