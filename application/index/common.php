@@ -193,6 +193,7 @@ class BiliHelper
             $this->heartbeat();
         } else {
             trace("奇怪 $raw");
+            //TODO
             //$this->heartbeat();
         }
         $this->lock('free_gift', $timeout);
@@ -219,7 +220,7 @@ class BiliHelper
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
             trace("领取银瓜子：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
-            $this->lock('silverTask', null);
+            $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
             if (false === strstr($data['msg'], '过期')) {
@@ -227,7 +228,7 @@ class BiliHelper
                 return;
             }
             trace("领取失败：{$data['msg']}");
-            $this->lock('silverTask', null);
+            $this->lock('silverTask', -1);
             $this->silverTask();
         }
     }
@@ -235,7 +236,7 @@ class BiliHelper
     private function silverTask()
     {
         if ($this->lock('silverTask')) {
-            return $this->lock('silverTask', true);
+            return $this->lock('silverTask', 1);
         }
         $urlapi = $this->prefix . 'FreeSilver/getCurrentTask';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
@@ -253,8 +254,7 @@ class BiliHelper
         $end = date("Y-m-d H:i:s", $data['data']['time_end']);
         $str = "领取宝箱，{$data['data']['silver']}瓜子，{$data['data']['minute']}分钟，$start --> $end";
         trace($str);
-        $this->lock('silverTask', true, $res);
-        return $this->lock('silverTask', true);
+        return $this->lock('silverTask', 1, $res);
     }
 
     private function captcha()
@@ -344,10 +344,10 @@ class BiliHelper
         switch ($time) {
             case 0:
                 return cache("?$name");
-            case null:
+            case -1:
                 cache($name, null);
                 return null;
-            case true:
+            case 1:
                 if (null !== $res) {
                     cache($name, $res);
                     return $res;
