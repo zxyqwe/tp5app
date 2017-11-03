@@ -135,7 +135,7 @@ class Data extends Controller
         $offset = max(0, $offset);
         $search = input('get.search');
         if (!empty($search)) {
-            $map['tieba_id'] = ['like', '%' . $search . '%'];
+            $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
         } else {
             $map = array();
         }

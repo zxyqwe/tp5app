@@ -69,7 +69,7 @@ var all = (function ($, w, undefined) {
         $table.bootstrapTable({
             'pageSize': 20,
             formatSearch: function () {
-                return '搜索昵称';
+                return '搜索昵称或会员编号';
             }
         });
     };
