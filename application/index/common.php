@@ -131,6 +131,38 @@ class BiliHelper
         }
     }
 
+    public function unknown_heart()
+    {
+        $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . (time() * 1000);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace($raw);
+        } else {
+
+        }
+    }
+
+    public function heart_gift_receive()
+    {
+        $urlapi = $this->prefix . 'gift/v2/live/heart_gift_receive?roomid=' . $this->room_id . '&area_v2_id=32';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace($raw);
+        } else {
+            $data = $data['data'];
+            $list = $data['gift_list'];
+            if (is_array($list)) {
+                foreach ($list as $item) {
+                    trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
+                }
+            } else {
+                trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
+            }
+        }
+    }
+
     private function heartbeat()
     {
         $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
@@ -323,7 +355,7 @@ class BiliHelper
 
     private function long_timeout()
     {
-        $timeout = strtotime(date("Y-m-d")) + 9 * 3600 - time();
+        $timeout = strtotime(date("Y-m-d")) + 25 * 3600 - time();
         return min(8 * 3600, $timeout);
     }
 }
