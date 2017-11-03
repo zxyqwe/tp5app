@@ -145,6 +145,9 @@ class BiliHelper
 
     public function heart_gift_receive()
     {
+        if ($this->lock('heart_gift_receive')) {
+            return;
+        }
         $urlapi = $this->prefix . 'gift/v2/live/heart_gift_receive?roomid=' . $this->room_id . '&area_v2_id=32';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
@@ -159,10 +162,15 @@ class BiliHelper
                 trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
             }
         } else {
-            if (1 === $data['heart_status']) {
-                return;
+            switch ($data['heart_status']) {
+                case 1:
+                    return;
+                case 0:
+                    $this->lock('heart_gift_receive', $this->long_timeout());
+                    return;
+                default:
+                    trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
             }
-            trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
         }
     }
 
