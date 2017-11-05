@@ -91,7 +91,7 @@ class BiliHelper
             $str = 'getSendGift ' . $item['giftTypeName'];
             trace($str);
         }
-        $this->lock('getSendGift', 3600);
+        $this->lock('getSendGift', $this->long_timeout());
     }
 
     public function send()
@@ -104,7 +104,7 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (empty($data)) {
-            $this->lock('send_gift', 3600);
+            $this->lock('send_gift', $this->long_timeout());
             return;
         }
         foreach ($data['data'] as $vo) {
@@ -166,6 +166,7 @@ class BiliHelper
                 case 1:
                     return;
                 case 0:
+                    trace("free heart_gift_receive");
                     $this->lock('heart_gift_receive', $this->long_timeout());
                     return;
                 default:
