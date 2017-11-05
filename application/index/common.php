@@ -76,10 +76,10 @@ class BiliHelper
 
     private function getSendGift()
     {
-        $this->sign();
         if ($this->lock('getSendGift')) {
             return;
         }
+        $this->sign();
         $urlapi = $this->prefix . 'giftBag/getSendGift';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
