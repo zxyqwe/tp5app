@@ -103,8 +103,8 @@ class BiliHelper
         $urlapi = $this->prefix . 'gift/playerBag?_=' . round(microtime(true) * 1000);
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        if (empty($data)) {
-            $this->lock('send_gift', $this->long_timeout());
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            trace($raw);
             return;
         }
         foreach ($data['data'] as $vo) {
@@ -129,6 +129,7 @@ class BiliHelper
                 trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
             }
         }
+        $this->lock('send_gift', $this->long_timeout());
     }
 
     public function unknown_heart()
@@ -166,7 +167,7 @@ class BiliHelper
                 case 1:
                     return;
                 case 0:
-                    trace("free heart_gift_receive");
+                    trace("empty heart_gift_receive");
                     $this->lock('heart_gift_receive', $this->long_timeout());
                     return;
                 default:
