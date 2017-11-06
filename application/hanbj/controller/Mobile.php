@@ -161,7 +161,7 @@ class Mobile extends Controller
 
     public function json_tempid()
     {
-        $member_code = session('member_code');
+        $member_code = intval(session('member_code'));
         if ($member_code !== MemberOper::NORMAL) {
             return json(['msg' => '用户锁住'], 400);
         }
