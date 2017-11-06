@@ -64,6 +64,7 @@ class Mobile extends Controller
         }
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
+        session('member_code', $res['code']);
         switch ($res['code']) {
             case MemberOper::NORMAL:
                 $res['code'] = '正常';
@@ -160,6 +161,10 @@ class Mobile extends Controller
 
     public function json_tempid()
     {
+        $member_code = session('member_code');
+        if ($member_code !== MemberOper::NORMAL) {
+            return json(['msg' => '用户锁住'], 400);
+        }
         $uniq = session('unique_name');
         $fee = FeeOper::cache_fee($uniq) < date('Y');
         if ($fee) {
