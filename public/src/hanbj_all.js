@@ -59,7 +59,7 @@ var all = (function ($, w, undefined) {
         return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
     };
     w.codeFormatter = function (value, row) {
-        return value === '0' ? '正常' : '注销';
+        return home.mem_code(value);
     };
     w.openidFormatter = function (str, row) {
         return !str || str.length === 0 ? '' : '有';

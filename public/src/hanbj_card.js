@@ -9,7 +9,7 @@ var card = (function ($, w, undefined) {
             }
         });
         w.codeFormatter = function (value, row) {
-            return value === '0' ? '正常' : '注销';
+            return home.mem_code(value);
         };
         w.cardFormatter = function (value, row) {
             return value === '0' ? '' : '激活';

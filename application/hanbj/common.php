@@ -12,6 +12,13 @@ use app\WxPayDataBase;
 use app\WxPayNotify;
 use Exception;
 
+class MemberOper
+{
+    const NORMAL = 0;
+    const BANNED = 1;
+    const FREEZE = 2;
+}
+
 class FeeOper
 {
     const ADD = 0;

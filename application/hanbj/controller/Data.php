@@ -174,7 +174,6 @@ class Data extends Controller
     public function json_detail()
     {
         $id = input('post.id', 1, FILTER_VALIDATE_INT);
-        $map['m.code'] = 0;
         $map['m.id'] = $id;
         $fee = Db::table('member')
             ->alias('m')

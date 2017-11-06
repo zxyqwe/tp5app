@@ -59,10 +59,16 @@ var wx_home = (function ($, Vue, w, undefined) {
         s += '</p><p>积分：';
         s += msg.bonus;
         s += '</p>';
-        if (msg.code === '1') {
-            s += '<p class="temp-text">状态：注销';
-        } else {
-            s += '<p>状态：正常';
+        switch (msg.code) {
+            case '1':
+                s += '<p class="temp-text">状态：注销';
+                break;
+            case '0':
+                s += '<p>状态：正常';
+                break;
+            default:
+                s += '<p>' + msg.code;
+                break;
         }
         s += '</p><p>编号：';
         s += msg.uni;

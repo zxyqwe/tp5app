@@ -26,7 +26,18 @@ var home = (function ($, w, undefined) {
             $alert_msg.modal('show');
         };
     };
+    var mem_code = function (value) {
+        switch (value) {
+            case '0':
+                return '正常';
+            case '1':
+                return '注销';
+            default:
+                return value;
+        }
+    };
     return {
-        init: init
+        init: init,
+        mem_code: mem_code
     };
 })(jQuery, window);

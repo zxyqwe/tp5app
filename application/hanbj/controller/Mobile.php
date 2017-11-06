@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
+use app\hanbj\MemberOper;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Controller;
@@ -64,10 +65,10 @@ class Mobile extends Controller
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
         switch ($res['code']) {
-            case 0:
+            case MemberOper::NORMAL:
                 $res['code'] = '正常';
                 break;
-            case 1:
+            case MemberOper::BANNED:
                 $res['code'] = '<span class="temp-text">注销</span>';
                 break;
         }

@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
+use app\hanbj\MemberOper;
 use app\hanbj\WxTemp;
 use think\Controller;
 use think\Db;
@@ -64,7 +65,7 @@ class Work extends Controller
             $code = 0;
         }
         $map['f.code'] = $code;
-        $map['m.code'] = 0;
+        $map['m.code'] = MemberOper::NORMAL;
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];

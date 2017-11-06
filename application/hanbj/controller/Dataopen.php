@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\MemberOper;
 use think\Controller;
 use think\Db;
 
@@ -43,7 +44,7 @@ class Dataopen extends Controller
         if (!empty($search)) {
             $map['m.unique_name'] = ['like', '%' . $search . '%'];
         }
-        $map['m.code'] = 0;
+        $map['m.code'] = MemberOper::NORMAL;
         $join = [
             ['nfee f', 'm.unique_name=f.unique_name', 'left']
         ];
@@ -114,10 +115,12 @@ class Dataopen extends Controller
 
     public function json_bonus()
     {
+        $map['code'] = MemberOper::NORMAL;
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
             ->order('m.bonus', 'desc')
+            ->where($map)
             ->limit(51, 1)
             ->field([
                 'm.bonus as o'
