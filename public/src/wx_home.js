@@ -67,7 +67,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 s += '<p class="temp-text">状态：';
                 break;
         }
-        s += home.mem_code(msg.code);
+        s += wx_init.mem_code(msg.code);
         s += '</p><p>编号：';
         s += msg.uni;
         s += '</p><p>昵称：';

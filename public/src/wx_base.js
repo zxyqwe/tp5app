@@ -221,6 +221,18 @@ var wx_init = (function ($, w, undefined) {
             .setDefault('home')
             .init();
     };
+    var mem_code = function (value) {
+        switch (value) {
+            case '0':
+                return '正常';
+            case '1':
+                return '注销';
+            case '2':
+                return '停机保号';
+            default:
+                return value;
+        }
+    };
     var jsapi = function () {
         w.waitloading('微信授权中');
         var msg = $('#json_wx').html();
@@ -297,6 +309,7 @@ var wx_init = (function ($, w, undefined) {
         }
     };
     return {
-        init: init
+        init: init,
+        mem_code: mem_code
     };
 })(Zepto, window);
