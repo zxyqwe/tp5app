@@ -60,16 +60,14 @@ var wx_home = (function ($, Vue, w, undefined) {
         s += msg.bonus;
         s += '</p>';
         switch (msg.code) {
-            case '1':
-                s += '<p class="temp-text">状态：注销';
-                break;
             case '0':
-                s += '<p>状态：正常';
+                s += '<p>状态：';
                 break;
             default:
-                s += '<p>' + msg.code;
+                s += '<p class="temp-text">状态：';
                 break;
         }
+        s += home.mem_code(msg.code);
         s += '</p><p>编号：';
         s += msg.uni;
         s += '</p><p>昵称：';

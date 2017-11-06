@@ -72,6 +72,12 @@ class Mobile extends Controller
             case MemberOper::BANNED:
                 $res['code'] = '<span class="temp-text">注销</span>';
                 break;
+            case MemberOper::FREEZE:
+                $res['code'] = '<span class="temp-text">停机保号</span>';
+                break;
+            default:
+                $res['code'] = '异常：' . $res['code'];
+                break;
         }
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);

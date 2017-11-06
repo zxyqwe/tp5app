@@ -32,6 +32,8 @@ var home = (function ($, w, undefined) {
                 return '正常';
             case '1':
                 return '注销';
+            case '2':
+                return '停机保号';
             default:
                 return value;
         }
