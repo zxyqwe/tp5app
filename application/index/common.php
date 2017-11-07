@@ -12,6 +12,7 @@ class BiliHelper
     private $csrf_token = '';
     private $room_id = 5294;//218
     private $ruid = 116683;
+    private $curl;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
     private $OCR = array(
         '0' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111111111111111111111',
@@ -30,11 +31,24 @@ class BiliHelper
 
     public function __construct()
     {
+        $this->curl = curl_init();
+        curl_setopt($this->curl, CURLOPT_HEADER, false);
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, 1);
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_USERAGENT, $this->agent);
+
         $this->cookie = config('bili_cron_cookie');
         preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
         $this->token = isset($token[1]) ? $token[1] : '';
         preg_match('/bili_jct=(.{32})/', $this->cookie, $token);
         $this->csrf_token = isset($token[1]) ? $token[1] : '';
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->curl);
     }
 
     public function online()
@@ -132,15 +146,38 @@ class BiliHelper
         $this->lock('send_gift', $this->long_timeout());
     }
 
-    public function unknown_heart()
+    public function unknown_heart()//100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
     {
         $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . (time() * 1000);
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace($raw);
-            return;
+            return '';
         }
+        $data = $data['data'];
+        if ($data['count'] !== 0 || $data['open'] !== 0 || $data['has_new'] !== 0) {
+            return $raw;
+        }
+        return '';
+        //TODO
+    }
+
+    public function unknown_notice()//100 sec {"code":0,"msg":" ","message":" ","data":{"num":0}}
+    {
+        $urlapi = $this->prefix . 'feed_svr/v1/feed_svr/notice';
+        $payload['csrf_token'] = $this->csrf_token;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace($raw);
+            return '';
+        }
+        $data = $data['data'];
+        if ($data['num'] !== 0) {
+            return $raw;
+        }
+        return '';
         //TODO
     }
 
@@ -322,29 +359,23 @@ class BiliHelper
 
     private function bili_Post($url, $cookie, $room, $data = false)
     {
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_COOKIE, $cookie);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 1);
-        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
         if ($data !== false) {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+        } else {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
         }
-        curl_setopt($curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
-        curl_setopt($curl, CURLOPT_USERAGENT, $this->agent);
-        $return_str = curl_exec($curl);
+        curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
+        $return_str = curl_exec($this->curl);
         if ($return_str === false) {
-            $num = curl_errno($curl);
-            $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
+            $num = curl_errno($this->curl);
+            $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
             if (false === strstr($return_str, 'Timeout')) {
                 trace(['url' => $url, 'res' => $return_str]);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
-        curl_close($curl);
         return $return_str;
     }
 
