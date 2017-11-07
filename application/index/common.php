@@ -195,6 +195,18 @@ class BiliHelper
         return '';
     }
 
+    public function unknown_lottery()
+    {
+        $urlapi = $this->prefix . 'lottery/v1/Storm/check?roomid=' . $this->room_id;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace($raw);
+            return '';
+        }
+        return '';
+    }
+
     public function heart_gift_receive()
     {
         if ($this->lock('heart_gift_receive')) {
