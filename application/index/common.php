@@ -146,7 +146,7 @@ class BiliHelper
         $this->lock('send_gift', $this->long_timeout());
     }
 
-    public function unknown_heart()//100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
+    public function unknown_heart()//看起来没用 100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
     {
         $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . (time() * 1000);
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
@@ -181,6 +181,18 @@ class BiliHelper
         }
         return '';
         //TODO
+    }
+
+    public function unknown_smallTV()
+    {
+        $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $this->room_id;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== -400) {//没有需要提示的小电视
+            trace($raw);
+            return '';
+        }
+        return '';
     }
 
     public function heart_gift_receive()
