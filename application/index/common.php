@@ -157,6 +157,7 @@ class BiliHelper
         }
         $data = $data['data'];
         if ($data['count'] !== 0 || $data['open'] !== 0 || $data['has_new'] !== 0) {
+            trace($raw);
             return $raw;
         }
         return '';
@@ -175,6 +176,7 @@ class BiliHelper
         }
         $data = $data['data'];
         if ($data['num'] !== 0) {
+            trace($raw);
             return $raw;
         }
         return '';
