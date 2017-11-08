@@ -57,6 +57,16 @@ class Bilibili
 
     public function un()
     {
+        $sk = input('post.sk');
+        if ('12345' !== $sk) {
+            return json(['msg' => 'sk']);
+        }
+        $bili = new BiliHelper();
+        if ('1' === input('get.id')) {
+            $giftId = input('post.giftId');
+            $real_roomid = input('post.real_roomid');
+            return $bili->unknown_raffle($giftId, $real_roomid);
+        }
         return '';
     }
 }

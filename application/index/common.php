@@ -162,8 +162,16 @@ class BiliHelper
     {
     }
 
-    public function unknown_raffle()
+    public function unknown_raffle($giftId, $real_roomid)
     {
+        $urlapi = $this->prefix . 'activity/v1/Raffle/check?roomid=' . $real_roomid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace($raw);
+            return '';
+        }
+        return $raw;
     }
 
     public function heart_gift_receive()
