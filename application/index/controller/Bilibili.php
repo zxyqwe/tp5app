@@ -57,12 +57,6 @@ class Bilibili
 
     public function un()
     {
-        $time = date("Y-m-d H:i:s");
-        $bili = new BiliHelper();
-        if ($bili->lock('un')) {
-            return json(['msg' => 'too fast', 'time' => $time]);
-        }
-        $bili->lock('un', 90);
-        return $bili->unknown_smallTV() . $bili->unknown_lottery();
+        return '';
     }
 }
