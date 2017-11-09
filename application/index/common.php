@@ -205,7 +205,6 @@ class BiliHelper
         }
         $data = $data['data'];
         foreach ($data as $item) {
-            trace('unknown_raffle' . json_encode($item));
             $payload = [
                 'roomid' => $real_roomid,
                 'raffleId' => $item['raffleId'],
@@ -219,7 +218,7 @@ class BiliHelper
             $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
             $join = json_decode($raw, true);
             if ($join['code'] !== 0) {
-                trace($raw);
+                trace('unknown_raffle' . json_encode($item) . $raw);
             } else {
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
             }
