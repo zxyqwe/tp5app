@@ -179,10 +179,9 @@ class BiliHelper
             }
             $urlapi = $this->prefix . 'gift/v2/smalltv/join?' . $payload;
             $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-            $payload = json_decode($raw, true);
-            if ($payload['code'] !== 0) {
+            $join = json_decode($raw, true);
+            if ($join['code'] !== 0) {
                 trace($raw);
-                trace('unknown_smallTV' . json_encode($item));
             } else {
                 $this->lock("unknown_smallTV$payload", $this->long_timeout());
             }
@@ -218,10 +217,9 @@ class BiliHelper
             }
             $urlapi = $this->prefix . 'activity/v1/Raffle/join';
             $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
-            $payload = json_decode($raw, true);
-            if ($payload['code'] !== 0) {
+            $join = json_decode($raw, true);
+            if ($join['code'] !== 0) {
                 trace($raw);
-                trace('unknown_raffle' . json_encode($item));
             } else {
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
             }
