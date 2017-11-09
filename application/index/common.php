@@ -160,11 +160,11 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] === -400) {//没有需要提示的小电视
-            return '';
+            return '-400';
         }
         if ($data['code'] !== 0) {
             trace($raw);
-            return '';
+            return "1 $raw";
         }
         $data = $data['data'];
         foreach ($data as $item) {
@@ -187,7 +187,7 @@ class BiliHelper
                 $this->lock("unknown_smallTV$payload", $this->long_timeout());
             }
         }
-        return '';
+        return 'unknown_smallTV';
 
     }
 
@@ -202,7 +202,7 @@ class BiliHelper
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace($raw);
-            return '';
+            return "1 $raw";
         }
         $data = $data['data'];
         foreach ($data as $item) {
@@ -226,7 +226,7 @@ class BiliHelper
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
             }
         }
-        return '';
+        return 'unknown_raffle';
     }
 
     public function heart_gift_receive()

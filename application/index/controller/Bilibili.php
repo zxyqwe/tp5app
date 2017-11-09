@@ -70,6 +70,6 @@ class Bilibili
         } elseif ('2' === $id) {
             return $bili->unknown_smallTV($giftId, $real_roomid);
         }
-        return '';
+        return json(['msg' => 'id']);
     }
 }
