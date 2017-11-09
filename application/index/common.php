@@ -154,8 +154,41 @@ class BiliHelper
     {
     }
 
-    public function unknown_smallTV()
+    public function unknown_smallTV($giftId, $real_roomid)
     {
+        $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        if ($data['code'] === -400) {//没有需要提示的小电视
+            return '';
+        }
+        if ($data['code'] !== 0) {
+            trace($raw);
+            return '';
+        }
+        $data = $data['data'];
+        foreach ($data as $item) {
+            trace('unknown_smallTV' . json_encode($item));
+            $payload = [
+                'roomid' => $real_roomid,
+                'raffleId' => $item['raffleId']
+            ];
+            $payload = http_build_query($payload);
+            if ($this->lock("unknown_smallTV$payload")) {
+                continue;
+            }
+            $urlapi = $this->prefix . 'gift/v2/smalltv/join?' . $payload;
+            $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+            $payload = json_decode($raw, true);
+            if ($payload['code'] !== 0) {
+                trace($raw);
+                trace('unknown_smallTV' . json_encode($item));
+            } else {
+                $this->lock("unknown_smallTV$payload", $this->long_timeout());
+            }
+        }
+        return '';
+
     }
 
     public function unknown_lottery()
@@ -171,7 +204,29 @@ class BiliHelper
             trace($raw);
             return '';
         }
-        return $raw;
+        $data = $data['data'];
+        foreach ($data as $item) {
+            trace('unknown_raffle' . json_encode($item));
+            $payload = [
+                'roomid' => $real_roomid,
+                'raffleId' => $item['raffleId'],
+                '_' => time()
+            ];
+            $payload = http_build_query($payload);
+            if ($this->lock("unknown_raffle$payload")) {
+                continue;
+            }
+            $urlapi = $this->prefix . 'activity/v1/Raffle/join';
+            $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
+            $payload = json_decode($raw, true);
+            if ($payload['code'] !== 0) {
+                trace($raw);
+                trace('unknown_raffle' . json_encode($item));
+            } else {
+                $this->lock("unknown_raffle$payload", $this->long_timeout());
+            }
+        }
+        return '';
     }
 
     public function heart_gift_receive()

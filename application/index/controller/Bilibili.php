@@ -62,10 +62,13 @@ class Bilibili
             return json(['msg' => 'sk']);
         }
         $bili = new BiliHelper();
-        if ('1' === input('get.id')) {
-            $giftId = input('post.giftId');
-            $real_roomid = input('post.real_roomid');
+        $id = input('get.id');
+        $giftId = input('post.giftId');
+        $real_roomid = input('post.real_roomid');
+        if ('1' === $id) {
             return $bili->unknown_raffle($giftId, $real_roomid);
+        } elseif ('2' === $id) {
+            return $bili->unknown_smallTV($giftId, $real_roomid);
         }
         return '';
     }
