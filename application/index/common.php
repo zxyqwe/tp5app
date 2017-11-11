@@ -205,8 +205,7 @@ class BiliHelper
         foreach ($data as $item) {
             $payload = [
                 'roomid' => $real_roomid,
-                'raffleId' => $item['raffleId'],
-                '_' => time()
+                'raffleId' => $item['raffleId']
             ];
             $payload = http_build_query($payload);
             if ($this->lock("unknown_raffle$payload")) {
