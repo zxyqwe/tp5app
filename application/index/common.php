@@ -198,7 +198,7 @@ class BiliHelper
         ];
         $payload = http_build_query($payload);
         if (!$this->lock("$key$payload")) {
-            return json(['msg' => "$key $payload"], 400);
+            return json(['msg' => "$key $payload"]);
         }
         $urlapi = $this->prefix . $url . $payload;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
