@@ -188,6 +188,30 @@ class BiliHelper
         return 'unknown_smallTV';
     }
 
+    public function notice_any($giftId, $real_roomid, $url, $key)
+    {
+        $payload = [
+            'roomid' => $real_roomid,
+            'raffleId' => $giftId
+        ];
+        $payload = http_build_query($payload);
+        $urlapi = $this->prefix . $url . $payload;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        switch ($data['code']) {
+            case -400:
+                return '';
+            case 0:
+                $this->lock("$key$payload", -1);
+                $data = $data['data'];
+                trace("$key {$data['gift_num']} 个 {$data['gift_name']}");
+                return '';
+            default:
+                trace($raw);
+                return "1 $raw";
+        }
+    }
+
     public function unknown_lottery()
     {
     }
