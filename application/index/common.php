@@ -197,6 +197,9 @@ class BiliHelper
             'raffleId' => $giftId
         ];
         $payload = http_build_query($payload);
+        if (!$this->lock("$key$payload")) {
+            return json(['msg' => "$key $payload"], 400);
+        }
         $urlapi = $this->prefix . $url . $payload;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
