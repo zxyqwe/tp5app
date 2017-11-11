@@ -308,7 +308,7 @@ class BiliHelper
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
-            trace("领取银瓜子：{$data['data']['silver']}(+{$data['data']['awardSilver']})");
+            trace("领取银瓜子：{$data['data']['silver']} (+{$data['data']['awardSilver']})");
             $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
@@ -339,10 +339,6 @@ class BiliHelper
                 $this->lock('day_empty', $this->long_timeout());
                 return '';
         }
-        $start = date("Y-m-d H:i:s", $data['data']['time_start']);
-        $end = date("Y-m-d H:i:s", $data['data']['time_end']);
-        $str = "领取宝箱，{$data['data']['silver']}瓜子，{$data['data']['minute']}分钟，$start --> $end";
-        trace($str);
         return $this->lock('silverTask', 1, $res);
     }
 
@@ -395,7 +391,6 @@ class BiliHelper
             }
         }
         $ans = eval("return $result;");
-        trace("(～￣▽￣)～ $result = $ans");
         return $ans;
     }
 
