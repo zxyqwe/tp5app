@@ -70,6 +70,10 @@ class Bilibili
                 return $bili->unknown_raffle($giftId, $real_roomid);
             case '2':
                 return $bili->unknown_smallTV($giftId, $real_roomid);
+            case '3':
+                return $bili->notice_any($giftId, $real_roomid, 'activity/v1/Raffle/notice', 'unknown_raffle');
+            case '4':
+                return $bili->notice_any($giftId, $real_roomid, 'gift/v2/smalltv/notice', 'unknown_smallTV');
         }
         return json(['msg' => 'id']);
     }
