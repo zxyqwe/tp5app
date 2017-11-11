@@ -160,18 +160,20 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] === -400) {//没有需要提示的小电视
-            return '-400';
+            return json(['msg' => "-400"], 400);
         }
         if ($data['code'] !== 0) {
             trace($raw);
-            return "1 $raw";
+            return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
+        $ret = [];
         foreach ($data as $item) {
             $payload = [
                 'roomid' => $real_roomid,
                 'raffleId' => $item['raffleId']
             ];
+            $ret[] = $payload;
             $payload = http_build_query($payload);
             if ($this->lock("unknown_smallTV$payload")) {
                 continue;
@@ -185,7 +187,7 @@ class BiliHelper
                 $this->lock("unknown_smallTV$payload", $this->long_timeout());
             }
         }
-        return 'unknown_smallTV';
+        return json($ret);
     }
 
     public function notice_any($giftId, $real_roomid, $url, $key)
@@ -200,15 +202,15 @@ class BiliHelper
         $data = json_decode($raw, true);
         switch ($data['code']) {
             case -400:
-                return '';
+                return json();
             case 0:
                 $this->lock("$key$payload", -1);
                 $data = $data['data'];
                 trace("$key {$data['gift_num']} 个 {$data['gift_name']}");
-                return '';
+                return json();
             default:
                 trace($raw);
-                return "1 $raw";
+                return json(['msg' => "1 $raw"], 400);
         }
     }
 
@@ -223,14 +225,16 @@ class BiliHelper
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace($raw);
-            return "1 $raw";
+            return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
+        $ret = [];
         foreach ($data as $item) {
             $payload = [
                 'roomid' => $real_roomid,
                 'raffleId' => $item['raffleId']
             ];
+            $ret[] = $payload;
             $payload = http_build_query($payload);
             if ($this->lock("unknown_raffle$payload")) {
                 continue;
@@ -244,7 +248,7 @@ class BiliHelper
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
             }
         }
-        return 'unknown_raffle';
+        return json($ret);
     }
 
     public function heart_gift_receive()
