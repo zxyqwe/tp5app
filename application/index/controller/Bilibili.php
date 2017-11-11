@@ -67,9 +67,9 @@ class Bilibili
         $real_roomid = input('post.real_roomid');
         switch ($id) {
             case '1':
-                return $bili->unknown_raffle($giftId, $real_roomid);
+                return $bili->unknown_raffle($real_roomid);
             case '2':
-                return $bili->unknown_smallTV($giftId, $real_roomid);
+                return $bili->unknown_smallTV($real_roomid);
             case '3':
                 return $bili->notice_any($giftId, $real_roomid, 'activity/v1/Raffle/notice?', 'unknown_raffle');
             case '4':

@@ -154,7 +154,7 @@ class BiliHelper
     {
     }
 
-    public function unknown_smallTV($giftId, $real_roomid)
+    public function unknown_smallTV($real_roomid)
     {
         $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
@@ -221,7 +221,7 @@ class BiliHelper
     {
     }
 
-    public function unknown_raffle($giftId, $real_roomid)
+    public function unknown_raffle($real_roomid)
     {
         $urlapi = $this->prefix . 'activity/v1/Raffle/check?roomid=' . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
@@ -313,7 +313,6 @@ class BiliHelper
             $this->heartbeat();
         } else {
             trace("奇怪 $raw");
-            //TODO
             //$this->heartbeat();
         }
         $this->lock('free_gift', $timeout);
