@@ -211,7 +211,7 @@ class BiliHelper
                 $data = $data['data'];
                 $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
                 trace($data);
-                return json([$data]);
+                return json($data);
             default:
                 trace($raw);
                 return json(['msg' => "1 $raw"], 400);
