@@ -209,9 +209,12 @@ class BiliHelper
             case 0:
                 $this->lock("$key$payload", -1);
                 $data = $data['data'];
-                $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
-                trace($data);
-                return json($data);
+                if ($data['gift_num'] > 0) {
+                    $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
+                    trace($data);
+                    return json($data);
+                }
+                return json();
             default:
                 trace($raw);
                 return json(['msg' => "1 $raw"], 400);
