@@ -58,8 +58,8 @@ class Bilibili
     public function un()
     {
         $sk = input('post.sk');
-        if ('12345' !== $sk) {
-            return json(['msg' => 'sk']);
+        if (config('raffle_sk') !== $sk) {
+            return json(['msg' => 'sk'], 400);
         }
         $bili = new BiliHelper();
         $id = input('get.id');
