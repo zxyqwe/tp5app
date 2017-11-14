@@ -73,7 +73,7 @@ class Index extends Controller
         if (!empty($data)) {
             $par = input('post.par');
             $chi = input('post.chi');
-            $dir = intval($par) . DIRECTORY_SEPARATOR . intval($chi) . '.log';
+            $dir = LOG_PATH . DIRECTORY_SEPARATOR . intval($par) . DIRECTORY_SEPARATOR . intval($chi) . '.log';
             $f = file_get_contents($dir);
             return json(['text' => $f]);
         }

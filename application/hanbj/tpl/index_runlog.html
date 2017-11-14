@@ -3,12 +3,13 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <div id="body">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <h2>日志列表</h2>
                     <div id="dir_tree"></div>
                 </div>
-                <div class="col-md-9">
-                    <code id="log_cont"></code>
+                <div class="col-md-10">
+                    <h2 id="log_title"></h2>
+                    <pre id="log_cont"></pre>
                 </div>
             </div>
         </div>
@@ -20,7 +21,11 @@
     //ToDo
     var tlog = (function ($, w, undefined) {
         'use strict';
-        var $tree, $cont;
+        var $tree, $cont, $title;
+        var cont = function (c, t) {
+            $cont.html(c);
+            $title.html(t);
+        };
         var up = function (par, chi) {
             $.ajax({
                 type: "POST",
@@ -31,7 +36,7 @@
                 },
                 dataType: "json",
                 success: function (msg) {
-                    $cont.html(msg.text);
+                    cont(msg.text, par + ' - ' + chi);
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -42,6 +47,7 @@
         var init = function () {
             $tree = $('#dir_tree');
             $cont = $('#log_cont');
+            $title = $('#log_title');
             var data = $('#dir_data').html();
             data = JSON.parse(data);
             $tree.treeview({
@@ -54,6 +60,9 @@
                     }
                     var parent = $tree.treeview('getParent', data);
                     up(parent.text, data.text);
+                },
+                onNodeUnselected: function (event, data) {
+                    cont('', '');
                 }
             });
         };
