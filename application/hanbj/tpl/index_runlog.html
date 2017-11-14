@@ -1,0 +1,41 @@
+{layout name="layout2" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <div id="body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="dir_tree"></div>
+                </div>
+                <div class="col-md-9">
+                    <code id="log_cont"></code>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sr-only" id="dir_data">{$data}</div>
+</div>
+<script>
+    var nav = 'nav2_9';
+    //ToDo
+    var tlog = (function ($, w, undefined) {
+        'use strict';
+        var $tree, $cont;
+        var init = function () {
+            $tree = $('#dir_tree');
+            $cont = $('#log_cont');
+            var data = $('#dir_data').html();
+            $tree.treeview({
+                data: data
+            });
+            $tree.on('nodeChecked', function (event, data) {
+                console.log(data);
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    $(window).on("load", function () {
+        tlog.init();
+    });
+</script>

@@ -64,6 +64,16 @@ class Index extends Controller
         return view('volunteer', ['data' => $data]);
     }
 
+    public function runlog()
+    {
+        if (session('unique_name') !== '') {
+            return redirect('/hanbj/index/home');
+        }
+
+        $data = scandir(LOG_PATH);
+        return view('runlog', ['data' => json_encode($data)]);
+    }
+
     public function token()
     {
         $length = 10;
