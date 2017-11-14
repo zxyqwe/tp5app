@@ -12,6 +12,7 @@ var login = (function ($, w, undefined) {
             mm = CryptoJS.SHA1(mm).toString();
             $mm.val(mm);
             var d = $('#form').serializeArray();
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u11,
@@ -26,6 +27,9 @@ var login = (function ($, w, undefined) {
                     $('#capt_img').attr('src', '/captcha.html?' + new Date());
                     $('#mm').val('');
                     $('#capt').val('');
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

@@ -19,6 +19,7 @@ var fee = (function ($, Vue, w, undefined) {
             }
         });
         vmain.$watch('uname', function (nv) {
+            w.waitloading();
             $.ajax({
                 type: "GET",
                 url: w.u1,
@@ -33,10 +34,14 @@ var fee = (function ($, Vue, w, undefined) {
                     vmain.candy = [];
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });
         $('#res_up').click(function () {
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u2,
@@ -51,10 +56,14 @@ var fee = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });
         $('#res_down').click(function () {
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u2,
@@ -69,6 +78,9 @@ var fee = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

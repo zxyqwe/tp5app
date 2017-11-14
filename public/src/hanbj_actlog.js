@@ -31,6 +31,7 @@ var actlog = (function ($, w, undefined) {
             if (!$wxup.hasClass('sr-only')) {
                 $wxup.addClass('sr-only');
             }
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u6,
@@ -45,6 +46,9 @@ var actlog = (function ($, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

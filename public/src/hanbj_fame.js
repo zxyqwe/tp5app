@@ -39,6 +39,7 @@ var fame = (function ($, Vue, w, undefined) {
                 fame_name: grade
             }
         });
+        w.waitloading();
         $.ajax({
             type: "GET",
             url: w.u9,
@@ -50,6 +51,9 @@ var fame = (function ($, Vue, w, undefined) {
                 vmain.fames = [];
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
             }
         });
     };
@@ -74,6 +78,7 @@ var fame = (function ($, Vue, w, undefined) {
             }
         });
         vmain.$watch('uname', function (nv) {
+            w.waitloading();
             $.ajax({
                 type: "GET",
                 url: w.u1,
@@ -88,10 +93,14 @@ var fame = (function ($, Vue, w, undefined) {
                     vmain.candy = [];
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });
         $('#res_up').click(function () {
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u10,
@@ -108,6 +117,9 @@ var fame = (function ($, Vue, w, undefined) {
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         });

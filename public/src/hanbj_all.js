@@ -35,6 +35,7 @@ var all = (function ($, w, undefined) {
         return data.join("");
     };
     w.loaddetail = function (id) {
+        w.waitloading();
         $.ajax({
             type: "POST",
             url: w.u7,
@@ -49,6 +50,9 @@ var all = (function ($, w, undefined) {
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
                 w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
             }
         });
     };
