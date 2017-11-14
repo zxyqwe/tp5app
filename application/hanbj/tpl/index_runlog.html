@@ -67,6 +67,9 @@
                 },
                 onNodeUnselected: function (event, data) {
                     cont('', '');
+                    if (undefined !== data.nodes) {
+                        $tree.treeview('collapseNode', [data.nodeId, {silent: true}]);
+                    }
                 }
             });
         };
