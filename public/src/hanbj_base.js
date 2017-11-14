@@ -25,6 +25,15 @@ var home = (function ($, w, undefined) {
             $alert_html.html(msg);
             $alert_msg.modal('show');
         };
+        w.waitloading = function (msg) {
+            if (undefined === msg) {
+                msg = '数据加载中';
+            }
+            waitingDialog.show(msg);
+        };
+        w.cancelloading = function () {
+            waitingDialog.hide();
+        };
     };
     var mem_code = function (value) {
         switch (value) {

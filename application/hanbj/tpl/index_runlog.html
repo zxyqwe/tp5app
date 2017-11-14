@@ -27,6 +27,7 @@
             $title.html(t);
         };
         var up = function (par, chi) {
+            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u12,
@@ -41,6 +42,9 @@
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
                 }
             });
         };
