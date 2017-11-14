@@ -646,7 +646,7 @@ class LogUtil
                 if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
                     $result['nodes'][] = self::list_dir($dir . DIRECTORY_SEPARATOR . $value, $value);
                 } else {
-                    $result['nodes'][] = ['text' => $value];
+                    $result['nodes'][] = ['text' => explode('.', $value)[0]];
                 }
             }
         }

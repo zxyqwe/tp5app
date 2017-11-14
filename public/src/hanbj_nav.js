@@ -16,6 +16,7 @@ var nav_active = (function ($, w, undefined) {
         w.u9 = base + dataopen + 'json_fame';
         w.u10 = base + data + 'fame_add';
         w.u11 = base + dataopen + 'json_login';
+        w.u12 = base + index + 'runlog/data/1';
     };
     var init = function () {
         dict();

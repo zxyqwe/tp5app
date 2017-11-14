@@ -4,6 +4,7 @@
         <div id="body">
             <div class="row">
                 <div class="col-md-3">
+                    <h2>日志列表</h2>
                     <div id="dir_tree"></div>
                 </div>
                 <div class="col-md-9">
@@ -20,16 +21,40 @@
     var tlog = (function ($, w, undefined) {
         'use strict';
         var $tree, $cont;
+        var up = function (par, chi) {
+            $.ajax({
+                type: "POST",
+                url: w.u12,
+                data: {
+                    par: par,
+                    chi: chi
+                },
+                dataType: "json",
+                success: function (msg) {
+                    $cont.html(msg.text);
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                }
+            });
+        };
         var init = function () {
             $tree = $('#dir_tree');
             $cont = $('#log_cont');
             var data = $('#dir_data').html();
             data = JSON.parse(data);
             $tree.treeview({
-                data: data
-            });
-            $tree.on('nodeChecked', function (event, data) {
-                console.log(data);
+                levels: 1,
+                data: data,
+                onNodeSelected: function (event, data) {
+                    if (undefined !== data.nodes) {
+                        $tree.treeview('expandNode', [data.nodeId, {silent: true}]);
+                        return;
+                    }
+                    var parent = $tree.treeview('getParent', data);
+                    up(parent.text, data.text);
+                }
             });
         };
         return {
