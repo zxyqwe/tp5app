@@ -63,6 +63,7 @@
                         return;
                     }
                     var parent = $tree.treeview('getParent', data);
+                    $tree.treeview('expandNode', [parent.nodeId, {silent: true}]);
                     up(parent.text, data.text);
                 },
                 onNodeUnselected: function (event, data) {
