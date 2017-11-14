@@ -71,7 +71,7 @@ class Index extends Controller
             return redirect('/hanbj/index/home');
         }
         $data = LogUtil::list_dir(LOG_PATH, '日志');
-        return view('runlog', ['data' => json_encode($data)]);
+        return view('runlog', ['data' => json_encode($data['nodes'])]);
     }
 
     public function token()

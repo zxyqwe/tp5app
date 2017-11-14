@@ -637,7 +637,7 @@ class LogUtil
     public static function list_dir($dir, $name)
     {
         $result = ['text' => $name];
-        $cdir = scandir($dir);
+        $cdir = scandir($dir, SCANDIR_SORT_DESCENDING);
         if (!empty($cdir)) {
             $result['nodes'] = [];
         }

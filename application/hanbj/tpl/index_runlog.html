@@ -24,6 +24,7 @@
             $tree = $('#dir_tree');
             $cont = $('#log_cont');
             var data = $('#dir_data').html();
+            data = JSON.parse(data);
             $tree.treeview({
                 data: data
             });
