@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 
 use app\hanbj\BonusOper;
+use app\hanbj\LogUtil;
 use app\hanbj\WxHanbj;
 use think\Controller;
 use think\Db;
@@ -66,11 +67,10 @@ class Index extends Controller
 
     public function runlog()
     {
-        if (session('unique_name') !== '') {
+        if (session('name') !== 'zxyqwe') {
             return redirect('/hanbj/index/home');
         }
-
-        $data = scandir(LOG_PATH);
+        $data = LogUtil::list_dir(LOG_PATH, '日志');
         return view('runlog', ['data' => json_encode($data)]);
     }
 
