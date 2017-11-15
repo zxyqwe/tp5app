@@ -205,7 +205,7 @@ class BiliHelper
         $data = json_decode($raw, true);
         switch ($data['code']) {
             case -400:
-                return json();
+                return json($raw);
             case 0:
                 $this->lock("$key$payload", -1);
                 $data = $data['data'];
@@ -214,7 +214,7 @@ class BiliHelper
                     trace($data);
                     return json($data);
                 }
-                return json();
+                return json($raw);
             default:
                 trace($raw);
                 return json(['msg' => "1 $raw"], 400);
