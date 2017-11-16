@@ -207,11 +207,11 @@ class BiliHelper
             case -400:
                 return json(['msg' => 'WAIT']);
             case 0:
-                if (in_array('正在抽奖中', $data['msg'])) {
+                if (false !== strstr($data['msg'], '正在抽奖中')) {
                     return json(['msg' => 'WAIT']);
                 }
                 $this->lock("$key$payload", -1);
-                if (in_array('很遗憾', $data['msg'])) {
+                if (false !== strstr($data['msg'], '很遗憾')) {
                     return json(['msg' => 'NOTHING']);
                 }
                 $data = $data['data'];
