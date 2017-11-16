@@ -207,11 +207,11 @@ class BiliHelper
             case -400:
                 return json(['msg' => 'WAIT']);
             case 0:
-                if (false !== strstr($data['msg'], '正在抽奖中')) {
+                if (false !== strpos($data['msg'], '正在抽奖中')) {
                     return json(['msg' => 'WAIT']);
                 }
                 $this->lock("$key$payload", -1);
-                if (false !== strstr($data['msg'], '很遗憾')) {
+                if (false !== strpos($data['msg'], '很遗憾')) {
                     return json(['msg' => 'NOTHING']);
                 }
                 $data = $data['data'];
@@ -352,7 +352,7 @@ class BiliHelper
             $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
-            if (false === strstr($data['msg'], '过期')) {
+            if (false === strpos($data['msg'], '过期')) {
                 trace("领取失败：$res");
                 return;
             }
@@ -448,7 +448,7 @@ class BiliHelper
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
-            if (false === strstr($return_str, 'Timeout')) {
+            if (false === strpos($return_str, 'Timeout')) {
                 trace(['url' => $url, 'res' => $return_str]);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
