@@ -205,16 +205,22 @@ class BiliHelper
         $data = json_decode($raw, true);
         switch ($data['code']) {
             case -400:
-                return json($raw);
+                return json(['msg' => 'WAIT']);
             case 0:
+                if (in_array('正在抽奖中', $data['msg'])) {
+                    return json(['msg' => 'WAIT']);
+                }
                 $this->lock("$key$payload", -1);
+                if (in_array('很遗憾', $data['msg'])) {
+                    return json(['msg' => 'NOTHING']);
+                }
                 $data = $data['data'];
                 if ($data['gift_num'] > 0) {
                     $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
                     trace($data);
-                    return json($data);
+                    return json(['msg' => $data]);
                 }
-                return json($raw);
+                return json(['msg' => $raw]);
             default:
                 trace($raw);
                 return json(['msg' => "1 $raw"], 400);
