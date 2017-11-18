@@ -34,41 +34,41 @@ var all = (function ($, w, undefined) {
         }
         return data.join("");
     };
-    w.loaddetail = function (id) {
-        w.waitloading();
-        $.ajax({
-            type: "POST",
-            url: w.u7,
-            data: {
-                id: id
-            },
-            dataType: "json",
-            success: function (msg) {
-                $('#fee' + id).html(itfee(msg.fee));
-                $('#act' + id).html(itact(msg.act));
-            },
-            error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
-            },
-            complete: function () {
-                w.cancelloading();
-            }
-        });
-    };
-    w.detailFormatter = function (index, row) {
-        var str = $('#detailV').html();
-        str = str.replace('fee', 'fee' + row.id);
-        str = str.replace('act', 'act' + row.id);
-        return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
-    };
-    w.codeFormatter = function (value, row) {
-        return home.mem_code(value);
-    };
-    w.openidFormatter = function (str, row) {
-        return !str || str.length === 0 ? '' : '有';
-    };
     var init = function () {
+        w.loaddetail = function (id) {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u7,
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function (msg) {
+                    $('#fee' + id).html(itfee(msg.fee));
+                    $('#act' + id).html(itact(msg.act));
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        w.detailFormatter = function (index, row) {
+            var str = $('#detailV').html();
+            str = str.replace('fee', 'fee' + row.id);
+            str = str.replace('act', 'act' + row.id);
+            return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
+        };
+        w.codeFormatter = function (value, row) {
+            return home.mem_code(value);
+        };
+        w.openidFormatter = function (str, row) {
+            return !str || str.length === 0 ? '' : '有';
+        };
         var $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
@@ -86,14 +86,14 @@ var all = (function ($, w, undefined) {
 var baselog = (function ($, w, undefined) {
     'use strict';
     var $onlyup, pressedup = false, $wxup, $table;
-    w.wxFormatter = function (value, row) {
-        return value === '0' ? '未更新' : '';
-    };
-    w.wxParams = function (params) {
-        params.up = pressedup;
-        return params;
-    };
     var init = function (uptype) {
+        w.wxFormatter = function (value, row) {
+            return value === '0' ? '未更新' : '';
+        };
+        w.wxParams = function (params) {
+            params.up = pressedup;
+            return params;
+        };
         $onlyup = $('#onlyup');
         $onlyup.click(function () {
             var pressed = $onlyup.attr('aria-pressed');
@@ -150,10 +150,10 @@ var baselog = (function ($, w, undefined) {
 var feelog = (function ($, w, undefined) {
     'use strict';
     var alr, nye;
-    w.codeFormatter = function (value, row) {
-        return value === '1' ? alr : nye;
-    };
     var init = function () {
+        w.codeFormatter = function (value, row) {
+            return value === '1' ? alr : nye;
+        };
         alr = $('#ggly').html() + '缴费';
         nye = $('#rgly').html() + '撤销';
         baselog.init(0);
