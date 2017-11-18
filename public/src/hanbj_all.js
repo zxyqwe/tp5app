@@ -82,9 +82,10 @@ var all = (function ($, w, undefined) {
     };
 })(jQuery, window);
 
-var actlog = (function ($, w, undefined) {
+
+var baselog = (function ($, w, undefined) {
     'use strict';
-    var $table, $onlyup, pressedup = false, $wxup;
+    var $onlyup, pressedup, $wxup;
     w.wxFormatter = function (value, row) {
         return value === '0' ? '未更新' : '';
     };
@@ -92,7 +93,7 @@ var actlog = (function ($, w, undefined) {
         params.up = pressedup;
         return params;
     };
-    var init = function () {
+    var init = function (uptype) {
         $onlyup = $('#onlyup');
         $onlyup.click(function () {
             var pressed = $onlyup.attr('aria-pressed');
@@ -119,7 +120,7 @@ var actlog = (function ($, w, undefined) {
             $.ajax({
                 type: "POST",
                 url: w.u6,
-                data: {type: 1},
+                data: {type: uptype},
                 dataType: "json",
                 success: function (msg) {
                     $table.bootstrapTable('refresh');
@@ -136,6 +137,23 @@ var actlog = (function ($, w, undefined) {
                 }
             });
         });
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);
+
+
+var feelog = (function ($, w, undefined) {
+    'use strict';
+    var alr, nye;
+    w.codeFormatter = function (value, row) {
+        return value === '1' ? alr : nye;
+    };
+    var init = function () {
+        alr = $('#ggly').html() + '缴费';
+        nye = $('#rgly').html() + '撤销';
+        baselog.init(0);
     };
     return {
         init: init
@@ -478,68 +496,3 @@ var fee = (function ($, Vue, w, undefined) {
         init: init
     };
 })(jQuery, Vue, window);
-
-var feelog = (function ($, w, undefined) {
-    'use strict';
-    var alr, nye, $table, $onlyup, pressedup = false, $wxup;
-    w.codeFormatter = function (value, row) {
-        return value === '1' ? alr : nye;
-    };
-    w.wxFormatter = function (value, row) {
-        return value === '0' ? '未更新' : '';
-    };
-    w.wxParams = function (params) {
-        params.up = pressedup;
-        return params;
-    };
-    var init = function () {
-        alr = $('#ggly').html() + '缴费';
-        nye = $('#rgly').html() + '撤销';
-        $onlyup = $('#onlyup');
-        $onlyup.click(function () {
-            var pressed = $onlyup.attr('aria-pressed');
-            if (pressed === 'false') {
-                $onlyup.html('仅看未更新事件');
-                pressedup = true;
-                $table.bootstrapTable('refresh');
-            } else {
-                $onlyup.html('不过滤微信事件');
-                pressedup = false;
-                $table.bootstrapTable('refresh');
-            }
-        });
-        $table = $('#table');
-        $table.bootstrapTable({
-            'pageSize': 20
-        });
-        $wxup = $('#wxup');
-        $wxup.click(function () {
-            if (!$wxup.hasClass('sr-only')) {
-                $wxup.addClass('sr-only');
-            }
-            w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: w.u6,
-                data: {type: 0},
-                dataType: "json",
-                success: function (msg) {
-                    $table.bootstrapTable('refresh');
-                    if (msg.c > 0) {
-                        $wxup.click();
-                    }
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-        });
-    };
-    return {
-        init: init
-    };
-})(jQuery, window);
