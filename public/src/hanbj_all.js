@@ -128,6 +128,7 @@ var baselog = (function ($, w, undefined) {
                         $wxup.click();
                     } else {
                         w.cancelloading();
+                        $wxup.removeClass('sr-only');
                     }
                 },
                 error: function (msg) {
