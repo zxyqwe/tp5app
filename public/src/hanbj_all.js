@@ -113,11 +113,10 @@ var baselog = (function ($, w, undefined) {
         });
         $wxup = $('#wxup');
         $wxup.click(function () {
-            w.cancelloading();
             if (!$wxup.hasClass('sr-only')) {
                 $wxup.addClass('sr-only');
+                w.waitloading();
             }
-            w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u6,
@@ -127,14 +126,14 @@ var baselog = (function ($, w, undefined) {
                     $table.bootstrapTable('refresh');
                     if (msg.c > 0) {
                         $wxup.click();
+                    } else {
+                        w.cancelloading();
                     }
                 },
                 error: function (msg) {
+                    w.cancelloading();
                     msg = JSON.parse(msg.responseText);
                     w.msgto(msg.msg);
-                },
-                complete: function () {
-                    w.cancelloading();
                 }
             });
         });
