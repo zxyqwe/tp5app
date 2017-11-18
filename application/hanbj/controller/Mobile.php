@@ -94,7 +94,7 @@ class Mobile extends Controller
             session('card', $card['code']);
         }
         if (!empty($obj)) {
-            return redirect('https://app.zxyqwe.com/hanbj/mobile/jump/nonce/' . $obj);
+            return WxHanbj::jump($obj);
         }
         $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
         session('json_wx', WxHanbj::json_wx($url));
@@ -104,19 +104,6 @@ class Mobile extends Controller
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y')
         ]);
-    }
-
-    public function jump($nonce)
-    {
-        $obj = cache('jump' . $nonce);
-        if (false !== $obj) {
-            $obj = json_decode($obj, true);
-            switch ($obj['event']) {
-                case 'wxtest':
-                    return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $nonce);
-            }
-        }
-        return view('jump');
     }
 
     public function reg()

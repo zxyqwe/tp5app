@@ -199,6 +199,19 @@ class WxHanbj
                 return '';
         }
     }
+
+    public static function jump($nonce)
+    {
+        $obj = cache('jump' . $nonce);
+        if (false !== $obj) {
+            $obj = json_decode($obj, true);
+            switch ($obj['event']) {
+                case 'wxtest':
+                    return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $nonce);
+            }
+        }
+        return view('jump');
+    }
 }
 
 class CardOper
