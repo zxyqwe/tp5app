@@ -200,6 +200,16 @@ class WxHanbj
         }
     }
 
+    public static function setJump($event, $item, $uname, $expire)
+    {
+        $nonce = getNonceStr() . $uname . $event . $item . $expire;
+        $nonce = md5($nonce);
+        $data['event'] = $event;
+        $data['val'] = $item;
+        cache('jump' . $nonce, json_encode($data), $expire);
+        return $nonce;
+    }
+
     public static function jump($nonce)
     {
         $obj = cache('jump' . $nonce);
@@ -801,16 +811,6 @@ class WxOrg
         }
     }
 
-    private static function setJump($item, $uname)
-    {
-        $nonce = getNonceStr() . $uname . $item;
-        $nonce = md5($nonce);
-        $data['event'] = 'wxtest';
-        $data['val'] = $item;
-        cache('jump' . $nonce, json_encode($data), 60000);//TODO
-        return $nonce;
-    }
-
     public static function checkAns($ans)
     {
         if (!is_array($ans)) {
@@ -871,7 +871,7 @@ class WxOrg
         $unfinish = "-----\n";
         foreach (self::obj as $item) {
             $c_name = $uname . $item . self::name;
-            $nonce = self::setJump($item, $uname);
+            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60000);//ToDo
             if (!cache('?' . $c_name)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
