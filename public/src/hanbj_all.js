@@ -85,7 +85,7 @@ var all = (function ($, w, undefined) {
 
 var baselog = (function ($, w, undefined) {
     'use strict';
-    var $onlyup, pressedup, $wxup;
+    var $onlyup, pressedup, $wxup, $table;
     w.wxFormatter = function (value, row) {
         return value === '0' ? '未更新' : '';
     };
