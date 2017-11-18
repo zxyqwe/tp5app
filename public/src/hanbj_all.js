@@ -499,3 +499,64 @@ var fee = (function ($, Vue, w, undefined) {
         init: init
     };
 })(jQuery, Vue, window);
+
+
+var tlog = (function ($, w, undefined) {
+    'use strict';
+    var $tree, $cont, $title;
+    var cont = function (c, t) {
+        $cont.html(c);
+        $title.html(t);
+    };
+    var up = function (par, chi) {
+        w.waitloading();
+        $.ajax({
+            type: "POST",
+            url: w.u12,
+            data: {
+                par: par,
+                chi: chi
+            },
+            dataType: "json",
+            success: function (msg) {
+                cont(msg.text, par + ' - ' + chi);
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
+    var init = function () {
+        $tree = $('#dir_tree');
+        $cont = $('#log_cont');
+        $title = $('#log_title');
+        var data = $('#dir_data').html();
+        data = JSON.parse(data);
+        $tree.treeview({
+            levels: 1,
+            data: data,
+            onNodeSelected: function (event, data) {
+                if (undefined !== data.nodes) {
+                    $tree.treeview('expandNode', [data.nodeId, {silent: true}]);
+                    return;
+                }
+                var parent = $tree.treeview('getParent', data);
+                $tree.treeview('expandNode', [parent.nodeId, {silent: true}]);
+                up(parent.text, data.text);
+            },
+            onNodeUnselected: function (event, data) {
+                cont('', '');
+                if (undefined !== data.nodes) {
+                    $tree.treeview('collapseNode', [data.nodeId, {silent: true}]);
+                }
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);
