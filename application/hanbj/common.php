@@ -780,7 +780,7 @@ class WxOrg
         return array_merge(self::leader, self::member, ['坎丙午']);
     }
 
-    public static function progress()
+    private static function progress()
     {
         $all = self::getAll();
         $len = count($all) * count(self::obj);
@@ -801,7 +801,7 @@ class WxOrg
         }
     }
 
-    public static function setJump($item, $uname)
+    private static function setJump($item, $uname)
     {
         $nonce = getNonceStr() . $uname . $item;
         $nonce = md5($nonce);
@@ -845,6 +845,11 @@ class WxOrg
         return true;
     }
 
+    private static function all_done()
+    {
+        return '已完成';
+    }
+
     public static function listobj($from)
     {
         $map['openid'] = $from;
@@ -859,7 +864,7 @@ class WxOrg
         }
         $prog = self::progress();
         if (false === $prog) {
-            return '已完成';
+            return WxOrg::all_done();
         }
         $ret = "有以下投票，十分钟有效\n" . $prog;
         $finish = "-----\n";
