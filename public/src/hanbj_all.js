@@ -85,7 +85,7 @@ var all = (function ($, w, undefined) {
 
 var baselog = (function ($, w, undefined) {
     'use strict';
-    var $onlyup, pressedup, $wxup, $table;
+    var $onlyup, pressedup = false, $wxup, $table;
     w.wxFormatter = function (value, row) {
         return value === '0' ? '未更新' : '';
     };
@@ -113,6 +113,7 @@ var baselog = (function ($, w, undefined) {
         });
         $wxup = $('#wxup');
         $wxup.click(function () {
+            w.cancelloading();
             if (!$wxup.hasClass('sr-only')) {
                 $wxup.addClass('sr-only');
             }
