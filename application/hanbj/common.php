@@ -325,9 +325,9 @@ class BonusOper
 {
     const FEE = 30;
     const ACT = 5;
-    const ACT_NAME = '2017重阳';
-    const _WORKER = ['兑庚午'];
-    const VOLUNTEER = 15;
+    const ACT_NAME = '十四周年活动';
+    const _WORKER = [];
+    const VOLUNTEER = 30;
 
     public static function getWorkers()
     {
