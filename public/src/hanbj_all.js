@@ -503,23 +503,33 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
-    var $tree, $cont, $title;
+    var $tree, $cont, $title, auto_handle;
     var cont = function (c, t) {
         $cont.html(c);
         $title.html(t);
     };
+    var cancel_up = function () {
+        cont('', '');
+        clearInterval(auto_handle);
+    };
+    var auto_up = function (par, chi) {
+        auto_handle = setInterval(function () {
+            up(par, chi);
+        }, 60000);
+    };
     var up = function (par, chi) {
         w.waitloading();
+        var num = $cont.html();
         $.ajax({
             type: "POST",
-            url: w.u12,
+            url: w.u12 + num.length,
             data: {
                 par: par,
                 chi: chi
             },
             dataType: "json",
             success: function (msg) {
-                cont(msg.text, par + ' - ' + chi);
+                cont(num + msg.text, par + ' - ' + chi);
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
@@ -540,16 +550,17 @@ var tlog = (function ($, w, undefined) {
             levels: 1,
             data: data,
             onNodeSelected: function (event, data) {
+                cancel_up();
                 if (undefined !== data.nodes) {
                     $tree.treeview('expandNode', [data.nodeId, {silent: true}]);
                     return;
                 }
                 var parent = $tree.treeview('getParent', data);
                 $tree.treeview('expandNode', [parent.nodeId, {silent: true}]);
-                up(parent.text, data.text);
+                auto_up(parent.text, data.text);
             },
             onNodeUnselected: function (event, data) {
-                cont('', '');
+                cancel_up();
                 if (undefined !== data.nodes) {
                     $tree.treeview('collapseNode', [data.nodeId, {silent: true}]);
                 }

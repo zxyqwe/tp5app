@@ -65,17 +65,18 @@ class Index extends Controller
         return view('volunteer', ['data' => $data]);
     }
 
-    public function runlog($data = '')
+    public function runlog($data = -1)
     {
         if (session('name') !== 'zxyqwe') {
             return redirect('/hanbj/index/home');
         }
-        if (!empty($data)) {
+        if (-1 === $data) {
             $par = input('post.par');
             $chi = input('post.chi');
+            $data = intval($data);
             $dir = LOG_PATH . DIRECTORY_SEPARATOR . intval($par) . DIRECTORY_SEPARATOR . intval($chi) . '.log';
             $f = file_get_contents($dir);
-            return json(['text' => $f]);
+            return json(['text' => substr($f, $data)]);
         }
         $data = LogUtil::list_dir(LOG_PATH, '日志');
         return view('runlog', ['data' => json_encode($data['nodes'])]);
