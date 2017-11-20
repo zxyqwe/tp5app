@@ -70,7 +70,7 @@ class Index extends Controller
         if (session('name') !== 'zxyqwe') {
             return redirect('/hanbj/index/home');
         }
-        if (-1 === $data) {
+        if (-1 < $data) {
             $par = input('post.par');
             $chi = input('post.chi');
             $data = intval($data);
