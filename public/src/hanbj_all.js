@@ -503,7 +503,7 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
-    var $tree, $cont, $title, auto_handle;
+    var $tree, $cont, $title, auto_handle, tenc = new TextEncoder('utf-8'), tenc_len = 0;
     var cont = function (c, t) {
         $cont.html(c);
         $title.html(t);
@@ -520,17 +520,20 @@ var tlog = (function ($, w, undefined) {
     };
     var up = function (par, chi) {
         w.waitloading();
-        var num = $cont.html();
         $.ajax({
             type: "POST",
-            url: w.u12 + num.length,
+            url: w.u12 + tenc_len,
             data: {
                 par: par,
                 chi: chi
             },
             dataType: "json",
             success: function (msg) {
-                cont(num + msg.text, par + ' - ' + chi);
+                if (false === msg) {
+                    return;
+                }
+                tenc_len += tenc.encode(msg.text).length;
+                cont($cont.html() + msg.text, par + ' - ' + chi);
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
