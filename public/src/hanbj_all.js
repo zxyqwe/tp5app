@@ -513,6 +513,7 @@ var tlog = (function ($, w, undefined) {
         clearInterval(auto_handle);
     };
     var auto_up = function (par, chi) {
+        up(par, chi);
         auto_handle = setInterval(function () {
             up(par, chi);
         }, 60000);
