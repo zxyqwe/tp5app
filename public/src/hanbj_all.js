@@ -529,11 +529,12 @@ var tlog = (function ($, w, undefined) {
             },
             dataType: "json",
             success: function (msg) {
-                if (false === msg) {
+                var mtext = msg.text;
+                if (false === mtext) {
                     return;
                 }
-                tenc_len += tenc.encode(msg.text).length;
-                cont($cont.html() + msg.text, par + ' - ' + chi);
+                tenc_len += tenc.encode(mtext).length;
+                cont($cont.html() + mtext, par + ' - ' + chi);
             },
             error: function (msg) {
                 msg = JSON.parse(msg.responseText);
