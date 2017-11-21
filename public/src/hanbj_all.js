@@ -516,7 +516,7 @@ var tlog = (function ($, w, undefined) {
         up(par, chi);
         auto_handle = setInterval(function () {
             up(par, chi);
-        }, 60000);
+        }, 600000);
     };
     var up = function (par, chi) {
         w.waitloading();
