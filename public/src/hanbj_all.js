@@ -109,6 +109,23 @@ var baselog = (function ($, Vue, w, undefined) {
                 }
             }
         });
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: w.u13,
+            dataType: "json",
+            success: function (msg) {
+                vmain.act = msg;
+            },
+            error: function (msg) {
+                vmain.act = [];
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
         vmain.$watch('uname', function (nv) {
             refresh(this.get_res());
         });

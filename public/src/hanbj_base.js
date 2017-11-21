@@ -72,6 +72,7 @@ var nav_active = (function ($, w, undefined) {
         w.u10 = base + data + 'fame_add';
         w.u11 = base + dataopen + 'json_login';
         w.u12 = base + index + 'runlog/data/';
+        w.u13 = base + data + 'list_act';
     };
     var init = function () {
         dict();

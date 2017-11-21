@@ -28,6 +28,18 @@ class Data extends Controller
         return '';
     }
 
+    public function list_act()
+    {
+        $ret = Db::table('activity')
+            ->field('distinct name')
+            ->select();
+        $data = [];
+        foreach ($ret as $item) {
+            $data[] = $item['name'];
+        }
+        return json($data);
+    }
+
     public function json_act()
     {
         $size = input('get.limit', 20, FILTER_VALIDATE_INT);
@@ -35,10 +47,18 @@ class Data extends Controller
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        $uname = input('get.uname', '');
+        $act = input('get.act', '');
         if ($up) {
             $map['f.up'] = 0;
         } else {
             $map = array();
+        }
+        if (!empty($uname)) {
+            $map['m.tieba_id|m.unique_name'] = ['like', '%' . $uname . '%'];
+        }
+        if (!empty($act) && '全部活动' !== $act) {
+            $map['name'] = $act;
         }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
@@ -76,10 +96,14 @@ class Data extends Controller
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        $uname = input('get.uname', '');
         if ($up) {
             $map['f.up'] = 0;
         } else {
             $map = array();
+        }
+        if (!empty($uname)) {
+            $map['m.tieba_id|m.unique_name'] = ['like', '%' . $uname . '%'];
         }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
