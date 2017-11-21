@@ -91,9 +91,33 @@ var baselog = (function ($, Vue, w, undefined) {
         $table.bootstrapTable('refresh');
     };
     var build_vue = function (refresh) {
-
-        //ToDo
-        refresh(t_data);
+        var vmain = new Vue({
+            el: '#simp_form',
+            data: {
+                uname: '',
+                up: false,
+                act: [],
+                act_res: ''
+            },
+            methods: {
+                get_res: function () {
+                    return {
+                        uname: this.uname,
+                        up: this.up,
+                        act: this.act_res
+                    }
+                }
+            }
+        });
+        vmain.$watch('uname', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('up', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('act_res', function (nv) {
+            refresh(this.get_res());
+        });
     };
     var init = function (uptype, build_v) {
         w.wxFormatter = function (value, row) {
