@@ -327,7 +327,7 @@ class BonusOper
     const ACT = 5;
     const ACT_NAME = '十四周年活动';
     const _WORKER = [];
-    const VOLUNTEER = 30;
+    const VOLUNTEER = 15;
 
     public static function getWorkers()
     {
