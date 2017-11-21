@@ -3,58 +3,56 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>活动日志</h1>
         <div id="body">
-            <div>
-                <div class="bs-example">
-                    <form class="form-inline" id="simp_form">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-addon">会员编号或昵称</div>
-                                <input type="text" class="form-control" placeholder="会员编号或昵称" v-model="uname"
-                                       debounce="500">
-                            </div>
+            <div class="bs-example">
+                <form class="form-inline" id="simp_form">
+                    <div class="form-group" style="margin-right: 1em">
+                        <div class="input-group">
+                            <div class="input-group-addon">会员编号或昵称</div>
+                            <input type="text" class="form-control" placeholder="会员编号或昵称" v-model="uname"
+                                   debounce="500">
                         </div>
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" v-model="up">过滤微信事件
-                                </label>
-                            </div>
+                    </div>
+                    <div class="form-group" style="margin-right: 1em">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" v-model="up">过滤微信事件
+                            </label>
                         </div>
-                        <div class="form-group">
-                            <select v-model="act_res" class="form-control">
-                                <option value="全部活动" selected>全部活动</option>
-                                <option v-for="option in act" v-bind:value="option">
-                                    {{ option }}
-                                </option>
-                            </select></div>
-                        <div class="form-group">
-                            <button id="wxup" type="button" class="btn btn-success">
-                                自动更新微信事件
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <table id="table"
-                       data-pagination="true"
-                       data-side-pagination="server"
-                       data-url="/hanbj/data/json_act"
-                       data-page-list="[20, 50, 100]"
-                       data-query-params="wxParams">
-                    <thead>
-                    <tr>
-                        <th data-field="id" class="sr-only">ID</th>
-                        <th data-field="n">活动</th>
-                        <th data-field="u">会员编号</th>
-                        <th data-field="t">昵称</th>
-                        <th data-field="m">操作人</th>
-                        <th data-field="y">登记时间</th>
-                        <th data-field="bonus">积分</th>
-                        <th data-field="up" data-formatter="wxFormatter">微信</th>
-                    </tr>
-                    </thead>
-                </table>
-                <p></p>
+                    </div>
+                    <div class="form-group" style="margin-right: 1em">
+                        <select v-model="act_res" class="form-control">
+                            <option value="全部活动" selected>全部活动</option>
+                            <option v-for="option in act" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select></div>
+                    <div class="form-group" style="margin-right: 1em">
+                        <button id="wxup" type="button" class="btn btn-success">
+                            自动更新微信事件
+                        </button>
+                    </div>
+                </form>
             </div>
+            <table id="table"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-url="/hanbj/data/json_act"
+                   data-page-list="[20, 50, 100]"
+                   data-query-params="wxParams">
+                <thead>
+                <tr>
+                    <th data-field="id" class="sr-only">ID</th>
+                    <th data-field="n">活动</th>
+                    <th data-field="u">会员编号</th>
+                    <th data-field="t">昵称</th>
+                    <th data-field="m">操作人</th>
+                    <th data-field="y">登记时间</th>
+                    <th data-field="bonus">积分</th>
+                    <th data-field="up" data-formatter="wxFormatter">微信</th>
+                </tr>
+                </thead>
+            </table>
+            <p></p>
         </div>
     </div>
 </div>
