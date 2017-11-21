@@ -5,25 +5,22 @@
             <h1>
                 会员卡情况
             </h1>
-            <div>
-                <table id="table"
-                       data-pagination="true"
-                       data-search="true"
-                       data-side-pagination="server"
-                       data-url="/hanbj/data/json_card"
-                       data-page-list="[20, 50, 100]">
-                    <thead>
-                    <tr>
-                        <th data-field="u">会员编号</th>
-                        <th data-field="t">昵称</th>
-                        <th data-field="c" data-formatter="codeFormatter">会员状态</th>
-                        <th data-field="o">会员卡</th>
-                        <th data-field="s" data-formatter="cardFormatter">状态</th>
-                    </tr>
-                    </thead>
-                </table>
-                <p></p>
-            </div>
+            <table id="table"
+                   data-pagination="true"
+                   data-search="true"
+                   data-side-pagination="server"
+                   data-url="/hanbj/data/json_card"
+                   data-page-list="[20, 50, 100]">
+                <thead>
+                <tr>
+                    <th data-field="u">会员编号</th>
+                    <th data-field="t">昵称</th>
+                    <th data-field="c" data-formatter="codeFormatter">会员状态</th>
+                    <th data-field="o">会员卡</th>
+                    <th data-field="s" data-formatter="cardFormatter">状态</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
