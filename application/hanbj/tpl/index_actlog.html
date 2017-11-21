@@ -4,15 +4,28 @@
         <h1>活动日志</h1>
         <div id="body">
             <div>
-                <p>
-                    <button id="onlyup" type="button" class="btn btn-default" data-toggle="button"
-                            aria-pressed="false">
-                        不过滤微信事件
-                    </button>
+                <form class="form-inline" id="simp_form">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">会员编号或昵称</div>
+                            <input type="text" class="form-control" placeholder="会员编号或昵称" v-model="uname">
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" v-model="up">过滤微信事件
+                        </label>
+                    </div>
+                    <select v-model="act_res" class="form-control">
+                        <option value="全部活动">全部活动</option>
+                        <option v-for="option in act" v-bind:value="option">
+                            {{ option }}
+                        </option>
+                    </select>
                     <button id="wxup" type="button" class="btn btn-success">
                         自动更新微信事件
                     </button>
-                </p>
+                </form>
                 <table id="table"
                        data-pagination="true"
                        data-side-pagination="server"
