@@ -12,20 +12,25 @@
                                    debounce="500">
                         </div>
                     </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" v-model="up">过滤微信事件
-                        </label>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" v-model="up">过滤微信事件
+                            </label>
+                        </div>
                     </div>
-                    <select v-model="act_res" class="form-control">
-                        <option value="全部活动" selected>全部活动</option>
-                        <option v-for="option in act" v-bind:value="option">
-                            {{ option }}
-                        </option>
-                    </select>
-                    <button id="wxup" type="button" class="btn btn-success">
-                        自动更新微信事件
-                    </button>
+                    <div class="form-group">
+                        <select v-model="act_res" class="form-control">
+                            <option value="全部活动" selected>全部活动</option>
+                            <option v-for="option in act" v-bind:value="option">
+                                {{ option }}
+                            </option>
+                        </select></div>
+                    <div class="form-group">
+                        <button id="wxup" type="button" class="btn btn-success">
+                            自动更新微信事件
+                        </button>
+                    </div>
                 </form>
                 <table id="table"
                        data-pagination="true"
