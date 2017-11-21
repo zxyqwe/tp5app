@@ -505,6 +505,7 @@ var tlog = (function ($, w, undefined) {
     'use strict';
     var $tree, $cont, $title, auto_handle, tenc = new TextEncoder('utf-8'), tenc_len = 0;
     var cont = function (c, t) {
+        tenc_len = tenc.encode(c).length;
         $cont.html(c);
         $title.html(t);
     };
@@ -533,7 +534,6 @@ var tlog = (function ($, w, undefined) {
                 if (false === mtext) {
                     return;
                 }
-                tenc_len += tenc.encode(mtext).length;
                 cont($cont.html() + mtext, par + ' - ' + chi);
             },
             error: function (msg) {
