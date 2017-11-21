@@ -324,10 +324,10 @@ class CardOper
 class BonusOper
 {
     const FEE = 30;
-    const ACT = 5;
-    const ACT_NAME = '十四周年活动';
+    const ACT = 10;
+    const VOLUNTEER = 10;
+    const ACT_NAME = '2017冬季团建';
     const _WORKER = [];
-    const VOLUNTEER = 15;
 
     public static function getWorkers()
     {
