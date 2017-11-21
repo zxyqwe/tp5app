@@ -179,7 +179,7 @@ p.footer {
     color: #959595;
     text-transform: uppercase;
     letter-spacing: 1px;
-    content: "Example";
+    content: "选项";
 }
 
 @media (min-width: 768px) {
