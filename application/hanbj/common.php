@@ -362,13 +362,12 @@ class BonusOper
             ->field([
                 'f.id',
                 'm.unique_name',
-                'm.openid',
                 'm.bonus',
                 'c.code',
                 'f.bonus as b'
             ])
             ->find();
-        if (null != $item) {
+        if (null !== $item) {
             $bonus = intval($item['b']);
             $map['id'] = $item['id'];
             Db::startTrans();
@@ -396,6 +395,8 @@ class BonusOper
                     if ($cardup !== true) {
                         return $cardup;
                     }
+                } else {
+                    trace("{$item['unique_name']} 没有会员卡");
                 }
             } catch (\Exception $e) {
                 Db::rollback();
