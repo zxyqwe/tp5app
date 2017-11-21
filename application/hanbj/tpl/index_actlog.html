@@ -8,7 +8,8 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-addon">会员编号或昵称</div>
-                            <input type="text" class="form-control" placeholder="会员编号或昵称" v-model="uname">
+                            <input type="text" class="form-control" placeholder="会员编号或昵称" v-model="uname"
+                                   debounce="500">
                         </div>
                     </div>
                     <div class="checkbox">
@@ -17,7 +18,7 @@
                         </label>
                     </div>
                     <select v-model="act_res" class="form-control">
-                        <option value="全部活动">全部活动</option>
+                        <option value="全部活动" selected>全部活动</option>
                         <option v-for="option in act" v-bind:value="option">
                             {{ option }}
                         </option>
