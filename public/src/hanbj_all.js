@@ -176,10 +176,29 @@ var baselog = (function ($, Vue, w, undefined) {
 
 var feelog = (function ($, Vue, w, undefined) {
     'use strict';
-    var alr, nye, t_data = {up: false};
+    var alr, nye;
     var build_vue = function (refresh) {
-        //ToDo
-        refresh(t_data);
+        var vmain = new Vue({
+            el: '#simp_form',
+            data: {
+                uname: '',
+                up: false
+            },
+            methods: {
+                get_res: function () {
+                    return {
+                        uname: this.uname,
+                        up: this.up
+                    }
+                }
+            }
+        });
+        vmain.$watch('uname', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('up', function (nv) {
+            refresh(this.get_res());
+        });
     };
     var init = function () {
         w.codeFormatter = function (value, row) {
