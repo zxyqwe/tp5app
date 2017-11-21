@@ -116,6 +116,7 @@ var baselog = (function ($, Vue, w, undefined) {
             dataType: "json",
             success: function (msg) {
                 vmain.act = msg;
+                $('select').selectpicker();
             },
             error: function (msg) {
                 vmain.act = [];
