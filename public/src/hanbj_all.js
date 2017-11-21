@@ -83,30 +83,33 @@ var all = (function ($, w, undefined) {
 })(jQuery, window);
 
 
-var baselog = (function ($, w, undefined) {
+var baselog = (function ($, Vue, w, undefined) {
     'use strict';
-    var $onlyup, pressedup = false, $wxup, $table;
-    var init = function (uptype) {
+    var $wxup, $table, t_data = {up: false};
+    var refresh = function (tmp_data) {
+        t_data = tmp_data;
+        $table.bootstrapTable('refresh');
+    };
+    var build_vue = function (refresh) {
+
+        //ToDo
+        refresh(t_data);
+    };
+    var init = function (uptype, build_v) {
         w.wxFormatter = function (value, row) {
             return value === '0' ? '未更新' : '';
         };
         w.wxParams = function (params) {
-            params.up = pressedup;
+            for (var x in t_data) {
+                params[x] = t_data[x];
+            }
             return params;
         };
-        $onlyup = $('#onlyup');
-        $onlyup.click(function () {
-            var pressed = $onlyup.attr('aria-pressed');
-            if (pressed === 'false') {
-                $onlyup.html('仅看未更新事件');
-                pressedup = true;
-                $table.bootstrapTable('refresh');
-            } else {
-                $onlyup.html('不过滤微信事件');
-                pressedup = false;
-                $table.bootstrapTable('refresh');
-            }
-        });
+        if (undefined === build_v) {
+            build_vue(refresh);
+        } else {
+            build_v(refresh);
+        }
         $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20
@@ -123,7 +126,7 @@ var baselog = (function ($, w, undefined) {
                 data: {type: uptype},
                 dataType: "json",
                 success: function (msg) {
-                    $table.bootstrapTable('refresh');
+                    refresh(t_data);
                     if (msg.c > 0) {
                         $wxup.click();
                     } else {
@@ -144,24 +147,28 @@ var baselog = (function ($, w, undefined) {
     return {
         init: init
     };
-})(jQuery, window);
+})(jQuery, Vue, window);
 
 
-var feelog = (function ($, w, undefined) {
+var feelog = (function ($, Vue, w, undefined) {
     'use strict';
-    var alr, nye;
+    var alr, nye, t_data = {up: false};
+    var build_vue = function (refresh) {
+        //ToDo
+        refresh(t_data);
+    };
     var init = function () {
         w.codeFormatter = function (value, row) {
             return value === '1' ? alr : nye;
         };
         alr = $('#ggly').html() + '缴费';
         nye = $('#rgly').html() + '撤销';
-        baselog.init(0);
+        baselog.init(0, build_vue);
     };
     return {
         init: init
     };
-})(jQuery, window);
+})(jQuery, Vue, window);
 
 
 var card = (function ($, w, undefined) {
