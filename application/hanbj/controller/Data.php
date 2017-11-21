@@ -142,6 +142,7 @@ class Data extends Controller
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
+            ->order('f.id')
             ->limit($offset, $size)
             ->cache(600)
             ->field([
@@ -212,6 +213,7 @@ class Data extends Controller
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
+            ->order('f.id')
             ->limit(10)
             ->field([
                 'f.tieba_id as t',
