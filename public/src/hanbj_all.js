@@ -109,6 +109,18 @@ var baselog = (function ($, Vue, w, undefined) {
                 }
             }
         });
+        vmain.$watch('uname', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('up', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('act_res', function (nv) {
+            refresh(this.get_res());
+        });
+        vmain.$watch('act', function (nv) {
+            $('select').selectpicker({size: false});
+        });
         w.waitloading();
         $.ajax({
             type: "GET",
@@ -116,7 +128,6 @@ var baselog = (function ($, Vue, w, undefined) {
             dataType: "json",
             success: function (msg) {
                 vmain.act = msg;
-                $('select').selectpicker();
             },
             error: function (msg) {
                 vmain.act = [];
@@ -126,15 +137,6 @@ var baselog = (function ($, Vue, w, undefined) {
             complete: function () {
                 w.cancelloading();
             }
-        });
-        vmain.$watch('uname', function (nv) {
-            refresh(this.get_res());
-        });
-        vmain.$watch('up', function (nv) {
-            refresh(this.get_res());
-        });
-        vmain.$watch('act_res', function (nv) {
-            refresh(this.get_res());
         });
     };
     var init = function (uptype, build_v) {
