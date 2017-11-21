@@ -31,6 +31,7 @@ class Data extends Controller
     public function list_act()
     {
         $ret = Db::table('activity')
+            ->order('id desc')
             ->field('distinct name')
             ->select();
         $data = [];
@@ -55,7 +56,7 @@ class Data extends Controller
             $map = array();
         }
         if (!empty($uname)) {
-            $map['m.tieba_id|m.unique_name'] = ['like', '%' . $uname . '%'];
+            $map['m.tieba_id|f.unique_name'] = ['like', '%' . $uname . '%'];
         }
         if (!empty($act) && '全部活动' !== $act) {
             $map['name'] = $act;
@@ -84,6 +85,7 @@ class Data extends Controller
         $total = Db::table('activity')
             ->alias('f')
             ->where($map)
+            ->join($join)
             ->count();
         $data['total'] = $total;
         return json($data);
@@ -103,7 +105,7 @@ class Data extends Controller
             $map = array();
         }
         if (!empty($uname)) {
-            $map['m.tieba_id|m.unique_name'] = ['like', '%' . $uname . '%'];
+            $map['m.tieba_id|f.unique_name'] = ['like', '%' . $uname . '%'];
         }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left']
@@ -129,6 +131,7 @@ class Data extends Controller
         $total = Db::table('nfee')
             ->alias('f')
             ->where($map)
+            ->join($join)
             ->count();
         $data['total'] = $total;
         return json($data);
