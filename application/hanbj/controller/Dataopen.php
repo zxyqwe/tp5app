@@ -52,6 +52,7 @@ class Dataopen extends Controller
             ->alias('m')
             ->join($join)
             ->where($map)
+            ->order('m.id')
             ->limit($offset, $size)
             ->cache(600)
             ->group('m.unique_name')
