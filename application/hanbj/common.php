@@ -865,7 +865,7 @@ class WxOrg
                 $ret[] = [
                     'o' => $o,
                     'a' => $ans[$o],
-                    's' => array_sum($ans[$o]) / count($ans[$o])
+                    's' => array_sum($ans[$o]) / 10
                 ];
             }
         }
