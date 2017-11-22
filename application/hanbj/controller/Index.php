@@ -118,6 +118,6 @@ class Index extends Controller
     {
         $org = new WxOrg();
         $ans = $org->getAns();
-        return json_encode($org->getAvg($ans));
+        return json_encode([$ans, $org->getAvg($ans)]);
     }
 }
