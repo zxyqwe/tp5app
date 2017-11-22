@@ -882,6 +882,24 @@ class WxOrg
         return $ret;
     }
 
+    public function getComment($data)
+    {
+        $ret = [];
+        foreach ($data as $item) {
+            $cmt = $item['ans']['sel_add'];
+            for ($i = 0; $i < count($cmt); $i++) {
+                if (!empty($cmt[$i])) {
+                    $ret[] = [
+                        'q' => self::test[$i]['q'],
+                        'o' => $item['o'],
+                        't' => $cmt[$i]
+                    ];
+                }
+            }
+        }
+        return $ret;
+    }
+
     private function progress()
     {
         $all = $this->getAll();
