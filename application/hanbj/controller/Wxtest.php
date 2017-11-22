@@ -15,7 +15,7 @@ class Wxtest extends Controller
     protected function valid_id()
     {
         $uname = session('unique_name');
-        if (!in_array($uname, WxOrg::getAll())) {
+        if (!in_array($uname, WxOrg::getUser())) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }

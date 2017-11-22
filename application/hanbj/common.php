@@ -778,17 +778,22 @@ class WxOrg
 
     public static function getAll()
     {
-        return array_merge(self::top, self::vice, self::leader, self::member, ['坎丙午']);
+        return array_merge(self::top, self::vice, self::leader, self::member);
+    }
+
+    public static function getUser()
+    {
+        return array_merge(self::getAll(), ['坎丙午']);
     }
 
     public static function getUpper()
     {
-        return array_merge(self::top, self::vice, ['坎丙午']);
+        return array_merge(self::top, self::vice);
     }
 
     public static function getLower()
     {
-        return array_merge(self::leader, self::member, ['坎丙午']);
+        return array_merge(self::leader, self::member);
     }
 
     private static function progress()
@@ -860,19 +865,19 @@ class WxOrg
             ->field('unique_name')
             ->find();
         $uname = $res['unique_name'];
-        if (!in_array($uname, self::getAll())) {
+        if (!in_array($uname, self::getUser())) {
             return '文字信息：投票';
         }
         $prog = self::progress();
         if (false === $prog) {
             return WxOrg::all_done();
         }
-        $ret = "有以下投票，十分钟有效\n" . $prog;
+        $ret = "有以下投票，五分钟有效\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
         foreach (self::obj as $item) {
             $c_name = $uname . $item . self::name;
-            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60000);//ToDo
+            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 5);
             if (!cache('?' . $c_name)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
