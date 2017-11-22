@@ -792,3 +792,39 @@ var fame = (function ($, Vue, w, undefined) {
         fameori: fameori
     };
 })(jQuery, Vue, window);
+
+var test = (function ($, Vue, w, undefined) {
+    'use strict';
+    var init = function () {
+        var msg = $('#data').html();
+        msg = JSON.parse(msg);
+        var trans = function (item) {
+            return item + '-' + msg.trn[item];
+        };
+        var vmain = new Vue({
+            el: '#body',
+            data: {
+                obj: msg.obj
+            },
+            methods: {
+                trans: function (item) {
+                    return trans(item);
+                }
+            },
+            ready: function () {
+                w.codeFormatter = function (value, row) {
+                    return trans(value);
+                };
+                $('#table1').bootstrapTable({
+                    data: msg.avg
+                });
+                $('#table2').bootstrapTable({
+                    data: msg.cmt
+                });
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, Vue, window);

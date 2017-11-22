@@ -8,7 +8,7 @@
                 <thead>
                 <tr>
                     <th data-field="q">问题</th>
-                    <th data-field="{{ item }}" v-for="item in obj">{{ trn.item }}</th>
+                    <th data-field="{{ item }}" v-for="item in obj">{{ trans(item) }}</th>
                 </tr>
                 </thead>
             </table>
@@ -17,7 +17,7 @@
                 <thead>
                 <tr>
                     <th data-field="q">问题</th>
-                    <th data-field="o">被测人</th>
+                    <th data-field="o" data-formatter="codeFormatter">被测人</th>
                     <th data-field="t">意见</th>
                 </tr>
                 </thead>
@@ -29,32 +29,6 @@
 <script type="text/javascript" src="/static/hanbj_all.js"></script>
 <script>
     var nav = 'nav4_5';
-    //ToDo
-    var test = (function ($, Vue, w, undefined) {
-        'use strict';
-        var init = function () {
-            var msg = $('#data').html();
-            msg = JSON.parse(msg);
-            new Vue({
-                el: '#body',
-                data: {
-                    obj: msg.obj,
-                    trn: msg.trn
-                },
-                ready: function () {
-                    $('#table1').bootstrapTable({
-                        data: msg.avg
-                    });
-                    $('#table2').bootstrapTable({
-                        data: msg.cmt
-                    });
-                }
-            });
-        };
-        return {
-            init: init
-        };
-    })(jQuery, Vue, window);
     $(window).load(function () {
         test.init();
     });
