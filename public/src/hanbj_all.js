@@ -575,11 +575,11 @@ var tlog = (function ($, w, undefined) {
     'use strict';
     var $tree, $cont, $title, auto_handle, tenc_len = 0;
     var cont = function (c, t) {
-        tenc_len = encodeURIComponent(c).replace(/%[A-F\d]{2}/g, 'U').length;
         $cont.html(c);
         $title.html(t);
     };
     var cancel_up = function () {
+        tenc_len = 0;
         cont('', '');
         clearInterval(auto_handle);
     };
@@ -604,6 +604,7 @@ var tlog = (function ($, w, undefined) {
                 if (false === mtext) {
                     return;
                 }
+                tenc_len = msg.len;
                 cont($cont.html() + mtext, par + ' - ' + chi);
             },
             error: function (msg) {

@@ -76,7 +76,10 @@ class Index extends Controller
             $data = intval($data);
             $dir = LOG_PATH . DIRECTORY_SEPARATOR . intval($par) . DIRECTORY_SEPARATOR . intval($chi) . '.log';
             $f = file_get_contents($dir);
-            return json(['text' => substr($f, $data)]);
+            return json([
+                'text' => substr($f, $data),
+                'len' => strlen($f)
+            ]);
         }
         $data = LogUtil::list_dir(LOG_PATH, '日志');
         return view('runlog', ['data' => json_encode($data['nodes'])]);
