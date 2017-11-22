@@ -8,11 +8,11 @@
                 <thead>
                 <tr>
                     <th data-field="q">问题</th>
-                    <th data-field="{{ item }}" v-for="item in obj">{{ item }}</th>
+                    <th data-field="{{ item }}" v-for="item in obj">{{ trn.item }}</th>
                 </tr>
                 </thead>
             </table>
-            <h4>意见与建议</h4>
+            <h4 style="margin-top: 2em">意见与建议</h4>
             <table id="table2">
                 <thead>
                 <tr>
@@ -38,7 +38,8 @@
             new Vue({
                 el: '#body',
                 data: {
-                    obj: msg.obj
+                    obj: msg.obj,
+                    trn: msg.trn
                 },
                 ready: function () {
                     $('#table1').bootstrapTable({
