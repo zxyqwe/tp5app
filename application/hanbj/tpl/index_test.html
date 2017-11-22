@@ -3,21 +3,58 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>投票结果</h1>
         <div id="body">
-            <p>评分汇总</p>
+            <h4>评分汇总</h4>
             <table id="table1">
                 <thead>
                 <tr>
-                    <th data-field="u">会员编号</th>
+                    <th data-field="q">问题</th>
+                    <th data-field="{{ item }}" v-for="item in obj">{{ item }}</th>
                 </tr>
                 </thead>
             </table>
-            <p>意见与建议</p>
+            <h4>意见与建议</h4>
+            <table id="table2">
+                <thead>
+                <tr>
+                    <th data-field="q">问题</th>
+                    <th data-field="o">被测人</th>
+                    <th data-field="t">意见</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
+<div id="data" class="sr-only">{$data}</div>
 <script type="text/javascript" src="/static/hanbj_all.js"></script>
 <script>
     var nav = 'nav4_5';
+    //ToDo
+    var test = (function ($, Vue, w, undefined) {
+        'use strict';
+        var init = function () {
+            var msg = $('#data').html();
+            msg = JSON.parse(msg);
+            new Vue({
+                el: '#body',
+                data: {
+                    obj: msg.obj
+                },
+                ready: function () {
+                    $('#table1').bootstrapTable({
+                        data: msg.avg
+                    });
+                    $('#table2').bootstrapTable({
+                        data: msg.cmt
+                    });
+                }
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
     $(window).load(function () {
+        test.init();
     });
 </script>
