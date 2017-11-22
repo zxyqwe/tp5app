@@ -125,7 +125,7 @@
                     next_cond: function () {
                         return !this.cur_a
                             || this.well_score
-                            || (this.slidepos > 0 && this.user_add_len > 15);
+                            || (this.slidepos > 0 && this.user_add_len >= 15);
                     }
                 },
                 methods: {
@@ -134,7 +134,7 @@
                     },
                     next: function (n) {
                         this.ans[this.cur_i] = this.slidepos;
-                        if (this.user_add_len > 15) {
+                        if (this.user_add_len >= 15) {
                             this.ans_add[this.cur_i] = this.user_add;
                             this.user_add = '';
                         }
