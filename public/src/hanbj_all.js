@@ -573,9 +573,9 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
-    var $tree, $cont, $title, auto_handle, tenc = new TextEncoder('utf-8'), tenc_len = 0;
+    var $tree, $cont, $title, auto_handle, tenc_len = 0;
     var cont = function (c, t) {
-        tenc_len = tenc.encode(c).length;
+        tenc_len = encodeURIComponent(c).replace(/%[A-F\d]{2}/g, 'U').length;
         $cont.html(c);
         $title.html(t);
     };
