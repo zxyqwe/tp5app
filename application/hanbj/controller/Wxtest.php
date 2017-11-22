@@ -74,4 +74,10 @@ class Wxtest extends Controller
         cache($c_name, json_encode($ans));
         return json(['msg' => 'OK']);
     }
+
+    public function ret()
+    {
+        $org = new WxOrg();
+        return json_encode($org->getAns());
+    }
 }

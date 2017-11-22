@@ -819,6 +819,26 @@ class WxOrg
         return array_merge($this->getAll(), ['坎丙午']);
     }
 
+    public function getAns()
+    {
+        $user = $this->getUser();
+        $data = [];
+        foreach ($user as $u) {
+            foreach ($this->obj as $o) {
+                $c_name = $u . $o . WxOrg::name;
+                if (cache('?' . $c_name)) {
+                    $data[] = [
+                        'ans' => json_decode(cache($c_name), true),
+                        'u' => $u,
+                        'o' => $o,
+                        'w' => in_array($u, $this->upper) ? 2 : 1
+                    ];
+                }
+            }
+        }
+        return $data;
+    }
+
     private function progress()
     {
         $all = $this->getAll();
