@@ -887,12 +887,14 @@ class WxOrg
         $ret = [];
         foreach ($data as $item) {
             $cmt = $item['ans']['sel_add'];
+            $sel = $item['ans']['sel'];
             for ($i = 0; $i < count($cmt); $i++) {
                 if (!empty($cmt[$i])) {
                     $ret[] = [
                         'q' => self::test[$i]['q'],
                         'o' => $item['o'],
-                        't' => $cmt[$i]
+                        't' => $cmt[$i],
+                        's' => $sel[$i]
                     ];
                 }
             }
