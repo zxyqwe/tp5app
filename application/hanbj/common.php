@@ -831,12 +831,32 @@ class WxOrg
                         'ans' => json_decode(cache($c_name), true),
                         'u' => $u,
                         'o' => $o,
-                        'w' => in_array($u, $this->upper) ? 2 : 1
+                        'w' => in_array($u, $this->upper) ? 2.0 : 1.0
                     ];
                 }
             }
         }
         return $data;
+    }
+
+    public function getAvg($data)
+    {
+        $cnt = 0;
+        $ans = [];
+        foreach ($data as $item) {
+            $weight = $item['w'];
+            $cnt += $weight;
+            for ($i = 0; $i < count(self::test); $i++) {
+                if (!isset($ans[$item['o']])) {
+                    $ans[$item['o']] = [];
+                }
+                if (!isset($ans[$item['o']][$i])) {
+                    $ans[$item['o']][$i] = 0;
+                }
+                $ans[$item['o']][$i] += $weight * intval($item['ans']['sel'][$i]);
+            }
+        }
+        return $ans;
     }
 
     private function progress()

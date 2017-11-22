@@ -78,6 +78,7 @@ class Wxtest extends Controller
     public function ret()
     {
         $org = new WxOrg();
-        return json_encode($org->getAns());
+        $ans = $org->getAns();
+        return json_encode($org->getAvg($ans));
     }
 }
