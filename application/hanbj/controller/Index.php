@@ -118,9 +118,11 @@ class Index extends Controller
     {
         $org = new WxOrg();
         $ans = $org->getAns();
-        return json_encode([
+        $ans = [
             'avg' => $org->getAvg($ans),
-            'cmt' => $org->getComment($ans)
-        ]);
+            'cmt' => $org->getComment($ans),
+            'obj' => $org->obj
+        ];
+        return view('test', ['data' => json_encode($ans)]);
     }
 }
