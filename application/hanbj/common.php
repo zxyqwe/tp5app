@@ -856,7 +856,20 @@ class WxOrg
                 $ans[$item['o']][$i] += $weight * intval($item['ans']['sel'][$i]);
             }
         }
-        return $ans;
+        $ret = [];
+        foreach ($this->obj as $o) {
+            if (isset($ans[$o])) {
+                foreach ($ans[$o] as &$tmp) {
+                    $tmp /= $cnt;
+                }
+                $ret[] = [
+                    'o' => $o,
+                    'a' => $ans[$o],
+                    's' => array_sum($ans[$o]) / count($ans[$o])
+                ];
+            }
+        }
+        return $ret;
     }
 
     private function progress()
