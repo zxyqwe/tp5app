@@ -6,6 +6,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\LogUtil;
 use app\hanbj\WxHanbj;
+use app\hanbj\WxOrg;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -111,5 +112,12 @@ class Index extends Controller
         }
         $map['Tables'] = implode(', ', $Tables_in_hanbj);
         return view('token', ['data' => $map]);
+    }
+
+    public function test()
+    {
+        $org = new WxOrg();
+        $ans = $org->getAns();
+        return json_encode($org->getAvg($ans));
     }
 }
