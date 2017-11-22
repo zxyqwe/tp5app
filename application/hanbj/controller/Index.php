@@ -118,10 +118,23 @@ class Index extends Controller
     {
         $org = new WxOrg();
         $ans = $org->getAns();
+        $map['unique_name'] = ['in', $org->obj];
+        $ret = Db::table('member')
+            ->where($map)
+            ->field([
+                'unique_name as u',
+                'tieba_id as t'
+            ])
+            ->select();
+        $dict = [];
+        foreach ($ret as $t) {
+            $dict[$t['u']] = $t['t'];
+        }
         $ans = [
             'avg' => $org->getAvg($ans),
             'cmt' => $org->getComment($ans),
-            'obj' => $org->obj
+            'obj' => $org->obj,
+            'trn' => $dict
         ];
         return view('test', ['data' => json_encode($ans)]);
     }
