@@ -856,19 +856,29 @@ class WxOrg
                 $ans[$item['o']][$i] += $weight * intval($item['ans']['sel'][$i]);
             }
         }
+
         $ret = [];
+        for ($i = 0; $i < count(self::test); $i++) {
+            $test = self::test[$i];
+            if (!isset($test['a'])) {
+                continue;
+            }
+            $tmp = ['q' => $test['q']];
+            foreach ($this->obj as $o) {
+                if (isset($ans[$o])) {
+                    $ans[$o][$i] /= $cnt;
+                    $tmp[$o] = $ans[$o][$i];
+                }
+            }
+            $ret[] = $tmp;
+        }
+        $tmp = ['q' => '总分（100分）'];
         foreach ($this->obj as $o) {
             if (isset($ans[$o])) {
-                foreach ($ans[$o] as &$tmp) {
-                    $tmp /= $cnt;
-                }
-                $ret[] = [
-                    'o' => $o,
-                    'a' => $ans[$o],
-                    's' => array_sum($ans[$o]) / 10
-                ];
+                $tmp[$o] = array_sum($ans[$o]);
             }
         }
+        $ret[] = $tmp;
         return $ret;
     }
 
