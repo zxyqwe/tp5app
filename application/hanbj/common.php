@@ -115,7 +115,8 @@ class WxHanbj
             case 'text':
                 $cont = (string)$msg->Content;
                 if ($cont === '投票') {
-                    $cont = WxOrg::listobj($from);
+                    $org = new WxOrg();
+                    $cont = $org->listobj($from);
                     return self::auto($from, $to, $cont, false, '投票');
                 } elseif (cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
@@ -680,12 +681,8 @@ class LogUtil
 
 class WxOrg
 {
-    const top = ['乾甲申', '坤丁酉', '乾乙丑', '离庚寅', '艮甲辰', '兑癸卯', '乾戊辰', '夏癸酉'];
-    const vice = [];
-    const leader = [];
-    const member = [];
-    const obj = ['素问', '采娈', '少卿', '魁儿'];
-    const name = '2017???问卷调查';
+    const year = 12;
+    const name = '2017会长层测评';
     const test = [
         [
             'q' => '你对A会长分管部门（无具体分管的，则评价各个部门）工作情况评价（40分）'
@@ -776,32 +773,58 @@ class WxOrg
         ]
     ];
 
-    public static function getAll()
+    function __construct()
     {
-        return array_merge(self::top, self::vice, self::leader, self::member);
+        $map['year'] = self::year;
+        $map['grade'] = ['<=', '3'];
+        $ret = Db::table('fame')
+            ->where($map)
+            ->field([
+                'unique_name as u',
+                'grade as g'
+            ])
+            ->select();
+        $upper = [];
+        $lower = [];
+        $obj = [];
+        foreach ($ret as $item) {
+            switch ($item['g']) {
+                case 0:
+                case 1:
+                    $obj[] = $item['u'];
+                    $upper[] = $item['u'];
+                    break;
+                case 2:
+                    $upper[] = $item['u'];
+                    break;
+                case 3:
+                    $lower[] = $item['u'];
+                    break;
+                default:
+                    trace(json_encode($item));
+            }
+        }
+        $this->upper = $upper;
+        $this->lower = $lower;
+        $this->obj = $obj;
     }
 
-    public static function getUser()
+    public function getAll()
     {
-        return array_merge(self::getAll(), ['坎丙午']);
+        return array_merge($this->upper, $this->lower);
     }
 
-    public static function getUpper()
+    public function getUser()
     {
-        return array_merge(self::top, self::vice);
+        return array_merge($this->getAll(), ['坎丙午']);
     }
 
-    public static function getLower()
+    private function progress()
     {
-        return array_merge(self::leader, self::member);
-    }
-
-    private static function progress()
-    {
-        $all = self::getAll();
-        $len = count($all) * count(self::obj);
+        $all = $this->getAll();
+        $len = count($all) * count($this->obj);
         $acc = 0;
-        foreach (self::obj as $obj) {
+        foreach ($this->obj as $obj) {
             foreach ($all as $item) {
                 $c_name = $item . $obj . self::name;
                 if (cache('?' . $c_name)) {
@@ -851,12 +874,12 @@ class WxOrg
         return true;
     }
 
-    private static function all_done()
+    private function all_done()
     {
         return '已完成';
     }
 
-    public static function listobj($from)
+    public function listobj($from)
     {
         $map['openid'] = $from;
         $res = Db::table('member')
@@ -865,17 +888,17 @@ class WxOrg
             ->field('unique_name')
             ->find();
         $uname = $res['unique_name'];
-        if (!in_array($uname, self::getUser())) {
+        if (!in_array($uname, $this->getUser())) {
             return '文字信息：投票';
         }
-        $prog = self::progress();
+        $prog = $this->progress();
         if (false === $prog) {
-            return WxOrg::all_done();
+            return $this->all_done();
         }
         $ret = "有以下投票，五分钟有效\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
-        foreach (self::obj as $item) {
+        foreach ($this->obj as $item) {
             $c_name = $uname . $item . self::name;
             $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 5);
             if (!cache('?' . $c_name)) {

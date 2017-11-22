@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\WxOrg;
 use think\Controller;
+use think\Db;
 use think\exception\HttpResponseException;
 
 class Wxtest extends Controller
@@ -15,7 +16,8 @@ class Wxtest extends Controller
     protected function valid_id()
     {
         $uname = session('unique_name');
-        if (!in_array($uname, WxOrg::getUser())) {
+        $org = new WxOrg();
+        if (!in_array($uname, $org->getUser())) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -32,10 +34,18 @@ class Wxtest extends Controller
         $obj = json_decode($obj, true);
         $obj = $obj['val'];
         $uname = session('unique_name');
-        if (!in_array($obj, WxOrg::obj)) {
+        $org = new WxOrg();
+        if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
-        $data['uname'] = $obj;
+        $map['unique_name'] = $obj;
+        $ret = Db::table('member')
+            ->where($map)
+            ->field([
+                'tieba_id as u'
+            ])
+            ->find();
+        $data['uname'] = "$obj - {$ret['u']}";
         $data['name'] = WxOrg::name;
         $data['test'] = WxOrg::test;
         $c_name = $uname . $obj . WxOrg::name;
@@ -50,7 +60,8 @@ class Wxtest extends Controller
     public function up()
     {
         $obj = input('post.obj');
-        if (!in_array($obj, WxOrg::obj)) {
+        $org = new WxOrg();
+        if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
         $ans = input('post.ans/a', []);
