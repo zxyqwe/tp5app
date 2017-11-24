@@ -821,7 +821,7 @@ class WxOrg
 
     public function getAns()
     {
-        $user = $this->getUser();
+        $user = $this->getAll();
         $data = [];
         foreach ($user as $u) {
             foreach ($this->obj as $o) {
