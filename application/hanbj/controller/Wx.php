@@ -90,15 +90,12 @@ class Wx extends Controller
         if ($res !== 1) {
             return json(['msg' => '更新失败，积分为' . $bonus], 400);
         }
-        $cardup = CardOper::update(
+        CardOper::update(
             $uname,
             session('card'),
             $bonus,
             $bonus,
             '重新计算积分');
-        if ($cardup !== true) {
-            return $cardup;
-        }
         return json(['msg' => $bonus]);
     }
 
