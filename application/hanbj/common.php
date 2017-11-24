@@ -913,17 +913,17 @@ class WxOrg
     public static function checkAns($ans)
     {
         if (!is_array($ans)) {
-            return 'array';
+            throw new HttpResponseException(json(['msg' => 'array'], 400));
         }
         $len = count(self::test);
         if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
-            return 'sel';
+            throw new HttpResponseException(json(['msg' => 'sel'], 400));
         }
         if (array_sum($ans['sel']) === 100) {
-            return '满分';
+            throw new HttpResponseException(json(['msg' => '满分'], 400));
         }
         if (!isset($ans['sel_add']) || !is_array($ans['sel_add'])) {
-            return 'sel_add';
+            throw new HttpResponseException(json(['msg' => 'sel_add'], 400));
         }
         foreach (range(0, $len - 1) as $i) {
             $tmp = self::test[$i];
@@ -938,10 +938,9 @@ class WxOrg
             if ($ans['sel'][$i] < $s
                 && (!isset($ans['sel_add'][$i]) || count($ans['sel_add'][$i]) < 15)
             ) {
-                return 'sel ' . $i;
+                throw new HttpResponseException(json(['msg' => 'sel ' . $i], 400));
             }
         }
-        return true;
     }
 
     private function all_done()

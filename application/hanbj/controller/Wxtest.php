@@ -65,10 +65,7 @@ class Wxtest extends Controller
             return json(['msg' => '参数错误'], 400);
         }
         $ans = input('post.ans/a', []);
-        $check = WxOrg::checkAns($ans);
-        if (true !== $check) {
-            json(['msg' => $check], 400);
-        }
+        WxOrg::checkAns($ans);
         $uname = session('unique_name');
         $c_name = $uname . $obj . WxOrg::name;
         cache($c_name, json_encode($ans));
