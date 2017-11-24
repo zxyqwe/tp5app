@@ -333,9 +333,9 @@ class Data extends Controller
     {
         $type = input('post.type');
         if ($type === '0') {
-            return BonusOper::upFee();
+            return BonusOper::up('nfee', '会费积分更新');
         } else {
-            return BonusOper::upAct();
+            return BonusOper::up('activity', '活动积分更新');
         }
     }
 

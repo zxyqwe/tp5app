@@ -348,7 +348,7 @@ class BonusOper
         return intval($act) + intval($res);
     }
 
-    private static function up($table, $label)
+    public static function up($table, $label)
     {
         $map['up'] = 0;
         $join = [
@@ -405,16 +405,6 @@ class BonusOper
             }
         }
         return json(['msg' => 'ok', 'c' => count($item)]);
-    }
-
-    public static function upFee()
-    {
-        return BonusOper::up('nfee', '会费积分更新');
-    }
-
-    public static function upAct()
-    {
-        return BonusOper::up('activity', '活动积分更新');
     }
 }
 
