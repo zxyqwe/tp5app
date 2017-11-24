@@ -11,6 +11,7 @@ use app\WxPayApi;
 use app\WxPayDataBase;
 use app\WxPayNotify;
 use Exception;
+use think\exception\HttpResponseException;
 
 class MemberOper
 {
@@ -248,9 +249,8 @@ class CardOper
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
             trace($raw);
-            return json(['msg' => $raw], 400);
+            throw new HttpResponseException(json(['msg' => $raw], 400));
         }
-        return true;
     }
 
     public static function active($code)
@@ -387,15 +387,12 @@ class BonusOper
                 }
                 Db::commit();
                 if ($item['code'] !== null) {
-                    $cardup = CardOper::update(
+                    CardOper::update(
                         $item['unique_name'],
                         $item['code'],
                         $bonus,
                         intval($item['bonus']) + $bonus,
                         $label);
-                    if ($cardup !== true) {
-                        return $cardup;
-                    }
                 } else {
                     trace("{$item['unique_name']} 没有会员卡");
                 }
