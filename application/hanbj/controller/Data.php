@@ -393,6 +393,11 @@ class Data extends Controller
             }
         } catch (\Exception $e) {
             Db::rollback();
+            $e = $e->__toString();
+            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
+            if (isset($token[2])) {
+                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
+            }
             return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
