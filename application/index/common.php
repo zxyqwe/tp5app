@@ -385,6 +385,9 @@ class BiliHelper
     {
         $urlapi = $this->prefix . 'freeSilver/getCaptcha?ts=' . time();
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        if (json_encode(json_decode($raw, true)) === $raw) {
+            return 0;
+        }
         $image = imagecreatefromstring($raw);
         $width = imagesx($image);
         $height = imagesy($image);
