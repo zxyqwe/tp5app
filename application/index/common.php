@@ -352,13 +352,12 @@ class BiliHelper
             $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
-            if (false === strpos($data['msg'], '过期')) {
-                trace("领取失败：$res");
-                return;
+            if (-903 === $data['code'] || false !== strpos($data['msg'], '过期')) {
+                trace("领取失败：{$data['msg']}");
+                $this->lock('silverTask', -1);
+                $this->silverTask();
             }
-            trace("领取失败：{$data['msg']}");
-            $this->lock('silverTask', -1);
-            $this->silverTask();
+            trace("领取失败：$res");
         }
     }
 
