@@ -356,6 +356,7 @@ class BiliHelper
                 trace("领取失败：{$data['msg']}");
                 $this->lock('silverTask', -1);
                 $this->silverTask();
+                return;
             }
             trace("领取失败：$res");
         }
