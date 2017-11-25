@@ -455,6 +455,9 @@ class BiliHelper
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
+        if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+        }
         return $return_str;
     }
 
