@@ -479,4 +479,19 @@ class Data extends Controller
         $data['total'] = $total;
         return json($data);
     }
+
+    public function json_birth()
+    {
+        $ret = Db::table('member')
+            ->field([
+                'eid',
+                'gender'
+            ])
+            ->select();
+        foreach ($ret as &$item) {
+            $item['eid'] = substr($item['eid'], 6, 8);
+            $item['gender'] = $item['gender'] === '男' ? 0 : 1;
+        }
+        return json($ret);
+    }
 }
