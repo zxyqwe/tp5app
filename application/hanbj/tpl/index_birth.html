@@ -21,6 +21,7 @@
                 dataType: "json",
                 success: function (msg) {
                     ret = msg;
+                    console.log(ret);
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
