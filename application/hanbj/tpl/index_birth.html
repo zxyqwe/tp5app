@@ -1,9 +1,15 @@
 {layout name="layout2" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
-        <div id="body">比例 男女年龄 生日日历
-            <div class="col-md-12 column" id="year">
-
+        <div id="body">比例 生日日历
+            <div class="row">
+                <div class="col-md-12 column" id="gender" style="height: 50em"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 column" id="year" style="height: 50em"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 column" id="birthday" style="height: 50em"></div>
             </div>
         </div>
     </div>
@@ -14,7 +20,7 @@
     //ToDo
     var birth = (function ($, w, undefined) {
         'use strict';
-        var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {};
+        var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {}, male = 0, female = 0;
         var get_year = function (y, m, d, g) {
             year_choice.push(y);
             if (undefined === year_set[y]) {
@@ -31,6 +37,7 @@
         };
         var get_year_ret = function () {
             var myChart = echarts.init(document.getElementById('year'));
+            year_choice = Array.from(new Set(year_choice));
             year_choice = year_choice.sort();
             var a = [], b = [], c = [];
             for (var i in year_choice) {
@@ -43,7 +50,9 @@
                 title: {
                     text: '年龄分布'
                 },
-                tooltip: {},
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b}年: {a} {c}人"},
                 legend: {
                     data: ['男', '女', '全体']
                 },
