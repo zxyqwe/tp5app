@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
+use app\hanbj\MemberOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -490,7 +491,9 @@ class Data extends Controller
 
     public function json_birth()
     {
+        $map['code'] = MemberOper::NORMAL;
         $ret = Db::table('member')
+            ->where($map)
             ->field([
                 'eid',
                 'gender'
