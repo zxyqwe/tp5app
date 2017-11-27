@@ -501,6 +501,8 @@ class Data extends Controller
             $tmp_eid = substr($item['eid'], 6, 8);
             if ($tmp_eid > 19491001 && $tmp_eid < $today) {
                 $item['eid'] = $tmp_eid;
+            } else {
+                $item['eid'] = false;
             }
             $item['gender'] = $item['gender'] === '男' ? 0 : 1;
         }
