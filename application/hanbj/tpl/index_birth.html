@@ -1,20 +1,71 @@
 {layout name="layout2" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
-        <div id="body">
-            nan nv all
-            nian shengxiao xingzuo
+        <div id="body">比例 男女年龄 生日日历
+            <div class="col-md-12 column" id="year">
+
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript" src="/static/hanbj_all.js"></script>
 <script>
     var nav = 'nav4_6';
+    //ToDo
     var birth = (function ($, w, undefined) {
         'use strict';
-        var ret;
+        var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {};
         var get_year = function (y, m, d, g) {
-            console.log([t, g]);
+            year_choice.push(y);
+            if (undefined === year_set[y]) {
+                year_set[y] = 0;
+                year_set_male[y] = 0;
+                year_set_female[y] = 0;
+            }
+            year_set[y]++;
+            if (g === 0) {
+                year_set_male[y]++;
+            } else {
+                year_set_female[y]++;
+            }
+        };
+        var get_year_ret = function () {
+            var myChart = echarts.init(document.getElementById('year'));
+            year_choice = year_choice.sort();
+            var a = [], b = [], c = [];
+            for (var i in year_choice) {
+                var k = year_choice[i];
+                a.push(year_set_male[k]);
+                b.push(year_set_female[k]);
+                c.push(year_set[k]);
+            }
+            var option = {
+                title: {
+                    text: '年龄分布'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['男', '女', '全体']
+                },
+                xAxis: {
+                    data: year_choice
+                },
+                yAxis: {},
+                series: [{
+                    name: '男',
+                    type: 'bar',
+                    data: a
+                }, {
+                    name: '女',
+                    type: 'bar',
+                    data: b
+                }, {
+                    name: '全体',
+                    type: 'bar',
+                    data: c
+                }]
+            };
+            myChart.setOption(option);
         };
         var get_ret = function () {
             w.waitloading();
@@ -24,15 +75,16 @@
                 dataType: "json",
                 success: function (msg) {
                     ret = msg;
-                    console.log(ret);
                     for (var i in ret) {
-                        if (ret[i].eid) {
+                        var k = ret[i];
+                        if (k.eid) {
                             var y = ret[i].eid.substring(0, 4);
                             var m = ret[i].eid.substring(4, 2);
                             var d = ret[i].eid.substring(6, 2);
                             get_year(y, m, d, ret[i].gender);
                         }
                     }
+                    get_year_ret();
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
