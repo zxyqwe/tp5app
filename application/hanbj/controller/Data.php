@@ -191,7 +191,7 @@ class Data extends Controller
                 'f.eid'
             ])
             ->select();
-        $today = date('Hmd');
+        $today = date('Ymd');
         foreach ($tmp as &$item) {
             $tmp_eid = substr($item['eid'], 6, 8);
             if ($tmp_eid > 19491001 && $tmp_eid < $today) {
@@ -496,7 +496,7 @@ class Data extends Controller
                 'gender'
             ])
             ->select();
-        $today = date('Hmd');
+        $today = date('Ymd');
         foreach ($ret as &$item) {
             $tmp_eid = substr($item['eid'], 6, 8);
             if ($tmp_eid > 19491001 && $tmp_eid < $today) {
