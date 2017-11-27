@@ -495,6 +495,7 @@ class Data extends Controller
                 'eid',
                 'gender'
             ])
+            ->cache(600)
             ->select();
         $today = date('Ymd');
         foreach ($ret as &$item) {
