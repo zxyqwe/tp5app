@@ -828,3 +828,245 @@ var test = (function ($, Vue, w, undefined) {
         init: init
     };
 })(jQuery, Vue, window);
+
+
+var birth = (function ($, w, undefined) {
+    'use strict';
+    var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {}, gender = {g0: 0, g1: 0},
+        birthday_set = {};
+    var get_year = function (y, m, d, g) {
+        year_choice.push(y);
+        if (undefined === year_set[y]) {
+            year_set[y] = 0;
+            year_set_male[y] = 0;
+            year_set_female[y] = 0;
+        }
+        year_set[y]++;
+        if (g === 0) {
+            year_set_male[y]++;
+        } else {
+            year_set_female[y]++;
+        }
+    };
+    var get_year_ret = function () {
+        var myChart = echarts.init(document.getElementById('year'));
+        year_choice = Array.from(new Set(year_choice));
+        year_choice = year_choice.sort();
+        var a = [], b = [], c = [];
+        for (var i in year_choice) {
+            var k = year_choice[i];
+            a.push(year_set_male[k]);
+            b.push(year_set_female[k]);
+            c.push(year_set[k]);
+        }
+        var option = {
+            title: {
+                text: '年龄分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}年: {a} {c}人"
+            },
+            legend: {
+                top: '40',
+                data: ['男', '女', '全体']
+            },
+            xAxis: {
+                data: year_choice
+            },
+            yAxis: {},
+            series: [{
+                name: '男',
+                type: 'bar',
+                data: a
+            }, {
+                name: '女',
+                type: 'bar',
+                data: b
+            }, {
+                name: '全体',
+                type: 'bar',
+                data: c
+            }]
+        };
+        myChart.setOption(option);
+    };
+    var get_gender = function (y, m, d, g) {
+        gender['g' + g]++;
+    };
+    var get_gender_year = function () {
+        var myChart = echarts.init(document.getElementById('gender'));
+        var option = {
+            title: {
+                text: '男女比例'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                top: '60',
+                orient: 'vertical',
+                x: 'left',
+                data: ['男', '女']
+            },
+            series: [
+                {
+                    name: '会员分布',
+                    type: 'pie',
+                    radius: '50%',
+                    data: [
+                        {value: gender.g0, name: '男'},
+                        {value: gender.g1, name: '女'}
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+    };
+    var get_birthday = function (y, m, d, g) {
+        var s = '2000-' + m + '-' + d;
+        if (undefined === birthday_set[s]) {
+            birthday_set[s] = 0;
+        }
+        birthday_set[s]++;
+    };
+    var get_birthday_ret = function () {
+        var myChart = echarts.init(document.getElementById('birthday'));
+        var vdata = [];
+        for (var i in birthday_set) {
+            vdata.push([
+                i,
+                Math.floor(birthday_set[i])
+            ]);
+        }
+        var sli = vdata.sort(function (a, b) {
+            return b[1] - a[1];
+        }).slice(0, 12);
+        var option = {
+            backgroundColor: '#404a59',
+            title: {
+                top: 30,
+                text: '会员生日分布',
+                left: 'center',
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params, ticket, callback) {
+                    var v = params.value;
+                    var s = v[0].split('-');
+                    return s[1] + '月' + s[2] + '日共' + v[1] + '人';
+                }
+            },
+            legend: {
+                top: '30',
+                left: '100',
+                data: ['生日', 'Top 12'],
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            calendar: [{
+                top: 100,
+                left: 'center',
+                range: ['2000-01-01', '2000-12-31'],
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#000',
+                        width: 4,
+                        type: 'solid'
+                    }
+                },
+                yearLabel: {},
+                itemStyle: {
+                    normal: {
+                        color: '#323c48',
+                        borderWidth: 1,
+                        borderColor: '#111'
+                    }
+                }
+            }],
+            series: [
+                {
+                    name: '生日',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    data: vdata,
+                    symbolSize: function (val) {
+                        return val[1] * 3;
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#ddb926'
+                        }
+                    }
+                },
+                {
+                    name: 'Top 12',
+                    type: 'effectScatter',
+                    coordinateSystem: 'calendar',
+                    data: sli,
+                    symbolSize: function (val) {
+                        return val[1] * 3;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    itemStyle: {
+                        normal: {
+                            color: '#f4e925',
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    zlevel: 1
+                }
+            ]
+        };
+        myChart.setOption(option);
+    };
+    var get_ret = function () {
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: w.u14,
+            dataType: "json",
+            success: function (msg) {
+                ret = msg;
+                for (var i in ret) {
+                    var k = ret[i];
+                    if (k.eid) {
+                        var y = ret[i].eid.substring(0, 4);
+                        var m = ret[i].eid.substring(4, 6);
+                        var d = ret[i].eid.substring(6, 8);
+                        get_year(y, m, d, ret[i].gender);
+                        get_gender(y, m, d, ret[i].gender);
+                        get_birthday(y, m, d, ret[i].gender);
+                    }
+                }
+                get_year_ret();
+                get_gender_year();
+                get_birthday_ret();
+            },
+            error: function (msg) {
+                msg = JSON.parse(msg.responseText);
+                w.msgto(msg.msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
+    var init = function () {
+        get_ret();
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);
