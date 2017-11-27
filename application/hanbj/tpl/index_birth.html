@@ -13,6 +13,9 @@
     var birth = (function ($, w, undefined) {
         'use strict';
         var ret;
+        var get_year = function (y, m, d, g) {
+            console.log([t, g]);
+        };
         var get_ret = function () {
             w.waitloading();
             $.ajax({
@@ -22,6 +25,14 @@
                 success: function (msg) {
                     ret = msg;
                     console.log(ret);
+                    for (var i in ret) {
+                        if (ret[i].eid) {
+                            var y = ret[i].eid.substring(0, 4);
+                            var m = ret[i].eid.substring(4, 2);
+                            var d = ret[i].eid.substring(6, 2);
+                            get_year(y, m, d, ret[i].gender);
+                        }
+                    }
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
