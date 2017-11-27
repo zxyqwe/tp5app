@@ -187,9 +187,17 @@ class Data extends Controller
                 'f.year_time as y',
                 'f.bonus as b',
                 'f.code',
-                'f.openid'
+                'f.openid',
+                'f.eid'
             ])
             ->select();
+        $today = date('Hmd');
+        foreach ($tmp as &$item) {
+            $tmp_eid = substr($item['eid'], 6, 8);
+            if ($tmp_eid > 19491001 && $tmp_eid < $today) {
+                $item['eid'] = $tmp_eid;
+            }
+        }
         $data['rows'] = $tmp;
         $total = Db::table('member')
             ->alias('f')
@@ -488,8 +496,12 @@ class Data extends Controller
                 'gender'
             ])
             ->select();
+        $today = date('Hmd');
         foreach ($ret as &$item) {
-            $item['eid'] = substr($item['eid'], 6, 8);
+            $tmp_eid = substr($item['eid'], 6, 8);
+            if ($tmp_eid > 19491001 && $tmp_eid < $today) {
+                $item['eid'] = $tmp_eid;
+            }
             $item['gender'] = $item['gender'] === '男' ? 0 : 1;
         }
         return json($ret);
