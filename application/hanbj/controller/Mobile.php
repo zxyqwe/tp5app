@@ -279,7 +279,7 @@ class Mobile extends Controller
         if ($res === 0) {
             return json(['msg' => '更新失败'], 400);
         }
-        trace("{$map['unique_name']} {$map[$action]} -> {$data[$action]}");
+        trace("{$map['unique_name']} {$action} {$map[$action]} -> {$data[$action]}");
         return json(['msg' => 'OK']);
     }
 }
