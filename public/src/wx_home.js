@@ -463,10 +463,10 @@ var wx_home = (function ($, Vue, w, undefined) {
         });
     };
     var pref = function (name) {
-        change_item(name, w.u14 + '?action=pref', '偏好');
+        change_item(name, w.u14 + '?action=pref', '兴趣爱好');
     };
     var web = function (name) {
-        change_item(name, w.u14 + '?action=web_name', '网名');
+        change_item(name, w.u14 + '?action=web_name', '常用网名');
     };
     var init = function () {
         $cardn = $("#card-1");
