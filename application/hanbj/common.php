@@ -25,12 +25,14 @@ class MemberOper
         switch ($v) {
             case MemberOper::NORMAL:
                 return '正常';
+            case MemberOper::UNUSED:
+                return '<span class="temp-text">空号</span>';
             case MemberOper::BANNED:
                 return '<span class="temp-text">注销</span>';
             case MemberOper::FREEZE:
                 return '<span class="temp-text">停机保号</span>';
             default:
-                return '异常：' . $v;
+                return '<span class="temp-text">异常：' . $v . '</span>';
         }
     }
 }
