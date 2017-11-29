@@ -268,6 +268,7 @@ return [
     'aws_end_point' => 'webservices.amazon.cn',
     'aws_uri' => '/onca/xml',
     'hanbj_api' => 'wx8519c9fd7817dbcb',
-    'hanbj_cardid' => 'pJkBfv06_x38RSmlhoR-2X7rWsxw'
+    'hanbj_cardid' => 'pJkBfv06_x38RSmlhoR-2X7rWsxw',
+    'hanbj_img1' => 'http://mmbiz.qpic.cn/mmbiz_jpg/PP2q8S7QAJdbFvGfSCOEia4ddWiabfVkXtblCEBKOcyBTmT7EUPQBaUE28FD8paOEYwIyFtWBzsWU8paviaEWVxYQ/0'
 
 ];
