@@ -162,10 +162,9 @@ class Data extends Controller
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $search = input('get.search');
+        $map['code'] = ['NEQ', MemberOper::UNUSED];
         if (!empty($search)) {
             $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
-        } else {
-            $map = array();
         }
         $tmp = Db::table('member')
             ->alias('f')
