@@ -59,14 +59,6 @@ var wx_home = (function ($, Vue, w, undefined) {
         s += '</p><p>积分：';
         s += msg.bonus;
         s += '</p>';
-        switch (msg.code) {
-            case '0':
-                s += '<p>状态：';
-                break;
-            default:
-                s += '<p class="temp-text">状态：';
-                break;
-        }
         s += wx_init.mem_code(msg.code);
         s += '</p><p>编号：';
         s += msg.uni;

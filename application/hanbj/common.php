@@ -24,7 +24,7 @@ class MemberOper
     {
         switch ($v) {
             case MemberOper::NORMAL:
-                return '正常';
+                return '实名';
             case MemberOper::UNUSED:
                 return '<span class="temp-text">空号</span>';
             case MemberOper::BANNED:

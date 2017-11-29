@@ -224,15 +224,15 @@ var wx_init = (function ($, w, undefined) {
     var mem_code = function (value) {
         switch (value) {
             case '-1':
-                return '空号';
+                return '<p class="temp-text">状态：空号';
             case '0':
-                return '正常';
+                return '<p>状态：实名';
             case '1':
-                return '注销';
+                return '<p class="temp-text">状态：注销';
             case '2':
-                return '停机保号';
+                return '<p class="temp-text">状态：停机保号';
             default:
-                return value;
+                return '<p class="temp-text">状态：' + value;
         }
     };
     var jsapi = function () {
