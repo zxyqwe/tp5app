@@ -223,6 +223,8 @@ var wx_init = (function ($, w, undefined) {
     };
     var mem_code = function (value) {
         switch (value) {
+            case '-1':
+                return '空号';
             case '0':
                 return '正常';
             case '1':
