@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
+use app\hanbj\MemberOper;
 use app\hanbj\OrderOper;
 use app\hanbj\HanbjRes;
 use think\Controller;
@@ -84,6 +85,7 @@ class Wx extends Controller
         cache('json_renew' . $uname, 1, 600);
         $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
+        $map['code'] = MemberOper::NORMAL;
         $res = Db::table('member')
             ->where($map)
             ->setField('bonus', $bonus);
