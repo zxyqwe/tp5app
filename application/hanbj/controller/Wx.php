@@ -147,5 +147,6 @@ class Wx extends Controller
         }
         $hand = new HanbjNotify();
         $hand->Handle(false);
+        return '';
     }
 }

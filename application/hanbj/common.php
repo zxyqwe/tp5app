@@ -35,6 +35,10 @@ class MemberOper
                 return '<span class="temp-text">异常：' . $v . '</span>';
         }
     }
+
+    public static function Unused2Temp()
+    {
+    }
 }
 
 class FeeOper
@@ -574,14 +578,16 @@ class HanbjNotify extends WxPayNotify
             return false;
         }
         //查询订单，判断订单真实性
-        if (!$this->Queryorder($data["out_trade_no"])) {
+        $outid = $data["out_trade_no"];
+        if (!$this->Queryorder($outid)) {
             return false;
         }
+        $total_fee = $data['total_fee'];
+        $transaction_id = $data['transaction_id'];
         $d = date("Y-m-d H:i:s");
-        $outid = $data["out_trade_no"];
         $map['outid'] = $outid;
-        $map['fee'] = $data['total_fee'];
-        $ins['trans'] = $data['transaction_id'];
+        $map['fee'] = $total_fee;
+        $ins['trans'] = $transaction_id;
         $ins['time'] = $d;
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
@@ -610,14 +616,15 @@ class HanbjNotify extends WxPayNotify
                 ->update();
             if ($up === 0) {
                 Db::rollback();
+                trace('重来订单 ' . json_encode($data));
                 return true;
             }
             if ('1' === $res['type']) {
-                $this->handleFee($res['value'], $res['unique_name'], $data['transaction_id'], $d);
+                $this->handleFee($res['value'], $res['unique_name'], $transaction_id, $d);
                 Db::commit();
                 WxTemp::notifyFee($res['openid'],
                     $res['unique_name'],
-                    intval($data['total_fee']) / 100,
+                    intval($total_fee) / 100,
                     FeeOper::cache_fee($res['unique_name']),
                     $res['label']);
             }
