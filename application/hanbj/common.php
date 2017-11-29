@@ -19,6 +19,8 @@ class MemberOper
     const NORMAL = 0;
     const BANNED = 1;
     const FREEZE = 2;
+    const TEMPUSE = 3;
+    const JUNIOR = 4;
 
     public static function trans($v)
     {
