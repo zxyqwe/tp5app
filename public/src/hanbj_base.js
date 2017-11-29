@@ -40,7 +40,7 @@ var home = (function ($, w, undefined) {
             case '-1':
                 return '空号';
             case '0':
-                return '正常';
+                return '实名';
             case '1':
                 return '注销';
             case '2':
