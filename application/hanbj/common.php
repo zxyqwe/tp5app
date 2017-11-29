@@ -15,6 +15,7 @@ use think\exception\HttpResponseException;
 
 class MemberOper
 {
+    const UNUSED = -1;
     const NORMAL = 0;
     const BANNED = 1;
     const FREEZE = 2;
