@@ -65,20 +65,7 @@ class Mobile extends Controller
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
         session('member_code', $res['code']);
-        switch ($res['code']) {
-            case MemberOper::NORMAL:
-                $res['code'] = '正常';
-                break;
-            case MemberOper::BANNED:
-                $res['code'] = '<span class="temp-text">注销</span>';
-                break;
-            case MemberOper::FREEZE:
-                $res['code'] = '<span class="temp-text">停机保号</span>';
-                break;
-            default:
-                $res['code'] = '异常：' . $res['code'];
-                break;
-        }
+        $res['code'] = MemberOper::trans($res['code']);
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
         $card = Db::table('card')

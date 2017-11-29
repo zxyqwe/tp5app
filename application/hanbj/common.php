@@ -19,6 +19,20 @@ class MemberOper
     const NORMAL = 0;
     const BANNED = 1;
     const FREEZE = 2;
+
+    public static function trans($v)
+    {
+        switch ($v) {
+            case MemberOper::NORMAL:
+                return '正常';
+            case MemberOper::BANNED:
+                return '<span class="temp-text">注销</span>';
+            case MemberOper::FREEZE:
+                return '<span class="temp-text">停机保号</span>';
+            default:
+                return '异常：' . $v;
+        }
+    }
 }
 
 class FeeOper
