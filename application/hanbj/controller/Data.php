@@ -141,6 +141,7 @@ class Data extends Controller
     public function json_tree()
     {
         $map['f.master'] = ['neq', ''];
+        $map['f.code'] = ['neq', MemberOper::UNUSED];
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
@@ -162,7 +163,7 @@ class Data extends Controller
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $search = input('get.search');
-        $map['code'] = ['NEQ', MemberOper::UNUSED];
+        $map['code'] = ['neq', MemberOper::UNUSED];
         if (!empty($search)) {
             $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
         }
@@ -245,6 +246,7 @@ class Data extends Controller
             return json();
         }
         $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
+        $map['code'] = ['not in', [MemberOper::UNUSED, MemberOper::TEMPUSE]];
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
