@@ -75,7 +75,10 @@ class Index extends Controller
             $par = input('post.par');
             $chi = input('post.chi');
             $data = intval($data);
-            $dir = LOG_PATH . DIRECTORY_SEPARATOR . intval($par) . DIRECTORY_SEPARATOR . intval($chi) . '.log';
+            if (!is_int($par) || !is_int($chi)) {
+                return json(['msg' => $par . '-' . $chi], 400);
+            }
+            $dir = LOG_PATH . DIRECTORY_SEPARATOR . $par . DIRECTORY_SEPARATOR . $chi . '.log';
             if (!is_file($dir)) {
                 return json(['msg' => $dir], 400);
             }
