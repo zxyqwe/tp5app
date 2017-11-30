@@ -189,6 +189,25 @@ class MemberOper
 
     public static function Junior2Normal($unique_name, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
     {
+        $map['code'] = self::JUNIOR;
+        $map['unique_name'] = $unique_name;
+        $data['code'] = self::NORMAL;
+        $data['gender'] = $gender;
+        $data['phone'] = $phone;
+        $data['QQ'] = $QQ;
+        $data['master'] = $master;
+        $data['eid'] = $eid;
+        $data['rn'] = $rn;
+        $data['mail'] = $mail;
+        try {
+            $ret = Db::table('member')
+                ->where($map)
+                ->update($data);
+            trace("$unique_name NORMAL $ret");
+            return $ret == 1;
+        } catch (\Exception $e) {
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
     }
 
     public static function Normal2Freeze($unique_name)
