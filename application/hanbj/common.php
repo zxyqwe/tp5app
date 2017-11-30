@@ -70,7 +70,10 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
+        echo json_encode($unique);
+        echo json_encode($already);
         $unique = array_diff($unique, $already);
+        echo json_encode($unique);
         $data = [];
         foreach ($unique as $u) {
             $data[] = [
@@ -79,9 +82,10 @@ class MemberOper
                 'code' => self::UNUSED
             ];
         }
+        echo json_encode($data);
         $ret = Db::table('member')
             ->insertAll($data);
-        return ['g' => $unique, 'r' => $ret];
+        return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
     }
 
     public function list_unused()
