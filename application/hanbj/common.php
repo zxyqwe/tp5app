@@ -15,12 +15,27 @@ use think\exception\HttpResponseException;
 
 class MemberOper
 {
+    /*
+     * id, unique_name, code, year_time, openid, bonus 自动
+     * tieba_id 人写
+     * gender, phone, QQ, master, eid, rn, mail 人工后台
+     * pref, web_name 随便
+     * */
     const UNUSED = -1;
     const NORMAL = 0;
     const BANNED = 1;
     const FREEZE = 2;
     const TEMPUSE = 3;
     const JUNIOR = 4;
+    const CYCLE = [
+        "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
+        "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
+        "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳",
+        "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯",
+        "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
+        "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
+    ];
+    const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏"];
 
     public static function trans($v)
     {
@@ -36,6 +51,27 @@ class MemberOper
             default:
                 return '<span class="temp-text">异常：' . $v . '</span>';
         }
+    }
+
+    public function create_unique()
+    {
+        $unique = [];
+        foreach (self::GROUP as $x) {
+            foreach (self::CYCLE as $y) {
+                $unique[] = "$x$y";
+            }
+        }
+        $map['unique_name'] = ['in', $unique];
+        $ret = Db::table('member')
+            ->where($map)
+            ->field('unique_name  as u')
+            ->select();
+        $already = [];
+        foreach ($ret as $i) {
+            $already[] = $i['u'];
+        }
+        $unique = array_diff($unique, $already);
+        return $unique;
     }
 
     public static function Unused2Temp()

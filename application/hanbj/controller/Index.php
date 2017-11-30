@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\LogUtil;
+use app\hanbj\MemberOper;
 use app\hanbj\WxHanbj;
 use app\hanbj\WxOrg;
 use think\Controller;
@@ -143,5 +144,12 @@ class Index extends Controller
             'trn' => $dict
         ];
         return view('test', ['data' => json_encode($ans)]);
+    }
+
+    public function debug()
+    {
+        $m = new MemberOper();
+        $ret = $m->create_unique();
+        return json($ret);
     }
 }
