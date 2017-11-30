@@ -80,7 +80,7 @@ class MemberOper
             ];
         }
         $ret = Db::table('member')
-            ->insert($data);
+            ->insertAll($data);
         return ['g' => $unique, 'r' => $ret];
     }
 
