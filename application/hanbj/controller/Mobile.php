@@ -146,8 +146,7 @@ class Mobile extends Controller
             return json(['msg' => '用户锁住'], 400);
         }
         $uniq = session('unique_name');
-        $fee = FeeOper::cache_fee($uniq) < date('Y');
-        if ($fee) {
+        if (FeeOper::owe($uniq)) {
             return json(['msg' => '欠费'], 400);
         }
         $tempid = 0;
