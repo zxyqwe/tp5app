@@ -53,7 +53,7 @@ class MemberOper
         }
     }
 
-    public function create_unique_unused()
+    public static function create_unique_unused()
     {
         $unique = [];
         foreach (self::GROUP as $x) {
@@ -87,7 +87,7 @@ class MemberOper
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
     }
 
-    public function list_unused()
+    public static function list_unused()
     {
         $map['code'] = MemberOper::UNUSED;
         $ret = Db::table('member')
@@ -101,8 +101,86 @@ class MemberOper
         return $already;
     }
 
-    public static function Unused2Temp()
+    public static function Unused2Temp($unique_name, $tieba_id, $openid)
     {
+        $ca = "Unused2Temp$unique_name";
+        $map['code'] = self::UNUSED;
+        $map['unique_name'] = $unique_name;
+        $data['code'] = self::TEMPUSE;
+        $data['tieba_id'] = $tieba_id;
+        $data['year_time'] = date('Y');
+        $data['openid'] = $openid;
+        try {
+            $ret = Db::table('member')
+                ->where($map)
+                ->update($data);
+            if ($ret === 1) {
+                $name = "$unique_name TEMPUSE $ret";
+                trace($name);
+                cache($ca, 2 * 86400);
+                return true;
+            }
+            return false;
+        } catch (\Exception $e) {
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
+    }
+
+    public static function Temp2($unique_name)
+    {
+        $map['unique_name'] = $unique_name;
+        $map['code'] = self::UNUSED;
+        $ret = Db::table('member')
+            ->where($map)
+            ->field('year_time as y')
+            ->find();
+        $fee = FeeOper::cache_fee($unique_name);
+        if ($fee >= $ret['u']) {
+            return self::Temp2Junior($unique_name);
+        } else {
+            return self::Temp2Unused($unique_name);
+        }
+    }
+
+    private static function Temp2Unused($unique_name)
+    {
+        $ca = "?Unused2Temp$unique_name";
+        if (cache($ca)) {
+            return true;
+        }
+        $map['code'] = self::TEMPUSE;
+        $map['unique_name'] = $unique_name;
+        $data['code'] = self::UNUSED;
+        $data['tieba_id'] = $unique_name;
+        try {
+            $ret = Db::table('member')
+                ->where($map)
+                ->update($data);
+            if ($ret === 1) {
+                $name = "$unique_name UNUSED $ret";
+                trace($name);
+                return true;
+            }
+            return false;
+        } catch (\Exception $e) {
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
+    }
+
+    private static function Temp2Junior($unique_name)
+    {
+        $map['code'] = self::TEMPUSE;
+        $map['unique_name'] = $unique_name;
+        $data['code'] = self::JUNIOR;
+        try {
+            $ret = Db::table('member')
+                ->where($map)
+                ->update($data);
+            trace("$unique_name JUNIOR $ret");
+            return $ret == 1;
+        } catch (\Exception $e) {
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
     }
 }
 
