@@ -4,26 +4,28 @@
         <h1>登记会员</h1>
         <div id="body">
             ToDo create
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `tieba_id` varchar(45) NOT NULL,
-            `gender` varchar(4) NOT NULL,
-            `phone` varchar(45) NOT NULL,
-            `QQ` varchar(45) NOT NULL,
-            `unique_name` varchar(8) NOT NULL,
-            `master` varchar(45) NOT NULL,
-            `eid` varchar(45) NOT NULL DEFAULT '?',
-            `rn` varchar(45) NOT NULL DEFAULT '?',
-            `mail` varchar(45) NOT NULL,
-            `pref` varchar(45) NOT NULL,
-            `web_name` varchar(45) NOT NULL,
-            `code` tinyint(4) NOT NULL DEFAULT '0',
-            `year_time` int(11) NOT NULL DEFAULT '2013',
-            `openid` varchar(255) DEFAULT NULL,
-            `bonus` int(11) NOT NULL,
-            PRIMARY KEY (`id`),
-            UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
-            UNIQUE KEY `t_uniq` (`tieba_id`),
-            UNIQUE KEY `openid_name` (`openid`)
+            <p>
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `tieba_id` varchar(45) NOT NULL,
+                `gender` varchar(4) NOT NULL,
+                `phone` varchar(45) NOT NULL,
+                `QQ` varchar(45) NOT NULL,
+                `unique_name` varchar(8) NOT NULL,
+                `master` varchar(45) NOT NULL,
+                `eid` varchar(45) NOT NULL DEFAULT '?',
+                `rn` varchar(45) NOT NULL DEFAULT '?',
+                `mail` varchar(45) NOT NULL,
+                `pref` varchar(45) NOT NULL,
+                `web_name` varchar(45) NOT NULL,
+                `code` tinyint(4) NOT NULL DEFAULT '0',
+                `year_time` int(11) NOT NULL DEFAULT '2013',
+                `openid` varchar(255) DEFAULT NULL,
+                `bonus` int(11) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
+                UNIQUE KEY `t_uniq` (`tieba_id`),
+                UNIQUE KEY `openid_name` (`openid`)
+            </p>
         </div>
     </div>
 </div>
