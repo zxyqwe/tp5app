@@ -105,7 +105,7 @@ class MemberOper
     public static function daily()
     {
         $name = "MemberOper::daily()";
-        if ("?$name") {
+        if (cache("?$name")) {
             return;
         }
         cache($name, $name, 86300);
