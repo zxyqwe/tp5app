@@ -303,6 +303,9 @@ class MemberOper
 
     private static function Banned2Normal($unique_name)
     {
+        if (FeeOper::cache_fee($unique_name) < intval(date('Y')) + 2) {
+            return false;
+        }
         $map['code'] = self::BANNED;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::NORMAL;
