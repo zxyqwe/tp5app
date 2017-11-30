@@ -70,10 +70,10 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
-        echo json_encode($unique);
-        echo json_encode($already);
         $unique = array_diff($unique, $already);
-        echo json_encode($unique);
+        if (count($unique) == 0) {
+            return ['g' => [], 'r' => 0, 'l' => 0];
+        }
         $data = [];
         foreach ($unique as $u) {
             $data[] = [
@@ -82,7 +82,6 @@ class MemberOper
                 'code' => self::UNUSED
             ];
         }
-        echo json_encode($data);
         $ret = Db::table('member')
             ->insertAll($data);
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
