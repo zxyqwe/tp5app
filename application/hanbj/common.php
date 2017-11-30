@@ -16,8 +16,8 @@ use think\exception\HttpResponseException;
 class MemberOper
 {
     /*
-     * id, unique_name, code, year_time, openid, bonus 自动
-     * tieba_id 人写
+     * id, !!unique_name, code, bonus 自动
+     * !!tieba_id year_time !!openid人写
      * gender, phone, QQ, master, eid, rn, mail 人工后台
      * pref, web_name 随便
      * */
@@ -53,7 +53,7 @@ class MemberOper
         }
     }
 
-    public function create_unique()
+    public function create_unique_unused()
     {
         $unique = [];
         foreach (self::GROUP as $x) {
@@ -71,7 +71,22 @@ class MemberOper
             $already[] = $i['u'];
         }
         $unique = array_diff($unique, $already);
-        return $unique;
+        $data = [];
+        foreach ($unique as $u) {
+            $data[] = [
+                'unique_name' => $u,
+                'tieba_id' => $u,
+                'code' => self::UNUSED
+            ];
+        }
+        $ret = Db::table('member')
+            ->insert($data);
+        return ['g' => $unique, 'r' => $ret];
+    }
+
+    public function list_unused()
+    {
+
     }
 
     public static function Unused2Temp()
