@@ -278,7 +278,7 @@ class MemberOper
 
     private static function Normal2Banned($unique_name)
     {
-        if (FeeOper::cache_fee($unique_name) >= intval(date('Y')) - 1) {
+        if (FeeOper::cache_fee($unique_name) >= intval(date('Y')) - 2) {
             return false;
         }
         $map['code'] = self::NORMAL;
@@ -649,6 +649,15 @@ class CardOper
             return;
         }
         self::update('未选择', $code, 0, 0, '未选择');
+    }
+
+    public static function common($uname)
+    {
+        $code = self::U2Card($uname);
+        if (null === $code) {
+            return;
+        }
+        self::update($uname, $code, 0, 0, '激活');
     }
 
     public static function update($uni, $card, $add_b, $b, $msg)
