@@ -148,8 +148,6 @@ class Index extends Controller
 
     public function debug()
     {
-        $m = new MemberOper();
-        $ret = $m->list_unused();
-        return json($ret);
+        MemberOper::daily();
     }
 }

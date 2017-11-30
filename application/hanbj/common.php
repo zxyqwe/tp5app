@@ -87,9 +87,9 @@ class MemberOper
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
     }
 
-    public static function list_unused()
+    public static function list_code($c)
     {
-        $map['code'] = MemberOper::UNUSED;
+        $map['code'] = $c;
         $ret = Db::table('member')
             ->where($map)
             ->field('unique_name  as u')
@@ -101,7 +101,31 @@ class MemberOper
         return $already;
     }
 
-    public static function Unused2Temp($unique_name, $tieba_id, $openid)
+    public static function daily()
+    {
+        $name = "MemberOper::daily()";
+        if ("?$name") {
+            return;
+        }
+        cache($name, $name, 86300);
+        $ret = self::list_code(self::TEMPUSE);
+        foreach ($ret as $i) {
+            $t = self::Temp2Unused($i);
+            if (!$t) {
+                self::Temp2Junior($i);
+            }
+        }
+        $ret = self::list_code(self::JUNIOR);
+        foreach ($ret as $i) {
+            self::Junior2Temp($i);
+        }
+        $ret = self::list_code(self::NORMAL);
+        foreach ($ret as $i) {
+            self::Normal2Banned($i);
+        }
+    }
+
+    private static function Unused2Temp($unique_name, $tieba_id, $openid)
     {
         $ca = "Unused2Temp$unique_name";
         $map['code'] = self::UNUSED;
@@ -117,14 +141,14 @@ class MemberOper
             if ($ret === 1) {
                 cache($ca, 2 * 86400);
             }
-            trace("$unique_name TEMPUSE $ret");
+            trace("$unique_name UNUSED TEMPUSE $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
-    public static function Temp2Unused($unique_name)
+    private static function Temp2Unused($unique_name)
     {
         $ca = "?Unused2Temp$unique_name";
         if (cache($ca)) {
@@ -141,7 +165,8 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name UNUSED $ret");
+            trace("$unique_name TEMPUSE UNUSED $ret");
+            FeeOper::clear($unique_name);
             CardOper::unuesd($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
@@ -149,7 +174,7 @@ class MemberOper
         }
     }
 
-    public static function Temp2Junior($unique_name)
+    private static function Temp2Junior($unique_name)
     {
         if (FeeOper::owe($unique_name)) {
             return false;
@@ -161,14 +186,14 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name JUNIOR $ret");
+            trace("$unique_name TEMPUSE JUNIOR $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
-    public static function Junior2Temp($unique_name)
+    private static function Junior2Temp($unique_name)
     {
         if (!FeeOper::owe($unique_name)) {
             return false;
@@ -180,14 +205,14 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name TEMPUSE $ret");
+            trace("$unique_name JUNIOR TEMPUSE $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
-    public static function Junior2Normal($unique_name, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
+    private static function Junior2Normal($unique_name, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
     {
         $map['code'] = self::JUNIOR;
         $map['unique_name'] = $unique_name;
@@ -203,14 +228,14 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name NORMAL $ret");
+            trace("$unique_name JUNIOR NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
-    public static function Normal2Freeze($unique_name)
+    private static function Normal2Freeze($unique_name)
     {
         $map['code'] = self::NORMAL;
         $map['unique_name'] = $unique_name;
@@ -219,7 +244,7 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name FREEZE $ret");
+            trace("$unique_name NORMAL FREEZE $ret");
             CardOper::freeze($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
@@ -227,7 +252,7 @@ class MemberOper
         }
     }
 
-    public static function Freeze2Normal($unique_name)
+    private static function Freeze2Normal($unique_name)
     {
         $map['code'] = self::FREEZE;
         $map['unique_name'] = $unique_name;
@@ -236,14 +261,14 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name NORMAL $ret");
+            trace("$unique_name FREEZE NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
-    public static function Normal2Banned($unique_name)
+    private static function Normal2Banned($unique_name)
     {
         if (FeeOper::cache_fee($unique_name) >= intval(date('Y')) - 1) {
             return false;
@@ -255,7 +280,7 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name BANNED $ret");
+            trace("$unique_name NORMAL BANNED $ret");
             CardOper::banned($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
@@ -263,7 +288,7 @@ class MemberOper
         }
     }
 
-    public static function Banned2Normal($unique_name)
+    private static function Banned2Normal($unique_name)
     {
         $map['code'] = self::BANNED;
         $map['unique_name'] = $unique_name;
@@ -272,7 +297,7 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name NORMAL $ret");
+            trace("$unique_name BANNED NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -312,6 +337,17 @@ class FeeOper
     public static function owe($uname)
     {
         return self::cache_fee($uname) < date('Y');
+    }
+
+    public static function clear($uname)
+    {
+        trace("Fee Clear $uname");
+        $map['unique_name'] = $uname;
+        $data['unique_name'] = $uname . date("Y-m-d H:i:s");
+        Db::table('nfee')
+            ->where($map)
+            ->update($data);
+        self::uncache($uname);
     }
 
     public static function uncache($uname)
