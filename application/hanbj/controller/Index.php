@@ -149,7 +149,7 @@ class Index extends Controller
     public function debug()
     {
         $m = new MemberOper();
-        $ret = $m->create_unique_unused();
+        $ret = $m->list_unused();
         return json($ret);
     }
 }

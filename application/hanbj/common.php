@@ -89,7 +89,16 @@ class MemberOper
 
     public function list_unused()
     {
-
+        $map['code'] = MemberOper::UNUSED;
+        $ret = Db::table('member')
+            ->where($map)
+            ->field('unique_name  as u')
+            ->select();
+        $already = [];
+        foreach ($ret as $i) {
+            $already[] = $i['u'];
+        }
+        return $already;
     }
 
     public static function Unused2Temp()
