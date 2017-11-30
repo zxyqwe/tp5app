@@ -120,6 +120,10 @@ class MemberOper
         foreach ($ret as $i) {
             self::Junior2Temp($i);
         }
+        $ret = self::list_code(self::BANNED);
+        foreach ($ret as $i) {
+            self::Banned2Normal($i);
+        }
         $ret = self::list_code(self::NORMAL);
         foreach ($ret as $i) {
             self::Normal2Banned($i);
