@@ -139,6 +139,7 @@ class MemberOper
         $data['tieba_id'] = $tieba_id;
         $data['year_time'] = date('Y');
         $data['openid'] = $openid;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -167,6 +168,7 @@ class MemberOper
         $map['unique_name'] = $unique_name;
         $data['code'] = self::UNUSED;
         $data['tieba_id'] = $unique_name;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -189,6 +191,7 @@ class MemberOper
         $map['code'] = self::TEMPUSE;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::JUNIOR;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -209,6 +212,7 @@ class MemberOper
         $map['code'] = self::JUNIOR;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::TEMPUSE;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -233,6 +237,7 @@ class MemberOper
         $data['eid'] = $eid;
         $data['rn'] = $rn;
         $data['mail'] = $mail;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -250,6 +255,7 @@ class MemberOper
         $map['code'] = self::NORMAL;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::FREEZE;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -268,6 +274,7 @@ class MemberOper
         $map['code'] = self::FREEZE;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::NORMAL;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -288,6 +295,7 @@ class MemberOper
         $map['code'] = self::NORMAL;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::BANNED;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -309,6 +317,7 @@ class MemberOper
         $map['code'] = self::BANNED;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::NORMAL;
+        $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
                 ->where($map)
