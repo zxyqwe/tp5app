@@ -40,13 +40,13 @@ class MemberOper
     public static function trans($v)
     {
         switch ($v) {
-            case MemberOper::NORMAL:
+            case self::NORMAL:
                 return '实名';
-            case MemberOper::UNUSED:
+            case self::UNUSED:
                 return '<span class="temp-text">空号</span>';
-            case MemberOper::BANNED:
+            case self::BANNED:
                 return '<span class="temp-text">注销</span>';
-            case MemberOper::FREEZE:
+            case self::FREEZE:
                 return '<span class="temp-text">停机保号</span>';
             default:
                 return '<span class="temp-text">异常：' . $v . '</span>';
@@ -115,12 +115,10 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             if ($ret === 1) {
-                $name = "$unique_name TEMPUSE $ret";
-                trace($name);
                 cache($ca, 2 * 86400);
-                return true;
             }
-            return false;
+            trace("$unique_name TEMPUSE $ret");
+            return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -143,12 +141,9 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            if ($ret === 1) {
-                $name = "$unique_name UNUSED $ret";
-                trace($name);
-                return true;
-            }
-            return false;
+            trace("$unique_name UNUSED $ret");
+            CardOper::unuesd($unique_name);
+            return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -206,6 +201,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name FREEZE $ret");
+            CardOper::freeze($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -241,6 +237,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name BANNED $ret");
+            CardOper::banned($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -282,6 +279,9 @@ class FeeOper
                 'sum(f.code) as n'
             ])
             ->find();
+        if (null === $res) {
+            return 0;
+        }
         $year = Db::table('member')
             ->where($map)
             ->value('year_time');
@@ -541,6 +541,51 @@ class CardOper
 
 }
     */
+    private static function U2Card($uname)
+    {
+        $map['m.unique_name'] = $uname;
+        $join = [
+            ['card c', 'm.openid=c.openid', 'left']
+        ];
+        $ret = Db::table('member')
+            ->alias('m')
+            ->where($map)
+            ->join($join)
+            ->field('c.code')
+            ->find();
+        if (null === $ret) {
+            return null;
+        }
+        return $ret['code'];
+    }
+
+    public static function banned($uname)
+    {
+        $code = self::U2Card($uname);
+        if (null === $code) {
+            return;
+        }
+        self::update('注销', $code, 0, 0, '注销');
+    }
+
+    public static function freeze($uname)
+    {
+        $code = self::U2Card($uname);
+        if (null === $code) {
+            return;
+        }
+        self::update('停机', $code, 0, 0, '停机');
+    }
+
+    public static function unuesd($uname)
+    {
+        $code = self::U2Card($uname);
+        if (null === $code) {
+            return;
+        }
+        self::update('未选择', $code, 0, 0, '未选择');
+    }
+
     public static function update($uni, $card, $add_b, $b, $msg)
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
