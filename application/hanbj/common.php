@@ -115,9 +115,9 @@ class MemberOper
         cache($name, $name, 86300);
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
-            $t = self::Temp2Unused($i);
+            $t = self::Temp2Junior($i);
             if (!$t) {
-                self::Temp2Junior($i);
+                self::Temp2Unused($i);
             }
         }
         $ret = self::list_code(self::JUNIOR);
