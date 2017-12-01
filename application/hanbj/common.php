@@ -232,11 +232,15 @@ class MemberOper
         }
     }
 
-    private static function Junior2Normal($unique_name, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
+    public static function Junior2Normal($unique_name, $tieba_id, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
     {
+        if (FeeOper::owe($unique_name)) {
+            return false;
+        }
         $map['code'] = self::JUNIOR;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::NORMAL;
+        $data['tieba_id'] = $tieba_id;
         $data['gender'] = $gender;
         $data['phone'] = $phone;
         $data['QQ'] = $QQ;
@@ -250,6 +254,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name JUNIOR NORMAL $ret");
+            trace(json_encode($data));
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();

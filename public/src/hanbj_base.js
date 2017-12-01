@@ -76,6 +76,7 @@ var nav_active = (function ($, w, undefined) {
         w.u12 = base + index + 'runlog/data/';
         w.u13 = base + data + 'list_act';
         w.u14 = base + data + 'json_birth';
+        w.u15 = base + data + 'create';
     };
     var init = function () {
         dict();

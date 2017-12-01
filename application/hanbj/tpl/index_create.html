@@ -82,8 +82,11 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-default" v-on:click="sub()">提交</button>
+                    <div class="col-sm-offset-2 col-sm-3">
+                        <button class="btn btn-default btn-block" v-on:click="sub()">提交</button>
+                    </div>
+                    <div class="col-sm-offset-1 col-sm-3">
+                        <button class="btn btn-success btn-block" v-on:click="clr()">重置</button>
                     </div>
                 </div>
             </div>
@@ -131,12 +134,14 @@
                         this.uni = item.u;
                         this.tie = item.t;
                         this.s = true;
+                    }, clr: function () {
+                        clear();
                     },
                     sub: function () {
                         w.waitloading();
                         $.ajax({
                             type: "POST",
-                            url: 'debug',
+                            url: w.u15,
                             dataType: "json",
                             data: {
                                 uni: vmain.uni,
@@ -166,7 +171,7 @@
                 w.waitloading();
                 $.ajax({
                     type: "GET",
-                    url: w.u1,
+                    url: w.u15,
                     dataType: "json",
                     data: {
                         name: nv

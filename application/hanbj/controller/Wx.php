@@ -175,9 +175,8 @@ class Wx extends Controller
                 $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
                 if ($ret) {
                     return json(['msg' => 'ok']);
-                } else {
-                    return json(['msg' => '会员编号没抢到'], 400);
                 }
+                return json(['msg' => '会员编号没抢到'], 400);
             default:
                 return json(['msg' => $this->request->method()], 400);
         }

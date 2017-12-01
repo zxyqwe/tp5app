@@ -513,4 +513,49 @@ class Data extends Controller
         }
         return json($ret);
     }
+
+    public function create()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                $name = input('get.name');
+                if (empty($name)) {
+                    return json();
+                }
+                $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
+                $map['code'] = MemberOper::TEMPUSE;
+                $tmp = Db::table('member')
+                    ->alias('f')
+                    ->where($map)
+                    ->order('f.id')
+                    ->limit(10)
+                    ->field([
+                        'f.tieba_id as t',
+                        'f.unique_name as u',
+                    ])
+                    ->cache(600)
+                    ->select();
+                return json($tmp);
+            case 'POST':
+                $uni = input('post.uni');
+                $tie = input('post.tie');
+                $gender = input('post.gender');
+                $phone = input('post.phone', 0, FILTER_VALIDATE_INT);
+                $QQ = input('post.QQ', 0, FILTER_VALIDATE_INT);
+                $eid = input('post.eid');
+                $rn = input('post.rn');
+                $mail = input('post.mail', 0, FILTER_VALIDATE_EMAIL);
+                $map['name'] = session('name');
+                $ret = Db::table('user')
+                    ->where($map)
+                    ->value('peo');
+                $ret = MemberOper::Junior2Normal($uni, $tie, $gender, $phone, $QQ, $ret, $eid, $rn, $mail);
+                if ($ret) {
+                    return json(['msg' => 'ok']);
+                }
+                return json(['msg' => '失败'], 400);
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
+    }
 }
