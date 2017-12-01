@@ -157,6 +157,7 @@ class MemberOper
                 cache($ca, 2 * 86400);
             }
             trace("$unique_name UNUSED TEMPUSE $ret");
+            CardOper::common($unique_name, '临时抢号');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -211,6 +212,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name TEMPUSE JUNIOR $ret");
+            CardOper::common($unique_name, '初级会员');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -233,6 +235,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name JUNIOR TEMPUSE $ret");
+            CardOper::common($unique_name, '临时抢号');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -264,6 +267,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name JUNIOR NORMAL $ret");
             trace(json_encode($data));
+            CardOper::common($unique_name, '实名会员');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -303,6 +307,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name FREEZE NORMAL $ret");
+            CardOper::common($unique_name, '实名会员');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -348,6 +353,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name BANNED NORMAL $ret");
+            CardOper::common($unique_name, '实名会员');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -693,13 +699,13 @@ class CardOper
         self::update('未选择', $code, 0, 0, '未选择');
     }
 
-    public static function common($uname)
+    public static function common($uname, $msg)
     {
         $code = self::U2Card($uname);
         if (null === $code) {
             return;
         }
-        self::update($uname, $code, 0, 0, '激活');
+        self::update($uname, $code, 0, 0, "激活为：$msg");
     }
 
     public static function update($uni, $card, $add_b, $b, $msg)
