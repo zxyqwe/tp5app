@@ -77,11 +77,9 @@
             });
         };
         var assm_data = function (data) {
-            console.log(data);
             var adata = [], c0, c1, s0, s1;
             for (var i in data) {
                 var tmp = data[i];
-                console.log(tmp);
                 if (tmp[0] !== s0) {
                     adata.push(c0);
                     c0 = {
@@ -104,7 +102,6 @@
             }
             c0.children.push(c1);
             adata.push(c0);
-            console.log(adata);
             return adata;
         };
         var get_unused = function () {
