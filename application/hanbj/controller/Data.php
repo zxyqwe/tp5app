@@ -141,7 +141,7 @@ class Data extends Controller
     public function json_tree()
     {
         $map['f.master'] = ['neq', ''];
-        $map['f.code'] = ['neq', MemberOper::UNUSED];
+        $map['f.code'] = ['not in', [MemberOper::UNUSED, MemberOper::JUNIOR, MemberOper::TEMPUSE]];
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
