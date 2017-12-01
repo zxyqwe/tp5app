@@ -82,11 +82,11 @@
                 var tmp = data[i];
                 if (tmp[0] === s0) {
                     if (tmp[1] === s1) {
-                        c1.children.append({
+                        c1.children.push({
                             label: tmp[2]
                         });
                     } else {
-                        c0.append(c1);
+                        c0.push(c1);
                         c1 = [{
                             label: tmp[1],
                             children: [{
@@ -96,7 +96,7 @@
                         s1 = tmp[1];
                     }
                 } else {
-                    adata.append(c0);
+                    adata.push(c0);
                     c0 = [{
                         label: tmp[0],
                         children: [{
@@ -117,7 +117,6 @@
                 dataType: "json",
                 success: function (msg) {
                     un_data = assm_data(msg.data);
-                    vue_init();
                 },
                 error: function (msg) {
                     msg = JSON.parse(msg.responseText);
@@ -127,6 +126,7 @@
                     w.cancelloading();
                 }
             });
+            vue_init();
         };
         var vue_init = function () {
             vmain = new Vue({
