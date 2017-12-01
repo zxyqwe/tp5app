@@ -37,6 +37,11 @@ class MemberOper
     ];
     const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏"];
 
+    public static function getMember()
+    {
+        return [self::JUNIOR, self::NORMAL];
+    }
+
     public static function trans($v)
     {
         switch ($v) {

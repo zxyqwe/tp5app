@@ -36,7 +36,7 @@ class Work extends Controller
             $code = 0;
         }
         $map['f.code'] = $code;
-        $map['m.code'] = MemberOper::NORMAL;
+        $map['m.code'] = ['in', MemberOper::getMember()];
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];
@@ -66,7 +66,7 @@ class Work extends Controller
             $code = 0;
         }
         $map['f.code'] = $code;
-        $map['m.code'] = MemberOper::NORMAL;
+        $map['m.code'] = ['in', MemberOper::getMember()];
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];
