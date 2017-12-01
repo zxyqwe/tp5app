@@ -69,6 +69,7 @@ class Index extends Controller
 
     public function runlog($data = -1)
     {
+        MemberOper::daily();
         if (session('name') !== 'zxyqwe') {
             return redirect('/hanbj/index/home');
         }
@@ -148,6 +149,5 @@ class Index extends Controller
 
     public function debug()
     {
-        MemberOper::daily();
     }
 }
