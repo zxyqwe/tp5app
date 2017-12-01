@@ -4,24 +4,27 @@
         <p class="page__desc">选号</p>
     </div>
     <div class="page__bd page__bd_spacing" id="vmain">
-        <div class="weui-cells__title">请选择会员号码，并填写昵称。临时会员身份仅保留2天，请尽快完成正式缴费。</div>
+        <div class="weui-cells__title">
+            1、请选择会员号码，并填写昵称。<br>
+            2、临时会员身份仅保留2天，请尽快完成正式缴费。<br>
+            3、昵称不可修改。
+        </div>
         <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
+            <div class="weui-cell weui-cell_access" v-on:click="uni()" href="javascript:">
                 <div class="weui-cell__hd">
                     <label class="weui-label">会员编号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <div v-on:click="uni()">
-                        {{ unique_name }}
-                    </div>
+                    {{ unique_name }}
                 </div>
+                <div class="weui-cell__ft">请选择</div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">昵称</label>
                 </div>
                 <div class="weui-cell__bd">
-                    <input class="weui-input" type="text" v-model="tie">
+                    <input class="weui-input" type="text" v-model="tie" placeholder="请输入">
                 </div>
             </div>
         </div>
@@ -42,14 +45,18 @@
     var wx_New = (function ($, Vue, w, undefined) {
         'use strict';
         var $weuiAgree, vmain, un_data;
+        var get_res = function (res) {
+            res = res[0].label + res[1].label + res[2].label;
+            vmain.unique_name = res;
+        };
         var picker = function () {
             weui.picker(un_data, {
                 container: 'body',
                 onChange: function (result) {
-                    console.log(result)
+                    get_res(result);
                 },
                 onConfirm: function (result) {
-                    console.log(result)
+                    get_res(result);
                 }
             });
         };
@@ -81,7 +88,9 @@
             for (var i in data) {
                 var tmp = data[i];
                 if (tmp[0] !== s0) {
-                    adata.push(c0);
+                    if (c0 !== undefined) {
+                        adata.push(c0);
+                    }
                     c0 = {
                         label: tmp[0],
                         children: []
@@ -89,7 +98,9 @@
                     s0 = tmp[0];
                 }
                 if (tmp[1] !== s1) {
-                    c0.children.push(c1);
+                    if (c1 !== undefined) {
+                        c0.children.push(c1);
+                    }
                     c1 = {
                         label: tmp[1],
                         children: []
@@ -138,6 +149,9 @@
                         var weagree = $weuiAgree.prop('checked');
                         if (!weagree) {
                             w.msgto('请阅读并同意《相关条款》');
+                            return;
+                        }
+                        if (this.unique_name.length === 0 || this.tie.length === 0) {
                             return;
                         }
                         submit();
