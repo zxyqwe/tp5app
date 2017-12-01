@@ -212,7 +212,7 @@ class MemberOper
 
     private static function Junior2Temp($unique_name)
     {
-        if (!FeeOper::owe($unique_name)) {
+        if (!FeeOper::owe($unique_name, -1)) {
             return false;
         }
         $map['code'] = self::JUNIOR;
@@ -299,7 +299,7 @@ class MemberOper
 
     private static function Normal2Banned($unique_name)
     {
-        if (FeeOper::cache_fee($unique_name) >= intval(date('Y')) - 2) {
+        if (!FeeOper::owe($unique_name, -2)) {
             return false;
         }
         $map['code'] = self::NORMAL;
@@ -322,7 +322,7 @@ class MemberOper
 
     private static function Banned2Normal($unique_name)
     {
-        if (FeeOper::cache_fee($unique_name) < intval(date('Y')) + 2) {
+        if (FeeOper::owe($unique_name, 2)) {
             return false;
         }
         $map['code'] = self::BANNED;
@@ -372,9 +372,9 @@ class FeeOper
         return $fee;
     }
 
-    public static function owe($uname)
+    public static function owe($uname, $off = 0)
     {
-        return self::cache_fee($uname) < date('Y');
+        return self::cache_fee($uname) < intval(date('Y')) + $off;
     }
 
     public static function clear($uname)
