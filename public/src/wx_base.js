@@ -275,6 +275,7 @@ var wx_init = (function ($, w, undefined) {
         w.u12 = hanbj + wx + 'order';
         w.u13 = hanbj + mobile + 'json_old';
         w.u14 = hanbj + mobile + 'change';
+        w.u15 = hanbj + wx + 'unused';
     };
     var init = function (jssign) {
         dict();

@@ -130,7 +130,7 @@ class MemberOper
         }
     }
 
-    private static function Unused2Temp($unique_name, $tieba_id, $openid)
+    public static function Unused2Temp($unique_name, $tieba_id, $openid)
     {
         $ca = "Unused2Temp$unique_name";
         $map['code'] = self::UNUSED;

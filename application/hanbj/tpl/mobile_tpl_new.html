@@ -1,0 +1,161 @@
+<div class="page">
+    <div class="page__hd">
+        <h1 class="page__title">临时会员</h1>
+        <p class="page__desc">选号</p>
+    </div>
+    <div class="page__bd page__bd_spacing" id="vmain">
+        <div class="weui-cells__title">请选择会员号码，并填写昵称。临时会员身份仅保留2天，请尽快完成正式缴费。</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">会员编号</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <div v-on:click="uni()">
+                        {{ unique_name }}
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">昵称</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" v-model="tie">
+                </div>
+            </div>
+        </div>
+        <label for="weuiAgree" class="weui-agree">
+            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+            <span class="weui-agree__text">
+                阅读并同意<a href="#rules">《注册须知》</a>
+            </span>
+        </label>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="sub()">确定</a>
+        </div>
+    </div>
+    <div class="page__ft">
+    </div>
+</div>
+<script type="text/javascript">
+    var wx_New = (function ($, Vue, w, undefined) {
+        'use strict';
+        var $weuiAgree, vmain, un_data;
+        var picker = function () {
+            weui.picker(un_data, {
+                container: 'body',
+                onChange: function (result) {
+                    console.log(result)
+                },
+                onConfirm: function (result) {
+                    console.log(result)
+                }
+            });
+        };
+        var submit = function () {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u15,
+                data: {
+                    uni: vmain.unique_name,
+                    tie: vmain.tie
+                },
+                dataType: "json",
+                success: function (msg) {
+                    w.msgok();
+                    location.reload(true);
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        var assm_data = function (data) {
+            var adata = [], c0, c1, s0 = '', s1 = '';
+            for (var i in data) {
+                var tmp = data[i];
+                if (tmp[0] === s0) {
+                    if (tmp[1] === s1) {
+                        c1.children.append({
+                            label: tmp[2]
+                        });
+                    } else {
+                        c0.append(c1);
+                        c1 = [{
+                            label: tmp[1],
+                            children: [{
+                                label: tmp[2]
+                            }]
+                        }];
+                        s1 = tmp[1];
+                    }
+                } else {
+                    adata.append(c0);
+                    c0 = [{
+                        label: tmp[0],
+                        children: [{
+                            label: tmp[1]
+                        }]
+                    }];
+                    s0 = tmp[0];
+                }
+            }
+            console.log(adata);
+            return adata;
+        };
+        var get_unused = function () {
+            w.waitloading();
+            $.ajax({
+                type: "GET",
+                url: w.u15,
+                dataType: "json",
+                success: function (msg) {
+                    un_data = assm_data(msg.data);
+                    vue_init();
+                },
+                error: function (msg) {
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        var vue_init = function () {
+            vmain = new Vue({
+                el: '#vmain',
+                data: {
+                    unique_name: '',
+                    tie: ''
+                },
+                methods: {
+                    uni: function () {
+                        picker();
+                    },
+                    sub: function () {
+                        var weagree = $weuiAgree.prop('checked');
+                        if (!weagree) {
+                            w.msgto('请阅读并同意《相关条款》');
+                        }
+                        submit();
+                    }
+                }
+            });
+        };
+        var init = function () {
+            $weuiAgree = $('#weuiAgree');
+            get_unused();
+        };
+        return {
+            init: init
+        };
+    })(Zepto, Vue, window);
+    wx_New.init();
+</script>

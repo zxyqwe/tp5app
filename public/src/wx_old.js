@@ -27,6 +27,7 @@ var wx_Old = (function ($, w, undefined) {
                 },
                 dataType: "json",
                 success: function (msg) {
+                    w.msgok();
                     location.reload(true);
                 },
                 error: function (msg) {

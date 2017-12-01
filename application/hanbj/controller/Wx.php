@@ -151,4 +151,35 @@ class Wx extends Controller
         $hand->Handle(false);
         return '';
     }
+
+    public function unused()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                $ret = MemberOper::list_code(MemberOper::UNUSED);
+                $rst = [];
+                foreach ($ret as $i) {
+                    if (strpos($i, '夏') !== false) {
+                        $rst[] = $i;
+                    }
+                }
+                sort($rst);
+                return json(['data' => $rst]);
+            case 'POST':
+                $openid = session('openid');
+                $tieba_id = input('post.tie');
+                $unique_name = input('post.uni');
+                if (empty($tieba_id) || empty($unique_name)) {
+                    return json(['msg' => '名称错误'], 400);
+                }
+                $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
+                if ($ret) {
+                    return json(['msg' => 'ok']);
+                } else {
+                    return json(['msg' => '会员编号没抢到'], 400);
+                }
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
+    }
 }
