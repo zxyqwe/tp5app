@@ -3,33 +3,193 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>登记会员</h1>
         <div id="body">
-            ToDo create
-            <p>
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tieba_id` varchar(45) NOT NULL,
-                `gender` varchar(4) NOT NULL,
-                `phone` varchar(45) NOT NULL,
-                `QQ` varchar(45) NOT NULL,
-                `unique_name` varchar(8) NOT NULL,
-                `master` varchar(45) NOT NULL,
-                `eid` varchar(45) NOT NULL DEFAULT '?',
-                `rn` varchar(45) NOT NULL DEFAULT '?',
-                `mail` varchar(45) NOT NULL,
-                `pref` varchar(45) NOT NULL,
-                `web_name` varchar(45) NOT NULL,
-                `code` tinyint(4) NOT NULL DEFAULT '0',
-                `year_time` int(11) NOT NULL DEFAULT '2013',
-                `openid` varchar(255) DEFAULT NULL,
-                `bonus` int(11) NOT NULL,
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
-                UNIQUE KEY `t_uniq` (`tieba_id`),
-                UNIQUE KEY `openid_name` (`openid`)
-            </p>
+            <div class="form-horizontal" v-show="!s">
+                <div class="form-group">
+                    <label for="feesearch" class="col-sm-2 control-label">搜索</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="feesearch" placeholder="昵称或会员编号"
+                               v-model="uname" debounce="500">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-2">
+                    <table class="table table-bordered table-hover table-condensed">
+                        <tr v-for="item in candy">
+                            <td>{{ item.t }}</td>
+                            <td>{{ item.u }}</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-xs"
+                                        v-on:click="sel_candy(item)">选择
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="form-horizontal" v-show="s">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">会员编号</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static">{{ uni }}</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">昵称</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="" v-model="tie" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">性别</label>
+                    <div class="col-sm-10">
+                        <label class="radio-inline">
+                            <input type="radio" value="男" v-model="gender"> 男
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="女" v-model="gender"> 女
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" placeholder="" v-model="phone" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">QQ</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" placeholder="" v-model="QQ" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">身份证号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="" v-model="eid" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">真实姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" placeholder="" v-model="rn" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">邮箱</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" placeholder="" v-model="mail" debounce="500">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button class="btn btn-default" v-on:click="sub()">提交</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script type="text/javascript" src="/static/hanbj_all.js"></script>
 <script>
     var nav = 'nav3_2';
+    var create = (function ($, Vue, w, undefined) {
+        'use strict';
+        var vmain;
+        var clear = function () {
+            vmain.s = false;
+            vmain.uname = '';
+            vmain.candy = [];
+            vmain.uni = '';
+            vmain.tie = '';
+            vmain.gender = '';
+            vmain.phone = '';
+            vmain.QQ = '';
+            vmain.eid = '';
+            vmain.rn = '';
+            vmain.mail = '';
+        };
+        var init = function () {
+            vmain = new Vue({
+                el: '#body',
+                data: {
+                    uname: '',
+                    candy: [],
+                    s: false,
+                    uni: '',
+                    tie: '',
+                    gender: '',
+                    phone: '',
+                    QQ: '',
+                    eid: '',
+                    rn: '',
+                    mail: ''
+                },
+                methods: {
+                    sel_candy: function (item) {
+                        clear();
+                        this.uni = item.u;
+                        this.tie = item.t;
+                        this.s = true;
+                    },
+                    sub: function () {
+                        w.waitloading();
+                        $.ajax({
+                            type: "POST",
+                            url: 'debug',
+                            dataType: "json",
+                            data: {
+                                uni: vmain.uni,
+                                tie: vmain.tie,
+                                gender: vmain.gender,
+                                phone: vmain.phone,
+                                QQ: vmain.QQ,
+                                eid: vmain.eid,
+                                rn: vmain.rn,
+                                mail: vmain.mail
+                            },
+                            success: function (msg) {
+                                clear();
+                            },
+                            error: function (msg) {
+                                msg = JSON.parse(msg.responseText);
+                                w.msgto(msg.msg);
+                            },
+                            complete: function () {
+                                w.cancelloading();
+                            }
+                        });
+                    }
+                }
+            });
+            vmain.$watch('uname', function (nv) {
+                w.waitloading();
+                $.ajax({
+                    type: "GET",
+                    url: w.u1,
+                    dataType: "json",
+                    data: {
+                        name: nv
+                    },
+                    success: function (msg) {
+                        vmain.candy = msg;
+                    },
+                    error: function (msg) {
+                        clear();
+                        msg = JSON.parse(msg.responseText);
+                        w.msgto(msg.msg);
+                    },
+                    complete: function () {
+                        w.cancelloading();
+                    }
+                });
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
+    $(window).load(function () {
+        create.init();
+    });
 </script>
