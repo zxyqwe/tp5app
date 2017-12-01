@@ -90,7 +90,7 @@ class Wx extends Controller
             ->where($map)
             ->setField('bonus', $bonus);
         if ($res !== 1) {
-            return json(['msg' => '更新失败，积分为' . $bonus], 400);
+            return json(['msg' => '更新失败，积分不变，为' . $bonus], 400);
         }
         CardOper::update(
             $uname,
