@@ -833,6 +833,7 @@ class BonusOper
     public static function up($table, $label)
     {
         $map['up'] = 0;
+        $map['m.code'] = ['in', MemberOper::getMember()];
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
             ['card c', 'c.openid=m.openid', 'left']
@@ -850,40 +851,42 @@ class BonusOper
                 'f.bonus as b'
             ])
             ->find();
-        if (null !== $item) {
-            $bonus = intval($item['b']);
-            $map['id'] = $item['id'];
-            Db::startTrans();
-            try {
-                $nfee = Db::table($table)
-                    ->where($map)
-                    ->update(['up' => 1]);
-                if ($nfee !== 1) {
-                    throw new \Exception('更新事件失败' . json_encode($map));
-                }
-                $nfee = Db::table('member')
-                    ->where(['unique_name' => $item['unique_name']])
-                    ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
-                if ($nfee !== 1) {
-                    throw new \Exception($label . '失败' . json_encode($item));
-                }
-                Db::commit();
-                if ($item['code'] !== null) {
-                    CardOper::update(
-                        $item['unique_name'],
-                        $item['code'],
-                        $bonus,
-                        intval($item['bonus']) + $bonus,
-                        $label);
-                } else {
-                    trace("{$item['unique_name']} 没有会员卡");
-                }
-            } catch (\Exception $e) {
-                Db::rollback();
-                return json(['msg' => '' . $e], 400);
-            }
+        if (null === $item) {
+            return json(['msg' => 'ok', 'c' => 0]);
         }
-        return json(['msg' => 'ok', 'c' => count($item)]);
+        $bonus = intval($item['b']);
+        $map['id'] = $item['id'];
+        unset($map['m.code']);
+        Db::startTrans();
+        try {
+            $nfee = Db::table($table)
+                ->where($map)
+                ->update(['up' => 1]);
+            if ($nfee !== 1) {
+                throw new \Exception('更新事件失败' . json_encode($map));
+            }
+            $nfee = Db::table('member')
+                ->where(['unique_name' => $item['unique_name']])
+                ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
+            if ($nfee !== 1) {
+                throw new \Exception($label . '失败' . json_encode($item));
+            }
+            Db::commit();
+            if ($item['code'] !== null) {
+                CardOper::update(
+                    $item['unique_name'],
+                    $item['code'],
+                    $bonus,
+                    intval($item['bonus']) + $bonus,
+                    $label);
+            } else {
+                trace("{$item['unique_name']} 没有会员卡");
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            return json(['msg' => '' . $e], 400);
+        }
+        return json(['msg' => 'ok', 'c' => 1]);
     }
 }
 
