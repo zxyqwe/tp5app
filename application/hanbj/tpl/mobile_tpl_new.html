@@ -15,7 +15,9 @@
                     <label class="weui-label">会员编号</label>
                 </div>
                 <div class="weui-cell__bd">
-                    {{ unique_name }}
+                    <p>
+                        {{ unique_name }}
+                    </p>
                 </div>
                 <div class="weui-cell__ft">请选择</div>
             </div>
@@ -42,131 +44,5 @@
     </div>
 </div>
 <script type="text/javascript">
-    var wx_New = (function ($, Vue, w, undefined) {
-        'use strict';
-        var $weuiAgree, vmain, un_data;
-        var get_res = function (res) {
-            res = res[0].label + res[1].label + res[2].label;
-            vmain.unique_name = res;
-        };
-        var picker = function () {
-            weui.picker(un_data, {
-                container: 'body',
-                onChange: function (result) {
-                    get_res(result);
-                },
-                onConfirm: function (result) {
-                    get_res(result);
-                }
-            });
-        };
-        var submit = function () {
-            w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: w.u15,
-                data: {
-                    uni: vmain.unique_name,
-                    tie: vmain.tie
-                },
-                dataType: "json",
-                success: function (msg) {
-                    w.msgok();
-                    location.reload(true);
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-        };
-        var assm_data = function (data) {
-            var adata = [], c0, c1, s0, s1;
-            for (var i in data) {
-                var tmp = data[i];
-                if (tmp[0] !== s0) {
-                    if (c0 !== undefined) {
-                        adata.push(c0);
-                    }
-                    c0 = {
-                        label: tmp[0],
-                        children: []
-                    };
-                    s0 = tmp[0];
-                }
-                if (tmp[1] !== s1) {
-                    if (c1 !== undefined) {
-                        c0.children.push(c1);
-                    }
-                    c1 = {
-                        label: tmp[1],
-                        children: []
-                    };
-                    s1 = tmp[1];
-                }
-                c1.children.push({
-                    label: tmp[2]
-                });
-            }
-            c0.children.push(c1);
-            adata.push(c0);
-            return adata;
-        };
-        var get_unused = function () {
-            w.waitloading();
-            $.ajax({
-                type: "GET",
-                url: w.u15,
-                dataType: "json",
-                success: function (msg) {
-                    un_data = assm_data(msg.data);
-                },
-                error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-            vue_init();
-        };
-        var vue_init = function () {
-            vmain = new Vue({
-                el: '#vmain',
-                data: {
-                    unique_name: '',
-                    tie: ''
-                },
-                methods: {
-                    uni: function () {
-                        picker();
-                    },
-                    sub: function () {
-                        var weagree = $weuiAgree.prop('checked');
-                        if (!weagree) {
-                            w.msgto('请阅读并同意《相关条款》');
-                            return;
-                        }
-                        if (this.unique_name.length === 0 || this.tie.length === 0) {
-                            return;
-                        }
-                        submit();
-                    }
-                }
-            });
-        };
-        var init = function () {
-            $weuiAgree = $('#weuiAgree');
-            get_unused();
-        };
-        return {
-            init: init
-        };
-    })
-    (Zepto, Vue, window);
     wx_New.init();
 </script>
