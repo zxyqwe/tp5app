@@ -85,7 +85,7 @@ class Wx extends Controller
         cache('json_renew' . $uname, 1, 600);
         $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
-        $map['code'] = MemberOper::NORMAL;
+        $map['code'] = ['in', MemberOper::getMember()];
         $res = Db::table('member')
             ->where($map)
             ->setField('bonus', $bonus);

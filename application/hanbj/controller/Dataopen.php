@@ -44,7 +44,7 @@ class Dataopen extends Controller
         if (!empty($search)) {
             $map['m.unique_name'] = ['like', '%' . $search . '%'];
         }
-        $map['m.code'] = ['in', [MemberOper::JUNIOR, MemberOper::NORMAL]];
+        $map['m.code'] = ['in', MemberOper::getMember()];
         $join = [
             ['nfee f', 'm.unique_name=f.unique_name', 'left']
         ];
@@ -116,7 +116,7 @@ class Dataopen extends Controller
 
     public function json_bonus()
     {
-        $map['code'] = ['in', [MemberOper::JUNIOR, MemberOper::NORMAL]];
+        $map['code'] = ['in', MemberOper::getMember()];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
