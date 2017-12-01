@@ -41,13 +41,17 @@ class MemberOper
     {
         switch ($v) {
             case self::NORMAL:
-                return '实名';
+                return '实名会员';
             case self::UNUSED:
                 return '<span class="temp-text">空号</span>';
             case self::BANNED:
                 return '<span class="temp-text">注销</span>';
             case self::FREEZE:
                 return '<span class="temp-text">停机保号</span>';
+            case self::TEMPUSE:
+                return '<span class="temp-text">临时抢号</span>';
+            case self::JUNIOR:
+                return '初级会员';
             default:
                 return '<span class="temp-text">异常：' . $v . '</span>';
         }

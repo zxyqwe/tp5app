@@ -226,11 +226,15 @@ var wx_init = (function ($, w, undefined) {
             case '-1':
                 return '<p class="temp-text">状态：空号';
             case '0':
-                return '<p>状态：实名';
+                return '<p>状态：实名会员';
             case '1':
                 return '<p class="temp-text">状态：注销';
             case '2':
                 return '<p class="temp-text">状态：停机保号';
+            case '3':
+                return '<p class="temp-text">状态：临时抢号';
+            case '4':
+                return '<p>状态：初级会员';
             default:
                 return '<p class="temp-text">状态：' + value;
         }
