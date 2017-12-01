@@ -150,7 +150,11 @@ class MemberOper
             trace("$unique_name UNUSED TEMPUSE $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Unused2Temp $unique_name $e");
+            if (false !== strpos($e, 'Duplicate')) {
+                $e = '名称重复';
+            }
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -178,6 +182,7 @@ class MemberOper
             CardOper::unuesd($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Temp2Unused $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -199,6 +204,7 @@ class MemberOper
             trace("$unique_name TEMPUSE JUNIOR $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Temp2Junior $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -220,6 +226,7 @@ class MemberOper
             trace("$unique_name JUNIOR TEMPUSE $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Junior2Temp $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -245,6 +252,7 @@ class MemberOper
             trace("$unique_name JUNIOR NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Junior2Normal $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -264,6 +272,7 @@ class MemberOper
             CardOper::freeze($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Normal2Freeze $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -282,6 +291,7 @@ class MemberOper
             trace("$unique_name FREEZE NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Freeze2Normal $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -304,6 +314,7 @@ class MemberOper
             CardOper::banned($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Normal2Banned $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
@@ -325,6 +336,7 @@ class MemberOper
             trace("$unique_name BANNED NORMAL $ret");
             return $ret == 1;
         } catch (\Exception $e) {
+            $e = $e->__toString();
             trace("Banned2Normal $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
