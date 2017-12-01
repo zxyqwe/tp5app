@@ -523,7 +523,7 @@ class Data extends Controller
                     return json();
                 }
                 $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
-                $map['code'] = MemberOper::TEMPUSE;
+                $map['code'] = MemberOper::JUNIOR;
                 $tmp = Db::table('member')
                     ->alias('f')
                     ->where($map)
