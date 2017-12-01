@@ -1070,3 +1070,104 @@ var birth = (function ($, w, undefined) {
         init: init
     };
 })(jQuery, window);
+
+
+var create = (function ($, Vue, w, undefined) {
+    'use strict';
+    var vmain;
+    var clear = function () {
+        vmain.s = false;
+        vmain.uname = '';
+        vmain.candy = [];
+        vmain.uni = '';
+        vmain.tie = '';
+        vmain.gender = '';
+        vmain.phone = '';
+        vmain.QQ = '';
+        vmain.eid = '';
+        vmain.rn = '';
+        vmain.mail = '';
+    };
+    var init = function () {
+        vmain = new Vue({
+            el: '#body',
+            data: {
+                uname: '',
+                candy: [],
+                s: false,
+                uni: '',
+                tie: '',
+                gender: '',
+                phone: '',
+                QQ: '',
+                eid: '',
+                rn: '',
+                mail: ''
+            },
+            methods: {
+                sel_candy: function (item) {
+                    clear();
+                    this.uni = item.u;
+                    this.tie = item.t;
+                    this.s = true;
+                },
+                clr: function () {
+                    clear();
+                },
+                sub: function () {
+                    w.waitloading();
+                    $.ajax({
+                        type: "POST",
+                        url: w.u15,
+                        dataType: "json",
+                        data: {
+                            uni: vmain.uni,
+                            tie: vmain.tie,
+                            gender: vmain.gender,
+                            phone: vmain.phone,
+                            QQ: vmain.QQ,
+                            eid: vmain.eid,
+                            rn: vmain.rn,
+                            mail: vmain.mail
+                        },
+                        success: function (msg) {
+                            clear();
+                        },
+                        error: function (msg) {
+                            msg = JSON.parse(msg.responseText);
+                            w.msgto(msg.msg);
+                        },
+                        complete: function () {
+                            w.cancelloading();
+                        }
+                    });
+                }
+            }
+        });
+        vmain.$watch('uname', function (nv) {
+            w.waitloading();
+            $.ajax({
+                type: "GET",
+                url: w.u15,
+                dataType: "json",
+                data: {
+                    name: nv
+                },
+                success: function (msg) {
+                    vmain.candy = msg;
+                },
+                error: function (msg) {
+                    clear();
+                    msg = JSON.parse(msg.responseText);
+                    w.msgto(msg.msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, Vue, window);
