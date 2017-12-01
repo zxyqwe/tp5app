@@ -40,11 +40,15 @@ var home = (function ($, w, undefined) {
             case '-1':
                 return '空号';
             case '0':
-                return '实名';
+                return '实名会员';
             case '1':
                 return '注销';
             case '2':
                 return '停机保号';
+            case '3':
+                return '临时抢号';
+            case '4':
+                return '初级会员';
             default:
                 return value;
         }
