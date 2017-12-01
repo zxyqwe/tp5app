@@ -77,35 +77,33 @@
             });
         };
         var assm_data = function (data) {
-            var adata = [], c0, c1, s0 = '', s1 = '';
+            console.log(data);
+            var adata = [], c0, c1, s0, s1;
             for (var i in data) {
                 var tmp = data[i];
-                if (tmp[0] === s0) {
-                    if (tmp[1] === s1) {
-                        c1.children.push({
-                            label: tmp[2]
-                        });
-                    } else {
-                        c0.push(c1);
-                        c1 = [{
-                            label: tmp[1],
-                            children: [{
-                                label: tmp[2]
-                            }]
-                        }];
-                        s1 = tmp[1];
-                    }
-                } else {
+                console.log(tmp);
+                if (tmp[0] !== s0) {
                     adata.push(c0);
-                    c0 = [{
+                    c0 = {
                         label: tmp[0],
-                        children: [{
-                            label: tmp[1]
-                        }]
-                    }];
+                        children: []
+                    };
                     s0 = tmp[0];
                 }
+                if (tmp[1] !== s1) {
+                    c0.children.push(c1);
+                    c1 = {
+                        label: tmp[1],
+                        children: []
+                    };
+                    s1 = tmp[1];
+                }
+                c1.children.push({
+                    label: tmp[2]
+                });
             }
+            c0.children.push(c1);
+            adata.push(c0);
             console.log(adata);
             return adata;
         };
@@ -143,6 +141,7 @@
                         var weagree = $weuiAgree.prop('checked');
                         if (!weagree) {
                             w.msgto('请阅读并同意《相关条款》');
+                            return;
                         }
                         submit();
                     }
@@ -156,6 +155,7 @@
         return {
             init: init
         };
-    })(Zepto, Vue, window);
+    })
+    (Zepto, Vue, window);
     wx_New.init();
 </script>
