@@ -286,8 +286,14 @@ var wx_init = (function ($, w, undefined) {
         w.home = function () {
             location.hash = '';
         };
-        w.msgto = function (data) {
-            weui.alert(data, {title: '错误'});
+        w.msgto = function (msg) {
+            try {
+                msg = JSON.parse(msg.responseText);
+                msg = msg.msg;
+            } catch (err) {
+                msg = msg.readyState + '-' + msg.status + '-' + msg.responseText;
+            }
+            weui.alert(msg, {title: '错误'});
         };
         w.msgok = function (data) {
             if (undefined === data) {

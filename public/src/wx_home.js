@@ -44,8 +44,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     add_card(msg)
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     $loading.addClass('sr-only');
@@ -102,8 +101,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 });
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -121,8 +119,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 w.msgok();
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -159,8 +156,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vwork_act_log.name = msg.name;
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -206,8 +202,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.location.search = '?g=' + rand;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     $loading.addClass('sr-only');
@@ -227,8 +222,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     open_card(msg);
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 }
             });
         });
@@ -243,8 +237,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -270,8 +263,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vact.items.push.apply(vact.items, da);
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -296,8 +288,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vvalid.real_year = msg.real_year;
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -315,8 +306,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.location.search = '?g=' + rand;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -376,8 +366,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 });
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -408,8 +397,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     wx.chooseWXPay(msg);
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -443,8 +431,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.location.search = '?g=' + rand;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
