@@ -616,7 +616,7 @@ class CardOper
                 "custom_url_name": "活动报名",
                 "custom_url": "https://app.zxyqwe.com/hanbj/mobile/#activity",
                 "custom_url_sub_title": "更多惊喜",
-                "promotion_url_name": "会员特权",
+                "promotion_url_name": "商家优惠",ToDo
                 "promotion_url": "https://app.zxyqwe.com/hanbj/mobile/#promotion",
                 "promotion_url_sub_title": "福利多多"
             },
@@ -633,7 +633,7 @@ class CardOper
             "bonus_url": "https://app.zxyqwe.com/hanbj/mobile/#bonus",
             "supply_balance": False,
             "prerogative":
-            "1、公开活动费用减免。吧务组组织的面向大众的活动，包括但不限于传统节日大活动、雅集类活动等。\n2、特别活动优先参与。对于部分限定活动享有优先报名特权。\n3、汉北周边购买最高折扣。尊享汉北周边产品最高折扣价。汉服北京承诺同一时间在任何渠道所售周边产品价格不低于会员折扣价。\n4、汉服租借及礼仪类服务折扣。可以优惠价租借汉服，预定成人礼抓周礼等礼仪类服务享受专属折扣。（限指定公司）\n5、汉北合作商家优惠。在指定汉服、饰品、国货、汉婚及其他商家购买产品和服务尊享汉北会员折扣。\n6、会员积分。参与活动可获得积分，达到一定数额可升级高级会员或兑换其他福利。\n7、参与限量会员牌订制。\n8、其他不定期其他特殊优惠。",
+          ToDo  "1、公开活动费用减免。吧务组组织的面向大众的活动，包括但不限于传统节日大活动、雅集类活动等。\n2、特别活动优先参与。对于部分限定活动享有优先报名特权。\n3、汉北周边购买最高折扣。尊享汉北周边产品最高折扣价。汉服北京承诺同一时间在任何渠道所售周边产品价格不低于会员折扣价。\n4、汉服租借及礼仪类服务折扣。可以优惠价租借汉服，预定成人礼抓周礼等礼仪类服务享受专属折扣。（限指定公司）\n5、汉北合作商家优惠。在指定汉服、饰品、国货、汉婚及其他商家购买产品和服务尊享汉北会员折扣。\n6、会员积分。参与活动可获得积分，达到一定数额可升级高级会员或兑换其他福利。\n7、参与限量会员牌订制。\n8、其他不定期其他特殊优惠。",
             "auto_activate": False,
             "activate_url": "https://app.zxyqwe.com/hanbj/mobile",
             "custom_field1": {
@@ -644,9 +644,9 @@ class CardOper
                 "name": "缴费",
                 "url": "https://app.zxyqwe.com/hanbj/mobile/#valid",
             },
-            "custom_cell1": {
-                "name": "未完成",
-                "tips": "显示未完成",
+        ToDo    "custom_cell1": {
+                "name": "汉北周边",
+                "tips": "微店",
                 "url": "https://app.zxyqwe.com/hanbj/mobile/#custom",
             }
         }
