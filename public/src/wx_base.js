@@ -256,7 +256,7 @@ var wx_init = (function ($, w, undefined) {
         wx.error(function (res) {
             res.url = location.href.split('#')[0];
             console.log(res);
-            w.msgto(JSON.stringify(res));
+            w.msgto2(JSON.stringify(res));
             w.location.search = '';
         });
     };
@@ -293,6 +293,9 @@ var wx_init = (function ($, w, undefined) {
             } catch (err) {
                 msg = msg.readyState + '-' + msg.status + '-' + msg.responseText;
             }
+            w.msgto2(msg);
+        };
+        w.msgto2 = function (msg) {
             weui.alert(msg, {title: '错误'});
         };
         w.msgok = function (data) {

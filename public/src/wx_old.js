@@ -8,12 +8,12 @@ var wx_Old = (function ($, w, undefined) {
         $("#oldok").click(function () {
             var weagree = $weuiAgree.prop('checked');
             if (!weagree) {
-                w.msgto('请阅读并同意《相关条款》');
+                w.msgto2('请阅读并同意《相关条款》');
                 return;
             }
             var old_eid = eid.val();
             if (old_eid.length !== 6) {
-                w.msgto('身份证输入的不是6位？当前是' + old_eid.length + '位！');
+                w.msgto2('身份证输入的不是6位？当前是' + old_eid.length + '位！');
                 return;
             }
             var old_phone = phone.val();
@@ -148,7 +148,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                 sub: function () {
                     var weagree = $weuiAgree.prop('checked');
                     if (!weagree) {
-                        w.msgto('请阅读并同意《相关条款》');
+                        w.msgto2('请阅读并同意《相关条款》');
                         return;
                     }
                     if (this.unique_name.length === 0 || this.tie.length === 0) {
@@ -273,7 +273,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                         sum += this.ans[i];
                     }
                     if (sum === 100) {
-                        w.msgto('全满分');
+                        w.msgto2('全满分');
                         w.cancelloading();
                         return;
                     }

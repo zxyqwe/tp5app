@@ -28,6 +28,9 @@ var home = (function ($, w, undefined) {
             } catch (err) {
                 msg = msg.readyState + '-' + msg.status + '-' + msg.responseText;
             }
+            w.msgto2(msg);
+        };
+        w.msgto2 = function (msg) {
             $alert_html.html(msg);
             $alert_msg.modal('show');
         };
