@@ -1404,7 +1404,7 @@ class WxOrg
         }
     }
 
-    public static function checkAns($ans)
+    public static function checkAns(&$ans)
     {
         if (!is_array($ans)) {
             throw new HttpResponseException(json(['msg' => 'array'], 400));
