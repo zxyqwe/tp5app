@@ -1345,7 +1345,7 @@ class WxOrg
             foreach ($this->obj as $o) {
                 if (isset($ans[$o])) {
                     $ans[$o][$i] /= $cnt[$o];
-                    $ans[$o][$i] = round($ans[$o][$i], 2);
+                    $ans[$o][$i] = number_format($ans[$o][$i], 2, '.', '');
                     $tmp[$o] = $ans[$o][$i];
                 }
             }
