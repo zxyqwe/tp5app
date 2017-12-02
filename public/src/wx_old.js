@@ -31,8 +31,7 @@ var wx_Old = (function ($, w, undefined) {
                     location.reload(true);
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -78,8 +77,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                 location.reload(true);
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -128,8 +126,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                 un_data = assm_data(msg.data);
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -277,6 +274,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                     }
                     if (sum === 100) {
                         w.msgto('全满分');
+                        w.cancelloading();
                         return;
                     }
                     $.ajax({
@@ -297,8 +295,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                             }, 1000);
                         },
                         error: function (msg) {
-                            msg = JSON.parse(msg.responseText);
-                            w.msgto(msg.msg);
+                            w.msgto(msg);
                         },
                         complete: function () {
                             w.cancelloading();

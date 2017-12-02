@@ -22,6 +22,12 @@ var home = (function ($, w, undefined) {
             return false;
         });
         w.msgto = function (msg) {
+            try {
+                msg = JSON.parse(msg.responseText);
+                msg = msg.msg;
+            } catch (err) {
+                msg = msg.readyState + '-' + msg.status + '-' + msg.responseText;
+            }
             $alert_html.html(msg);
             $alert_msg.modal('show');
         };

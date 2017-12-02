@@ -49,8 +49,7 @@ var all = (function ($, w, undefined) {
                     $('#act' + id).html(itact(msg.act));
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -131,8 +130,7 @@ var baselog = (function ($, Vue, w, undefined) {
             },
             error: function (msg) {
                 vmain.act = [];
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -182,8 +180,7 @@ var baselog = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     w.cancelloading();
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 }
             });
         });
@@ -324,8 +321,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     vmain.candy = [];
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -345,8 +341,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                     location.href = w.u5;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -512,8 +507,7 @@ var fee = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     vmain.candy = [];
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -534,8 +528,7 @@ var fee = (function ($, Vue, w, undefined) {
                     location.href = w.u3;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -556,8 +549,7 @@ var fee = (function ($, Vue, w, undefined) {
                     location.href = w.u3;
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -608,8 +600,7 @@ var tlog = (function ($, w, undefined) {
                 cont($cont.html() + mtext, par + ' - ' + chi);
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -700,8 +691,7 @@ var fame = (function ($, Vue, w, undefined) {
             },
             error: function (msg) {
                 vmain.fames = [];
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -742,8 +732,7 @@ var fame = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     vmain.candy = [];
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -766,8 +755,7 @@ var fame = (function ($, Vue, w, undefined) {
                     vmain.res = [];
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -1055,8 +1043,7 @@ var birth = (function ($, w, undefined) {
                 get_birthday_ret();
             },
             error: function (msg) {
-                msg = JSON.parse(msg.responseText);
-                w.msgto(msg.msg);
+                w.msgto(msg);
             },
             complete: function () {
                 w.cancelloading();
@@ -1134,8 +1121,7 @@ var create = (function ($, Vue, w, undefined) {
                             clear();
                         },
                         error: function (msg) {
-                            msg = JSON.parse(msg.responseText);
-                            w.msgto(msg.msg);
+                            w.msgto(msg);
                         },
                         complete: function () {
                             w.cancelloading();
@@ -1158,8 +1144,7 @@ var create = (function ($, Vue, w, undefined) {
                 },
                 error: function (msg) {
                     clear();
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                 },
                 complete: function () {
                     w.cancelloading();

@@ -3,10 +3,10 @@ var bulletin = (function ($, w, undefined) {
     var repeat = function (target, n) {
         var s = target, total = "";
         while (n > 0) {
-            if (n % 2 == 1) {
+            if (n % 2 === 1) {
                 total += s;
             }
-            if (n == 1) {
+            if (n === 1) {
                 break;
             }
 
@@ -97,8 +97,7 @@ var login = (function ($, w, undefined) {
                     location.reload(true);
                 },
                 error: function (msg) {
-                    msg = JSON.parse(msg.responseText);
-                    w.msgto(msg.msg);
+                    w.msgto(msg);
                     $('#capt_img').attr('src', '/captcha.html?' + new Date());
                     $('#mm').val('');
                     $('#capt').val('');
