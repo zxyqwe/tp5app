@@ -1410,7 +1410,10 @@ class WxOrg
         if (array_sum($ans['sel']) === 100) {
             throw new HttpResponseException(json(['msg' => '满分'], 400));
         }
-        if (!isset($ans['sel_add']) || !is_array($ans['sel_add'])) {
+        if (!isset($ans['sel_add'])) {
+            $ans['sel_add'] = [];
+        }
+        if (!is_array($ans['sel_add'])) {
             throw new HttpResponseException(json(['msg' => 'sel_add'], 400));
         }
         foreach (range(0, $len - 1) as $i) {
@@ -1452,12 +1455,12 @@ class WxOrg
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "有以下投票，五分钟有效\n" . $prog;
+        $ret = "有以下投票，二十分钟有效\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
         foreach ($this->obj as $item) {
             $c_name = $uname . $item . self::name;
-            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 5);
+            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 20);
             if (!cache('?' . $c_name)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
