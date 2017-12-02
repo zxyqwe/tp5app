@@ -12,7 +12,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 w.location.search = '?g=' + rand;
             },
             fail: function (msg) {
-                w.msgto(msg);
+                w.msgto2(msg);
             }
         });
     };
@@ -375,7 +375,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         $('#order').click(function () {
             var year = fm.html();
             if (year < 15) {
-                w.msgto('请选择年数');
+                w.msgto2('请选择年数');
                 return;
             }
             w.waitloading();
@@ -392,7 +392,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                         w.msgok();
                     };
                     msg.fail = function (msg) {
-                        w.msgto(msg.errMsg);
+                        w.msgto2(msg.errMsg);
                     };
                     wx.chooseWXPay(msg);
                 },
