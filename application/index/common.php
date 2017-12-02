@@ -451,7 +451,9 @@ class BiliHelper
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
-            if (false === strpos($return_str, 'Timeout')) {
+            if (false === strpos($return_str, 'Timeout')
+                && false === strpos($return_str, 'SSL connect error')
+            ) {
                 trace(['url' => $url, 'res' => $return_str]);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
