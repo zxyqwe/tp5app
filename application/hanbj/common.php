@@ -617,7 +617,7 @@ class CardOper
                 "custom_url": "https://app.zxyqwe.com/hanbj/mobile/#activity",
                 "custom_url_sub_title": "更多惊喜",
                 "promotion_url_name": "商家优惠",ToDo
-                "promotion_url": "https://app.zxyqwe.com/hanbj/mobile/#promotion",
+                "promotion_url": "https://app.zxyqwe.com/hanbj/mobile/#prom",ToDo
                 "promotion_url_sub_title": "福利多多"
             },
             "advanced_info": {

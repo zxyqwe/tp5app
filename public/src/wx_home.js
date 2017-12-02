@@ -226,24 +226,6 @@ var wx_home = (function ($, Vue, w, undefined) {
                 }
             });
         });
-        $('#tempid').click(function () {
-            w.waitloading();
-            $.ajax({
-                type: "GET",
-                url: w.u7,
-                dataType: "json",
-                success: function (msg) {
-                    var temp = msg.temp;
-                    weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
-                },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-        });
         ticketapi();
     };
     var load_act = function () {
@@ -467,3 +449,30 @@ var wx_home = (function ($, Vue, w, undefined) {
         }
     };
 })(Zepto, Vue, window);
+
+var wx_prom = (function ($, w, undefined) {
+    'use strict';
+    var init = function () {
+        $('#tempid').click(function () {
+            w.waitloading();
+            $.ajax({
+                type: "GET",
+                url: w.u7,
+                dataType: "json",
+                success: function (msg) {
+                    var temp = msg.temp;
+                    weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
+                },
+                error: function (msg) {
+                    w.msgto(msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        });
+    };
+    return {
+        init: init
+    };
+})(Zepto, window);
