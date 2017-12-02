@@ -1354,7 +1354,7 @@ class WxOrg
         $tmp = ['q' => '总分（100分）'];
         foreach ($this->obj as $o) {
             if (isset($ans[$o])) {
-                $tmp[$o] = array_sum($ans[$o]);
+                $tmp[$o] = number_format(array_sum($ans[$o]), 2, '.', '');
             }
         }
         $ret[] = $tmp;
