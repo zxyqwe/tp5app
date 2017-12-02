@@ -1364,6 +1364,9 @@ class WxOrg
     {
         $ret = [];
         foreach ($data as $item) {
+            if (!isset($item['ans']['sel_add'])) {
+                $item['ans']['sel_add'] = [];
+            }
             $cmt = $item['ans']['sel_add'];
             $sel = $item['ans']['sel'];
             for ($i = 0; $i < count($cmt); $i++) {
