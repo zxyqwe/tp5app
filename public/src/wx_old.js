@@ -28,7 +28,10 @@ var wx_Old = (function ($, w, undefined) {
                 dataType: "json",
                 success: function (msg) {
                     w.msgok();
-                    location.reload(true);
+                    setTimeout(function () {
+                        WeixinJSBridge.call('closeWindow');
+                        location.search += '&_=' + Date.now();
+                    }, 1000);
                 },
                 error: function (msg) {
                     w.msgto(msg);
@@ -74,7 +77,10 @@ var wx_New = (function ($, Vue, w, undefined) {
             dataType: "json",
             success: function (msg) {
                 w.msgok();
-                location.reload(true);
+                setTimeout(function () {
+                    WeixinJSBridge.call('closeWindow');
+                    location.search += '&_='+Date.now();
+                }, 1000);
             },
             error: function (msg) {
                 w.msgto(msg);

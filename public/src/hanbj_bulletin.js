@@ -95,6 +95,7 @@ var login = (function ($, w, undefined) {
                 dataType: "json",
                 success: function (msg) {
                     location.reload(true);
+                    location.search += '&_='+Date.now();
                 },
                 error: function (msg) {
                     w.msgto(msg);
