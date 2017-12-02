@@ -1316,11 +1316,14 @@ class WxOrg
 
     public function getAvg($data)
     {
-        $cnt = 0;
+        $cnt = [];
+        foreach ($this->obj as $o) {
+            $cnt[$o] = 0;
+        }
         $ans = [];
         foreach ($data as $item) {
             $weight = $item['w'];
-            $cnt += $weight;
+            $cnt[$item['o']] += $weight;
             for ($i = 0; $i < count(self::test); $i++) {
                 if (!isset($ans[$item['o']])) {
                     $ans[$item['o']] = [];
@@ -1341,7 +1344,7 @@ class WxOrg
             $tmp = ['q' => $test['q']];
             foreach ($this->obj as $o) {
                 if (isset($ans[$o])) {
-                    $ans[$o][$i] /= $cnt;
+                    $ans[$o][$i] /= $cnt[$o];
                     $tmp[$o] = $ans[$o][$i];
                 }
             }
