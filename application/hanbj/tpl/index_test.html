@@ -3,6 +3,16 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>投票结果</h1>
         <div id="body">
+            <h4>未投票者</h4>
+            <code>{{ mis }}</code>
+            <h4>总进度</h4>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                     v-bind:aria-valuenow="{ rto }" v-bind:style="{ width: rto + '%' }" aria-valuemin="0"
+                     aria-valuemax="100" style="min-width: 2em;">
+                    {{ rto }}%
+                </div>
+            </div>
             <h4>评分汇总</h4>
             <table id="table1">
                 <thead>

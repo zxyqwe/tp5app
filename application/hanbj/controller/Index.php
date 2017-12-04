@@ -126,6 +126,8 @@ class Index extends Controller
     {
         $org = new WxOrg();
         $ans = $org->getAns();
+        $ratio = count($ans) * 1.0 / count($org->getAll()) / count($org->obj);
+        $miss = cache(WxOrg::name . 'getAns.miss');
         $map['unique_name'] = ['in', $org->obj];
         $ret = Db::table('member')
             ->where($map)
@@ -142,7 +144,9 @@ class Index extends Controller
             'avg' => $org->getAvg($ans),
             'cmt' => $org->getComment($ans),
             'obj' => $org->obj,
-            'trn' => $dict
+            'trn' => $dict,
+            'mis' => $miss,
+            'rto' => $ratio
         ];
         return view('test', ['data' => json_encode($ans)]);
     }

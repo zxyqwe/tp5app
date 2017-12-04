@@ -792,7 +792,9 @@ var test = (function ($, Vue, w, undefined) {
         var vmain = new Vue({
             el: '#body',
             data: {
-                obj: msg.obj
+                obj: msg.obj,
+                mis: msg.mis,
+                rto: msg.rto
             },
             methods: {
                 trans: function (item) {
