@@ -126,7 +126,8 @@ class Index extends Controller
     {
         $org = new WxOrg();
         $ans = $org->getAns();
-        $ratio = count($ans) * 1.0 / count($org->getAll()) / count($org->obj);
+        $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
+        $ratio = number_format($ratio, 2, '.', '');
         $miss = cache(WxOrg::name . 'getAns.miss');
         $map['unique_name'] = ['in', $org->obj];
         $ret = Db::table('member')
