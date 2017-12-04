@@ -1298,6 +1298,7 @@ class WxOrg
     {
         $user = $this->getAll();
         $data = [];
+        $miss = [];
         foreach ($user as $u) {
             foreach ($this->obj as $o) {
                 $c_name = $u . $o . WxOrg::name;
@@ -1308,9 +1309,17 @@ class WxOrg
                         'o' => $o,
                         'w' => in_array($u, $this->upper) ? 2.0 : 1.0
                     ];
+                } else {
+                    $miss[] = $u;
                 }
             }
         }
+        $miss = array_unique($miss);
+        if (count($miss) > count($user) / 2) {
+            $miss = [];
+        }
+        $miss = implode(', ', $miss);
+        cache(WxOrg::name . 'getAns.miss', $miss);
         return $data;
     }
 
