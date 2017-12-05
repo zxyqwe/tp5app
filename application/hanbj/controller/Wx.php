@@ -208,4 +208,19 @@ class Wx extends Controller
         trace("{$map['unique_name']} {$action} {$map[$action]} -> {$data[$action]}");
         return json(['msg' => 'OK']);
     }
+
+    public function history()
+    {
+        $map['unique_name'] = session('unique_name');
+        $ret = Db::table('fame')
+            ->where($map)
+            ->order('id desc')
+            ->field([
+                'year',
+                'grade',
+                'label'
+            ])
+            ->select();
+        return json(['hist' => $ret]);
+    }
 }
