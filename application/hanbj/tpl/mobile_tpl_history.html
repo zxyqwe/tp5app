@@ -2,17 +2,20 @@
     <div class="page__hd">
         <h1 class="page__title">任职履历</h1>
     </div>
-    <div class="page__bd page__bd_spacing" id="vmain">
-        <div class="weui-panel__bd" v-for="i in hist">
-            <a href="javascript:" class="weui-media-box weui-media-box_appmsg">
-                <div class="weui-media-box__hd">
-                    <img class="weui-media-box__thumb" v-bind:src="{ trans(i.grade) }" alt="">
-                </div>
-                <div class="weui-media-box__bd">
-                    <h4 class="weui-media-box__title">{{ trans2(i.grade) }}</h4>
-                    <p class="weui-media-box__desc">第{{ i.year }}届 i.label</p>
-                </div>
-            </a>
+    <div class="page__bd page__bd_spacing sr-only" id="vmain">
+        <div class="weui-panel">
+            <div class="weui-panel__hd">共 {{ hist.length }} 届</div>
+            <div class="weui-panel__bd" v-for="i in hist" v-if="hist.length > 0">
+                <a href="javascript:" class="weui-media-box weui-media-box_appmsg">
+                    <div class="weui-media-box__hd">
+                        <img class="weui-media-box__thumb" v-bind:src="{ trans(i.grade) }" alt="">
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <h4 class="weui-media-box__title">{{ trans2(i.grade) }}</h4>
+                        <p class="weui-media-box__desc">第{{ i.year }}届 {{ i.label }}</p>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
     <div class="page__ft">
@@ -21,12 +24,12 @@
 <script type="text/javascript">
     var wx_hist = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, history = [];
+        var vmain;
         var vue_init = function () {
             vmain = new Vue({
                 el: '#vmain',
                 data: {
-                    hist: history
+                    hist: []
                 },
                 methods: {
                     trans: function (n) {
@@ -64,11 +67,12 @@
             w.waitloading();
             $.ajax({
                 type: "GET",
-                url: w.u15,
+                url: w.u17,
                 dataType: "json",
                 success: function (msg) {
-                    history = msg.hist;
                     vue_init();
+                    vmain.hist = msg.hist;
+                    $('#vmain').removeClass('sr-only');
                 },
                 error: function (msg) {
                     w.msgto(msg);
