@@ -113,29 +113,25 @@
                 <div class="weui-cell__ft">{$user.master}</div>
             </div>
         </div>
-        <div class="weui-flex" style="margin-top: 10px;">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <a href="#activity" class="weui-btn weui-btn_primary" style="background-color: #5bc0de">活动记录</a>
-                </div>
-            </div>
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <a href="#valid" class="weui-btn weui-btn_primary">缴费记录</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-flex">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <a href="/hanfubj" class="weui-btn weui-btn_plain-primary">公告栏（电脑版）</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-flex">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <a href="#prom" class="weui-btn weui-btn_primary">商家优惠</a>
+        <div class="weui-panel">
+            <div class="weui-panel__hd">详情页</div>
+            <div class="weui-panel__bd">
+                <div class="weui-grids">
+                    <a href="#activity" class="weui-grid">
+                        <p class="weui-btn weui-btn_mini weui-btn_primary" style="background-color: #5bc0de">活动记录</p>
+                    </a>
+                    <a href="#valid" class="weui-grid">
+                        <p class="weui-btn weui-btn_mini weui-btn_primary">缴费记录</p>
+                    </a>
+                    <a href="/hanfubj" class="weui-grid">
+                        <p class="weui-btn weui-btn_mini weui-btn_plain-primary">公告栏</p>
+                    </a>
+                    <a href="#prom" class="weui-grid">
+                        <p class="weui-btn weui-btn_mini weui-btn_primary">商家优惠</p>
+                    </a>
+                    <a href="#history" class="weui-grid">
+                        <p class="weui-btn weui-btn_mini weui-btn_plain-primary">任职履历</p>
+                    </a>
                 </div>
             </div>
         </div>
@@ -143,7 +139,7 @@
             <div class="weui-panel__hd">工作人员专区：{$user.tieba_id}</div>
             <div class="weui-panel__bd">
                 <div class="weui-grids">
-                    <a href="javascript:;" class="weui-grid" id="work_act">
+                    <a href="javascript:" class="weui-grid" id="work_act">
                         <p class="weui-btn weui-btn_mini weui-btn_primary">活动登记</p>
                     </a>
                     <a href="#work_act_log" class="weui-grid">
