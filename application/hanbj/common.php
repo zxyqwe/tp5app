@@ -56,7 +56,7 @@ class MemberOper
             case self::TEMPUSE:
                 return '<span class="temp-text">临时抢号</span>';
             case self::JUNIOR:
-                return '初级会员';
+                return '会员';
             default:
                 return '<span class="temp-text">异常：' . $v . '</span>';
         }
@@ -212,7 +212,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name TEMPUSE JUNIOR $ret");
-            CardOper::common($unique_name, '初级会员');
+            CardOper::common($unique_name, '会员');
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
