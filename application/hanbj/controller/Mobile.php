@@ -142,37 +142,6 @@ class Mobile extends Controller
         return json($wx);
     }
 
-    public function json_tempid()
-    {
-        $member_code = intval(session('member_code'));
-        if (!in_array($member_code, MemberOper::getMember())) {
-            return json(['msg' => '用户锁住'], 400);
-        }
-        $uniq = session('unique_name');
-        if (FeeOper::owe($uniq)) {
-            return json(['msg' => '欠费'], 400);
-        }
-        $tempid = 0;
-        if (cache("?json_tempid" . $uniq)) {
-            $tempid = cache("json_tempid" . $uniq);
-        } else {
-            while ($tempid === 0) {
-                $tempnum = rand(1000, 9999);
-                if (!cache('?tempnum' . $tempnum)) {
-                    cache('tempnum' . $tempnum, '', 1800);
-                    $tempid = $tempnum;
-                    cache("json_tempid" . $uniq, $tempid, 1700);
-                }
-            }
-        }
-        $data['time'] = date("Y-m-d");
-        $data['time2'] = date("H:i:s");
-        $data['uniq'] = $uniq;
-        $data['nick'] = session('tieba_id');
-        cache('tempnum' . $tempid, json_encode($data), 1800);
-        return json(['msg' => 'OK', 'temp' => $tempid]);
-    }
-
     public function json_active()
     {
         $openid = session('openid');
@@ -246,29 +215,34 @@ class Mobile extends Controller
         return $reply;
     }
 
-    public function change()
+    public function unused()
     {
-        $action = input('get.action');
-        if (!in_array($action, ['pref', 'web_name'])) {
-            return json(['msg' => '操作未知' . $action], 400);
+        switch ($this->request->method()) {
+            case 'GET':
+                $ret = MemberOper::list_code(MemberOper::UNUSED);
+                $rst = [];
+                foreach ($ret as $i) {
+                    if (strpos($i, '夏') !== false) {
+                        $rst[] = $i;
+                    }
+                }
+                sort($rst);
+                return json(['data' => $rst]);
+            case 'POST':
+                $openid = session('openid');
+                $tieba_id = input('post.tie');
+                $unique_name = input('post.uni');
+                if (empty($tieba_id) || empty($unique_name)) {
+                    return json(['msg' => '名称错误'], 400);
+                }
+                $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
+                if ($ret) {
+                    session('unique_name', $unique_name);
+                    return json(['msg' => 'ok']);
+                }
+                return json(['msg' => '会员编号没抢到'], 400);
+            default:
+                return json(['msg' => $this->request->method()], 400);
         }
-        $map['openid'] = session('openid');
-        $map['unique_name'] = session('unique_name');
-        $map[$action] = input('post.old');
-        $data[$action] = input('post.new');
-        if ($map[$action] === $data[$action]) {
-            return json(['msg' => '内容相同'], 400);
-        }
-        if (strlen($data[$action]) > 60) {
-            return json(['msg' => '字数太多'], 400);
-        }
-        $res = Db::table('member')
-            ->where($map)
-            ->update($data);
-        if ($res === 0) {
-            return json(['msg' => '更新失败'], 400);
-        }
-        trace("{$map['unique_name']} {$action} {$map[$action]} -> {$data[$action]}");
-        return json(['msg' => 'OK']);
     }
 }
