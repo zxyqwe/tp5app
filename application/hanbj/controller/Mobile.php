@@ -98,7 +98,7 @@ class Mobile extends Controller
         if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
-        if (session('?unique_name') && session('?unique_name') !== '坎丙午') {
+        if (session('?unique_name') && session('unique_name') !== '坎丙午') {
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
         }
         return view('reg');
