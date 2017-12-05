@@ -174,6 +174,7 @@ class Wx extends Controller
                 }
                 $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
                 if ($ret) {
+                    session('unique_name', $unique_name);
                     return json(['msg' => 'ok']);
                 }
                 return json(['msg' => '会员编号没抢到'], 400);
