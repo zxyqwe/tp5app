@@ -476,3 +476,69 @@ var wx_prom = (function ($, w, undefined) {
         init: init
     };
 })(Zepto, window);
+
+
+var wx_hist = (function ($, Vue, w, undefined) {
+    'use strict';
+    var vmain;
+    var vue_init = function () {
+        vmain = new Vue({
+            el: '#vmain',
+            data: {
+                hist: []
+            },
+            methods: {
+                trans: function (n) {
+                    switch (n) {
+                        case '0':
+                            return '/static/arrow-up.png';
+                        case '1':
+                            return '/static/arrow-up.png';
+                        case '2':
+                            return '/static/arrow-up.png';
+                        case '3':
+                            return '/static/arrow-up.png';
+                        case '4':
+                            return '/static/arrow-up.png';
+                    }
+                },
+                trans2: function (n) {
+                    switch (n) {
+                        case '0':
+                            return '会长';
+                        case '1':
+                            return '副会长';
+                        case '2':
+                            return '部长';
+                        case '3':
+                            return '副部长';
+                        case '4':
+                            return '干事';
+                    }
+                }
+            }
+        });
+    };
+    var init = function () {
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: w.u17,
+            dataType: "json",
+            success: function (msg) {
+                vue_init();
+                vmain.hist = msg.hist;
+                $('#vmain').removeClass('sr-only');
+            },
+            error: function (msg) {
+                w.msgto(msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(Zepto, Vue, window);
