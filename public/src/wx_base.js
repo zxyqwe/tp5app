@@ -234,7 +234,7 @@ var wx_init = (function ($, w, undefined) {
             case '3':
                 return '<p class="temp-text">状态：临时抢号';
             case '4':
-                return '<p>状态：初级会员';
+                return '<p>状态：会员';
             default:
                 return '<p class="temp-text">状态：' + value;
         }

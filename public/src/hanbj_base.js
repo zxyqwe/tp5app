@@ -57,7 +57,7 @@ var home = (function ($, w, undefined) {
             case '3':
                 return '临时抢号';
             case '4':
-                return '初级会员';
+                return '会员';
             default:
                 return value;
         }
