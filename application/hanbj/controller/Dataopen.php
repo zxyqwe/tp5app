@@ -23,7 +23,7 @@ class Dataopen extends Controller
                 $nonce = getNonceStr();
                 session('nonce', $nonce, UserOper::time);
                 cache("jump$nonce", json_encode(['event' => 'login']), UserOper::time);
-                $qrCode = new QrCode("https://app.zxyqwe.com/mobile/index/index/obj/$nonce");
+                $qrCode = new QrCode("https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce");
                 $qrCode
                     ->setSize(200)
                     ->setErrorCorrection(QrCode::LEVEL_HIGH)
