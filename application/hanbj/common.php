@@ -42,6 +42,7 @@ class UserOper
         }
         $data = ['login' => self::VERSION, 'uni' => $unique];
         cache("login$nonce", json_encode($data), self::time * 2);
+        trace("login$nonce");
     }
 }
 
