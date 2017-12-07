@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use app\hanbj\BonusOper;
 use app\hanbj\MemberOper;
+use app\hanbj\UserOper;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Controller;
@@ -83,6 +84,7 @@ class Mobile extends Controller
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
+        UserOper::login();
         $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
         session('json_wx', WxHanbj::json_wx($url));
         return view('home', [

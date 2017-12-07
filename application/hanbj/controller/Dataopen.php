@@ -3,8 +3,10 @@
 namespace app\hanbj\controller;
 
 use app\hanbj\MemberOper;
+use app\hanbj\UserOper;
 use think\Controller;
 use think\Db;
+use Endroid\QrCode\QrCode;
 
 
 class Dataopen extends Controller
@@ -16,22 +18,38 @@ class Dataopen extends Controller
 
     public function json_login()
     {
-        $capt = input('post.capt');
-        if (!captcha_check($capt)) {
-            return json(['msg' => '验证码错误'], 400);
+        switch ($this->request->method()) {
+            case 'GET':
+                $nonce = getNonceStr();
+                session('nonce', $nonce, 30);
+                cache("jump$nonce", json_encode(['event' => 'login']), 30);
+                $qrCode = new QrCode("https://app.zxyqwe.com/mobile/index/index/obj/$nonce");
+                $qrCode
+                    ->setSize(300)
+                    ->setErrorCorrection(QrCode::LEVEL_HIGH)
+                    ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
+                    ->setLabelFontSize(25)
+                    ->setLabel("微信扫码登录");
+                return response($qrCode->get(QrCode::IMAGE_TYPE_JPEG), 200, [
+                    'Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
+                    'Content-Type' => "image/jpeg; charset=utf-8"
+                ]);
+            case 'POST':
+                $nonce = session('nonce');
+                $nonce = cache($nonce);
+                if (strlen($nonce) > 5) {
+                    $nonce = json_decode($nonce, true);
+                    if (UserOper::VERSION === $nonce['login']) {
+                        session('login', UserOper::VERSION);
+                        session('name', $nonce['uni']);
+                        session('unique_name', $nonce['uni']);
+                        return json();
+                    }
+                }
+                return json(['msg' => '未登录'], 400);
+            default:
+                return json(['msg' => $this->request->method()], 400);
         }
-        $mm = input('post.mm');
-        $nonstr = session('nonstr');
-        $user = input('post.user');
-        $tmp = Db::table('user')->where(['name' => $user])->value('mm');
-        $tmp = strtolower($tmp) . $nonstr;
-        $tmp = sha1($tmp);
-        if ($mm !== $tmp) {
-            return json(['msg' => '密码错误'], 400);
-        }
-        session('login', 'succ');
-        session('name', $user);
-        return json(['msg' => ' 登录成功'], 200);
     }
 
     public function json_bulletin()

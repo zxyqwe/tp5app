@@ -13,6 +13,37 @@ use app\WxPayNotify;
 use Exception;
 use think\exception\HttpResponseException;
 
+class UserOper
+{
+    const VERSION = 'succ_1';
+    const FIXED = ['坎丙午', '坤丁酉', '离丙申', '乾壬申'];
+
+    private static function limit($unique)
+    {
+        return in_array($unique, self::FIXED);
+    }
+
+    public static function login()
+    {
+        $unique = session('unique_name');
+        if (!self::limit($unique)) {
+            return;
+        }
+        session('login', self::VERSION);
+        session('name', $unique);
+    }
+
+    public static function nonce($nonce)
+    {
+        $unique = session('unique_name');
+        if (!self::limit($unique)) {
+            return;
+        }
+        $data = ['login' => self::VERSION, 'uni' => $unique];
+        cache($nonce, json_encode($data), 60);
+    }
+}
+
 class MemberOper
 {
     /*
@@ -582,6 +613,9 @@ class WxHanbj
             switch ($obj['event']) {
                 case 'wxtest':
                     return redirect('https://app.zxyqwe.com/hanbj/wxtest/index/obj/' . $nonce);
+                case 'login':
+                    UserOper::nonce($nonce);
+                    return redirect('https://app.zxyqwe.com/hanbj/mobile');
             }
         }
         return view('jump');
