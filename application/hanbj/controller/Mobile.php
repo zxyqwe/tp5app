@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\MemberOper;
 use app\hanbj\UserOper;
+use app\hanbj\WxVote;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Controller;
@@ -91,7 +92,8 @@ class Mobile extends Controller
             'user' => $res,
             'card' => $card['status'],
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
-            'status' => $res['fee_code'] >= date('Y')
+            'status' => $res['fee_code'] >= date('Y'),
+            'vote' => WxVote::result($res['unique_name'])
         ]);
     }
 
