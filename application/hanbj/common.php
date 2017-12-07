@@ -21,7 +21,24 @@ class UserOper
 
     private static function limit($unique)
     {
-        return in_array($unique, self::FIXED);
+        return in_array($unique, self::reg());
+    }
+
+    public static function reg()
+    {
+        $map['year'] = WxOrg::year;
+        $map['grade'] = ['in', [0, 1]];
+        $ret = Db::table('fame')
+            ->where($map)
+            ->field('unique_name as u')
+            ->cache(600)
+            ->select();
+        $data = [];
+        foreach ($ret as $i) {
+            $data[] = $i['u'];
+        }
+        $data = array_merge($data, self::FIXED);
+        return array_unique($data);
     }
 
     public static function login()
