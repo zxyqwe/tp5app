@@ -32,6 +32,7 @@ class UserOper
         }
         session('login', self::VERSION);
         session('name', $unique);
+        trace("$unique 登录微信");
     }
 
     public static function nonce($nonce)
@@ -42,6 +43,7 @@ class UserOper
         }
         $data = ['login' => self::VERSION, 'uni' => $unique];
         cache("login$nonce", json_encode($data), self::time * 2);
+        trace("$unique 登录网页");
     }
 }
 
