@@ -25,7 +25,7 @@ class Dataopen extends Controller
                 cache("jump$nonce", json_encode(['event' => 'login']), 30);
                 $qrCode = new QrCode("https://app.zxyqwe.com/mobile/index/index/obj/$nonce");
                 $qrCode
-                    ->setSize(300)
+                    ->setSize(150)
                     ->setErrorCorrection(QrCode::LEVEL_HIGH)
                     ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
                     ->setLabelFontSize(25)
