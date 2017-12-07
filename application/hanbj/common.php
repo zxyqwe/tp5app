@@ -1543,3 +1543,12 @@ class WxOrg
         return $ret . $unfinish . $finish;
     }
 }
+
+class WxVote
+{
+    public static function result($unique_name)
+    {
+        $data = [$unique_name];
+        return json_encode($data);
+    }
+}
