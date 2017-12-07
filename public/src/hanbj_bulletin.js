@@ -82,7 +82,7 @@ var login = (function ($, Vue, w, undefined) {
             data: {
                 sec: 30
             },
-            compute: {
+            computed: {
                 rto: function () {
                     return this.sec * 100.0 / 30;
                 }
