@@ -17,6 +17,7 @@ class UserOper
 {
     const VERSION = 'succ_1';
     const FIXED = ['坎丙午', '坤丁酉', '离丙申', '乾壬申'];
+    const time = 60;
 
     private static function limit($unique)
     {
@@ -40,7 +41,7 @@ class UserOper
             return;
         }
         $data = ['login' => self::VERSION, 'uni' => $unique];
-        cache($nonce, json_encode($data), 60);
+        cache("login$nonce", json_encode($data), self::time * 2);
     }
 }
 

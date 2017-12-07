@@ -21,14 +21,14 @@ class Dataopen extends Controller
         switch ($this->request->method()) {
             case 'GET':
                 $nonce = getNonceStr();
-                session('nonce', $nonce, 30);
-                cache("jump$nonce", json_encode(['event' => 'login']), 30);
+                session('nonce', $nonce, UserOper::time);
+                cache("jump$nonce", json_encode(['event' => 'login']), UserOper::time);
                 $qrCode = new QrCode("https://app.zxyqwe.com/mobile/index/index/obj/$nonce");
                 $qrCode
-                    ->setSize(150)
+                    ->setSize(200)
                     ->setErrorCorrection(QrCode::LEVEL_HIGH)
                     ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
-                    ->setLabelFontSize(25)
+                    ->setLabelFontSize(15)
                     ->setLabel("微信扫码登录");
                 return response($qrCode->get(QrCode::IMAGE_TYPE_JPEG), 200, [
                     'Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
@@ -36,7 +36,7 @@ class Dataopen extends Controller
                 ]);
             case 'POST':
                 $nonce = session('nonce');
-                $nonce = cache($nonce);
+                $nonce = cache("login$nonce");
                 if (strlen($nonce) > 5) {
                     $nonce = json_decode($nonce, true);
                     if (UserOper::VERSION === $nonce['login']) {
