@@ -20,8 +20,8 @@ class Dataopen extends Controller
     {
         switch ($this->request->method()) {
             case 'GET':
-                $nonce = getNonceStr();
-                session('nonce', $nonce, UserOper::time);
+                $nonce = '123';// getNonceStr();
+                session('nonce', $nonce);
                 cache("jump$nonce", json_encode(['event' => 'login']), UserOper::time);
                 $qrCode = new QrCode("https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce");
                 $qrCode
@@ -36,6 +36,7 @@ class Dataopen extends Controller
                 ]);
             case 'POST':
                 $nonce = session('nonce');
+                trace("login$nonce");
                 $nonce = cache("login$nonce");
                 if (strlen($nonce) > 5) {
                     $nonce = json_decode($nonce, true);
