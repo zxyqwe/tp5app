@@ -46,7 +46,7 @@ class Dataopen extends Controller
                         return json();
                     }
                 }
-                return json(['msg' => '未登录'], 400);
+                return json(['msg' => $nonce], 400);
             default:
                 return json(['msg' => $this->request->method()], 400);
         }

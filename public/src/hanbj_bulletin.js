@@ -97,6 +97,9 @@ var login = (function ($, Vue, w, undefined) {
             success: function (msg) {
                 location.reload(true);
                 location.search += '&_=' + Date.now();
+            },
+            error: function () {
+                setTimeout(heartbeat, 1000);
             }
         });
     };
@@ -107,12 +110,12 @@ var login = (function ($, Vue, w, undefined) {
             $capt_img.attr('src', w.u11 + '?_=' + new Date());
         }
         vmain.sec = limit - iter;
-        heartbeat();
     };
     var init = function () {
         $capt_img = $('#capt_img');
         vue_init();
         setInterval(loop, 1000);
+        heartbeat();
     };
     return {
         init: init
