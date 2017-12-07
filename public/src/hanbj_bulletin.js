@@ -73,43 +73,48 @@ var bonus = (function ($, w, undefined) {
     };
 })(jQuery, window);
 
-var login = (function ($, w, undefined) {
+var login = (function ($, Vue, w, undefined) {
     'use strict';
-    var $mm = $('#mm');
-    var init = function () {
-        $('#capt_img').click(function () {
-            $('#capt_img').attr('src', '/captcha.html?' + new Date());
-        });
-        $("#login").click(function () {
-            var mm = $mm.val();
-            mm = CryptoJS.SHA1(mm).toString();
-            mm += w.nonStr;
-            mm = CryptoJS.SHA1(mm).toString();
-            $mm.val(mm);
-            var d = $('#form').serializeArray();
-            w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: w.u11,
-                data: d,
-                dataType: "json",
-                success: function (msg) {
-                    location.reload(true);
-                    location.search += '&_='+Date.now();
-                },
-                error: function (msg) {
-                    w.msgto(msg);
-                    $('#capt_img').attr('src', '/captcha.html?' + new Date());
-                    $('#mm').val('');
-                    $('#capt').val('');
-                },
-                complete: function () {
-                    w.cancelloading();
+    var $capt_img, iter = 0, vmain;
+    var vue_init = function () {
+        vmain = new Vue({
+            el: '#vmain',
+            data: {
+                sec: 30
+            },
+            compute: {
+                rto: function () {
+                    return this.sec * 100.0 / 30;
                 }
-            });
+            }
         });
+    };
+    var heartbeat = function () {
+        $.ajax({
+            type: "POST",
+            url: w.u11,
+            dataType: "json",
+            success: function (msg) {
+                location.reload(true);
+                location.search += '&_=' + Date.now();
+            }
+        });
+    };
+    var loop = function () {
+        iter++;
+        iter %= 30;
+        if (iter === 0) {
+            $capt_img.attr('src', w.u11 + '?_=' + new Date());
+        }
+        vmain.sec = 30 - iter;
+        heartbeat();
+    };
+    var init = function () {
+        $capt_img = $('#capt_img');
+        vue_init();
+        setInterval(loop, 1000);
     };
     return {
         init: init
     };
-})(jQuery, window);
+})(jQuery, Vue, window);

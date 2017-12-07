@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\FeeOper;
 use app\hanbj\MemberOper;
+use app\hanbj\UserOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -18,7 +19,7 @@ class Data extends Controller
 
     protected function valid_id()
     {
-        if ('succ' !== session('login')) {
+        if (UserOper::VERSION !== session('login')) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -544,10 +545,7 @@ class Data extends Controller
                 $eid = input('post.eid');
                 $rn = input('post.rn');
                 $mail = input('post.mail', 0, FILTER_VALIDATE_EMAIL);
-                $map['name'] = session('name');
-                $ret = Db::table('user')
-                    ->where($map)
-                    ->value('peo');
+                $ret = session('unique_name');
                 $ret = MemberOper::Junior2Normal($uni, $tie, $gender, $phone, $QQ, $ret, $eid, $rn, $mail);
                 if ($ret) {
                     return json(['msg' => 'ok']);

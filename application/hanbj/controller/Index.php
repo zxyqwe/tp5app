@@ -6,6 +6,7 @@ namespace app\hanbj\controller;
 use app\hanbj\BonusOper;
 use app\hanbj\LogUtil;
 use app\hanbj\MemberOper;
+use app\hanbj\UserOper;
 use app\hanbj\WxHanbj;
 use app\hanbj\WxOrg;
 use think\Controller;
@@ -20,7 +21,7 @@ class Index extends Controller
 
     protected function valid_id()
     {
-        if ('succ' !== session('login')) {
+        if (UserOper::VERSION !== session('login')) {
             $res = redirect('/hanbj/index/bulletin');
             throw new HttpResponseException($res);
         }
@@ -40,12 +41,10 @@ class Index extends Controller
 
     public function index()
     {
-        if ('succ' === session('login')) {
+        if (UserOper::VERSION === session('login')) {
             return redirect('/hanbj/index/home');
         }
-        $nonstr = getNonceStr();
-        session('nonstr', $nonstr);
-        return view('login', ['nonstr' => $nonstr]);
+        return view('login');
     }
 
     public function old()//需要这个，不然route就会屏蔽入口

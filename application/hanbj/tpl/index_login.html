@@ -9,41 +9,17 @@
                             汉服北京会员部管理系统
                         </h3>
                     </div>
-                    <div class="row">
-                        <div class="col-md-10 col-md-offset-1 column">
-                            <form id="form" class="form-horizontal login-form" action="welcome" method="post"
-                                  novalidate="novalidate">
-                                <fieldset>
-                                    <div class="form-group">
-                                        <div class="controls">
-                                            <input id="user" name="user" type="text" placeholder="用户名"
-                                                   class="required form-control input-lg">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="controls">
-                                            <input id="mm" name="mm" type="password" placeholder="密码"
-                                                   class="required form-control input-lg">
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-inline">
-                                        <div class="controls">
-                                            <input id="capt" name="capt" type="text" placeholder="验证码"
-                                                   class="required form-control input-lg" style="float: left">
-                                            <img id="capt_img" src="/captcha.html" alt="captcha">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="control-group">
-                                            <button type="button" id="login" class="btn btn-block btn-lg btn-primary">
-                                                立即登录
-                                            </button>
-                                        </div>
-                                    </div>
-                                </fieldset>
-                            </form>
-                        </div>
-                        <div class="col-md-1 column">
+                    <div class="row" id="vmain">
+                        <div class="col-md-4 col-md-offset-4 column">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-success progress-bar-striped active"
+                                     role="progressbar"
+                                     v-bind:aria-valuenow="{ rto }" v-bind:style="{ width: rto + '%' }"
+                                     aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
+                                    {{ sec }}秒
+                                </div>
+                            </div>
+                            <img src="/hanbj/data/json_login" id="capt_img">
                         </div>
                     </div>
                 </div>
@@ -55,7 +31,6 @@
 <script>
     var nav = 'nav1_1';
     $(window).load(function () {
-        window.nonStr = '{$nonstr}';
         login.init();
     });
 </script>
