@@ -338,7 +338,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                     name: vmain.res
                 },
                 success: function (msg) {
-                    location.href = w.u5;
+                    w.location.href = w.u5;
                 },
                 error: function (msg) {
                     w.msgto(msg);
@@ -525,7 +525,7 @@ var fee = (function ($, Vue, w, undefined) {
                     type: 0
                 },
                 success: function (msg) {
-                    location.href = w.u3;
+                    w.location.href = w.u3;
                 },
                 error: function (msg) {
                     w.msgto(msg);
@@ -546,7 +546,7 @@ var fee = (function ($, Vue, w, undefined) {
                     type: 1
                 },
                 success: function (msg) {
-                    location.href = w.u3;
+                    w.location.href = w.u3;
                 },
                 error: function (msg) {
                     w.msgto(msg);

@@ -1,7 +1,7 @@
 var wx_home = (function ($, Vue, w, undefined) {
     'use strict';
     var $card1, $card0, $cardn, $loading, vact, $activity_button, vvalid, $valid_button, vwork_act_log,
-        $work_act_log_button, rand = new Date().getTime();
+        $work_act_log_button;
     var add_card = function (msg) {
         wx.addCard({
             cardList: [{
@@ -9,7 +9,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 cardExt: JSON.stringify(msg)
             }],
             success: function (res) {
-                w.location.search = '?g=' + rand;
+                w.location.search += '&_=' + Date.now();
             },
             fail: function (msg) {
                 w.msgto2(msg);
@@ -199,7 +199,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: w.u5,
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=' + rand;
+                    w.location.search += '&_=' + Date.now();
                 },
                 error: function (msg) {
                     w.msgto(msg);
@@ -285,7 +285,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: w.u10,
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search = '?g=' + rand;
+                    w.location.search += '&_=' + Date.now();
                 },
                 error: function (msg) {
                     w.msgto(msg);
@@ -410,7 +410,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 },
                 success: function (msg) {
                     w.msgok();
-                    w.location.search = '?g=' + rand;
+                    w.location.search += '&_=' + Date.now();
                 },
                 error: function (msg) {
                     w.msgto(msg);

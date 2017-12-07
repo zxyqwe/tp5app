@@ -30,8 +30,8 @@ var wx_Old = (function ($, w, undefined) {
                     w.msgok();
                     setTimeout(function () {
                         WeixinJSBridge.call('closeWindow');
-                        location.href = w.u16;
-                        location.search += '&_=' + Date.now();
+                        w.location.href = w.u16;
+                        w.location.search += '&_=' + Date.now();
                     }, 1000);
                 },
                 error: function (msg) {
@@ -80,8 +80,8 @@ var wx_New = (function ($, Vue, w, undefined) {
                 w.msgok();
                 setTimeout(function () {
                     WeixinJSBridge.call('closeWindow');
-                    location.href = w.u16;
-                    location.search += '&_=' + Date.now();
+                    w.location.href = w.u16;
+                    w.location.search += '&_=' + Date.now();
                 }, 1000);
             },
             error: function (msg) {
