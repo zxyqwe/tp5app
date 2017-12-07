@@ -1548,7 +1548,15 @@ class WxVote
 {
     public static function result($unique_name)
     {
-        $data = [$unique_name];
+        $data = [];
+        $data['result'] = false;
+        if (cache("?wxvote$unique_name")) {
+            $data['ans'] = json_decode(cache("wxvote$unique_name"), true);
+            $data['unvote'] = false;
+        } else {
+            $data['ans'] = [];
+            $data['unvote'] = true;
+        }
         return json_encode($data);
     }
 }

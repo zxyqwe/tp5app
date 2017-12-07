@@ -5,9 +5,9 @@
     <div class="page__bd page__bd_spacing sr-only" id="votemain">
         <div class="weui-cells__title">候选人，可多选，可弃权。</div>
         <div class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" v-for="i in candi">
+            <label class="weui-cell weui-check__label" v-for="i in candi" v-bind:for="i.v">
                 <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" v-model="ans" v-bind:value="{ i.v }">
+                    <input type="checkbox" class="weui-check" v-model="ans" v-bind:value="i.v" v-bind:id="i.v">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">
@@ -18,9 +18,15 @@
         <div class="weui-flex">
             <div class="weui-flex__item">
                 <div class="placeholder">
-                    <a v-if="unvote" v-on:click="sub()" href="javascript:"
+                    <p>已选择：{{ ans_res }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex" v-if="unvote">
+            <div class="weui-flex__item">
+                <div class="placeholder">
+                    <a v-on:click="sub()" href="javascript:"
                        class="weui-btn weui-btn_plain-primary">投票无悔</a>
-                    <p v-else>已投票：{{ ans_res }}</p>
                 </div>
             </div>
         </div>
@@ -35,7 +41,7 @@
         </div>
     </div>
     <div class="page__ft">
-        <div class="sr-only" id="data">
+        <div class="sr-only" id="votedata">
             {$vote}
         </div>
     </div>
@@ -46,13 +52,23 @@
         'use strict';
         var vmain, cand = ['aaa-bbb', 'ccc-ddd', 'eee-fff'];
         var init = function () {
+            var votedata = $('#votedata').html();
+            votedata = JSON.parse(testdata);
             vmain = new Vue({
                 el: '#votemain',
                 data: {
                     candi: [],
-                    ans: [],
-                    unvote: true,
-                    result: false
+                    ans: votedata.ans,
+                    unvote: votedata.unvote,
+                    result: votedata.result
+                },
+                computed: {
+                    ans_res: function () {
+                        if (this.ans.length === 0) {
+                            return '弃权';
+                        }
+                        return this.ans.join(', ');
+                    }
                 },
                 methods: {
                     sub: function () {
@@ -62,8 +78,9 @@
                 ready: function () {
                     for (var i in cand) {
                         var tmp = cand[i];
-                        this.candy.push({v: tmp.split('-')[0], n: tmp})
+                        this.candi.push({v: tmp.split('-')[0], n: tmp})
                     }
+                    $('#votemain').removeClass('sr-only');
                 }
             })
             ;
