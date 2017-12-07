@@ -762,7 +762,7 @@ class CardOper
         if (null === $code) {
             return;
         }
-        self::update($uname, $code, 0, 0, "激活为：$msg");
+        self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：$msg");
     }
 
     public static function update($uni, $card, $add_b, $b, $msg)
