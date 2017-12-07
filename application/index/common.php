@@ -386,7 +386,7 @@ class BiliHelper
     {
         $urlapi = $this->prefix . 'freeSilver/getCaptcha?ts=' . time();
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-        if (json_encode(json_decode($raw, true)) === $raw) {
+        if (!is_null(json_decode($raw))) {
             return 0;
         }
         $image = imagecreatefromstring($raw);
@@ -460,6 +460,10 @@ class BiliHelper
         }
         if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+        }
+        if (is_null(json_decode($return_str))) {
+            $return_str = str_replace(["\r", "\n"], '', $return_str);
+            return substr($return_str, 0, 50);
         }
         return $return_str;
     }
