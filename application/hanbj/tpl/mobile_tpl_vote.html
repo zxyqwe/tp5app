@@ -53,7 +53,7 @@
         var vmain, cand = ['aaa-bbb', 'ccc-ddd', 'eee-fff'];
         var init = function () {
             var votedata = $('#votedata').html();
-            votedata = JSON.parse(testdata);
+            votedata = JSON.parse(votedata);
             vmain = new Vue({
                 el: '#votemain',
                 data: {
