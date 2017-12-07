@@ -462,8 +462,8 @@ class BiliHelper
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
         if (is_null(json_decode($return_str))) {
-            $return_str = str_replace(["\r", "\n"], '', $return_str);
-            return substr($return_str, 0, 50);
+            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
+            $return_str = urlencode(substr($return_str, 0, 100));
         }
         return $return_str;
     }
