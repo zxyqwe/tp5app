@@ -75,16 +75,16 @@ var bonus = (function ($, w, undefined) {
 
 var login = (function ($, Vue, w, undefined) {
     'use strict';
-    var $capt_img, iter = 0, vmain;
+    var $capt_img, iter = 0, vmain, limit = 60;
     var vue_init = function () {
         vmain = new Vue({
             el: '#vmain',
             data: {
-                sec: 30
+                sec: limit
             },
             computed: {
                 rto: function () {
-                    return this.sec * 100.0 / 30;
+                    return this.sec * 100.0 / limit;
                 }
             }
         });
@@ -102,11 +102,11 @@ var login = (function ($, Vue, w, undefined) {
     };
     var loop = function () {
         iter++;
-        iter %= 30;
+        iter %= limit;
         if (iter === 0) {
             $capt_img.attr('src', w.u11 + '?_=' + new Date());
         }
-        vmain.sec = 30 - iter;
+        vmain.sec = limit - iter;
         heartbeat();
     };
     var init = function () {
