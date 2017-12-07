@@ -30,6 +30,9 @@ class UserOper
         if (!self::limit($unique)) {
             return;
         }
+        if (self::VERSION === session('login')) {
+            return;
+        }
         session('login', self::VERSION);
         session('name', $unique);
         trace("$unique 登录微信");
