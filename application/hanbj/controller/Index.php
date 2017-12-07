@@ -69,7 +69,7 @@ class Index extends Controller
     public function runlog($data = -1)
     {
         MemberOper::daily();
-        if (session('name') !== 'zxyqwe') {
+        if (session('name') !== '坎丙午') {
             return redirect('/hanbj/index/home');
         }
         if (-1 < $data) {
