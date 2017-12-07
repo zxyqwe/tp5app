@@ -1,86 +1,75 @@
 <div class="page">
     <div class="page__hd">
-        <h1 class="page__title">投票</h1>
+        <h1 class="page__title">下届吧务组选举投票</h1>
     </div>
-    <div class="page__bd page__bd_spacing" id="votemain">
-        <div class="weui-panel">
+    <div class="page__bd page__bd_spacing sr-only" id="votemain">
+        <div class="weui-cells__title">候选人，可多选，可弃权。</div>
+        <div class="weui-cells weui-cells_checkbox">
+            <label class="weui-cell weui-check__label" v-for="i in candi">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" class="weui-check" v-model="ans" v-bind:value="{ i.v }">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>{{ i.n }}</p>
+                </div>
+            </label>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="placeholder">
+                    <a v-if="unvote" v-on:click="sub()" href="javascript:"
+                       class="weui-btn weui-btn_plain-primary">投票无悔</a>
+                    <p v-else>已投票：{{ ans_res }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="weui-panel" v-if="result">
             <div class="weui-panel__hd">
                 投票结果
             </div>
             <div class="weui-panel__bd">
-                <div class="weui-grids">
-                    <template v-for="n in ns">
-                        <div class="weui-grid-sm"
-                             v-bind:style="{ background : t_clr(n.clr), height : t_ht }">
-                        </div>
-                    </template>
-                </div>
             </div>
             <div class="weui-panel__ft">
             </div>
         </div>
     </div>
     <div class="page__ft">
+        <div class="sr-only" id="data">
+            {$data}
+        </div>
     </div>
 </div>
 <script type="text/javascript">
     //ToDo
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, col = [
-            '#ddd',
-            '#913173',
-            '#013673',
-            '#917603'];
+        var vmain, cand = ['aaa-bbb', 'ccc-ddd', 'eee-fff'];
         var init = function () {
             vmain = new Vue({
                 el: '#votemain',
                 data: {
-                    ns: []
-                },
-                computed: {
-                    t_ht: function () {
-                        return '3.45px';//ToDo
-                    }
+                    candi: [],
+                    ans: [],
+                    unvote: true,
+                    result: false
                 },
                 methods: {
-                    t_clr: function (i) {
-                        return col[i];
-                    },
-                    shuffle: function () {
-                        var a = this.ns;
-                        this.ns = [];
-                        var j, x, i;
-                        for (i = a.length - 1; i > 0; i--) {
-                            j = Math.floor(Math.random() * (i + 1));
-                            x = a[i];
-                            a[i] = a[j];
-                            a[j] = x;
-                        }
-                        this.ns = a;
-                        return this.ns;
-                    },
-                    gen_tiles: function () {
-                        var i = 10000;
-                        while (i--) {
-                            this.ns.push({
-                                id: i,
-                                clr: Math.floor(Math.random() * 4)
-                            });
-                        }
+                    sub: function () {
+                        console.log(this.ans);
                     }
                 },
                 ready: function () {
-                    this.gen_tiles();
+                    for (var i in cand) {
+                        var tmp = cand[i];
+                        this.candy.push({v: tmp.split('-')[0], n: tmp})
+                    }
                 }
             })
             ;
         };
         return {
-            init: init,
-            shuffle: function () {
-                return vmain.shuffle();
-            }
+            init: init
         };
     })(Zepto, Vue, window);
     vote.init();
