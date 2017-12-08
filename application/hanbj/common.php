@@ -1546,14 +1546,41 @@ class WxOrg
 
 class WxVote
 {
-    public static function result($unique_name)
+    private static function weight()
+    {
+        $org = new WxOrg();
+        $org->upper;//2.0
+        $org->lower;//1.5
+        //1.0
+        $data = [];
+        return $data;
+    }
+
+    private static function watcher($unique)
+    {
+        return in_array($unique, ['坎丙午']);
+    }
+
+    private static function make_res($unique_name)
     {
         $data = [];
-        $data['result'] = false;
-        if (cache("?wxvote$unique_name")) {
-            $data['ans'] = json_decode(cache("wxvote$unique_name"), true);
-            $data['unvote'] = false;
-        } else {
+        $data['result'] = self::watcher($unique_name);
+        if ($data['result']) {
+            $data['res_ans'] = self::weight();
+        }
+        return $data;
+    }
+
+    public static function result($unique_name)
+    {
+        $data = self::make_res($unique_name);
+        $data['ans'] = Db::table('vote')
+            ->where([
+                'year' => WxOrg::year,
+                'unique_name' => $unique_name
+            ])->value('ans');
+        $data['unvote'] = false;
+        if (is_null($data['ans'])) {
             $data['ans'] = [];
             $data['unvote'] = true;
         }
