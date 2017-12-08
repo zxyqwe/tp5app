@@ -1599,10 +1599,10 @@ class WxVote
                 'year' => WxOrg::year,
                 'unique_name' => $unique_name
             ])->value('ans');
-        $data['unvote'] = true;
+        $data['unvote'] = false;
         if (is_null($data['ans'])) {
             $data['ans'] = [];
-            $data['unvote'] = true;
+            $data['unvote'] = false;
         } else {
             $data['ans'] = json_decode($data['ans'], true);
         }

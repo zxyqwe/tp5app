@@ -147,6 +147,9 @@ var baselog = (function ($, Vue, w, undefined) {
             }
             return params;
         };
+        w.codeFormatter = function (value, row) {
+            return home.mem_code(value);
+        };
         if (undefined === build_v) {
             build_vue(refresh);
         } else {
@@ -218,7 +221,7 @@ var feelog = (function ($, Vue, w, undefined) {
         });
     };
     var init = function () {
-        w.codeFormatter = function (value, row) {
+        w.code2Formatter = function (value, row) {
             return value === '1' ? alr : nye;
         };
         alr = $('#ggly').html() + '缴费';
@@ -267,6 +270,9 @@ var order = (function ($, w, undefined) {
         }
     };
     var init = function () {
+        w.codeFormatter = function (value, row) {
+            return home.mem_code(value);
+        };
         $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
@@ -764,8 +770,11 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var fameori = function () {
-        w.codeFormatter = function (value, row) {
+        w.code2Formatter = function (value, row) {
             return grade(value);
+        };
+        w.codeFormatter = function (value, row) {
+            return home.mem_code(value);
         };
         var $table = $('#table');
         $table.bootstrapTable({
