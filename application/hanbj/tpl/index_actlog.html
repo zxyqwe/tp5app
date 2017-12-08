@@ -22,7 +22,7 @@
                     <div class="form-group" style="margin-right: 1em">
                         <select v-model="act_res" class="form-control">
                             <option value="全部活动" selected>全部活动</option>
-                            <option v-for="option in act" v-bind:value="option">
+                            <option v-for="option in act" :value="option">
                                 {{ option }}
                             </option>
                         </select>
