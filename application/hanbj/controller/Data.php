@@ -367,7 +367,8 @@ class Data extends Controller
                 'tieba_id as t',
                 'year as y',
                 'grade as g',
-                'label as l'
+                'label as l',
+                'm.code'
             ])
             ->select();
         return json($res);

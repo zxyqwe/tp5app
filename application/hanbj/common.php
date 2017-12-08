@@ -1602,7 +1602,7 @@ class WxVote
         $data['unvote'] = false;
         if (is_null($data['ans'])) {
             $data['ans'] = [];
-            $data['unvote'] = false;
+            $data['unvote'] = true;
         } else {
             $data['ans'] = json_decode($data['ans'], true);
         }
