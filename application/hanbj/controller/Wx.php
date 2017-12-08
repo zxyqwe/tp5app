@@ -6,6 +6,7 @@ use app\hanbj\BonusOper;
 use app\hanbj\MemberOper;
 use app\hanbj\OrderOper;
 use app\hanbj\HanbjRes;
+use app\hanbj\WxOrg;
 use think\Controller;
 use think\Db;
 use app\hanbj\HanbjNotify;
@@ -222,5 +223,26 @@ class Wx extends Controller
             ])
             ->select();
         return json(['hist' => $ret]);
+    }
+
+    public function vote()
+    {
+        $member_code = intval(session('member_code'));
+        if ($member_code !== MemberOper::NORMAL) {
+            return json(['msg' => '用户锁住'], 400);
+        }
+        $ans = input('post.ans/a', []);
+        $data = [
+            'uniaue_name' => session('unique_name'),
+            'year' => WxOrg::year,
+            'ans' => json_encode($ans)
+        ];
+        try {
+            Db::table('vote')
+                ->insert($data);
+            return json(['msg' => 'ok']);
+        } catch (\Exception $e) {
+            return json(['msg' => '' . $e], 400);
+        }
     }
 }
