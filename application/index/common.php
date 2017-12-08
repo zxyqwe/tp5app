@@ -387,7 +387,7 @@ class BiliHelper
     private function captcha()
     {
         $urlapi = $this->prefix . 'freeSilver/getCaptcha?ts=' . time();
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false, false);
         if (!is_null(json_decode($raw))) {
             return 0;
         }
@@ -439,7 +439,7 @@ class BiliHelper
         return $ans;
     }
 
-    private function bili_Post($url, $cookie, $room, $data = false)
+    private function bili_Post($url, $cookie, $room, $data = false, $sub = true)
     {
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
@@ -463,7 +463,7 @@ class BiliHelper
         if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
-        if (is_null(json_decode($return_str))) {
+        if ($sub && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
             $return_str = urlencode(substr($return_str, 0, 100));
         }
