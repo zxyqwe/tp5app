@@ -8,7 +8,7 @@
             <h4>总进度</h4>
             <div class="progress">
                 <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
-                     v-bind:aria-valuenow="{ rto }" v-bind:style="{ width: rto + '%' }" aria-valuemin="0"
+                     :aria-valuenow="{ rto }" :style="{ width: rto + '%' }" aria-valuemin="0"
                      aria-valuemax="100" style="min-width: 2em;">
                     {{ rto }}%
                 </div>
