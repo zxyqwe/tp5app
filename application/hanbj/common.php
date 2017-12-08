@@ -1549,10 +1549,30 @@ class WxVote
     private static function weight()
     {
         $org = new WxOrg();
-        $org->upper;//2.0
-        $org->lower;//1.5
-        //1.0
+        $ret = Db::table('vote')
+            ->where([
+                'year' => WxOrg::year
+            ])->field([
+                'unique_name as u',
+                'ans'
+            ])
+            ->select();
         $data = [];
+        foreach ($ret as $i) {
+            $ans = json_decode($i['ans'], true);
+            $w = 1.0;
+            if (in_array($i['u'], $org->lower)) {
+                $w = 1.5;
+            } elseif (in_array($i['u'], $org->upper)) {
+                $w = 2.0;
+            }
+            foreach ($ans as $j) {
+                if (!isset($data[$j])) {
+                    $data[$j] = 0;
+                }
+                $data[$j] += $w;
+            }
+        }
         return $data;
     }
 
@@ -1583,6 +1603,8 @@ class WxVote
         if (is_null($data['ans'])) {
             $data['ans'] = [];
             $data['unvote'] = true;
+        } else {
+            $data['ans'] = json_decode($data['ans'], true);
         }
         return json_encode($data);
     }
