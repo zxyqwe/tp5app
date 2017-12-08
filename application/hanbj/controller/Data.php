@@ -80,7 +80,8 @@ class Data extends Controller
                 'act_time as y',
                 'm.tieba_id as t',
                 'f.up',
-                'f.bonus'
+                'f.bonus',
+                'm.code'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -126,7 +127,8 @@ class Data extends Controller
                 'f.code as c',
                 'm.tieba_id as t',
                 'f.up',
-                'f.bonus'
+                'f.bonus',
+                'm.code'
             ])
             ->select();
         $data['rows'] = $tmp;
@@ -255,6 +257,7 @@ class Data extends Controller
             ->field([
                 'f.tieba_id as t',
                 'f.unique_name as u',
+                'f.code as c'
             ])
             ->cache(600)
             ->select();
@@ -479,7 +482,8 @@ class Data extends Controller
                 'f.type as y',
                 'f.value as v',
                 'f.label as l',
-                'f.time as i'
+                'f.time as i',
+                'm.code'
             ])
             ->select();
         $data['rows'] = $res;
