@@ -73,6 +73,26 @@
                 methods: {
                     sub: function () {
                         console.log(this.ans);
+                        w.waitloading();
+                        $.ajax({
+                            type: "POST",
+                            url: w.u18,
+                            data: {ans: vmain.ans},
+                            dataType: "json",
+                            success: function (msg) {
+                                w.msgok();
+                                setTimeout(function () {
+                                    w.location.search += '&_=' + Date.now();
+                                    WeixinJSBridge.call('closeWindow');
+                                }, 1000);
+                            },
+                            error: function (msg) {
+                                w.msgto(msg);
+                            },
+                            complete: function () {
+                                w.cancelloading();
+                            }
+                        });
                     }
                 },
                 ready: function () {

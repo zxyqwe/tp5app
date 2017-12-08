@@ -282,6 +282,7 @@ var wx_init = (function ($, w, undefined) {
         w.u15 = hanbj + mobile + 'unused';
         w.u16 = hanbj + mobile;
         w.u17 = hanbj + wx + 'history';
+        w.u18 = hanbj + wx + 'vote';
     };
     var init = function (jssign) {
         dict();
