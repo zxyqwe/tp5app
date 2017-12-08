@@ -5,9 +5,9 @@
     <div class="page__bd page__bd_spacing sr-only" id="votemain">
         <div class="weui-cells__title">候选人，可多选，可弃权。</div>
         <div class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" v-for="i in candi" v-bind:for="i.v">
+            <label class="weui-cell weui-check__label" v-for="i in candi" :for="i.v">
                 <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" v-model="ans" v-bind:value="i.v" v-bind:id="i.v">
+                    <input type="checkbox" class="weui-check" v-model="ans" :value="i.v" :id="i.v" :disabled="!unvote">
                     <i class="weui-icon-checked"></i>
                 </div>
                 <div class="weui-cell__bd">

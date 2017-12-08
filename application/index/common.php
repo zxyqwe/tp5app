@@ -216,11 +216,11 @@ class BiliHelper
                 }
                 $data = $data['data'];
                 if ($data['gift_num'] > 0) {
-                    $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
+                    $data_for = "$key {$data['gift_num']} 个 {$data['gift_name']}";
                     if ($data['gift_name'] !== '辣条') {
-                        trace($data);
+                        trace($data_for);
                     }
-                    return json(['msg' => $data]);
+                    return json(['msg' => $data_for]);
                 }
                 return json(['msg' => $raw]);
             default:
