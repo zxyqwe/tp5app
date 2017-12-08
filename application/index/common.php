@@ -217,7 +217,9 @@ class BiliHelper
                 $data = $data['data'];
                 if ($data['gift_num'] > 0) {
                     $data = "$key {$data['gift_num']} 个 {$data['gift_name']}";
-                    trace($data);
+                    if ($data['gift_name'] !== '辣条') {
+                        trace($data);
+                    }
                     return json(['msg' => $data]);
                 }
                 return json(['msg' => $raw]);
