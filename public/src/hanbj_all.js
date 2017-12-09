@@ -722,6 +722,9 @@ var fame = (function ($, Vue, w, undefined) {
                 },
                 del_candy: function (n) {
                     this.res.splice(n, 1);
+                },
+                grade_code:function (n) {
+                    return grade(n);
                 }
             }
         });
