@@ -713,7 +713,8 @@ var fame = (function ($, Vue, w, undefined) {
                 grade: 0,
                 labelname: '',
                 candy: [],
-                res: []
+                res: [],
+                labellist: ['中枢', '会员中心', '外联部', '宣传部', '活动部', '人力部', '会员部', '秘书处'].sort()
             },
             methods: {
                 sel_candy: function (item) {
