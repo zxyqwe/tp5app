@@ -975,7 +975,7 @@ var birth = (function ($, w, undefined) {
             calendar: [{
                 top: 100,
                 left: 'center',
-                range: ['2000-01-01', '2000-12-31'],
+                range: ['2000-01-01', '2000-06-30'],
                 splitLine: {
                     show: true,
                     lineStyle: {
@@ -984,7 +984,37 @@ var birth = (function ($, w, undefined) {
                         type: 'solid'
                     }
                 },
-                yearLabel: {},
+                yearLabel: {
+                    formatter: '上半年',
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#323c48',
+                        borderWidth: 1,
+                        borderColor: '#111'
+                    }
+                }
+            }, {
+                top: 100,
+                left: 'center',
+                range: ['2000-07-01', '2000-12-31'],
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        color: '#000',
+                        width: 4,
+                        type: 'solid'
+                    }
+                },
+                yearLabel: {
+                    formatter: '下半年',
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
                 itemStyle: {
                     normal: {
                         color: '#323c48',
@@ -1012,6 +1042,44 @@ var birth = (function ($, w, undefined) {
                     name: 'Top 12',
                     type: 'effectScatter',
                     coordinateSystem: 'calendar',
+                    data: sli,
+                    symbolSize: function (val) {
+                        return val[1] * 3;
+                    },
+                    showEffectOn: 'render',
+                    rippleEffect: {
+                        brushType: 'stroke'
+                    },
+                    hoverAnimation: true,
+                    itemStyle: {
+                        normal: {
+                            color: '#f4e925',
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    zlevel: 1
+                },
+                {
+                    name: '生日',
+                    type: 'scatter',
+                    coordinateSystem: 'calendar',
+                    calendarIndex: 1,
+                    data: vdata,
+                    symbolSize: function (val) {
+                        return val[1] * 3;
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#ddb926'
+                        }
+                    }
+                },
+                {
+                    name: 'Top 12',
+                    type: 'effectScatter',
+                    coordinateSystem: 'calendar',
+                    calendarIndex: 1,
                     data: sli,
                     symbolSize: function (val) {
                         return val[1] * 3;
