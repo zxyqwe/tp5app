@@ -259,6 +259,9 @@ class BiliHelper
             $join = json_decode($raw, true);
             if ($join['code'] !== 0) {
                 trace('unknown_raffle' . json_encode($item) . $raw);
+                if (strpos($raw, '已加入') !== false) {
+                    $this->lock("unknown_raffle$payload", $this->long_timeout());
+                }
             } else {
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
             }
