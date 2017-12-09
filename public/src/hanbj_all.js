@@ -705,13 +705,16 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var initlog = function () {
+        Vue.filter('grade_code', function (n) {
+            return grade(n);
+        });
         vmain = new Vue({
             el: '#body',
             data: {
                 uname: '',
                 year: 0,
                 grade: 0,
-                labelname: '',
+                labelname: '中枢',
                 candy: [],
                 res: [],
                 labellist: ['中枢', '会员中心', '外联部', '宣传部', '活动部', '人力部', '会员部', '秘书处'].sort()
@@ -722,9 +725,6 @@ var fame = (function ($, Vue, w, undefined) {
                 },
                 del_candy: function (n) {
                     this.res.splice(n, 1);
-                },
-                grade_code:function (n) {
-                    return grade(n);
                 }
             }
         });

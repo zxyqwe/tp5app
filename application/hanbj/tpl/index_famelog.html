@@ -45,7 +45,7 @@
                                 <label class="col-sm-2 control-label">级别</label>
                                 <div class="col-sm-10">
                                     <label class="radio-inline" v-for="gra in 5">
-                                        <input type="radio" :value="gra" v-model="grade">{{ grade_code(gra) }}
+                                        <input type="radio" :value="gra" v-model="grade">{{ gra | grade_code }}
                                     </label>
                                 </div>
                             </div>
