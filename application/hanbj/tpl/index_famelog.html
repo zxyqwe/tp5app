@@ -44,19 +44,29 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">级别</label>
                                 <div class="col-sm-10">
-                                    <select class="form-control" v-model="grade">
-                                        <option value="0">会长</option>
-                                        <option value="1">副会长</option>
-                                        <option value="2">部长</option>
-                                        <option value="3">副部长</option>
-                                        <option value="4">干事</option>
-                                    </select>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="0" v-model="grade">会长
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="1" v-model="grade">副会长
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="2" v-model="grade">部长
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="3" v-model="grade">副部长
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" value="4" v-model="grade">干事
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">部门</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" placeholder="名称" v-model="labelname">
+                                    <select class="form-control" v-model="labelname">
+                                        <option v-for="lab in labellist" :value="lab">{{ lab }}</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>

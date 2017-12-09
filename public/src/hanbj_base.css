@@ -54,6 +54,7 @@ p.footer {
     bottom: 50px;
     right: 60px;
     display: none;
+    z-index: 999;
 }
 
 #back-to-top a {
