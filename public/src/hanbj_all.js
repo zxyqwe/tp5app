@@ -706,7 +706,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var initlog = function () {
         Vue.filter('grade_code', function (n) {
-            return grade(n);
+            return grade('' + n);
         });
         vmain = new Vue({
             el: '#body',
