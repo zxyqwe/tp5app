@@ -836,7 +836,7 @@ var test = (function ($, Vue, w, undefined) {
 var birth = (function ($, w, undefined) {
     'use strict';
     var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {}, gender = {g0: 0, g1: 0},
-        birthday_set = {};
+        birthday_set = {}, default_year = new Date().getFullYear();
     var get_year = function (y, m, d, g) {
         year_choice.push(y);
         if (undefined === year_set[y]) {
@@ -928,7 +928,7 @@ var birth = (function ($, w, undefined) {
         myChart.setOption(option);
     };
     var get_birthday = function (y, m, d, g) {
-        var s = '2000-' + m + '-' + d;
+        var s = default_year + '-' + m + '-' + d;
         if (undefined === birthday_set[s]) {
             birthday_set[s] = 0;
         }
@@ -975,7 +975,7 @@ var birth = (function ($, w, undefined) {
             calendar: [{
                 top: 100,
                 left: 'center',
-                range: ['2000-01-01', '2000-06-30'],
+                range: [default_year + '-01-01', default_year + '-06-30'],
                 splitLine: {
                     show: true,
                     lineStyle: {
@@ -998,9 +998,9 @@ var birth = (function ($, w, undefined) {
                     }
                 }
             }, {
-                top: 340,
+                top: 300,
                 left: 'center',
-                range: ['2000-07-01', '2000-12-31'],
+                range: [default_year + '-07-01', default_year + '-12-31'],
                 splitLine: {
                     show: true,
                     lineStyle: {
