@@ -998,7 +998,7 @@ var birth = (function ($, w, undefined) {
                     }
                 }
             }, {
-                top: 100,
+                top: 340,
                 left: 'center',
                 range: ['2000-07-01', '2000-12-31'],
                 splitLine: {
