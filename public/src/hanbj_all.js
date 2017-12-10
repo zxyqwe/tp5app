@@ -937,7 +937,7 @@ var brief = (function ($, w, undefined) {
                 ret = msg;
                 for (var i in ret) {
                     var k = ret[i];
-                    if ([0, 4].includes(k.code)) {
+                    if (['0', '4'].includes(k.code)) {
                         get_gender(ret[i].gender);
                         get_catalog(ret[i].year_time, ret[i].gender);
                     }
