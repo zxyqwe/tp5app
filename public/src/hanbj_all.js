@@ -1019,7 +1019,20 @@ var birth = (function ($, w, undefined) {
     'use strict';
     var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
         birthday_set = {}, default_year = new Date().getFullYear(), join = {}, join1 = [], join2 = [];
+    var trans_year = function (y) {
+        var tmp = default_year - y;
+        if (tmp < 18) {
+            return '未成年';
+        } else if (tmp < 25) {
+            return '18~24';
+        } else if (tmp < 30) {
+            return '25~29'
+        } else {
+            return '30以上';
+        }
+    };
     var get_join = function (j, c) {
+        c = trans_year(c);
         join1.push(j);
         join2.push(c);
         if (undefined === join[j + c]) {
