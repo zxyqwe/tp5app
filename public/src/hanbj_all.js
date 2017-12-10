@@ -996,7 +996,7 @@ var group = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '当前会员性别分布'
+                text: '实名会员性别分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1126,8 +1126,10 @@ var group = (function ($, w, undefined) {
                 for (var i in ret) {
                     var k = ret[i];
                     if (['0', '4'].includes(k.code)) {
-                        get_cata(k.u, k.year_time)
-                        get_gender(k.u, k.gender);
+                        get_cata(k.u, k.year_time);
+                        if (k.code === '0') {
+                            get_gender(k.u, k.gender);
+                        }
                     }
                     get_join(k.u, k.code)
                 }
