@@ -931,13 +931,13 @@ var brief = (function ($, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: w.u14,
+            url: w.u16,
             dataType: "json",
             success: function (msg) {
                 ret = msg;
                 for (var i in ret) {
                     var k = ret[i];
-                    if (k.eid) {
+                    if ([0, 4].includes(k.code)) {
                         get_gender(ret[i].gender);
                         get_catalog(ret[i].year_time, ret[i].gender);
                     }

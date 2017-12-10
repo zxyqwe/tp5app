@@ -90,6 +90,7 @@ var nav_active = (function ($, w, undefined) {
         w.u13 = base + data + 'list_act';
         w.u14 = base + data + 'json_birth';
         w.u15 = base + data + 'create';
+        w.u16 = base + data + 'json_brief';
     };
     var init = function () {
         dict();
