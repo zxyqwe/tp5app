@@ -506,9 +506,6 @@ class Data extends Controller
             ])
             ->cache(600)
             ->select();
-        foreach ($ret as &$item) {
-            $item['gender'] = $item['gender'] === '男' ? 0 : 1;
-        }
         return json($ret);
     }
 
