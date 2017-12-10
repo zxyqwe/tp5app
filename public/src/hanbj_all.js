@@ -1018,7 +1018,8 @@ var brief = (function ($, w, undefined) {
 var birth = (function ($, w, undefined) {
     'use strict';
     var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
-        birthday_set = {}, default_year = new Date().getFullYear(), join = {}, join1 = [], join2 = [];
+        birthday_set = {}, default_year = new Date().getFullYear(), join = {}, join1 = [], join2 = [], cata = {},
+        cata1 = [], cata2 = [];
     var trans_year = function (y) {
         var tmp = default_year - y;
         if (tmp < 18) {
@@ -1030,6 +1031,57 @@ var birth = (function ($, w, undefined) {
         } else {
             return '30以上';
         }
+    };
+    var get_catalog = function (j, c) {
+        c = trans_year(c);
+        cata1.push(j);
+        cata2.push(c);
+        if (undefined === cata[j + c]) {
+            cata[j + c] = 0;
+        }
+        cata[j + c]++;
+    };
+    var get_catalog_ret = function () {
+        var myChart = echarts.init(document.getElementById('catalog'));
+        cata1 = Array.from(new Set(cata1));
+        cata2 = Array.from(new Set(cata2));
+        var series = [];
+        for (var i in cata2) {
+            i = cata2[i];
+            var s = [];
+            for (var j in cata1) {
+                j = cata1[j];
+                if (undefined === cata[j + i]) {
+                    s.push(0);
+                } else {
+                    s.push(cata[j + i]);
+                }
+            }
+            series.push({
+                name: i,
+                type: 'bar',
+                data: s
+            });
+        }
+        var option = {
+            title: {
+                text: '当前字组年龄分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}字组: {a} {c}个"
+            },
+            legend: {
+                top: '40',
+                data: cata2
+            },
+            xAxis: {
+                data: cata1
+            },
+            yAxis: {},
+            series: series
+        };
+        myChart.setOption(option);
     };
     var get_join = function (j, c) {
         c = trans_year(c);
@@ -1043,6 +1095,7 @@ var birth = (function ($, w, undefined) {
     var get_join_ret = function () {
         var myChart = echarts.init(document.getElementById('join'));
         join1 = Array.from(new Set(join1));
+        join1 = join1.sort();
         join2 = Array.from(new Set(join2));
         var series = [];
         for (var i in join2) {
@@ -1331,11 +1384,13 @@ var birth = (function ($, w, undefined) {
                         var m = e.substring(4, 6);
                         var d = e.substring(6, 8);
                         get_year(y, g);
-                        get_join(k.u, y);
+                        get_catalog(k.u, y);
+                        get_join(k.year_time, y);
                         get_birthday(m, d);
                     }
                 }
                 get_year_ret();
+                get_catalog_ret();
                 get_join_ret();
                 get_birthday_ret();
             },
