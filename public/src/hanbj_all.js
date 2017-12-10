@@ -962,7 +962,58 @@ var brief = (function ($, w, undefined) {
 
 var group = (function ($, w, undefined) {
     'use strict';
-    var ret, join = {}, join1 = [], join2 = [], cata = {}, cata1 = [], cata2 = [];
+    var ret, join = {}, join1 = [], join2 = [], cata = {}, cata1 = [], cata2 = [], gender = {}, gender1 = [],
+        gender2 = [];
+    var get_gender = function (j, c) {
+        gender1.push(j);
+        gender2.push(c);
+        if (undefined === gender[j + c]) {
+            gender[j + c] = 0;
+        }
+        gender[j + c]++;
+    };
+    var get_gender_ret = function () {
+        var myChart = echarts.init(document.getElementById('gender'));
+        gender1 = Array.from(new Set(gender1));
+        gender2 = Array.from(new Set(gender2));
+        var series = [];
+        for (var i in gender2) {
+            i = gender2[i];
+            var s = [];
+            for (var j in gender1) {
+                j = gender1[j];
+                if (undefined === gender[j + i]) {
+                    s.push(0);
+                } else {
+                    s.push(gender[j + i]);
+                }
+            }
+            series.push({
+                name: i,
+                type: 'bar',
+                data: s
+            });
+        }
+        var option = {
+            title: {
+                text: '当前会员性别分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}字组: {a} {c}个"
+            },
+            legend: {
+                top: '40',
+                data: gender2
+            },
+            xAxis: {
+                data: gender1
+            },
+            yAxis: {},
+            series: series
+        };
+        myChart.setOption(option);
+    };
     var get_cata = function (j, c) {
         cata1.push(j);
         cata2.push(c);
@@ -995,11 +1046,11 @@ var group = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '当前字组名额分布'
+                text: '当前会员入会时间'
             },
             tooltip: {
                 trigger: 'item',
-                formatter: "{b}字组: {a} {c}个"
+                formatter: "{b}字组: {a}年 {c}个"
             },
             legend: {
                 top: '40',
@@ -1046,7 +1097,7 @@ var group = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '当前字组名额分布'
+                text: '名额分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1076,10 +1127,12 @@ var group = (function ($, w, undefined) {
                     var k = ret[i];
                     if (['0', '4'].includes(k.code)) {
                         get_cata(k.u, k.year_time)
+                        get_gender(k.u, k.gender);
                     }
                     get_join(k.u, k.code)
                 }
                 get_cata_ret();
+                get_gender_ret();
                 get_join_ret();
             },
             error: function (msg) {
@@ -1149,7 +1202,7 @@ var birth = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '当前字组年龄分布'
+                text: '当前字组分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1201,7 +1254,7 @@ var birth = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '入会时间年龄分布'
+                text: '当前会员入会时间分布'
             },
             tooltip: {
                 trigger: 'item',
