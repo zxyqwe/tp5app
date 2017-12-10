@@ -876,7 +876,7 @@ var birth = (function ($, w, undefined) {
                 data: ['男', '女', '全体']
             },
             xAxis: {
-                data: year_choice
+                data: catalog_choice
             },
             yAxis: {},
             series: [{
@@ -975,7 +975,7 @@ var birth = (function ($, w, undefined) {
             backgroundColor: '#404a59',
             title: {
                 top: 30,
-                text: '会员生日分布',
+                text: '当前会员生日分布',
                 left: 'center',
                 textStyle: {
                     color: '#fff'
