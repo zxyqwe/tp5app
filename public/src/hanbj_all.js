@@ -836,7 +836,65 @@ var test = (function ($, Vue, w, undefined) {
 var birth = (function ($, w, undefined) {
     'use strict';
     var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
-        birthday_set = {}, default_year = new Date().getFullYear();
+        birthday_set = {}, default_year = new Date().getFullYear(), catalog_choice = [], catalog_set = {},
+        catalog_set_male = {}, catalog_set_female = {};
+    var get_catalog = function (y, m, d, g) {
+        catalog_choice.push(y);
+        if (undefined === catalog_set[y]) {
+            catalog_set[y] = 0;
+            catalog_set_male[y] = 0;
+            catalog_set_female[y] = 0;
+        }
+        catalog_set[y]++;
+        if (g === 0) {
+            catalog_set_male[y]++;
+        } else {
+            catalog_set_female[y]++;
+        }
+    };
+    var get_catalog_ret = function () {
+        var myChart = echarts.init(document.getElementById('catalog'));
+        catalog_choice = Array.from(new Set(catalog_choice));
+        catalog_choice = catalog_choice.sort();
+        var a = [], b = [], c = [];
+        for (var i in catalog_choice) {
+            var k = catalog_choice[i];
+            a.push(catalog_set_male[k]);
+            b.push(catalog_set_female[k]);
+            c.push(catalog_set[k]);
+        }
+        var option = {
+            title: {
+                text: '当前会员入会时间分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}年: {a} {c}人"
+            },
+            legend: {
+                top: '40',
+                data: ['男', '女', '全体']
+            },
+            xAxis: {
+                data: year_choice
+            },
+            yAxis: {},
+            series: [{
+                name: '男',
+                type: 'bar',
+                data: a
+            }, {
+                name: '女',
+                type: 'bar',
+                data: b
+            }, {
+                name: '全体',
+                type: 'bar',
+                data: c
+            }]
+        };
+        myChart.setOption(option);
+    };
     var get_year = function (y, m, d, g) {
         year_choice.push(y);
         if (undefined === year_set[y]) {
@@ -864,7 +922,7 @@ var birth = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '年龄分布'
+                text: '当前会员年龄分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1085,9 +1143,11 @@ var birth = (function ($, w, undefined) {
                         var d = ret[i].eid.substring(6, 8);
                         get_year(y, m, d, ret[i].gender);
                         get_birthday(y, m, d, ret[i].gender);
+                        get_catalog(ret[i].year_time, m, d, ret[i].gender);
                     }
                 }
                 get_year_ret();
+                get_catalog_ret();
                 get_birthday_ret();
             },
             error: function (msg) {

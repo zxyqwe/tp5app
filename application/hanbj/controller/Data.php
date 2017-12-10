@@ -501,7 +501,7 @@ class Data extends Controller
         $ret = Db::table('member')
             ->where($map)
             ->field([
-                'SUBSTRING(eid,5,8) as eid',
+                'SUBSTRING(eid,7,8) as eid',
                 'gender',
                 'year_time',
                 'SUBSTRING(unique_name,1,1) as u'
