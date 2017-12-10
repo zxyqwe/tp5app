@@ -1018,7 +1018,7 @@ var group = (function ($, w, undefined) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: w.u16,
+            url: w.u17,
             dataType: "json",
             success: function (msg) {
                 ret = msg;

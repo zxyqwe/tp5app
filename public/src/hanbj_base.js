@@ -91,6 +91,7 @@ var nav_active = (function ($, w, undefined) {
         w.u14 = base + data + 'json_birth';
         w.u15 = base + data + 'create';
         w.u16 = base + data + 'json_brief';
+        w.u17 = base + data + 'json_group';
     };
     var init = function () {
         dict();
