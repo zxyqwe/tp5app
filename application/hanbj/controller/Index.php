@@ -30,13 +30,10 @@ class Index extends Controller
     public function _empty()
     {
         $action = $this->request->action();
-        if (in_array($action, [
-            'all', 'feelog', 'actlog', 'fee', 'create', 'tree', 'famelog',
-            'card', 'fameinit', 'fame', 'bulletin', 'home', 'order', 'bonus', 'birth'
-        ])) {
-            return view($action);
+        if (is_file(__DIR__ . "/../tpl/index_$action.html")) {
+            throw new HttpResponseException(view($action));
         }
-        return '';
+        abort(404, '页面不存在', [$action]);
     }
 
     public function index()
