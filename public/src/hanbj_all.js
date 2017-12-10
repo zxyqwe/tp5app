@@ -835,7 +835,7 @@ var test = (function ($, Vue, w, undefined) {
 
 var birth = (function ($, w, undefined) {
     'use strict';
-    var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {}, gender = {g0: 0, g1: 0},
+    var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
         birthday_set = {}, default_year = new Date().getFullYear();
     var get_year = function (y, m, d, g) {
         year_choice.push(y);
@@ -891,39 +891,6 @@ var birth = (function ($, w, undefined) {
                 type: 'bar',
                 data: c
             }]
-        };
-        myChart.setOption(option);
-    };
-    var get_gender = function (y, m, d, g) {
-        gender['g' + g]++;
-    };
-    var get_gender_year = function () {
-        var myChart = echarts.init(document.getElementById('gender'));
-        var option = {
-            title: {
-                text: '男女比例'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            legend: {
-                top: '60',
-                orient: 'vertical',
-                x: 'left',
-                data: ['男', '女']
-            },
-            series: [
-                {
-                    name: '会员分布',
-                    type: 'pie',
-                    radius: '50%',
-                    data: [
-                        {value: gender.g0, name: '男'},
-                        {value: gender.g1, name: '女'}
-                    ]
-                }
-            ]
         };
         myChart.setOption(option);
     };
@@ -1117,12 +1084,10 @@ var birth = (function ($, w, undefined) {
                         var m = ret[i].eid.substring(4, 6);
                         var d = ret[i].eid.substring(6, 8);
                         get_year(y, m, d, ret[i].gender);
-                        get_gender(y, m, d, ret[i].gender);
                         get_birthday(y, m, d, ret[i].gender);
                     }
                 }
                 get_year_ret();
-                get_gender_year();
                 get_birthday_ret();
             },
             error: function (msg) {
