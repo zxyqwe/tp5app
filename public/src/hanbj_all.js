@@ -1331,7 +1331,7 @@ var birth = (function ($, w, undefined) {
                         var m = e.substring(4, 6);
                         var d = e.substring(6, 8);
                         get_year(y, g);
-                        get_join(e.u, y);
+                        get_join(k.u, y);
                         get_birthday(m, d);
                     }
                 }
