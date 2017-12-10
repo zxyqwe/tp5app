@@ -1069,7 +1069,7 @@ var birth = (function ($, w, undefined) {
         };
         myChart.setOption(option);
     };
-    var get_year = function (y) {
+    var get_year = function (y, g) {
         year_choice.push(y);
         if (undefined === year_set[y]) {
             year_set[y] = 0;
@@ -1317,7 +1317,7 @@ var birth = (function ($, w, undefined) {
                         var y = e.substring(0, 4);
                         var m = e.substring(4, 6);
                         var d = e.substring(6, 8);
-                        get_year(y);
+                        get_year(y, g);
                         get_join(e.u, y);
                         get_birthday(m, d);
                     }
