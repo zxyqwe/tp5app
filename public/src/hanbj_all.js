@@ -836,7 +836,55 @@ var test = (function ($, Vue, w, undefined) {
 var brief = (function ($, w, undefined) {
     'use strict';
     var ret, catalog_choice = [], catalog_set = {},
-        catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0};
+        catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0}, join = {}, join1 = [], join2 = [];
+    var get_join = function (j, c) {
+        join1.push(j);
+        join2.push(c);
+        if (undefined === join[j + c]) {
+            join[j + c] = 0;
+        }
+        join[j + c]++;
+    };
+    var get_join_ret = function () {
+        var myChart = echarts.init(document.getElementById('join'));
+        join1 = Array.from(new Set(join1));
+        join2 = Array.from(new Set(join2));
+        var series = [];
+        for (var i in join2) {
+            var s = [];
+            for (var j in join1) {
+                if (undefined === join[j + i]) {
+                    s.push(0);
+                } else {
+                    s.push(join[j + i]);
+                }
+            }
+            series.push({
+                name: join2[i],
+                type: 'bar',
+                data: s
+            });
+        }
+        var option = {
+            title: {
+                text: '当前字组名额分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}字组: {a} {c}个"
+            },
+            legend: {
+                top: '40',
+                data: join2
+            },
+            xAxis: {
+                data: join1
+            },
+            yAxis: {},
+            series: series
+        };
+        myChart.setOption(option);
+    };
     var get_catalog = function (y, g) {
         catalog_choice.push(y);
         if (undefined === catalog_set[y]) {
@@ -938,11 +986,13 @@ var brief = (function ($, w, undefined) {
                 for (var i in ret) {
                     var k = ret[i];
                     if (['0', '4'].includes(k.code)) {
-                        get_gender(ret[i].gender);
-                        get_catalog(ret[i].year_time, ret[i].gender);
+                        get_gender(k.gender);
+                        get_catalog(k.year_time, k.gender);
                     }
+                    get_join(k.u, k.code)
                 }
                 get_gender_year();
+                get_join_ret();
                 get_catalog_ret();
             },
             error: function (msg) {
@@ -1208,12 +1258,14 @@ var birth = (function ($, w, undefined) {
                 ret = msg;
                 for (var i in ret) {
                     var k = ret[i];
-                    if (k.eid) {
-                        var y = ret[i].eid.substring(0, 4);
-                        var m = ret[i].eid.substring(4, 6);
-                        var d = ret[i].eid.substring(6, 8);
-                        get_year(y, m, d, ret[i].gender);
-                        get_birthday(y, m, d, ret[i].gender);
+                    var e = k.eid;
+                    var g = k.gender;
+                    if (e) {
+                        var y = e.substring(0, 4);
+                        var m = e.substring(4, 6);
+                        var d = e.substring(6, 8);
+                        get_year(y, m, d, g);
+                        get_birthday(y, m, d, g);
                     }
                 }
                 get_year_ret();
