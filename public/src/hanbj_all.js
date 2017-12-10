@@ -1092,6 +1092,7 @@ var group = (function ($, w, undefined) {
             series.push({
                 name: i,
                 type: 'bar',
+                stack: '总量',
                 data: s
             });
         }
