@@ -495,6 +495,23 @@ class Data extends Controller
         return json($data);
     }
 
+    public function json_group()
+    {
+        $ret = Db::table('member')
+            ->field([
+                'gender',
+                'year_time',
+                'SUBSTRING(unique_name,1,1) as u',
+                'code'
+            ])
+            ->cache(600)
+            ->select();
+        foreach ($ret as &$item) {
+            $item['gender'] = $item['gender'] === '男' ? 0 : 1;
+        }
+        return json($ret);
+    }
+
     public function json_brief()
     {
         $map['code'] = MemberOper::NORMAL;
