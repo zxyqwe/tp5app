@@ -972,7 +972,7 @@ var group = (function ($, w, undefined) {
         cata[j + c]++;
     };
     var get_cata_ret = function () {
-        var myChart = echarts.init(document.getElementById('cata'));
+        var myChart = echarts.init(document.getElementById('catalog'));
         cata1 = Array.from(new Set(cata1));
         cata2 = Array.from(new Set(cata2));
         var series = [];
