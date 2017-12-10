@@ -8,12 +8,12 @@ class Zhongl
 {
     public function _empty()
     {
-        return '';
+        return json([], 404);
     }
 
     public function index()
     {
-        return '';
+        return json([], 404);
     }
 
     public function geocode()

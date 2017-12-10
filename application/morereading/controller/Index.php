@@ -6,6 +6,6 @@ class Index
 {
     public function _empty()
     {
-        return '';
+        return json([], 404);
     }
 }

@@ -32,7 +32,7 @@ class Mobile extends Controller
 
     public function _empty()
     {
-        return '';
+        return json([], 404);
     }
 
     public function index($obj = '')

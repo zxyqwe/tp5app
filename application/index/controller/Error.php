@@ -6,6 +6,6 @@ class Error
 {
     public function _empty()
     {
-        return '';
+        return json([], 404);
     }
 }

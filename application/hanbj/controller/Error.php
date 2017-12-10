@@ -6,6 +6,6 @@ class Error
 {
     public function _empty()
     {
-        return '';
+        abort(404, '页面不存在', []);
     }
 }

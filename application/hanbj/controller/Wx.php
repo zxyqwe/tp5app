@@ -32,7 +32,7 @@ class Wx extends Controller
 
     public function _empty()
     {
-        return '';
+        return json([], 404);
     }
 
     public function json_activity()
