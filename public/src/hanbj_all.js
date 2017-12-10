@@ -838,6 +838,7 @@ var brief = (function ($, w, undefined) {
     var ret, catalog_choice = [], catalog_set = {},
         catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0}, join = {}, join1 = [], join2 = [];
     var get_join = function (j, c) {
+        c = home.mem_code(c);
         join1.push(j);
         join2.push(c);
         if (undefined === join[j + c]) {
