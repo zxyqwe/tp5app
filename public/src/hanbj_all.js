@@ -962,7 +962,57 @@ var brief = (function ($, w, undefined) {
 
 var group = (function ($, w, undefined) {
     'use strict';
-    var ret, join = {}, join1 = [], join2 = [];
+    var ret, join = {}, join1 = [], join2 = [], cata = {}, cata1 = [], cata2 = [];
+    var get_cata = function (j, c) {
+        cata1.push(j);
+        cata2.push(c);
+        if (undefined === cata[j + c]) {
+            cata[j + c] = 0;
+        }
+        cata[j + c]++;
+    };
+    var get_cata_ret = function () {
+        var myChart = echarts.init(document.getElementById('cata'));
+        cata1 = Array.from(new Set(cata1));
+        cata2 = Array.from(new Set(cata2));
+        var series = [];
+        for (var i in cata2) {
+            i = cata2[i];
+            var s = [];
+            for (var j in cata1) {
+                j = cata1[j];
+                if (undefined === cata[j + i]) {
+                    s.push(0);
+                } else {
+                    s.push(cata[j + i]);
+                }
+            }
+            series.push({
+                name: i,
+                type: 'bar',
+                data: s
+            });
+        }
+        var option = {
+            title: {
+                text: '当前字组名额分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}字组: {a} {c}个"
+            },
+            legend: {
+                top: '40',
+                data: cata2
+            },
+            xAxis: {
+                data: cata1
+            },
+            yAxis: {},
+            series: series
+        };
+        myChart.setOption(option);
+    };
     var get_join = function (j, c) {
         c = home.mem_code(c);
         join1.push(j);
@@ -1025,9 +1075,11 @@ var group = (function ($, w, undefined) {
                 for (var i in ret) {
                     var k = ret[i];
                     if (['0', '4'].includes(k.code)) {
+                        get_cata(k.u, k.year_time)
                     }
                     get_join(k.u, k.code)
                 }
+                get_cata_ret();
                 get_join_ret();
             },
             error: function (msg) {
