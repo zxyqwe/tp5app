@@ -851,8 +851,10 @@ var brief = (function ($, w, undefined) {
         join2 = Array.from(new Set(join2));
         var series = [];
         for (var i in join2) {
+            i = join2[i];
             var s = [];
             for (var j in join1) {
+                j = join1[j];
                 if (undefined === join[j + i]) {
                     s.push(0);
                 } else {
@@ -860,7 +862,7 @@ var brief = (function ($, w, undefined) {
                 }
             }
             series.push({
-                name: join2[i],
+                name: i,
                 type: 'bar',
                 data: s
             });
