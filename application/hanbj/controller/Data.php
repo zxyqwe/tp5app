@@ -501,14 +501,16 @@ class Data extends Controller
         $ret = Db::table('member')
             ->where($map)
             ->field([
-                'eid',
-                'gender'
+                'SUBSTRING(eid,5,8) as eid',
+                'gender',
+                'year_time',
+                'SUBSTRING(unique_name,1,1) as u'
             ])
             ->cache(600)
             ->select();
         $today = date('Ymd');
         foreach ($ret as &$item) {
-            $tmp_eid = substr($item['eid'], 6, 8);
+            $tmp_eid = $item['eid'];
             if ($tmp_eid > 19491001 && $tmp_eid < $today) {
                 $item['eid'] = $tmp_eid;
             } else {
