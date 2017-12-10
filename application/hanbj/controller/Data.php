@@ -497,12 +497,13 @@ class Data extends Controller
 
     public function json_brief()
     {
+        $map['code'] = MemberOper::NORMAL;
         $ret = Db::table('member')
+            ->where($map)
             ->field([
                 'gender',
                 'year_time',
-                'SUBSTRING(unique_name,1,1) as u',
-                'code'
+                'SUBSTRING(unique_name,1,1) as u'
             ])
             ->cache(600)
             ->select();
