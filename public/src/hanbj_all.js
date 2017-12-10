@@ -1018,8 +1018,58 @@ var brief = (function ($, w, undefined) {
 var birth = (function ($, w, undefined) {
     'use strict';
     var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
-        birthday_set = {}, default_year = new Date().getFullYear();
-    var get_year = function (y, m, d, g) {
+        birthday_set = {}, default_year = new Date().getFullYear(), join = {}, join1 = [], join2 = [];
+    var get_join = function (j, c) {
+        join1.push(j);
+        join2.push(c);
+        if (undefined === join[j + c]) {
+            join[j + c] = 0;
+        }
+        join[j + c]++;
+    };
+    var get_join_ret = function () {
+        var myChart = echarts.init(document.getElementById('join'));
+        join1 = Array.from(new Set(join1));
+        join2 = Array.from(new Set(join2));
+        var series = [];
+        for (var i in join2) {
+            i = join2[i];
+            var s = [];
+            for (var j in join1) {
+                j = join1[j];
+                if (undefined === join[j + i]) {
+                    s.push(0);
+                } else {
+                    s.push(join[j + i]);
+                }
+            }
+            series.push({
+                name: i,
+                type: 'bar',
+                data: s
+            });
+        }
+        var option = {
+            title: {
+                text: '当前字组年龄分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}字组: {a} {c}个"
+            },
+            legend: {
+                top: '40',
+                data: join2
+            },
+            xAxis: {
+                data: join1
+            },
+            yAxis: {},
+            series: series
+        };
+        myChart.setOption(option);
+    };
+    var get_year = function (y) {
         year_choice.push(y);
         if (undefined === year_set[y]) {
             year_set[y] = 0;
@@ -1076,7 +1126,7 @@ var birth = (function ($, w, undefined) {
         };
         myChart.setOption(option);
     };
-    var get_birthday = function (y, m, d, g) {
+    var get_birthday = function (m, d) {
         var s = default_year + '-' + m + '-' + d;
         if (undefined === birthday_set[s]) {
             birthday_set[s] = 0;
@@ -1267,11 +1317,13 @@ var birth = (function ($, w, undefined) {
                         var y = e.substring(0, 4);
                         var m = e.substring(4, 6);
                         var d = e.substring(6, 8);
-                        get_year(y, m, d, g);
-                        get_birthday(y, m, d, g);
+                        get_year(y);
+                        get_join(e.u, y);
+                        get_birthday(m, d);
                     }
                 }
                 get_year_ret();
+                get_join_ret();
                 get_birthday_ret();
             },
             error: function (msg) {
