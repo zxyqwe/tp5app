@@ -1025,11 +1025,11 @@ var birth = (function ($, w, undefined) {
         if (tmp < 18) {
             return '未成年';
         } else if (tmp < 25) {
-            return '18~24';
+            return '18~24岁';
         } else if (tmp < 30) {
-            return '25~29'
+            return '25~29岁'
         } else {
-            return '30以上';
+            return '30岁以上';
         }
     };
     var get_catalog = function (j, c) {
@@ -1117,11 +1117,11 @@ var birth = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '当前字组年龄分布'
+                text: '入会时间年龄分布'
             },
             tooltip: {
                 trigger: 'item',
-                formatter: "{b}字组: {a} {c}个"
+                formatter: "{b}年: {a} {c}个"
             },
             legend: {
                 top: '40',
@@ -1226,7 +1226,7 @@ var birth = (function ($, w, undefined) {
                 formatter: function (params, ticket, callback) {
                     var v = params.value;
                     var s = v[0].split('-');
-                    return s[1] + '月' + s[2] + '日共' + v[1] + '人';
+                    return s[1] + '月' + s[2] + '日 共' + v[1] + '人';
                 }
             },
             legend: {
