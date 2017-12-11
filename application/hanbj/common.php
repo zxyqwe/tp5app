@@ -208,7 +208,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             if ($ret === 1) {
-                cache($ca, 2 * 86400);
+                cache($ca, $ca, 2 * 86400);
             }
             trace("$unique_name UNUSED TEMPUSE $ret");
             CardOper::common($unique_name, '临时抢号');
