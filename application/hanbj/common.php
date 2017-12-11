@@ -453,12 +453,12 @@ class FeeOper
 
     public static function clear($uname)
     {
-        trace("Fee Clear $uname");
         $map['unique_name'] = $uname;
         $data['unique_name'] = $uname . date("Y-m-d H:i:s");
-        Db::table('nfee')
+        $ret = Db::table('nfee')
             ->where($map)
             ->update($data);
+        trace("Fee Clear $uname $ret");
         self::uncache($uname);
     }
 
