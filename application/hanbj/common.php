@@ -96,6 +96,11 @@ class MemberOper
         return [self::JUNIOR, self::NORMAL];
     }
 
+    public static function getAllReal()
+    {
+        return [MemberOper::NORMAL, MemberOper::FREEZE, MemberOper::BANNED];
+    }
+
     public static function trans($v)
     {
         switch ($v) {
