@@ -38,7 +38,7 @@ var all = (function ($, w, undefined) {
         var data = [];
         for (var i in fame) {
             var tmp = fame[i];
-            data.push(listitem(home.mem_code(tmp.grade), ['第 ' + tmp.year + ' 届：' + tmp.label]));
+            data.push(listitem(home.grade(tmp.grade), ['第 ' + tmp.year + ' 届：' + tmp.label]));
         }
         return data.join("");
     };
@@ -659,20 +659,6 @@ var tlog = (function ($, w, undefined) {
 var fame = (function ($, Vue, w, undefined) {
     'use strict';
     var vmain;
-    var grade = function (n) {
-        switch (n) {
-            case '0':
-                return '会长';
-            case '1':
-                return '副会长';
-            case '2':
-                return '部长';
-            case '3':
-                return '副部长';
-            case '4':
-                return '干事';
-        }
-    };
     var init = function () {
         vmain = new Vue({
             el: '#fame',
@@ -680,21 +666,8 @@ var fame = (function ($, Vue, w, undefined) {
                 fames: []
             },
             methods: {
-                fame_img: function (n) {
-                    switch (n) {
-                        case '0':
-                            return '/static/arrow-up.png';
-                        case '1':
-                            return '/static/arrow-up.png';
-                        case '2':
-                            return '/static/arrow-up.png';
-                        case '3':
-                            return '/static/arrow-up.png';
-                        case '4':
-                            return '/static/arrow-up.png';
-                    }
-                },
-                fame_name: grade
+                fame_img: home.fame_img,
+                fame_name: home.grade
             }
         });
         w.waitloading();
