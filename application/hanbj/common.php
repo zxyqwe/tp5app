@@ -534,13 +534,13 @@ class WxHanbj
                 if ($cont === '投票') {
                     $org = new WxOrg();
                     $cont = $org->listobj($from);
-                    return self::auto($from, $to, $cont, false, '投票');
-                } elseif (cache('?tempnum' . $cont)) {
+                    return self::auto($from, $to, $cont, '投票');
+                } elseif (strlen($cont) === 4 && is_numeric($cont) && cache('?tempnum' . $cont)) {
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
-                    return self::auto($from, $to, $cont, false, '临时身份');
+                    return self::auto($from, $to, $cont, '临时身份');
                 }
-                $cont = '文字信息：' . $cont;
+                $cont = "检查口令...失败\n\n文字信息：" . $cont;
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
@@ -554,7 +554,7 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "临时身份信息验证\n会员编号：{$data['uniq']}\n" .
+        $cont = "检查口令...成功\n提取身份...成功\n\n临时身份信息验证\n会员编号：{$data['uniq']}\n" .
             "昵称：{$data['nick']}\n" .
             "生成日期：{$data['time']}\n" .
             "生成时间：{$data['time2']}\n" .
@@ -562,9 +562,9 @@ class WxHanbj
         return $cont;
     }
 
-    private static function auto($to, $from, $type, $debug = true, $debug_msg = '')
+    private static function auto($to, $from, $type, $debug_msg = '')
     {
-        if ($debug) {
+        if (empty($debug_msg)) {
             trace([
                 'TO' => $to,
                 'TEXT' => $type
@@ -1522,13 +1522,13 @@ class WxOrg
             ->find();
         $uname = $res['unique_name'];
         if (!in_array($uname, $this->getUser())) {
-            return '文字信息：投票';
+            return "检查口令...成功\n身份验证...失败\n\n文字信息：投票";
         }
         $prog = $this->progress();
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "有以下投票，二十分钟有效\n" . $prog;
+        $ret = "检查口令...成功\n身份验证...成功\n提取投票...成功\n\n有以下投票，二十分钟有效，过时重新取号\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
         foreach ($this->obj as $item) {
