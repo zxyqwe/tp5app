@@ -689,7 +689,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var initlog = function () {
         Vue.filter('grade_code', function (n) {
-            return grade('' + n);
+            return home.grade('' + n);
         });
         vmain = new Vue({
             el: '#body',
@@ -759,7 +759,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var fameori = function () {
         w.code2Formatter = function (value, row) {
-            return grade(value);
+            return home.grade(value);
         };
         w.codeFormatter = function (value, row) {
             return home.mem_code(value);
