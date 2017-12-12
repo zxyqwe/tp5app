@@ -244,7 +244,7 @@ class Data extends Controller
             ->field([
                 'year',
                 'grade',
-                'level'
+                'label'
             ])
             ->select();
         $data['fee'] = $fee;

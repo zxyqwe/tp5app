@@ -69,6 +69,7 @@ var all = (function ($, w, undefined) {
             var str = $('#detailV').html();
             str = str.replace('fee', 'fee' + row.id);
             str = str.replace('act', 'act' + row.id);
+            str = str.replace('fame', 'fame' + row.id);
             return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
         };
         w.codeFormatter = function (value, row) {
