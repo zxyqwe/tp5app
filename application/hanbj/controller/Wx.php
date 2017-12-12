@@ -215,7 +215,7 @@ class Wx extends Controller
         $map['unique_name'] = session('unique_name');
         $ret = Db::table('fame')
             ->where($map)
-            ->order('id desc')
+            ->order('year desc')
             ->field([
                 'year',
                 'grade',

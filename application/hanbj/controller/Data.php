@@ -248,7 +248,7 @@ class Data extends Controller
             return json();
         }
         $map['tieba_id|unique_name'] = ['like', '%' . $name . '%'];
-        $map['code'] = ['in', MemberOper::getMember()];
+        $map['code'] = ['in', [MemberOper::NORMAL, MemberOper::JUNIOR, MemberOper::FREEZE, MemberOper::BANNED]];
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
