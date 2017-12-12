@@ -34,6 +34,14 @@ var all = (function ($, w, undefined) {
         }
         return data.join("");
     };
+    var itfame = function (fame) {
+        var data = [];
+        for (var i in fame) {
+            var tmp = fame[i];
+            data.push(listitem(home.mem_code(tmp.grade), ['第 ' + tmp.year + ' 届：' + tmp.label]));
+        }
+        return data.join("");
+    };
     var init = function () {
         w.loaddetail = function (id) {
             w.waitloading();
@@ -47,6 +55,7 @@ var all = (function ($, w, undefined) {
                 success: function (msg) {
                     $('#fee' + id).html(itfee(msg.fee));
                     $('#act' + id).html(itact(msg.act));
+                    $('#fame' + id).html(itfame(msg.fame));
                 },
                 error: function (msg) {
                     w.msgto(msg);

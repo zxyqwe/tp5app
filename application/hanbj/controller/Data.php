@@ -236,8 +236,20 @@ class Data extends Controller
                 'act_time'
             ])
             ->select();
+        $fame = Db::table('member')
+            ->alias('m')
+            ->join('fame f', 'm.unique_name=f.unique_name')
+            ->where($map)
+            ->order('year', 'desc')
+            ->field([
+                'year',
+                'grade',
+                'level'
+            ])
+            ->select();
         $data['fee'] = $fee;
         $data['act'] = $act;
+        $data['fame'] = $fame;
         return json($data);
     }
 
