@@ -258,9 +258,10 @@ class BiliHelper
             $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
             $join = json_decode($raw, true);
             if ($join['code'] !== 0) {
-                trace('unknown_raffle' . json_encode($item) . $raw);
                 if (strpos($raw, '已加入') !== false) {
                     $this->lock("unknown_raffle$payload", $this->long_timeout());
+                } else {
+                    trace('unknown_raffle' . json_encode($item) . $raw);
                 }
             } else {
                 $this->lock("unknown_raffle$payload", $this->long_timeout());
@@ -327,7 +328,9 @@ class BiliHelper
         } elseif ($data['msg'] === '非法心跳') {
             $this->heartbeat();
         } else {
-            trace("奇怪 $raw");
+            if (false === strpos($raw, 'DOCTYPE')) {
+                trace("奇怪 $raw");
+            }
             //$this->heartbeat();
         }
         $this->lock('free_gift', $timeout);
