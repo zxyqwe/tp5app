@@ -12,6 +12,7 @@ class BiliHelper
     private $csrf_token = '';
     private $room_id = 5294;//218
     private $ruid = 116683;
+    private $uid = 649681;
     private $curl;
     private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
     private $OCR = array(
@@ -114,31 +115,35 @@ class BiliHelper
             return;
         }
         $this->getSendGift();
-        $urlapi = $this->prefix . 'gift/playerBag?_=' . round(microtime(true) * 1000);
+        $urlapi = $this->prefix . 'gift/v2/gift/bag_list';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        if (!isset($data['data']) || !is_array($data['data'])) {
+        if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
             trace($raw);
             return;
         }
-        foreach ($data['data'] as $vo) {
+        $data = $data['data']['list'];
+        foreach ($data as $vo) {
             $payload = [
-                'giftId' => $vo['gift_id'],
-                'roomid' => $this->room_id,
+                'uid' => $this->uid,
+                'gift_id' => $vo['gift_id'],
                 'ruid' => $this->ruid,
-                'num' => $vo['gift_num'],
-                'coinType' => 'silver',
-                'Bag_id' => $vo['id'],
-                'timestamp' => time(),
+                'gift_num' => $vo['gift_num'],
+                'bag_id' => $vo['bag_id'],
+                'platform' => 'pc',
+                'biz_code' => 'live',
+                'biz_id' => $this->room_id,
                 'rnd' => mt_rand() % 10000000000,
-                'token' => $this->token,
+                'storm_beat_id' => 0,
+                'metadata' => '',
+                'token' => '',
                 'csrf_token' => $this->csrf_token
             ];
-            $urlapi = $this->prefix . 'giftBag/send';
+            $urlapi = $this->prefix . 'gift/v2/live/bag_send';
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
             if (0 !== $res['code']) {
-                trace("投喂 {$this->token} {$this->csrf_token} $raw");
+                trace("投喂 {$this->csrf_token} $raw");
             } else {
                 trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
             }
