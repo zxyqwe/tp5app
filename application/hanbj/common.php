@@ -241,6 +241,8 @@ class MemberOper
         $map['unique_name'] = $unique_name;
         $data['code'] = self::UNUSED;
         $data['tieba_id'] = $unique_name;
+        $data['year_time'] = -1;
+        $data['openid'] = null;
         $data['bonus'] = 0;
         try {
             $ret = Db::table('member')
@@ -871,7 +873,7 @@ class BonusOper
     const FEE = 30;
     const ACT = 10;
     const VOLUNTEER = 10;
-    const ACT_NAME = '2017冬季团建';
+    const ACT_NAME = '2017冬至';
     const _WORKER = [];
 
     public static function getWorkers()
