@@ -745,26 +745,26 @@ class CardOper
         $code = $ret['code'];
         switch ($ret['c']) {
             case MemberOper::BANNED:
-                self::update('注销', $code, 0, 0, '注销');
+                self::update('注销', $code, -1, 0, '注销');
                 break;
             case MemberOper::FREEZE:
-                self::update('停机', $code, 0, 0, '停机');
+                self::update('停机', $code, -1, 0, '停机');
                 break;
             case MemberOper::UNUSED:
-                self::update('未选择', $code, 0, 0, '未选择');
+                self::update('未选择', $code, -1, 0, '未选择');
                 break;
             case MemberOper::TEMPUSE:
-                self::update("临时抢号", $code, 0, 0, "临时抢号");
+                self::update("临时抢号", $code, -1, 0, "临时抢号");
                 break;
             case MemberOper::JUNIOR:
-                self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：会员");
+                self::update($uname, $code, BonusOper::reCalc($uname), BonusOper::reCalc($uname), "激活为：会员");
                 break;
             case MemberOper::NORMAL:
-                self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：实名会员");
+                self::update($uname, $code, BonusOper::reCalc($uname), BonusOper::reCalc($uname), "激活为：实名会员");
                 break;
             default:
                 trace("{$uname} {$code} {$ret['c']}");
-                self::update($uname, $code, 0, 0, "激活为：{$ret['c']}");
+                self::update($uname, $code, -1, 0, "激活为：{$ret['c']}");
         }
     }
 
@@ -792,6 +792,8 @@ class CardOper
         if ($res['errcode'] !== 0) {
             trace($raw);
             throw new HttpResponseException(json(['msg' => $raw], 400));
+        } else {
+            trace(implode('; ', [$uni, $card, $add_b, $b, $msg]));
         }
     }
 
@@ -859,8 +861,11 @@ class CardOper
         $res = Db::table('card')
             ->insert($data);
         if ($res !== 1) {
-            trace($msg);
+            $data['status'] = 'get fail';
+        } else {
+            $data['status'] = 'get OK';
         }
+        trace($data);
         return '';
     }
 }
@@ -880,6 +885,10 @@ class BonusOper
 
     public static function reCalc($uname)
     {
+        $key = "BonusOper::reCalc{$uname}";
+        if (cache("?{$key}")) {
+            return intval(cache($key));
+        }
         $map['up'] = 1;
         $map['unique_name'] = $uname;
         $act = Db::table('activity')
@@ -888,7 +897,9 @@ class BonusOper
         $res = Db::table('nfee')
             ->where($map)
             ->sum('bonus');
-        return intval($act) + intval($res);
+        $all_b = intval($act) + intval($res);
+        cache($key, $all_b, 600);
+        return intval(cache($key));
     }
 
     public static function up($table, $label)
