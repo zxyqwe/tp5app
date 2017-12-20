@@ -967,6 +967,7 @@ class BonusOper
             ])
             ->select();
         $map['bonus'] = ['>=', intval($tmp[0]['o'])];
+        $map['unique_name'] = ['neq', '坎丙午'];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
@@ -981,15 +982,16 @@ class BonusOper
             ->select();
         $tmp_list = [];
         $tmp_bonus = 0;
+        $base = 0;
         foreach ($tmp as $key => $item) {
             if ($item['o'] != $tmp_bonus) {
                 $base = $key + 1;
                 if ($base > 50) {
                     break;
                 }
-                $tmp_bonus = $base;
+                $tmp_bonus = $item['o'];
             }
-            $item['i'] = $tmp_bonus;
+            $item['i'] = $base;
             $tmp_list[] = $item;
         }
         return $tmp_list;
