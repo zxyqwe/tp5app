@@ -67,6 +67,14 @@ class Mobile extends Controller
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
         session('member_code', $res['code']);
+        $res['bonus_top'] = '50名之后';
+        $bonus_top = BonusOper::getTop();
+        foreach ($bonus_top as $item) {
+            if ($item['o'] <= $res['bonus']) {
+                $res['bonus_top'] = "第{$item['i']}名";
+                break;
+            }
+        }
         $res['code'] = MemberOper::trans($res['code']);
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);

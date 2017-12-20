@@ -952,6 +952,48 @@ class BonusOper
         }
         return json(['msg' => 'ok', 'c' => 1]);
     }
+
+    public static function getTop()
+    {
+        $map['code'] = ['in', MemberOper::getMember()];
+        $tmp = Db::table('member')
+            ->alias('m')
+            ->cache(600)
+            ->order('m.bonus', 'desc')
+            ->where($map)
+            ->limit(51, 1)
+            ->field([
+                'm.bonus as o'
+            ])
+            ->select();
+        $map['bonus'] = ['>=', intval($tmp[0]['o'])];
+        $tmp = Db::table('member')
+            ->alias('m')
+            ->cache(600)
+            ->order('m.bonus', 'desc')
+            ->where($map)
+            ->field([
+                'm.unique_name as u',
+                'm.tieba_id as t',
+                'm.bonus as o',
+                'm.year_time as y'
+            ])
+            ->select();
+        $tmp_list = [];
+        $tmp_bonus = 0;
+        foreach ($tmp as $key => $item) {
+            if ($item['o'] != $tmp_bonus) {
+                $base = $key + 1;
+                if ($base > 50) {
+                    break;
+                }
+                $tmp_bonus = $base;
+            }
+            $item['i'] = $tmp_bonus;
+            $tmp_list[] = $item;
+        }
+        return $tmp_list;
+    }
 }
 
 class OrderOper
