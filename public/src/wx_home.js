@@ -285,7 +285,8 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: w.u10,
                 dataType: "json",
                 success: function (msg) {
-                    w.location.search += '&_=' + Date.now();
+                    w.msgok();
+                    w.home();
                 },
                 error: function (msg) {
                     w.msgto(msg);
