@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\BonusOper;
 use app\hanbj\MemberOper;
 use app\hanbj\UserOper;
 use think\Controller;
@@ -134,31 +135,7 @@ class Dataopen extends Controller
 
     public function json_bonus()
     {
-        $map['code'] = ['in', MemberOper::getMember()];
-        $tmp = Db::table('member')
-            ->alias('m')
-            ->cache(600)
-            ->order('m.bonus', 'desc')
-            ->where($map)
-            ->limit(51, 1)
-            ->field([
-                'm.bonus as o'
-            ])
-            ->select();
-        $map['bonus'] = ['>=', intval($tmp[0]['o'])];
-        $map['unique_name'] = ['neq', '坎丙午'];
-        $tmp = Db::table('member')
-            ->alias('m')
-            ->cache(600)
-            ->order('m.bonus', 'desc')
-            ->where($map)
-            ->field([
-                'm.unique_name as u',
-                'm.tieba_id as t',
-                'm.bonus as o',
-                'm.year_time as y'
-            ])
-            ->select();
+        $tmp = BonusOper::getTop();
         return json($tmp);
     }
 }
