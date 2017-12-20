@@ -87,18 +87,10 @@ class Wx extends Controller
         $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
         $map['code'] = ['in', MemberOper::getMember()];
-        $res = Db::table('member')
+        Db::table('member')
             ->where($map)
             ->setField('bonus', $bonus);
-        if ($res !== 1) {
-            return json(['msg' => '更新失败，积分不变，为' . $bonus], 400);
-        }
-        CardOper::update(
-            $uname,
-            session('card'),
-            $bonus,
-            $bonus,
-            '重新计算积分');
+        CardOper::renew($uname);
         return json(['msg' => $bonus]);
     }
 
