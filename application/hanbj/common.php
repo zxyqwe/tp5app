@@ -216,7 +216,7 @@ class MemberOper
                 cache($ca, $ca, 2 * 86400);
             }
             trace("$unique_name UNUSED TEMPUSE $ret");
-            CardOper::common($unique_name, '临时抢号');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -250,7 +250,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name TEMPUSE UNUSED $ret");
             FeeOper::clear($unique_name);
-            CardOper::unuesd($unique_name);
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -273,7 +273,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name TEMPUSE JUNIOR $ret");
-            CardOper::common($unique_name, '会员');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -296,7 +296,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name JUNIOR TEMPUSE $ret");
-            CardOper::common($unique_name, '临时抢号');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -328,7 +328,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name JUNIOR NORMAL $ret");
             trace(json_encode($data));
-            CardOper::common($unique_name, '实名会员');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -348,7 +348,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name NORMAL FREEZE $ret");
-            CardOper::freeze($unique_name);
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -368,7 +368,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name FREEZE NORMAL $ret");
-            CardOper::common($unique_name, '实名会员');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -391,7 +391,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name NORMAL BANNED $ret");
-            CardOper::banned($unique_name);
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -414,7 +414,7 @@ class MemberOper
                 ->where($map)
                 ->update($data);
             trace("$unique_name BANNED NORMAL $ret");
-            CardOper::common($unique_name, '实名会员');
+            CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -728,48 +728,44 @@ class CardOper
             ->alias('m')
             ->where($map)
             ->join($join)
-            ->field('c.code')
+            ->field(['c.code', 'm.code as c'])
             ->find();
         if (null === $ret) {
             return null;
         }
-        return $ret['code'];
+        return $ret;
     }
 
-    public static function banned($uname)
+    public static function renew($uname)
     {
-        $code = self::U2Card($uname);
-        if (null === $code) {
+        $ret = self::U2Card($uname);
+        if (null === $ret) {
             return;
         }
-        self::update('注销', $code, 0, 0, '注销');
-    }
-
-    public static function freeze($uname)
-    {
-        $code = self::U2Card($uname);
-        if (null === $code) {
-            return;
+        $code = $ret['code'];
+        switch ($ret['c']) {
+            case MemberOper::BANNED:
+                self::update('注销', $code, 0, 0, '注销');
+                break;
+            case MemberOper::FREEZE:
+                self::update('停机', $code, 0, 0, '停机');
+                break;
+            case MemberOper::UNUSED:
+                self::update('未选择', $code, 0, 0, '未选择');
+                break;
+            case MemberOper::TEMPUSE:
+                self::update("临时抢号", $code, 0, 0, "临时抢号");
+                break;
+            case MemberOper::JUNIOR:
+                self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：会员");
+                break;
+            case MemberOper::NORMAL:
+                self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：实名会员");
+                break;
+            default:
+                trace("{$uname} {$code} {$ret['c']}");
+                self::update($uname, $code, 0, 0, "激活为：{$ret['c']}");
         }
-        self::update('停机', $code, 0, 0, '停机');
-    }
-
-    public static function unuesd($uname)
-    {
-        $code = self::U2Card($uname);
-        if (null === $code) {
-            return;
-        }
-        self::update('未选择', $code, 0, 0, '未选择');
-    }
-
-    public static function common($uname, $msg)
-    {
-        $code = self::U2Card($uname);
-        if (null === $code) {
-            return;
-        }
-        self::update($uname, $code, 0, BonusOper::reCalc($uname), "激活为：$msg");
     }
 
     public static function update($uni, $card, $add_b, $b, $msg)
@@ -808,8 +804,8 @@ class CardOper
             "membership_number" => $code,
             "code" => $code,
             "card_id" => config('hanbj_cardid'),
-            'init_bonus' => BonusOper::reCalc($uname),
-            'init_custom_field_value1' => $uname,
+            'init_bonus' => 0,
+            'init_custom_field_value1' => '激活中',
             'init_custom_field_value2' => FeeOper::cache_fee($uname)
         ];
         $raw = Curl_Post($data, $url, false);
@@ -828,6 +824,7 @@ class CardOper
             trace($data);
             return json(['msg' => '更新失败'], 500);
         }
+        self::renew($uname);
         return json(['msg' => 'OK']);
     }
 
