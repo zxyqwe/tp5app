@@ -58,7 +58,7 @@ class BiliHelper
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] !== 0) {
-            trace($res);
+            trace("online $res");
         }
     }
 
@@ -99,12 +99,11 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
-            trace($raw);
+            trace("getSendGift $raw");
             return;
         }
         foreach ($data['data'] as $item) {
-            $str = 'getSendGift ' . $item['giftTypeName'];
-            trace($str);
+            trace("getSendGift {$item['giftTypeName']}");
         }
         $this->lock('getSendGift', $this->long_timeout());
     }
@@ -119,7 +118,7 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
-            trace($raw);
+            trace("send $raw");
             return;
         }
         $data = $data['data']['list'];
@@ -168,7 +167,7 @@ class BiliHelper
             return json(['msg' => "-400"], 400);
         }
         if ($data['code'] !== 0) {
-            trace($raw);
+            trace("unknown_smallTV $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -229,7 +228,7 @@ class BiliHelper
                 }
                 return json(['msg' => $raw]);
             default:
-                trace($raw);
+                trace("notice_any $raw");
                 return json(['msg' => "1 $raw"], 400);
         }
     }
@@ -244,7 +243,7 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace($raw);
+            trace("unknown_raffle $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -284,7 +283,7 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace($raw);
+            trace("heart_gift_receive $raw");
             return;
         }
         $data = $data['data'];
@@ -385,7 +384,7 @@ class BiliHelper
         $data = json_decode($res, true);
         switch ($data['code']) {
             case -101:
-                trace($res);
+                trace("silverTask $res");
                 return '';
             case -10017:
                 trace("day empty {$data['msg']}");
@@ -467,7 +466,7 @@ class BiliHelper
             if (false === strpos($return_str, 'Timeout')
                 && false === strpos($return_str, 'SSL connect error')
             ) {
-                trace(['url' => $url, 'res' => $return_str]);
+                trace("url => $url, res => $return_str");
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
         }
