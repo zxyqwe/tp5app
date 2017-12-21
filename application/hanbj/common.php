@@ -824,11 +824,12 @@ class CardOper
         ];
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
+        $log = implode('; ', [$uni, $card, $msg, $add_b, $b]);
         if ($res['errcode'] !== 0) {
-            trace("update $raw");
+            trace("update $log $raw " . json_encode($data));
             throw new HttpResponseException(json(['msg' => $raw], 400));
         } else {
-            trace(implode('; ', [$uni, $card, $add_b, $b, $msg]));
+            trace($log);
         }
     }
 
@@ -991,7 +992,8 @@ class BonusOper
             }
         } catch (\Exception $e) {
             Db::rollback();
-            return json(['msg' => '' . $e], 400);
+            $e = $e->getMessage();
+            return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok', 'c' => 1]);
     }
@@ -1129,10 +1131,13 @@ class WxTemp
                 ]
             ]
         ];
+        $log = implode(', ', [$openid, $uname, $fee, $cache_fee, $label]);
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("notifyFee $raw");
+            trace("notifyFee $log $raw");
+        } else {
+            trace($log);
         }
     }
 
@@ -1161,10 +1166,13 @@ class WxTemp
                 ]
             ]
         ];
+        $log = implode(', ', [$openid, $uname, $act]);
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("regAct $raw");
+            trace("regAct $log $raw");
+        } else {
+            trace($log);
         }
     }
 }
@@ -1245,7 +1253,8 @@ class HanbjNotify extends WxPayNotify
             }
         } catch (\Exception $e) {
             Db::rollback();
-            trace('NotifyProcess ' . $e);
+            $e = $e->getMessage();
+            trace('NotifyProcess ' . $e . json_encode($data));
             return false;
         }
         return true;
