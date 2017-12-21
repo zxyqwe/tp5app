@@ -152,5 +152,6 @@ class Index extends Controller
 
     public function debug()
     {
+        MemberOper::Normal2Junior('夏癸未');
     }
 }
