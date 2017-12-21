@@ -80,10 +80,11 @@ class Wx extends Controller
     public function json_renew()
     {
         $uname = session('unique_name');
-        if (cache('?json_renew' . $uname)) {
+        $key = "json_renew_$uname";
+        if (cache("?$key")) {
             return json(['msg' => '每天可以重新核算一次'], 400);
         }
-        cache('json_renew' . $uname, 1, 86400);
+        cache($key, $key, 86400);
         $bonus = BonusOper::reCalc($uname);
         $map['unique_name'] = $uname;
         $map['code'] = ['in', MemberOper::getMember()];

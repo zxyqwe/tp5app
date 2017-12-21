@@ -745,30 +745,34 @@ class CardOper
         $code = $ret['code'];
         switch ($ret['c']) {
             case MemberOper::BANNED:
-                self::update('注销', $code, -1, 0, '注销');
+                self::update('注销', $code, '注销');
                 break;
             case MemberOper::FREEZE:
-                self::update('停机', $code, -1, 0, '停机');
+                self::update('停机', $code, '停机');
                 break;
             case MemberOper::UNUSED:
-                self::update('未选择', $code, -1, 0, '未选择');
+                self::update('未选择', $code, '未选择');
                 break;
             case MemberOper::TEMPUSE:
-                self::update("临时抢号", $code, -1, 0, "临时抢号");
+                self::update("临时抢号", $code, "临时抢号");
                 break;
             case MemberOper::JUNIOR:
-                self::update($uname, $code, BonusOper::reCalc($uname), BonusOper::reCalc($uname), "激活为：会员");
+                self::update($uname, $code, "激活为：会员");
+                $bonus = BonusOper::reCalc($uname);
+                self::update($uname, $code, "重新更新积分", $bonus, $bonus);
                 break;
             case MemberOper::NORMAL:
-                self::update($uname, $code, BonusOper::reCalc($uname), BonusOper::reCalc($uname), "激活为：实名会员");
+                self::update($uname, $code, "激活为：实名会员");
+                $bonus = BonusOper::reCalc($uname);
+                self::update($uname, $code, "重新更新积分", $bonus, $bonus);
                 break;
             default:
-                trace("{$uname} {$code} {$ret['c']}");
-                self::update($uname, $code, -1, 0, "激活为：{$ret['c']}");
+                trace("激活为：{$uname} {$code} {$ret['c']}");
+                self::update($uname, $code, "激活为：{$ret['c']}");
         }
     }
 
-    public static function update($uni, $card, $add_b, $b, $msg)
+    public static function update($uni, $card, $msg, $add_b = 0, $b = 0)
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/updateuser?access_token=' . $access;
@@ -948,9 +952,9 @@ class BonusOper
                 CardOper::update(
                     $item['unique_name'],
                     $item['code'],
+                    $label,
                     $bonus,
-                    intval($item['bonus']) + $bonus,
-                    $label);
+                    intval($item['bonus']) + $bonus);
             } else {
                 trace("{$item['unique_name']} 没有会员卡");
             }
