@@ -337,6 +337,37 @@ class MemberOper
         }
     }
 
+    public static function Normal2Junior($unique_name)
+    {
+        if (FeeOper::owe($unique_name)) {
+            return false;
+        }
+        $map['code'] = self::NORMAL;
+        $map['unique_name'] = $unique_name;
+        $data['code'] = self::JUNIOR;
+        $data['gender'] = '';
+        $data['phone'] = '';
+        $data['QQ'] = '';
+        $data['master'] = '';
+        $data['eid'] = '?';
+        $data['rn'] = '?';
+        $data['mail'] = '';
+        $data['bonus'] = 0;
+        try {
+            $ret = Db::table('member')
+                ->where($map)
+                ->update($data);
+            trace("大杀器 $unique_name NORMAL JUNIOR $ret");
+            trace(json_encode($data));
+            CardOper::renew($unique_name);
+            return $ret == 1;
+        } catch (\Exception $e) {
+            $e = $e->getMessage();
+            trace("Normal2Junior $unique_name $e");
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
+    }
+
     private static function Normal2Freeze($unique_name)
     {
         $map['code'] = self::NORMAL;
