@@ -501,10 +501,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("JsApi $raw");
             return '';
         }
-        trace("WxHanbj JsApi " . $res['ticket']);
+        trace("WxHanbj JsApi {$res['ticket']}");
         cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -517,10 +517,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("TicketApi $raw");
             return '';
         }
-        trace("WxHanbj TicketApi " . $res['ticket']);
+        trace("WxHanbj TicketApi {$res['ticket']}");
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -535,7 +535,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg);
             default:
-                trace($msg);
+                trace(json_encode($msg));
             case 'text':
                 $cont = (string)$msg->Content;
                 if ($cont === '投票') {
@@ -572,10 +572,7 @@ class WxHanbj
     private static function auto($to, $from, $type, $debug_msg = '')
     {
         if (empty($debug_msg)) {
-            trace([
-                'TO' => $to,
-                'TEXT' => $type
-            ]);
+            trace("TO => $to, TEXT => $type");
         } else {
             trace($to . ' ' . $debug_msg);
         }
@@ -601,7 +598,7 @@ class WxHanbj
             case 'TEMPLATESENDJOBFINISH':
                 $Status = (string)$msg->Status;
                 if ('success' != $Status) {
-                    trace($msg);
+                    trace(json_encode($msg));
                 }
                 return '';
             case 'update_member_card':
@@ -610,7 +607,7 @@ class WxHanbj
                 trace($UserCardCode . ' --> ' . $ModifyBonus);
                 return '';
             default:
-                trace($msg);
+                trace(json_encode($msg));
             case 'subscribe':
             case 'unsubscribe':
             case 'SCAN':
@@ -797,7 +794,7 @@ class CardOper
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("update $raw");
             throw new HttpResponseException(json(['msg' => $raw], 400));
         } else {
             trace(implode('; ', [$uni, $card, $add_b, $b, $msg]));
@@ -820,7 +817,7 @@ class CardOper
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("active $raw " . json_encode($data));
             return json(['msg' => $raw], 400);
         }
         $map['status'] = 0;
@@ -830,7 +827,7 @@ class CardOper
             ->where($map)
             ->setField('status', 1);
         if ($res !== 1) {
-            trace($data);
+            trace("active " . json_encode($data));
             return json(['msg' => '更新失败'], 500);
         }
         self::renew($uname);
@@ -853,7 +850,7 @@ class CardOper
         } else {
             $data['status'] = 'del OK';
         }
-        trace($data);
+        trace(json_encode($data));
         return '';
     }
 
@@ -872,7 +869,7 @@ class CardOper
         } else {
             $data['status'] = 'get OK';
         }
-        trace($data);
+        trace(json_encode($data));
         return '';
     }
 }
@@ -1104,7 +1101,7 @@ class WxTemp
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("notifyFee $raw");
         }
     }
 
@@ -1136,7 +1133,7 @@ class WxTemp
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace($raw);
+            trace("regAct $raw");
         }
     }
 }
@@ -1217,7 +1214,7 @@ class HanbjNotify extends WxPayNotify
             }
         } catch (\Exception $e) {
             Db::rollback();
-            trace('' . $e);
+            trace('NotifyProcess ' . $e);
             return false;
         }
         return true;
