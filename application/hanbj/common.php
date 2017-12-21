@@ -743,6 +743,9 @@ class CardOper
             return;
         }
         $code = $ret['code'];
+        if (null === $code) {
+            return;
+        }
         switch ($ret['c']) {
             case MemberOper::BANNED:
                 self::update('注销', $code, '注销');
