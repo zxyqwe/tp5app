@@ -372,7 +372,7 @@ class Data extends Controller
         $res = Db::table('fame')
             ->alias('f')
             ->join($join)
-            ->order('year desc,grade')
+            ->order('year desc,grade asc,label asc')
             ->field([
                 'f.id',
                 'f.unique_name as u',
