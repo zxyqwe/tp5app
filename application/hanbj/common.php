@@ -842,7 +842,7 @@ class CardOper
             "membership_number" => $code,
             "code" => $code,
             "card_id" => config('hanbj_cardid'),
-            'init_bonus' => 0,
+            'init_bonus' => 1,
             'init_custom_field_value1' => '激活中',
             'init_custom_field_value2' => FeeOper::cache_fee($uname)
         ];
