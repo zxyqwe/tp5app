@@ -909,14 +909,15 @@ class CardOper
 class BonusOper
 {
     const FEE = 30;
-    const ACT = 10;
-    const VOLUNTEER = 10;
+    const ACT = 5;
+    const VOLUNTEER = 30;
     const ACT_NAME = '2017冬至';
     const _WORKER = [];
 
     public static function getWorkers()
     {
-        return array_merge(self::_WORKER, ['坎丙午', '乾壬申']);//zxyqwe, 魁儿
+        //zxyqwe, 魁儿, 花西, 哈利, 紫菀
+        return array_merge(self::_WORKER, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
     }
 
     public static function reCalc($uname)
