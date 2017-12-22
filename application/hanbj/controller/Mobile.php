@@ -162,7 +162,7 @@ class Mobile extends Controller
         $card = Db::table('card')
             ->where($map)
             ->value('code');
-        if ($card === false) {
+        if ($card === null) {
             return json(['msg' => '没有未激活会员卡'], 400);
         }
         return CardOper::active($card);
