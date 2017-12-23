@@ -252,6 +252,7 @@ class MemberOper
                 throw new \Exception('1 fail');
             }
             CardOper::renew($unique_name);
+            $map['code'] = self::UNUSED;
             $ret = Db::table('member')
                 ->where($map)
                 ->update(['openid' => null]);
@@ -814,7 +815,7 @@ class CardOper
         }
     }
 
-    public static function update($uni, $card, $msg, $add_b = -1, $b = 0)
+    public static function update($uni, $card, $msg, $add_b = 1, $b = 0)
     {
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/card/membercard/updateuser?access_token=' . $access;
