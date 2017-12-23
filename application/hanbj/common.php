@@ -924,7 +924,7 @@ class BonusOper
     const ACT = 5;
     const VOLUNTEER = 30;
     const ACT_NAME = '2017冬至';
-    const _WORKER = [];
+    const _WORKER = ['兑壬子', '兑癸卯'];
 
     public static function getWorkers()
     {
