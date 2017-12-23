@@ -242,17 +242,28 @@ class MemberOper
         $data['code'] = self::UNUSED;
         $data['tieba_id'] = $unique_name;
         $data['year_time'] = -1;
-        $data['openid'] = null;
         $data['bonus'] = 0;
+        Db::startTrans();
         try {
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name TEMPUSE UNUSED $ret");
-            FeeOper::clear($unique_name);
+            if ($ret != 1) {
+                throw new \Exception('1 fail');
+            }
             CardOper::renew($unique_name);
-            return $ret == 1;
+            $ret = Db::table('member')
+                ->where($map)
+                ->update(['openid' => null]);
+            if ($ret != 1) {
+                throw new \Exception('2 fail');
+            }
+            trace("$unique_name TEMPUSE UNUSED 1");
+            FeeOper::clear($unique_name);
+            Db::commit();
+            return true;
         } catch (\Exception $e) {
+            Db::rollback();
             $e = $e->getMessage();
             trace("Temp2Unused $unique_name $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
