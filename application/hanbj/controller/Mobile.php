@@ -257,4 +257,9 @@ class Mobile extends Controller
                 return json(['msg' => $this->request->method()], 400);
         }
     }
+
+    public function help()
+    {
+        return redirect('https://mp.weixin.qq.com/s/jfVoYA8ezZUFmoFU6bMndg');
+    }
 }

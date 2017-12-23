@@ -720,14 +720,14 @@ class CardOper
                 "custom_url_name": "活动报名",
                 "custom_url": "https://app.zxyqwe.com/hanbj/mobile/#activity",
                 "custom_url_sub_title": "更多惊喜",
-                "promotion_url_name": "商家优惠",ToDo
-                "promotion_url": "https://app.zxyqwe.com/hanbj/mobile/#prom",ToDo
+                "promotion_url_name": "商家优惠",
+                "promotion_url": "https://app.zxyqwe.com/hanbj/mobile/#prom",
                 "promotion_url_sub_title": "福利多多"
             },
             "advanced_info": {
                 "text_image_list": [
                     {
-                  ToDo      "image_url": "http://mmbiz.qpic.cn/mmbiz/p98FjXy8LacgHxp3sJ3vn97bGLz0ib0Sfz1bjiaoOYA027iasqSG0sjpiby4vce3AtaPu6cIhBHkt6IjlkY9YnDsfw/0",
+                        "image_url": "http://mmbiz.qpic.cn/mmbiz_jpg/PP2q8S7QAJdkZWIvIQheoscaVOPSibtibZQUqibrjNzZoIqo5mLeib1RhUe8vvjhf9LWdBhX4qV1mc7iaKInIYlWTqg/0",
                         "text":
                         "1、会员须遵守国家法律，遵守汉服北京的各项章程、规定，认同本群体的原则理念和基本共识，履行吧务组决议，不公开发表过激或极端言论，不做有损汉服群体整体利益和对外形象的行为。因违法违纪、违反汉服北京规章制度等行为造成恶劣影响，可由汉服北京管理团队讨论后，终止或撤销其会员资格，所缴纳会费恕不退回。\n2、会员在行使任何权利时，都应携带并配合出示有效会员凭证，否则将不享有会员权利。\n3、会员可主动申请终止或撤销会员资格，自汉服北京管理团队确认之日起会员资格失效，所缴纳会费恕不退回；再次申请加入会员时，重新计算会员时效。"
                     }
@@ -748,10 +748,10 @@ class CardOper
                 "name": "缴费",
                 "url": "https://app.zxyqwe.com/hanbj/mobile/#valid",
             },
-        ToDo    "custom_cell1": {
+            "custom_cell1": {
                 "name": "汉北会员",
                 "tips": "攻略指南",
-                "url": "https://app.zxyqwe.com/hanbj/mobile/#custom",
+                "url": "https://app.zxyqwe.com/hanbj/mobile/help",
             }
         }
     }
