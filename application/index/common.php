@@ -189,6 +189,9 @@ class BiliHelper
                 $this->lock("unknown_smallTV$payload", $this->long_timeout());
                 continue;
             }
+            if (strpos($raw, '系统繁忙') !== false) {
+                continue;
+            }
             trace('unknown_smallTV' . json_encode($item) . $raw);
         }
         return json($ret);
