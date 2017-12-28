@@ -167,7 +167,9 @@ class BiliHelper
             return json(['msg' => "-400"], 400);
         }
         if ($data['code'] !== 0) {
-            trace("unknown_smallTV $raw");
+            if (strpos($raw, '系统繁忙') === false) {
+                trace("unknown_smallTV $raw");
+            }
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -246,7 +248,9 @@ class BiliHelper
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("unknown_raffle $raw");
+            if (strpos($raw, '系统繁忙') === false) {
+                trace("unknown_raffle $raw");
+            }
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
