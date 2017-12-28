@@ -124,8 +124,14 @@ class BiliHelper
         $data = $data['data']['list'];
         foreach ($data as $vo) {
             $end = intval($vo['expire_at']);
-            if ($end - time() > 2 * 86400) {
-                trace("跳过 {$vo['gift_name']} 过期时间 " . date("Y-m-d H:i:s", $end));
+            $period = $end - time();
+            if ($period > 2 * 86400) {
+                $inter = new \DateTime();
+                $inter->setTimestamp($end);
+                $period = $inter->diff(new \DateTime());
+                trace("截止时间 " . date("Y-m-d H:i:s", $end) .
+                    " 间隔时间 " . $period->format("%d天%H:%I:%S") .
+                    " 跳过 {$vo['gift_num']} 个 {$vo['gift_name']}");
                 continue;
             }
             $payload = [
