@@ -161,12 +161,14 @@ class Data extends Controller
 
     public function json_all()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
-        $search = input('get.search');
-        $map['code'] = ['neq', MemberOper::UNUSED];
+        $search = input('post.search');
+        $level = input('post.up/a', []);
+        $level = array_intersect($level, range(0, 4));
+        $map['code'] = ['in', $level];
         if (!empty($search)) {
             $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
         }
