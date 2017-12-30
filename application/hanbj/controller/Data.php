@@ -45,13 +45,13 @@ class Data extends Controller
 
     public function json_act()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
-        $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
-        $uname = input('get.uname', '');
-        $act = input('get.act', '');
+        $up = input('post.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        $uname = input('post.uname', '');
+        $act = input('post.act', '');
         if ($up) {
             $map['f.up'] = 0;
         } else {
@@ -96,12 +96,12 @@ class Data extends Controller
 
     public function json_fee()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
-        $up = input('get.up/b', false, FILTER_VALIDATE_BOOLEAN);
-        $uname = input('get.uname', '');
+        $up = input('post.up/b', false, FILTER_VALIDATE_BOOLEAN);
+        $uname = input('post.uname', '');
         if ($up) {
             $map['f.up'] = 0;
         } else {
@@ -433,11 +433,11 @@ class Data extends Controller
 
     public function json_card()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
-        $search = input('get.search');
+        $search = input('post.search');
         $map['f.code'] = ['EXP', 'IS NOT NULL'];
         if (!empty($search)) {
             $map['m.tieba_id|m.unique_name'] = ['like', '%' . $search . '%'];
@@ -475,8 +475,8 @@ class Data extends Controller
 
     public function json_order()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
         $join = [
