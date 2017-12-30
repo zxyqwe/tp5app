@@ -48,19 +48,21 @@ var all_mem = (function ($, w, undefined) {
         return params;
     };
     var build_vue = function (refresh) {
+        var le = [], u = [];
+        for (var i in Array.from(Array(5).keys())) {
+            le.push({v: i, n: w.mem_code(i)});
+            u.push(i)
+        }
         vmain = new Vue({
             el: '#toolbar',
             data: {
-                up: [],
-                level: []
+                up: u,
+                level: le
             }
         });
         vmain.$watch('up', function (nv) {
             $table.bootstrapTable('refresh');
         });
-        for (var i in Array.from(Array(5).keys())) {
-            vmain.level.push({v: i, n: w.mem_code(i)});
-        }
     };
     var init = function () {
         build_vue();
