@@ -58,7 +58,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         s += '</p><p>积分：';
         s += msg.bonus;
         s += '</p>';
-        s += wx_init.mem_code(msg.code);
+        s += w.wx_mem_code(msg.code);
         s += '</p><p>编号：';
         s += msg.uni;
         s += '</p><p>昵称：';
@@ -489,34 +489,8 @@ var wx_hist = (function ($, Vue, w, undefined) {
                 hist: []
             },
             methods: {
-                trans: function (n) {
-                    switch (n) {
-                        case '0':
-                            return '/static/arrow-up.png';
-                        case '1':
-                            return '/static/arrow-up.png';
-                        case '2':
-                            return '/static/arrow-up.png';
-                        case '3':
-                            return '/static/arrow-up.png';
-                        case '4':
-                            return '/static/arrow-up.png';
-                    }
-                },
-                trans2: function (n) {
-                    switch (n) {
-                        case '0':
-                            return '会长';
-                        case '1':
-                            return '副会长';
-                        case '2':
-                            return '部长';
-                        case '3':
-                            return '副部长';
-                        case '4':
-                            return '干事';
-                    }
-                }
+                trans: w.fame_img,
+                trans2: w.grade
             }
         });
     };
