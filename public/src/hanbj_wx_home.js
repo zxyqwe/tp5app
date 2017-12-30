@@ -140,7 +140,7 @@ var wx_home = (function ($, Vue, w, undefined) {
     var load_act_log = function () {
         w.waitloading();
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: w.u4,
             dataType: "json",
             data: {
@@ -231,7 +231,7 @@ var wx_home = (function ($, Vue, w, undefined) {
     var load_act = function () {
         w.waitloading();
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: w.u8,
             dataType: "json",
             data: {
@@ -255,7 +255,7 @@ var wx_home = (function ($, Vue, w, undefined) {
     var load_valid = function () {
         w.waitloading();
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: w.u9,
             dataType: "json",
             data: {
