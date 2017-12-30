@@ -55,11 +55,11 @@ class Dataopen extends Controller
 
     public function json_bulletin()
     {
-        $size = input('get.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
-        $search = input('get.search');
+        $search = input('post.search');
         if (!empty($search)) {
             $map['m.unique_name'] = ['like', '%' . $search . '%'];
         }
