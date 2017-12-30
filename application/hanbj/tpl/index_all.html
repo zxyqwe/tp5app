@@ -3,15 +3,28 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>全体成员</h1>
         <div id="body">
+            <div id="toolbar">
+                <div class="form-inline" role="form">
+                    <div class="form-group" v-for="i in level">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" v-model="up" :value="i.v">{{ i.n }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <table id="table"
                    data-pagination="true"
                    data-search="true"
+                   data-toolbar="#toolbar"
                    data-side-pagination="server"
                    data-url="/hanbj/data/json_all"
                    data-detail-view="true"
                    data-show-toggle="true"
                    data-show-columns="true"
                    data-detail-formatter="detailFormatter"
+                   data-query-params="wxParams"
                    data-page-list="[20, 50, 100]">
                 <thead>
                 <tr>
