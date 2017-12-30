@@ -39,7 +39,7 @@ var all_mem = (function ($, w, undefined) {
         var data = [];
         for (var i in fame) {
             var tmp = fame[i];
-            data.push(listitem(home.grade(tmp.grade), ['第 ' + tmp.year + ' 届：' + tmp.label]));
+            data.push(listitem(w.grade(tmp.grade), ['第 ' + tmp.year + ' 届：' + tmp.label]));
         }
         return data.join("");
     };
@@ -58,6 +58,9 @@ var all_mem = (function ($, w, undefined) {
         vmain.$watch('up', function (nv) {
             $table.bootstrapTable('refresh');
         });
+        for (var i in Array(5).keys()) {
+            vmain.level.push({v: i, n: w.mem_code(i)});
+        }
     };
     var init = function () {
         build_vue();
@@ -91,7 +94,7 @@ var all_mem = (function ($, w, undefined) {
             return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
         };
         w.codeFormatter = function (value, row) {
-            return home.mem_code(value);
+            return w.mem_code(value);
         };
         w.openidFormatter = function (str, row) {
             return !str || str.length === 0 ? '' : '有';
@@ -176,7 +179,7 @@ var baselog = (function ($, Vue, w, undefined) {
             return params;
         };
         w.codeFormatter = function (value, row) {
-            return home.mem_code(value);
+            return w.mem_code(value);
         };
         if (undefined === build_v) {
             build_vue(refresh);
@@ -273,7 +276,7 @@ var card = (function ($, w, undefined) {
             }
         });
         w.codeFormatter = function (value, row) {
-            return home.mem_code(value);
+            return w.mem_code(value);
         };
         w.cardFormatter = function (value, row) {
             return value === '0' ? '' : '激活';
@@ -299,7 +302,7 @@ var order = (function ($, w, undefined) {
     };
     var init = function () {
         w.codeFormatter = function (value, row) {
-            return home.mem_code(value);
+            return w.mem_code(value);
         };
         $table = $('#table');
         $table.bootstrapTable({
@@ -684,8 +687,8 @@ var fame = (function ($, Vue, w, undefined) {
                 fames: []
             },
             methods: {
-                fame_img: home.fame_img,
-                fame_name: home.grade
+                fame_img: w.fame_img,
+                fame_name: w.grade
             }
         });
         w.waitloading();
@@ -707,7 +710,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var initlog = function () {
         Vue.filter('grade_code', function (n) {
-            return home.grade('' + n);
+            return w.grade('' + n);
         });
         vmain = new Vue({
             el: '#body',
@@ -777,10 +780,10 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var fameori = function () {
         w.code2Formatter = function (value, row) {
-            return home.grade(value);
+            return w.grade(value);
         };
         w.codeFormatter = function (value, row) {
-            return home.mem_code(value);
+            return w.mem_code(value);
         };
         var $table = $('#table');
         $table.bootstrapTable({
@@ -1067,7 +1070,7 @@ var group = (function ($, w, undefined) {
         myChart.setOption(option);
     };
     var get_join = function (j, c) {
-        c = home.mem_code(c);
+        c = w.mem_code(c);
         join1.push(j);
         join2.push(c);
         if (undefined === join[j + c]) {

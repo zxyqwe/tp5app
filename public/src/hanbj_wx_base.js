@@ -221,24 +221,6 @@ var wx_init = (function ($, w, undefined) {
             .setDefault('home')
             .init();
     };
-    var mem_code = function (value) {
-        switch (value) {
-            case '-1':
-                return '<p class="temp-text">状态：空号';
-            case '0':
-                return '<p>状态：实名会员';
-            case '1':
-                return '<p class="temp-text">状态：注销';
-            case '2':
-                return '<p class="temp-text">状态：停机保号';
-            case '3':
-                return '<p class="temp-text">状态：临时抢号';
-            case '4':
-                return '<p>状态：会员';
-            default:
-                return '<p class="temp-text">状态：' + value;
-        }
-    };
     var jsapi = function () {
         w.waitloading('微信授权中');
         var msg = $('#json_wx').html();
@@ -328,7 +310,6 @@ var wx_init = (function ($, w, undefined) {
         }
     };
     return {
-        init: init,
-        mem_code: mem_code
+        init: init
     };
 })(Zepto, window);
