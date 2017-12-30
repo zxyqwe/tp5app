@@ -2,7 +2,11 @@
 
 namespace app\index\controller;
 
-use app\index\BiliHelper;
+
+use app\index\BiliDanmu;
+use app\index\BiliOnline;
+use app\index\BiliSend;
+use app\index\BiliSilver;
 
 class Bilibili
 {
@@ -38,7 +42,7 @@ class Bilibili
     public function cron()
     {
         $time = date("Y-m-d H:i:s");
-        $bili = new BiliHelper();
+        $bili = new BiliOnline();
         if ($bili->lock('cookie')) {
             return json(['msg' => 'too fast', 'time' => $time]);
         }
@@ -48,9 +52,11 @@ class Bilibili
         $res = $bili->getInfo();
         cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
-        $bili->silver();
         $bili->freeGift();
         $bili->heart_gift_receive();
+        $bili = new BiliSilver();
+        $bili->silver();
+        $bili = new BiliSend();
         $bili->send();
         return json(['msg' => 'ok', 'time' => $time]);
     }
@@ -61,7 +67,7 @@ class Bilibili
         if (config('raffle_sk') !== $sk) {
             return json(['msg' => 'sk'], 400);
         }
-        $bili = new BiliHelper();
+        $bili = new BiliDanmu();
         $id = input('get.id');
         $giftId = input('post.giftId');
         $real_roomid = input('post.real_roomid');
