@@ -5,10 +5,10 @@
         <div id="body">
             <div id="toolbar">
                 <div class="form-inline" role="form">
-                    <div class="form-group" v-for="i in level">
+                    <div class="form-group" v-for="i in level" style="margin-right: 1em">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" v-model="up" :value="i.v">{{ i.n }}
+                                <input type="checkbox" v-model="up" :value="i.v" checked>{{ i.n }}
                             </label>
                         </div>
                     </div>
