@@ -4,7 +4,7 @@ var all_mem = (function ($, w, undefined) {
     var nye = $('#rgly').html();
     var jsr = '经手人：';
     var sj = "时间：";
-    var vmain;
+    var vmain, $table;
     var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
@@ -99,7 +99,7 @@ var all_mem = (function ($, w, undefined) {
         w.openidFormatter = function (str, row) {
             return !str || str.length === 0 ? '' : '有';
         };
-        var $table = $('#table');
+        $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
             formatSearch: function () {
