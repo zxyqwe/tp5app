@@ -37,7 +37,7 @@ class Wx extends Controller
 
     public function json_activity()
     {
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
         $uname = session('unique_name');
@@ -58,7 +58,7 @@ class Wx extends Controller
 
     public function json_valid()
     {
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = 5;
         $offset = max(0, $offset);
         $uname = session('unique_name');

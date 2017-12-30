@@ -104,8 +104,8 @@ class Work extends Controller
 
     public function act_log()
     {
-        $offset = input('get.offset', 0, FILTER_VALIDATE_INT);
-        $own = input('get.own', false, FILTER_VALIDATE_BOOLEAN);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+        $own = input('post.own', false, FILTER_VALIDATE_BOOLEAN);
         $size = 5;
         $offset = max(0, $offset);
         $act = BonusOper::ACT_NAME;

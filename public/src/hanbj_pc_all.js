@@ -349,7 +349,7 @@ var volunteer = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             w.waitloading();
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: w.u1,
                 dataType: "json",
                 data: {
@@ -535,7 +535,7 @@ var fee = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             w.waitloading();
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: w.u1,
                 dataType: "json",
                 data: {
@@ -738,7 +738,7 @@ var fame = (function ($, Vue, w, undefined) {
         vmain.$watch('uname', function (nv) {
             w.waitloading();
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: w.u1,
                 dataType: "json",
                 data: {

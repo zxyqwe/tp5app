@@ -257,7 +257,7 @@ class Data extends Controller
 
     public function fee_search()
     {
-        $name = input('get.name');
+        $name = input('post.name');
         if (empty($name)) {
             return json();
         }
