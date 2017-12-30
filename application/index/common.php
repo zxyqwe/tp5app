@@ -4,31 +4,17 @@ namespace app\index;
 
 use think\exception\HttpResponseException;
 
-class BiliHelper
+class BiliBase
 {
-    private $prefix = 'https://api.live.bilibili.com/';
-    private $cookie = '';
-    private $token = '';
-    private $csrf_token = '';
-    private $room_id = 5294;//218
-    private $ruid = 116683;
-    private $uid = 649681;
+    protected $token = '';
+    protected $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
+    protected $prefix = 'https://api.live.bilibili.com/';
+    protected $cookie = '';
+    protected $csrf_token = '';
+    protected $room_id = 5294;//218
+    protected $ruid = 116683;
+    protected $uid = 649681;
     private $curl;
-    private $agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.101 Safari/537.36';
-    private $OCR = array(
-        '0' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111111111111111111111',
-        '1' => '0011111001111101111110111111011111101111111111111111111111111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111',
-        '2' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111000000000011111100000000001111110000000001111110000000001111111000000000111111000000000111111000000000011111100000000011111100000000011111100000000001111110000000001111110000000000111110000000000111111000000000111111000000000011111000000000011111100000000001111100000000001111111111111111111111111111111111111111111111111111111111111111',
-        '3' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111000000000011111100000000011111110000000111111110000000111111110000000011111100000000001111111100000000011111111000000000011111110000000000111111000000000001111100000000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
-        '4' => '00000001111110000000000011111100000000001111110000000000011111100000000000111110000000000011111100000000000111111000000000001111100000000000111111000000000001111110000000000011111000000000001111110000000000011111101111100000111110011111000011111100111110000111111001111100001111100011111000111111000111110001111110001111100011111000011111001111110000111110011111111111111111111111111111111111111111111111111111111111111111111000000000011111000000000000111110000000000001111100000000000011111000000000000111110000000000001111100',
-        '5' => '1111111111111111111111111111111111111111111111111111111111111111111110000000000011111000000000001111100000000000111110000000000011111000000000001111100000000000111110000000000011111111111111101111111111111111111111111111111111111111111111110000000000011111000000000001111100000000000111110000000000011111000000000001111100000000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
-        '6' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000000000111110000000000011111000000000001111100000000000111111111111111011111111111111111111111111111111111111111111111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
-        '7' => '1111111111111111111111111111111111111111111111111111111111111111111110000011111111111000001111111111100000111110111110000011111000000000011111100000000001111110000000000111110000000000011111000000000011111100000000001111110000000000111110000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111110000000',
-        '8' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111100000111111111100000011111111110000001111111111100001111110111111111111110001111111111110000011111111110000011111111111100011111111111111011111110011111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111111',
-        '9' => '1111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111111111111111111111111111111111111111111111101111111111111110000000000011111000000000001111100000000000111110000000000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
-        '+' => '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111110000000000001111100000000000011111000000000000111110000000000001111100000000000011111000000111111111111111111111111111111111111111111111111111111111111111111110000001111100000000000011111000000000000111110000000000001111100000000000011111000000000000111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-        '-' => '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111111111111111111111111111111111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    );
 
     public function __construct()
     {
@@ -47,11 +33,71 @@ class BiliHelper
         $this->csrf_token = isset($token[1]) ? $token[1] : '';
     }
 
+    protected function bili_Post($url, $cookie, $room, $data = false, $sub = true)
+    {
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
+        if ($data !== false) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+        } else {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
+        }
+        curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
+        $return_str = curl_exec($this->curl);
+        if ($return_str === false) {
+            $num = curl_errno($this->curl);
+            $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
+            if (false === strpos($return_str, 'Timeout')
+                && false === strpos($return_str, 'SSL connect error')
+            ) {
+                trace("url => $url, res => $return_str");
+            }
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+        }
+        if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+        }
+        if ($sub && is_null(json_decode($return_str))) {
+            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
+            $return_str = urlencode(substr($return_str, 0, 100));
+        }
+        return $return_str;
+    }
+
+    public function lock($name, $time = 0, $res = null)
+    {
+        $name = "bili_cron_$name";
+        switch ($time) {
+            case 0:
+                return cache("?$name");
+            case -1:
+                cache($name, null);
+                return null;
+            case 1:
+                if (null !== $res) {
+                    cache($name, $res);
+                    return $res;
+                }
+                return cache($name);
+        }
+        cache($name, $name, $time);
+        return $name;
+    }
+
+    public function long_timeout()
+    {
+        $timeout = strtotime(date("Y-m-d")) + 25 * 3600 - time();
+        return min(8 * 3600, $timeout);
+    }
+
     public function __destruct()
     {
         curl_close($this->curl);
     }
+}
 
+class BiliOnline extends BiliBase
+{
     public function online()
     {
         $urlapi = $this->prefix . 'User/userOnlineHeart';
@@ -69,6 +115,83 @@ class BiliHelper
         return $res;
     }
 
+    public function unknown_heart()//看起来没用 100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
+    {
+    }
+
+    public function unknown_notice()//link 动态 100 sec {"code":0,"msg":" ","message":" ","data":{"num":0}}
+    {
+    }
+
+    public function heart_gift_receive()
+    {
+        if ($this->lock('heart_gift_receive')) {
+            return;
+        }
+        $urlapi = $this->prefix . 'gift/v2/live/heart_gift_receive?roomid=' . $this->room_id . '&area_v2_id=32';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace("heart_gift_receive $raw");
+            return;
+        }
+        $data = $data['data'];
+        $list = $data['gift_list'];
+        if (is_array($list)) {
+            foreach ($list as $item) {
+                trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
+            }
+        } else {
+            switch ($data['heart_status']) {
+                case 1:
+                    return;
+                case 0:
+                    trace("empty heart_gift_receive");
+                    $this->lock('heart_gift_receive', $this->long_timeout());
+                    return;
+                default:
+                    trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
+            }
+        }
+    }
+
+    private function heartbeat()
+    {
+        $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        trace("心跳 {$data['msg']}");
+    }
+
+    public function freeGift()
+    {
+        if ($this->lock('free_gift')) {
+            return;
+        }
+        $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = json_decode($raw, true);
+        $timeout = 590;
+        if ($data['code'] === 0) {
+            $gift = end($data['data']['gift']);
+            trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
+        } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
+            $timeout = $this->long_timeout();
+            trace("free gift empty {$data['msg']}");
+        } elseif ($data['msg'] === '非法心跳') {
+            $this->heartbeat();
+        } else {
+            if (false === strpos($raw, 'DOCTYPE')) {
+                trace("奇怪 $raw");
+            }
+            //$this->heartbeat();
+        }
+        $this->lock('free_gift', $timeout);
+    }
+}
+
+class BiliSend extends BiliBase
+{
     private function sign()
     {
         $urlapi = $this->prefix . 'sign/doSign';
@@ -160,202 +283,24 @@ class BiliHelper
         }
         $this->lock('send_gift', $this->long_timeout());
     }
+}
 
-    public function unknown_heart()//看起来没用 100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
-    {
-    }
-
-    public function unknown_notice()//link 动态 100 sec {"code":0,"msg":" ","message":" ","data":{"num":0}}
-    {
-    }
-
-    public function unknown_smallTV($real_roomid)
-    {
-        $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-        $data = json_decode($raw, true);
-        if ($data['code'] === -400) {//没有需要提示的小电视
-            return json(['msg' => "-400"], 400);
-        }
-        if ($data['code'] !== 0) {
-            if (strpos($raw, '系统繁忙') === false) {
-                trace("unknown_smallTV $raw");
-            }
-            return json(['msg' => "1 $raw"], 400);
-        }
-        $data = $data['data'];
-        $ret = [];
-        foreach ($data as $item) {
-            $payload = [
-                'roomid' => $real_roomid,
-                'raffleId' => $item['raffleId']
-            ];
-            $ret[] = $payload;
-            $payload = http_build_query($payload);
-            if ($this->lock("unknown_smallTV$payload")) {
-                continue;
-            }
-            $urlapi = $this->prefix . 'gift/v2/smalltv/join?' . $payload;
-            $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-            $join = json_decode($raw, true);
-            if (in_array($join['code'], [0, 65531])) {
-                $this->lock("unknown_smallTV$payload", $this->long_timeout());
-                continue;
-            }
-            if (strpos($raw, '系统繁忙') !== false) {
-                continue;
-            }
-            trace('unknown_smallTV' . json_encode($item) . $raw);
-        }
-        return json($ret);
-    }
-
-    public function notice_any($giftId, $real_roomid, $url, $key)
-    {
-        $payload = [
-            'roomid' => $real_roomid,
-            'raffleId' => $giftId
-        ];
-        $payload = http_build_query($payload);
-        if (!$this->lock("$key$payload")) {
-            return json(['msg' => "$key $payload"]);
-        }
-        $urlapi = $this->prefix . $url . $payload;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-        $data = json_decode($raw, true);
-        switch ($data['code']) {
-            case -400:
-                return json(['msg' => 'WAIT']);
-            case 0:
-                if (false !== strpos($data['msg'], '正在抽奖中')) {
-                    return json(['msg' => 'WAIT']);
-                }
-                $this->lock("$key$payload", -1);
-                if (false !== strpos($data['msg'], '很遗憾')) {
-                    return json(['msg' => 'NOTHING']);
-                }
-                $data = $data['data'];
-                if ($data['gift_num'] > 0) {
-                    $data_for = "$key {$data['gift_num']} 个 {$data['gift_name']}";
-                    if ($data['gift_name'] !== '辣条') {
-                        trace($data_for);
-                    }
-                    return json(['msg' => $data_for]);
-                }
-                return json(['msg' => $raw]);
-            default:
-                trace("notice_any $raw");
-                return json(['msg' => "1 $raw"], 400);
-        }
-    }
-
-    public function unknown_lottery()
-    {
-    }
-
-    public function unknown_raffle($real_roomid)
-    {
-        $urlapi = $this->prefix . 'activity/v1/Raffle/check?roomid=' . $real_roomid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-        $data = json_decode($raw, true);
-        if ($data['code'] !== 0) {
-            if (strpos($raw, '系统繁忙') === false) {
-                trace("unknown_raffle $raw");
-            }
-            return json(['msg' => "1 $raw"], 400);
-        }
-        $data = $data['data'];
-        $ret = [];
-        foreach ($data as $item) {
-            $payload = [
-                'roomid' => $real_roomid,
-                'raffleId' => $item['raffleId']
-            ];
-            $ret[] = $payload;
-            $payload = http_build_query($payload);
-            if ($this->lock("unknown_raffle$payload")) {
-                continue;
-            }
-            $urlapi = $this->prefix . 'activity/v1/Raffle/join';
-            $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
-            $join = json_decode($raw, true);
-            if (in_array($join['code'], [0, 65531]) || strpos($raw, '已加入') !== false) {
-                $this->lock("unknown_raffle$payload", $this->long_timeout());
-                continue;
-            }
-            if (strpos($raw, '系统繁忙') !== false) {
-                continue;
-            }
-            trace('unknown_raffle' . json_encode($item) . $raw);
-        }
-        return json($ret);
-    }
-
-    public function heart_gift_receive()
-    {
-        if ($this->lock('heart_gift_receive')) {
-            return;
-        }
-        $urlapi = $this->prefix . 'gift/v2/live/heart_gift_receive?roomid=' . $this->room_id . '&area_v2_id=32';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-        $data = json_decode($raw, true);
-        if ($data['code'] !== 0) {
-            trace("heart_gift_receive $raw");
-            return;
-        }
-        $data = $data['data'];
-        $list = $data['gift_list'];
-        if (is_array($list)) {
-            foreach ($list as $item) {
-                trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
-            }
-        } else {
-            switch ($data['heart_status']) {
-                case 1:
-                    return;
-                case 0:
-                    trace("empty heart_gift_receive");
-                    $this->lock('heart_gift_receive', $this->long_timeout());
-                    return;
-                default:
-                    trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
-            }
-        }
-    }
-
-    private function heartbeat()
-    {
-        $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-        $data = json_decode($raw, true);
-        trace("心跳 {$data['msg']}");
-    }
-
-    public function freeGift()
-    {
-        if ($this->lock('free_gift')) {
-            return;
-        }
-        $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
-        $data = json_decode($raw, true);
-        $timeout = 590;
-        if ($data['code'] === 0) {
-            $gift = end($data['data']['gift']);
-            trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
-        } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
-            $timeout = $this->long_timeout();
-            trace("free gift empty {$data['msg']}");
-        } elseif ($data['msg'] === '非法心跳') {
-            $this->heartbeat();
-        } else {
-            if (false === strpos($raw, 'DOCTYPE')) {
-                trace("奇怪 $raw");
-            }
-            //$this->heartbeat();
-        }
-        $this->lock('free_gift', $timeout);
-    }
+class BiliSilver extends BiliBase
+{
+    private $OCR = array(
+        '0' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111111111111111111111',
+        '1' => '0011111001111101111110111111011111101111111111111111111111111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111001111100111110011111',
+        '2' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111000000000011111100000000001111110000000001111110000000001111111000000000111111000000000111111000000000011111100000000011111100000000011111100000000001111110000000001111110000000000111110000000000111111000000000111111000000000011111000000000011111100000000001111100000000001111111111111111111111111111111111111111111111111111111111111111',
+        '3' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111000000000011111100000000011111110000000111111110000000111111110000000011111100000000001111111100000000011111111000000000011111110000000000111111000000000001111100000000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
+        '4' => '00000001111110000000000011111100000000001111110000000000011111100000000000111110000000000011111100000000000111111000000000001111100000000000111111000000000001111110000000000011111000000000001111110000000000011111101111100000111110011111000011111100111110000111111001111100001111100011111000111111000111110001111110001111100011111000011111001111110000111110011111111111111111111111111111111111111111111111111111111111111111111000000000011111000000000000111110000000000001111100000000000011111000000000000111110000000000001111100',
+        '5' => '1111111111111111111111111111111111111111111111111111111111111111111110000000000011111000000000001111100000000000111110000000000011111000000000001111100000000000111110000000000011111111111111101111111111111111111111111111111111111111111111110000000000011111000000000001111100000000000111110000000000011111000000000001111100000000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
+        '6' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000000000111110000000000011111000000000001111100000000000111111111111111011111111111111111111111111111111111111111111111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
+        '7' => '1111111111111111111111111111111111111111111111111111111111111111111110000011111111111000001111111111100000111110111110000011111000000000011111100000000001111110000000000111110000000000011111000000000011111100000000001111110000000000111110000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111111000000000011111000000000011111100000000001111110000000000111110000000',
+        '8' => '0111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111100000111111111100000011111111110000001111111111100001111110111111111111110001111111111110000011111111110000011111111111100011111111111111011111110011111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111111',
+        '9' => '1111111111111110111111111111111111111111111111111111111111111111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111100000011111111110000001111111111111111111111111111111111111111111111111111101111111111111110000000000011111000000000001111100000000000111110000000000011111111110000001111111111000000111111111100000011111111110000001111111111000000111111111111111111111111111111111111111111111111111110111111111111110',
+        '+' => '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111110000000000001111100000000000011111000000000000111110000000000001111100000000000011111000000111111111111111111111111111111111111111111111111111111111111111111110000001111100000000000011111000000000000111110000000000001111100000000000011111000000000000111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+        '-' => '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111111111111111111111111111111111000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    );
 
     public function silver()
     {
@@ -465,62 +410,148 @@ class BiliHelper
         $ans = eval("return $result;");
         return $ans;
     }
+}
 
-    private function bili_Post($url, $cookie, $room, $data = false, $sub = true)
+class BiliDanmu extends BiliBase
+{
+    public function unknown_smallTV($real_roomid)
     {
-        curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
-        if ($data !== false) {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
-        } else {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
+        $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        if ($data['code'] === -400) {//没有需要提示的小电视
+            return json(['msg' => "-400"], 400);
         }
-        curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
-        $return_str = curl_exec($this->curl);
-        if ($return_str === false) {
-            $num = curl_errno($this->curl);
-            $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
-            if (false === strpos($return_str, 'Timeout')
-                && false === strpos($return_str, 'SSL connect error')
-            ) {
-                trace("url => $url, res => $return_str");
+        if ($data['code'] !== 0) {
+            if (strpos($raw, '系统繁忙') === false) {
+                trace("unknown_smallTV $raw");
             }
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+            return json(['msg' => "1 $raw"], 400);
         }
-        if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+        $data = $data['data'];
+        $ret = [];
+        foreach ($data as $item) {
+            $this->_handle_smallTV($real_roomid, $item, $ret);
         }
-        if ($sub && is_null(json_decode($return_str))) {
-            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = urlencode(substr($return_str, 0, 100));
-        }
-        return $return_str;
+        return json($ret);
     }
 
-    public function lock($name, $time = 0, $res = null)
+    private function _handle_smallTV($real_roomid, $item, &$ret)
     {
-        $name = "bili_cron_$name";
-        switch ($time) {
+        $payload = [
+            'roomid' => $real_roomid,
+            'raffleId' => $item['raffleId']
+        ];
+        $ret[] = $payload;
+        $payload = http_build_query($payload);
+        if ($this->lock("unknown_smallTV$payload")) {
+            return;
+        }
+        $urlapi = $this->prefix . 'gift/v2/smalltv/join?' . $payload;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $join = json_decode($raw, true);
+        if (in_array($join['code'], [0, 65531])) {
+            $this->lock("unknown_smallTV$payload", $this->long_timeout());
+            return;
+        }
+        if (strpos($raw, '系统繁忙') !== false) {
+            return;
+        }
+        trace('unknown_smallTV' . json_encode($item) . $raw);
+    }
+
+    public function notice_any($giftId, $real_roomid, $url, $key)
+    {
+        $payload = [
+            'roomid' => $real_roomid,
+            'raffleId' => $giftId
+        ];
+        $payload = http_build_query($payload);
+        if (!$this->lock("$key$payload")) {
+            $ret = [];
+            if ($key === 'unknown_raffle') {
+                $this->_handle_raffle($real_roomid, ['raffleId' => $giftId], $ret);
+            } elseif ($key === 'unknown_smallTV') {
+                $this->_handle_smallTV($real_roomid, ['raffleId' => $giftId], $ret);
+            } else {
+                $ret[] = $payload;
+            }
+            return json($ret);
+        }
+        $urlapi = $this->prefix . $url . $payload;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        switch ($data['code']) {
+            case -400:
+                return json(['msg' => 'WAIT']);
             case 0:
-                return cache("?$name");
-            case -1:
-                cache($name, null);
-                return null;
-            case 1:
-                if (null !== $res) {
-                    cache($name, $res);
-                    return $res;
+                if (false !== strpos($data['msg'], '正在抽奖中')) {
+                    return json(['msg' => 'WAIT']);
                 }
-                return cache($name);
+                $this->lock("$key$payload", -1);
+                if (false !== strpos($data['msg'], '很遗憾')) {
+                    return json(['msg' => 'NOTHING']);
+                }
+                $data = $data['data'];
+                if ($data['gift_num'] > 0) {
+                    $data_for = "$key {$data['gift_num']} 个 {$data['gift_name']}";
+                    if ($data['gift_name'] !== '辣条') {
+                        trace($data_for);
+                    }
+                    return json(['msg' => $data_for]);
+                }
+                return json(['msg' => $raw]);
+            default:
+                trace("notice_any $raw");
+                return json(['msg' => "1 $raw"], 400);
         }
-        cache($name, $name, $time);
-        return $name;
     }
 
-    private function long_timeout()
+    public function unknown_lottery()
     {
-        $timeout = strtotime(date("Y-m-d")) + 25 * 3600 - time();
-        return min(8 * 3600, $timeout);
+    }
+
+    public function unknown_raffle($real_roomid)
+    {
+        $urlapi = $this->prefix . 'activity/v1/Raffle/check?roomid=' . $real_roomid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            if (strpos($raw, '系统繁忙') === false) {
+                trace("unknown_raffle $raw");
+            }
+            return json(['msg' => "1 $raw"], 400);
+        }
+        $data = $data['data'];
+        $ret = [];
+        foreach ($data as $item) {
+            $this->_handle_raffle($real_roomid, $item, $ret);
+        }
+        return json($ret);
+    }
+
+    private function _handle_raffle($real_roomid, $raffle, &$ret)
+    {
+        $payload = [
+            'roomid' => $real_roomid,
+            'raffleId' => $raffle['raffleId']
+        ];
+        $ret[] = $payload;
+        $payload = http_build_query($payload);
+        if ($this->lock("unknown_raffle$payload")) {
+            return;
+        }
+        $urlapi = $this->prefix . 'activity/v1/Raffle/join';
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
+        $join = json_decode($raw, true);
+        if (in_array($join['code'], [0, 65531]) || strpos($raw, '已加入') !== false) {
+            $this->lock("unknown_raffle$payload", $this->long_timeout());
+            return;
+        }
+        if (strpos($raw, '系统繁忙') !== false) {
+            return;
+        }
+        trace('unknown_raffle' . json_encode($raffle) . $raw);
     }
 }
 
