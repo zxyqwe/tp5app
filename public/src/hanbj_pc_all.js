@@ -58,7 +58,7 @@ var all_mem = (function ($, w, undefined) {
         vmain.$watch('up', function (nv) {
             $table.bootstrapTable('refresh');
         });
-        for (var i in Array(5).keys()) {
+        for (var i in Array.from(Array(5).keys())) {
             vmain.level.push({v: i, n: w.mem_code(i)});
         }
     };
