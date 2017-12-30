@@ -1,9 +1,10 @@
-var all = (function ($, w, undefined) {
+var all_mem = (function ($, w, undefined) {
     'use strict';
     var alr = $('#ggly').html();
     var nye = $('#rgly').html();
     var jsr = '经手人：';
     var sj = "时间：";
+    var vmain;
     var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
@@ -42,7 +43,24 @@ var all = (function ($, w, undefined) {
         }
         return data.join("");
     };
+    w.wxParams = function (params) {
+        params.up = vmain.up;
+        return params;
+    };
+    var build_vue = function (refresh) {
+        vmain = new Vue({
+            el: '#toolbar',
+            data: {
+                up: [],
+                level: []
+            }
+        });
+        vmain.$watch('up', function (nv) {
+            $table.bootstrapTable('refresh');
+        });
+    };
     var init = function () {
+        build_vue();
         w.loaddetail = function (id) {
             w.waitloading();
             $.ajax({
