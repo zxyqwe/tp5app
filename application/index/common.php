@@ -54,7 +54,10 @@ class BiliBase
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
-        if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
+        if (false !== strpos($return_str, 'timeout')
+            || false !== strpos($return_str, 'time-out')
+            || false !== strpos($return_str, '系统繁忙')
+        ) {
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
         if ($sub && is_null(json_decode($return_str))) {
@@ -103,7 +106,7 @@ class BiliOnline extends BiliBase
         $urlapi = $this->prefix . 'User/userOnlineHeart';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
-        if ($data['code'] !== 0) {
+        if (!in_array($data['code'], [0, 65531])) {
             trace("online $res");
         }
     }
@@ -423,9 +426,7 @@ class BiliDanmu extends BiliBase
             return json(['msg' => "-400"], 400);
         }
         if ($data['code'] !== 0) {
-            if (strpos($raw, '系统繁忙') === false) {
-                trace("unknown_smallTV $raw");
-            }
+            trace("unknown_smallTV $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -454,9 +455,6 @@ class BiliDanmu extends BiliBase
             || strpos($raw, '已结束') !== false
         ) {
             $this->lock("unknown_smallTV$payload", $this->long_timeout());
-            return;
-        }
-        if (strpos($raw, '系统繁忙') !== false) {
             return;
         }
         trace('unknown_smallTV' . json_encode($item) . $raw);
@@ -519,9 +517,7 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            if (strpos($raw, '系统繁忙') === false) {
-                trace("unknown_raffle $raw");
-            }
+            trace("unknown_raffle $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -551,9 +547,6 @@ class BiliDanmu extends BiliBase
             || strpos($raw, '已结束') !== false
         ) {
             $this->lock("unknown_raffle$payload", $this->long_timeout());
-            return;
-        }
-        if (strpos($raw, '系统繁忙') !== false) {
             return;
         }
         trace('unknown_raffle' . json_encode($raffle) . $raw);
