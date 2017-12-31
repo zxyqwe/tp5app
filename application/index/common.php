@@ -52,10 +52,10 @@ class BiliBase
             ) {
                 trace("url => $url, res => $return_str");
             }
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
         if (false !== strpos($return_str, 'timeout') || false !== strpos($return_str, 'time-out')) {
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str]));
+            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
         if ($sub && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
