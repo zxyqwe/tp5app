@@ -1,10 +1,6 @@
 var all_mem = (function ($, w, undefined) {
     'use strict';
-    var alr = $('#ggly').html();
-    var nye = $('#rgly').html();
-    var jsr = '经手人：';
-    var sj = "时间：";
-    var vmain, $table;
+    var alr, nye, jsr = '经手人：', sj = "时间：", vmain, $table;
     var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
@@ -65,6 +61,8 @@ var all_mem = (function ($, w, undefined) {
         });
     };
     var init = function () {
+        alr = $('#ggly').html();
+        nye = $('#rgly').html();
         build_vue();
         w.loaddetail = function (id) {
             w.waitloading();
