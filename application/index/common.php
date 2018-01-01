@@ -452,9 +452,13 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $join = json_decode($raw, true);
         if (in_array($join['code'], [0, 65531])
+            || strpos($raw, '已加入') !== false
             || strpos($raw, '已结束') !== false
         ) {
             $this->lock("unknown_smallTV$payload", $this->long_timeout());
+            return;
+        }
+        if (strpos($raw, '不存在') !== false) {
             return;
         }
         trace('unknown_smallTV' . json_encode($item) . $raw);
@@ -480,14 +484,14 @@ class BiliDanmu extends BiliBase
         }
         $urlapi = $this->prefix . $url . $payload;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        if (false !== strpos($raw, '正在抽奖中')) {
+            return json(['msg' => 'WAIT']);
+        }
         $data = json_decode($raw, true);
         switch ($data['code']) {
             case -400:
-                return json(['msg' => 'WAIT']);
+                return json(['msg' => $raw], 400);
             case 0:
-                if (false !== strpos($data['msg'], '正在抽奖中')) {
-                    return json(['msg' => 'WAIT']);
-                }
                 $this->lock("$key$payload", -1);
                 if (false !== strpos($data['msg'], '很遗憾')) {
                     return json(['msg' => 'NOTHING']);
@@ -547,6 +551,9 @@ class BiliDanmu extends BiliBase
             || strpos($raw, '已结束') !== false
         ) {
             $this->lock("unknown_raffle$payload", $this->long_timeout());
+            return;
+        }
+        if (strpos($raw, '不存在') !== false) {
             return;
         }
         trace('unknown_raffle' . json_encode($raffle) . $raw);
