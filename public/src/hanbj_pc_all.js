@@ -932,6 +932,12 @@ var brief = (function ($, w, undefined) {
         };
         myChart.setOption(option);
     };
+    var get_dist = function (g) {
+
+    };
+    var get_dist_year = function () {
+
+    };
     var get_ret = function () {
         w.waitloading();
         $.ajax({
@@ -942,9 +948,13 @@ var brief = (function ($, w, undefined) {
                 ret = msg;
                 for (var i in ret) {
                     var k = ret[i];
-                    get_gender(k.gender);
-                    get_catalog(k.year_time, k.gender);
+                    if (['0', '4'].includes(k.code)) {
+                        get_gender(k.gender);
+                        get_catalog(k.year_time, k.gender);
+                    }
+                    get_dist(k.code);
                 }
+                get_dist_year();
                 get_gender_year();
                 get_catalog_ret();
             },
