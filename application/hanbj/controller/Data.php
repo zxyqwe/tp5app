@@ -529,7 +529,8 @@ class Data extends Controller
             ->field([
                 'gender',
                 'year_time',
-                'SUBSTRING(unique_name,1,1) as u'
+                'SUBSTRING(unique_name,1,1) as u',
+                'code'
             ])
             ->cache(600)
             ->select();
