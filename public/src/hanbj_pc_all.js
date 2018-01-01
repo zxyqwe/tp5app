@@ -841,7 +841,8 @@ var test = (function ($, Vue, w, undefined) {
 var brief = (function ($, w, undefined) {
     'use strict';
     var ret, catalog_choice = [], catalog_set = {},
-        catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0};
+        catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0},
+        dist_set = {};
     var get_catalog = function (y, g) {
         catalog_choice.push(y);
         if (undefined === catalog_set[y]) {
@@ -933,10 +934,42 @@ var brief = (function ($, w, undefined) {
         myChart.setOption(option);
     };
     var get_dist = function (g) {
-
+        if (undefined === dist_set[g]) {
+            dist_set[g] = 0;
+        }
+        dist_set[g]++;
     };
     var get_dist_year = function () {
-
+        var leg = [], ser = [];
+        for (var i in dist_set) {
+            leg.push(w.mem_code(i));
+            ser.push({name: w.mem_code(i), value: dist_set[i]});
+        }
+        var myChart = echarts.init(document.getElementById('dist'));
+        var option = {
+            title: {
+                text: '当前会员编号分布'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                top: '60',
+                orient: 'vertical',
+                x: 'left',
+                data: leg
+            },
+            series: [
+                {
+                    name: '编号分布',
+                    type: 'pie',
+                    radius: '50%',
+                    data: ser
+                }
+            ]
+        };
+        myChart.setOption(option);
     };
     var get_ret = function () {
         w.waitloading();
