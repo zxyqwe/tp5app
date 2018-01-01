@@ -525,9 +525,7 @@ class Data extends Controller
 
     public function json_brief()
     {
-        $map['code'] = MemberOper::NORMAL;
         $ret = Db::table('member')
-            ->where($map)
             ->field([
                 'gender',
                 'year_time',
