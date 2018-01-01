@@ -476,7 +476,7 @@ class BiliDanmu extends BiliBase
             } else {
                 $ret[] = $payload;
             }
-            return json($ret);
+            return json(['msg' => 'ADD', 'data' => $ret]);
         }
         $urlapi = $this->prefix . $url . $payload;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
