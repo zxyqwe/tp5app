@@ -24,7 +24,7 @@ class Wx extends Controller
 
     protected function valid_id()
     {
-        if (!session('?unique_name')) {
+        if (!MemberOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }

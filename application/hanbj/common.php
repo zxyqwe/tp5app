@@ -90,6 +90,24 @@ class MemberOper
         "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
     ];
     const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏"];
+    const VERSION = 'wx_succ_1';
+
+    public static function wx_login()
+    {
+        if (MemberOper::VERSION === session('wx_login')) {
+            return true;
+        }
+        $api = config('hanbj_api');
+        $sec = config('hanbj_secret');
+        if (input('?get.code')) {
+            $openid = WX_code(input('get.code'), $api, $sec);
+            if (!is_array($openid)) {
+                session('openid', $openid);
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static function getMember()
     {
@@ -922,6 +940,22 @@ class CardOper
         trace(json_encode($data));
         return '';
     }
+
+    public static function mod_ret($map)
+    {
+        $card = Db::table('card')
+            ->where($map)
+            ->field([
+                'status',
+                'code'
+            ])
+            ->find();
+        if ($card === null) {
+            return -1;
+        }
+        session('card', $card['code']);
+        return $card['status'];
+    }
 }
 
 class BonusOper
@@ -1059,6 +1093,19 @@ class BonusOper
             $tmp_list[] = $item;
         }
         return $tmp_list;
+    }
+
+    public static function mod_ret($bonus)
+    {
+        $ret = '50名之后';
+        $bonus_top = self::getTop();
+        foreach ($bonus_top as $item) {
+            if ($item['o'] <= $bonus) {
+                $ret = "第{$item['i']}名";
+                break;
+            }
+        }
+        return $ret;
     }
 }
 

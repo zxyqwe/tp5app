@@ -24,7 +24,7 @@ class Mobile extends Controller
 
     protected function valid_id()
     {
-        if (!session('?openid')) {
+        if (!MemberOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -37,7 +37,7 @@ class Mobile extends Controller
 
     public function index($obj = '')
     {
-        if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
+        if (!MemberOper::wx_login()) {
             $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix, config('hanbj_api'));
         }
@@ -64,41 +64,23 @@ class Mobile extends Controller
         if (null === $res) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile/reg');
         }
+        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
+        session('json_wx', WxHanbj::json_wx($url));
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
         session('member_code', $res['code']);
-        $res['bonus_top'] = '50名之后';
-        $bonus_top = BonusOper::getTop();
-        foreach ($bonus_top as $item) {
-            if ($item['o'] <= $res['bonus']) {
-                $res['bonus_top'] = "第{$item['i']}名";
-                break;
-            }
-        }
+        session('wx_login', MemberOper::VERSION);
+        UserOper::login();
+        $res['bonus_top'] = BonusOper::mod_ret($res['bonus']);
         $res['code'] = MemberOper::trans($res['code']);
         $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
-        $card = Db::table('card')
-            ->where($map)
-            ->field([
-                'status',
-                'code'
-            ])
-            ->find();
-        if ($card === null) {
-            $card = ['status' => -1];
-        } else {
-            session('card', $card['code']);
-        }
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
-        UserOper::login();
-        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
-        session('json_wx', WxHanbj::json_wx($url));
         return view('home', [
             'user' => $res,
-            'card' => $card['status'],
+            'card' => CardOper::mod_ret($map),
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y'),
             'vote' => WxVote::result($res['unique_name'])
@@ -107,7 +89,7 @@ class Mobile extends Controller
 
     public function reg()
     {
-        if (!WX_iter(config('hanbj_api'), config('hanbj_secret'))) {
+        if (!MemberOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
         if (session('?unique_name') && session('unique_name') !== '坎丙午') {

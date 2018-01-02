@@ -134,18 +134,3 @@ function WX_access($api, $sec, $name)
     cache($name, $res['access_token'], intval($res['expires_in']));
     return $res['access_token'];
 }
-
-function WX_iter($api, $sec)
-{
-    if (session('?openid')) {
-        return true;
-    }
-    if (input('?get.code')) {
-        $openid = WX_code(input('get.code'), $api, $sec);
-        if (!is_array($openid)) {
-            session('openid', $openid);
-            return true;
-        }
-    }
-    return false;
-}
