@@ -105,6 +105,7 @@ class MemberOper
             $openid = WX_code(input('get.code'), $api, $sec);
             if (is_string($openid)) {
                 session('openid', $openid);
+                session('wx_login', MemberOper::VERSION);
                 return true;
             }
         }

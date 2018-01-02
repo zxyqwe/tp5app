@@ -69,7 +69,6 @@ class Mobile extends Controller
         session('unique_name', $res['unique_name']);
         session('tieba_id', $res['tieba_id']);
         session('member_code', $res['code']);
-        session('wx_login', MemberOper::VERSION);
         if (in_array(intval($res['code']), MemberOper::getMember())) {
             cache("chatbot$openid", $res['unique_name']);
         }
