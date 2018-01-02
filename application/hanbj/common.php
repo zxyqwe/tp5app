@@ -613,8 +613,11 @@ class WxHanbj
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
                     return self::auto($from, $to, $cont, '临时身份');
+                } elseif (session("?chatbot$from")) {
+                    $cont = "检查口令...失败\n身份验证...成功\n\n";
+                    return self::auto($from, $to, $cont);
                 }
-                $cont = "检查口令...失败\n\n文字信息：" . $cont;
+                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：" . $cont;
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
@@ -628,7 +631,7 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "检查口令...成功\n提取身份...成功\n\n临时身份信息验证\n会员编号：{$data['uniq']}\n" .
+        $cont = "检查口令...成功\n身份验证...成功\n\n临时身份信息验证\n会员编号：{$data['uniq']}\n" .
             "昵称：{$data['nick']}\n" .
             "生成日期：{$data['time']}\n" .
             "生成时间：{$data['time2']}\n" .
@@ -639,11 +642,10 @@ class WxHanbj
     private static function auto($to, $from, $type, $debug_msg = '')
     {
         if (empty($debug_msg)) {
-            trace("TO => $to, TEXT => $type");
+            trace("TO => $to, TEXT => " . preg_replace('/\s*/', '', $type));
         } else {
-            trace($to . ' ' . $debug_msg);
+            trace($to . ' ' . preg_replace('/\s*/', '', $debug_msg));
         }
-
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
