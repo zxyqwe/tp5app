@@ -96,6 +96,8 @@ class MemberOper
     {
         if (MemberOper::VERSION !== session('wx_login')) {
             session(null);
+        } else {
+            return true;
         }
         if (input('?get.code')) {
             $api = config('hanbj_api');
