@@ -28,9 +28,17 @@
                             <div v-if="item.code == 1"><i class="weui-icon-success"></i>缴费</div>
                             <div v-else><i class="weui-icon-cancel"></i>撤销</div>
                         </h4>
-                        <p class="weui-media-box__desc">时间：{{ item.fee_time }}
-                            <br>登记者：{{ item.oper }}
-                            积分：{{ item.bonus }}</p>
+                        <p class="weui-media-box__desc">
+                            时间：{{ item.fee_time }}<br>登记者：{{ item.oper }}
+                        </p>
+                        <ul class="weui-media-box__info">
+                            <li class="weui-media-box__info__meta">
+                                积分：{{ item.bonus }}
+                            </li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                {{ item.up==1?'已入账':'未入账'}}
+                            </li>
+                        </ul>
                     </div>
                 </template>
             </div>
