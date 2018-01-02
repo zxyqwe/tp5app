@@ -92,11 +92,11 @@ class Mobile extends Controller
 
     public function reg()
     {
-        if (!MemberOper::wx_login()) {
-            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/reg', config('hanbj_api'));
-        }
         if (session('?unique_name') && session('unique_name') !== '坎丙午') {
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
+        }
+        if (!MemberOper::wx_login()) {
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/reg', config('hanbj_api'));
         }
         return view('reg');
     }
