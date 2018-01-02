@@ -220,6 +220,7 @@ class Wx extends Controller
 
     public function vote()
     {
+        //TODO login
         $member_code = intval(session('member_code'));
         if ($member_code !== MemberOper::NORMAL) {
             return json(['msg' => '用户锁住'], 400);
