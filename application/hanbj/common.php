@@ -90,18 +90,18 @@ class MemberOper
         "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
     ];
     const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏"];
-    const VERSION = 'wx_succ_1';
+    const VERSION = 'wx_succ_2';
 
     public static function wx_login()
     {
-        if (MemberOper::VERSION === session('wx_login')) {
-            return true;
+        if (MemberOper::VERSION !== session('wx_login')) {
+            session(null);
         }
-        $api = config('hanbj_api');
-        $sec = config('hanbj_secret');
         if (input('?get.code')) {
+            $api = config('hanbj_api');
+            $sec = config('hanbj_secret');
             $openid = WX_code(input('get.code'), $api, $sec);
-            if (!is_array($openid)) {
+            if (is_string($openid)) {
                 session('openid', $openid);
                 return true;
             }
@@ -613,7 +613,7 @@ class WxHanbj
                     $cont = cache('tempnum' . $cont);
                     $cont = self::tempid(json_decode($cont, true));
                     return self::auto($from, $to, $cont, '临时身份');
-                } elseif (session("?chatbot$from")) {
+                } elseif (cache("?chatbot$from")) {
                     $cont = "检查口令...失败\n身份验证...成功\n\n";
                     return self::auto($from, $to, $cont);
                 }

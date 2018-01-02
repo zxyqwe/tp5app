@@ -70,8 +70,8 @@ class Mobile extends Controller
         session('tieba_id', $res['tieba_id']);
         session('member_code', $res['code']);
         session('wx_login', MemberOper::VERSION);
-        if (in_array($res['code'], MemberOper::getMember())) {
-            session("chatbot$openid", $res['unique_name']);
+        if (in_array(intval($res['code']), MemberOper::getMember())) {
+            cache("chatbot$openid", $res['unique_name']);
         }
         UserOper::login();
         $res['bonus_top'] = BonusOper::mod_ret($res['bonus']);
