@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\MemberOper;
 use app\hanbj\WxOrg;
 use think\Controller;
 use think\Db;
@@ -17,7 +18,7 @@ class Wxtest extends Controller
     {
         $uname = session('unique_name');
         $org = new WxOrg();
-        if (!in_array($uname, $org->getUser())) {
+        if (!MemberOper::wx_login() || !in_array($uname, $org->getUser())) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }

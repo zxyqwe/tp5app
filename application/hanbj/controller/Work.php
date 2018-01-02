@@ -18,7 +18,7 @@ class Work extends Controller
 
     protected function valid_id()
     {
-        if (!in_array(session('unique_name'), BonusOper::getWorkers())) {
+        if (!MemberOper::wx_login() || !in_array(session('unique_name'), BonusOper::getWorkers())) {
             $res = json(['msg' => '非工作人员'], 400);
             throw new HttpResponseException($res);
         }
