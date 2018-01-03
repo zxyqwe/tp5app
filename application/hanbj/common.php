@@ -618,7 +618,14 @@ class WxHanbj
                     $cont = self::tempid(json_decode($cont, true));
                     return self::auto($from, $to, $cont, '临时身份');
                 } elseif (cache("?chatbot$from")) {
-                    $cont = "检查口令...失败\n身份验证...成功\n\n";
+                    try {
+                        $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . $cont);
+                        $cont = json_decode($cont, true);
+                        $cont = $cont['msg'];
+                    } catch (HttpResponseException $e) {
+                        $cont = '机器人不在线';
+                    }
+                    $cont = "检查口令...失败\n身份验证...成功\n\n" . $cont;
                     return self::auto($from, $to, $cont);
                 }
                 $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：" . $cont;
