@@ -850,7 +850,6 @@ var brief = (function ($, w, undefined) {
             catalog_set_male[y] = 0;
             catalog_set_female[y] = 0;
         }
-        catalog_set[y]++;
         if (g === 0) {
             catalog_set_male[y]++;
         } else {
@@ -1245,12 +1244,13 @@ var birth = (function ($, w, undefined) {
             series.push({
                 name: i,
                 type: 'bar',
+                stack: '总量',
                 data: s
             });
         }
         var option = {
             title: {
-                text: '当前字组分布'
+                text: '实名会员字组分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1297,12 +1297,13 @@ var birth = (function ($, w, undefined) {
             series.push({
                 name: i,
                 type: 'bar',
+                stack: '总量',
                 data: s
             });
         }
         var option = {
             title: {
-                text: '当前会员入会时间分布'
+                text: '实名会员入会时间分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1327,7 +1328,6 @@ var birth = (function ($, w, undefined) {
             year_set_male[y] = 0;
             year_set_female[y] = 0;
         }
-        year_set[y]++;
         if (g === 0) {
             year_set_male[y]++;
         } else {
@@ -1343,11 +1343,10 @@ var birth = (function ($, w, undefined) {
             var k = year_choice[i];
             a.push(year_set_male[k]);
             b.push(year_set_female[k]);
-            c.push(year_set[k]);
         }
         var option = {
             title: {
-                text: '当前会员年龄分布'
+                text: '实名会员年龄分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -1355,7 +1354,7 @@ var birth = (function ($, w, undefined) {
             },
             legend: {
                 top: '40',
-                data: ['男', '女', '全体']
+                data: ['男', '女']
             },
             xAxis: {
                 data: year_choice
@@ -1364,15 +1363,13 @@ var birth = (function ($, w, undefined) {
             series: [{
                 name: '男',
                 type: 'bar',
+                stack: '总量',
                 data: a
             }, {
                 name: '女',
                 type: 'bar',
+                stack: '总量',
                 data: b
-            }, {
-                name: '全体',
-                type: 'bar',
-                data: c
             }]
         };
         myChart.setOption(option);
