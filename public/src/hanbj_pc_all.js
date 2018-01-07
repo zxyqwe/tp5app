@@ -1035,6 +1035,7 @@ var group = (function ($, w, undefined) {
             series.push({
                 name: i,
                 type: 'bar',
+                stack: '总量',
                 data: s
             });
         }
@@ -1085,12 +1086,13 @@ var group = (function ($, w, undefined) {
             series.push({
                 name: i,
                 type: 'bar',
+                stack: '总量',
                 data: s
             });
         }
         var option = {
             title: {
-                text: '当前会员入会时间'
+                text: '所有会员入会时间'
             },
             tooltip: {
                 trigger: 'item',
@@ -1142,7 +1144,7 @@ var group = (function ($, w, undefined) {
         }
         var option = {
             title: {
-                text: '名额分布'
+                text: '编号状态分布'
             },
             tooltip: {
                 trigger: 'item',
