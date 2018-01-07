@@ -861,16 +861,15 @@ var brief = (function ($, w, undefined) {
         var myChart = echarts.init(document.getElementById('catalog'));
         catalog_choice = Array.from(new Set(catalog_choice));
         catalog_choice = catalog_choice.sort();
-        var a = [], b = [], c = [];
+        var a = [], b = [];
         for (var i in catalog_choice) {
             var k = catalog_choice[i];
             a.push(catalog_set_male[k]);
             b.push(catalog_set_female[k]);
-            c.push(catalog_set[k]);
         }
         var option = {
             title: {
-                text: '当前会员入会时间分布'
+                text: '会员入会时间分布'
             },
             tooltip: {
                 trigger: 'item',
@@ -878,7 +877,7 @@ var brief = (function ($, w, undefined) {
             },
             legend: {
                 top: '40',
-                data: ['男', '女', '全体']
+                data: ['男', '女']
             },
             xAxis: {
                 data: catalog_choice
@@ -887,15 +886,13 @@ var brief = (function ($, w, undefined) {
             series: [{
                 name: '男',
                 type: 'bar',
+                stack: '总量',
                 data: a
             }, {
                 name: '女',
                 type: 'bar',
+                stack: '总量',
                 data: b
-            }, {
-                name: '全体',
-                type: 'bar',
-                data: c
             }]
         };
         myChart.setOption(option);
@@ -907,7 +904,7 @@ var brief = (function ($, w, undefined) {
         var myChart = echarts.init(document.getElementById('gender'));
         var option = {
             title: {
-                text: '当前会员男女比例'
+                text: '实名会员男女比例'
             },
             tooltip: {
                 trigger: 'item',
@@ -921,7 +918,7 @@ var brief = (function ($, w, undefined) {
             },
             series: [
                 {
-                    name: '会员分布',
+                    name: '实名会员分布',
                     type: 'pie',
                     radius: '50%',
                     data: [
@@ -948,7 +945,7 @@ var brief = (function ($, w, undefined) {
         var myChart = echarts.init(document.getElementById('dist'));
         var option = {
             title: {
-                text: '当前会员编号分布'
+                text: '编号状态分布'
             },
             tooltip: {
                 trigger: 'item',
