@@ -196,3 +196,7 @@ ul {
     float: left;
     box-sizing: border-box;
 }
+
+.act-log-icon {
+    font-size: 10px;
+}

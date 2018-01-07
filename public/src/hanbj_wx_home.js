@@ -55,23 +55,14 @@ var wx_home = (function ($, Vue, w, undefined) {
     var build_act = function (msg) {
         var s = '<p>活动：';
         s += msg.act;
-        s += '</p><p>积分：';
-        s += msg.bonus;
-        s += '</p>';
-        s += w.wx_mem_code(msg.code);
         s += '</p><p>编号：';
-        s += msg.uni;
-        s += '</p><p>昵称：';
-        s += msg.tie;
+        s += msg.uni + ' ' + msg.tie;
         s += '</p><p>缴费：';
-        s += '<i class="';
-        if (msg.fee < new Date().getFullYear()) {
-            s += 'weui-icon-cancel';
-        } else {
-            s += 'weui-icon-success';
-        }
-        s += '"></i>';
-        s += msg.fee;
+        var fee = parseInt(msg.fee) + 1;
+        var yt = parseInt(msg.yt);
+        var cyt = new Date().getFullYear() + 1;
+        s += w.repeat_icon('<i class="weui-icon-success act-log-icon"></i>', fee - yt);
+        s += w.repeat_icon('<i class="weui-icon-cancel act-log-icon"></i>', cyt - fee);
         s += '</p>';
         return s;
     };

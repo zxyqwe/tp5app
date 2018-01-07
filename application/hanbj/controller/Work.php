@@ -47,7 +47,7 @@ class Work extends Controller
             ->field([
                 'm.unique_name as uni',
                 'm.tieba_id as tie',
-                'm.code'
+                'm.year_time as yt'
             ])
             ->find();
         if (null === $res) {
@@ -55,7 +55,6 @@ class Work extends Controller
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
         $res['act'] = BonusOper::ACT_NAME;
-        $res['bonus'] = BonusOper::ACT;
         return json($res);
     }
 

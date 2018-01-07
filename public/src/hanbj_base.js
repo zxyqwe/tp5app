@@ -53,3 +53,18 @@ window.fame_img = function (n) {
             return '/static/arrow-up.png';
     }
 };
+window.repeat_icon = function (target, n) {
+    var s = target, total = "";
+    while (n > 0) {
+        if (n % 2 === 1) {
+            total += s;
+        }
+        if (n === 1) {
+            break;
+        }
+
+        s += s;
+        n = n >> 1;//相当于将n除以2取其商，或者说是开2次方
+    }
+    return total;
+};
