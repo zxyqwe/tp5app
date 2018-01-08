@@ -30,24 +30,6 @@ class Data extends Controller
         return json([], 404);
     }
 
-    public function json_tree()
-    {
-        $map['f.master'] = ['neq', ''];
-        $map['f.code'] = ['not in', [MemberOper::UNUSED, MemberOper::JUNIOR, MemberOper::TEMPUSE]];
-        $tmp = Db::table('member')
-            ->alias('f')
-            ->where($map)
-            ->cache(600)
-            ->field([
-                'f.tieba_id as t',
-                'f.unique_name as u',
-                'f.master as m',
-                'f.code as c'
-            ])
-            ->select();
-        return json($tmp);
-    }
-
     public function fee_search()
     {
         $name = input('post.name');
@@ -190,42 +172,6 @@ class Data extends Controller
             return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
-    }
-
-    public function json_order()
-    {
-        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
-        $size = min(100, max(0, $size));
-        $offset = max(0, $offset);
-        $join = [
-            ['member m', 'm.openid=f.openid', 'left']
-        ];
-        $res = Db::table('order')
-            ->alias('f')
-            ->join($join)
-            ->order('f.id', 'desc')
-            ->limit($offset, $size)
-            ->field([
-                'f.id',
-                'm.unique_name as u',
-                'm.tieba_id as e',
-                'f.outid as o',
-                'f.trans as t',
-                'f.fee as f',
-                'f.type as y',
-                'f.value as v',
-                'f.label as l',
-                'f.time as i',
-                'm.code'
-            ])
-            ->select();
-        $data['rows'] = $res;
-        $total = Db::table('order')
-            ->alias('f')
-            ->count();
-        $data['total'] = $total;
-        return json($data);
     }
 
     public function json_group()
