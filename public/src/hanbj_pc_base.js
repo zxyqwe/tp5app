@@ -58,6 +58,7 @@ var nav_active = (function ($, w, undefined) {
         var pub = 'pub/';
         var index = 'index/';
         var system = 'system/';
+        var analysis='analysis/';
         w.u9 = base + pub + 'json_fame';
         w.u11 = base + pub + 'json_login';
         w.u5 = base + daily + 'actlog';
@@ -67,14 +68,14 @@ var nav_active = (function ($, w, undefined) {
         w.u6 = base + daily + 'bonus_add';
         w.u12 = base + system + 'runlog/data/';
         w.u8 = base + system + 'json_tree';
+        w.u14 = base + analysis + 'json_birth';
+        w.u16 = base + analysis + 'json_brief';
+        w.u17 = base + analysis + 'json_group';
         w.u1 = base + data + 'fee_search';
         w.u2 = base + data + 'fee_add';
         w.u4 = base + data + 'vol_add';
         w.u10 = base + data + 'fame_add';
-        w.u14 = base + data + 'json_birth';
         w.u15 = base + data + 'create';
-        w.u16 = base + data + 'json_brief';
-        w.u17 = base + data + 'json_group';
     };
     var init = function () {
         dict();
