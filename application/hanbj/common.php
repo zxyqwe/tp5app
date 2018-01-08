@@ -619,7 +619,7 @@ class WxHanbj
                     return self::auto($from, $to, $cont, '临时身份');
                 } elseif (cache("?chatbot$from")) {
                     try {
-                        $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . $cont);
+                        $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . rawurlencode($cont));
                         $cont = json_decode($cont, true);
                         $cont = $cont['msg'];
                     } catch (HttpResponseException $e) {
