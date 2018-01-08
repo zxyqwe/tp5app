@@ -53,7 +53,7 @@ var nav_active = (function ($, w, undefined) {
     'use strict';
     var dict = function () {
         var base = '/hanbj/';
-        var data = 'data/';
+        var write = 'write/';
         var daily = "daily/";
         var pub = 'pub/';
         var index = 'index/';
@@ -71,11 +71,11 @@ var nav_active = (function ($, w, undefined) {
         w.u14 = base + analysis + 'json_birth';
         w.u16 = base + analysis + 'json_brief';
         w.u17 = base + analysis + 'json_group';
-        w.u1 = base + data + 'fee_search';
-        w.u2 = base + data + 'fee_add';
-        w.u4 = base + data + 'vol_add';
-        w.u10 = base + data + 'fame_add';
-        w.u15 = base + data + 'create';
+        w.u1 = base + write + 'fee_search';
+        w.u2 = base + write + 'fee_add';
+        w.u4 = base + write + 'vol_add';
+        w.u10 = base + write + 'fame_add';
+        w.u15 = base + write + 'create';
     };
     var init = function () {
         dict();

@@ -11,7 +11,7 @@ use think\Db;
 use think\exception\HttpResponseException;
 
 
-class Data extends Controller
+class Write extends Controller
 {
     protected $beforeActionList = [
         'valid_id'
@@ -27,7 +27,11 @@ class Data extends Controller
 
     public function _empty()
     {
-        return json([], 404);
+        $action = $this->request->action();
+        if (is_file(__DIR__ . "/../tpl/write_$action.html")) {
+            throw new HttpResponseException(view($action));
+        }
+        abort(404, '页面不存在', [$action]);
     }
 
     public function fee_search()
