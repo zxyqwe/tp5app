@@ -10,7 +10,7 @@ use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 
-class Work extends Controller
+class Wxwork extends Controller
 {
     protected $beforeActionList = [
         'valid_id'

@@ -16,7 +16,7 @@ use app\WxPayUnifiedOrder;
 use app\WxPayApi;
 use think\exception\HttpResponseException;
 
-class Wx extends Controller
+class Wxdaily extends Controller
 {
     protected $beforeActionList = [
         'valid_id' => ['except' => 'notify']
