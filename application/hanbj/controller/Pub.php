@@ -8,13 +8,18 @@ use app\hanbj\UserOper;
 use think\Controller;
 use think\Db;
 use Endroid\QrCode\QrCode;
+use think\exception\HttpResponseException;
 
 
-class Dataopen extends Controller
+class Pub extends Controller
 {
     public function _empty()
     {
-        return json([], 404);
+        $action = $this->request->action();
+        if (is_file(__DIR__ . "/../tpl/pub_$action.html")) {
+            throw new HttpResponseException(view($action));
+        }
+        abort(404, '页面不存在', [$action]);
     }
 
     public function json_login()
