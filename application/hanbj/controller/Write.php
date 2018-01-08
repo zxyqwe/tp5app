@@ -34,6 +34,14 @@ class Write extends Controller
         abort(404, '页面不存在', [$action]);
     }
 
+    public function volunteer()
+    {
+        $data['name'] = BonusOper::ACT_NAME;
+        $data['act'] = BonusOper::ACT;
+        $data['vol'] = BonusOper::VOLUNTEER;
+        return view('volunteer', ['data' => $data]);
+    }
+
     public function fee_search()
     {
         $name = input('post.name');
@@ -178,7 +186,7 @@ class Write extends Controller
         return json(['msg' => 'ok']);
     }
 
-    public function create()
+    public function json_create()
     {
         switch ($this->request->method()) {
             case 'GET':
