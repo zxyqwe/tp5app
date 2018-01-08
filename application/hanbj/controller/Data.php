@@ -30,19 +30,6 @@ class Data extends Controller
         return json([], 404);
     }
 
-    public function list_act()
-    {
-        $ret = Db::table('activity')
-            ->order('id desc')
-            ->field('distinct name')
-            ->select();
-        $data = [];
-        foreach ($ret as $item) {
-            $data[] = $item['name'];
-        }
-        return json($data);
-    }
-
     public function json_tree()
     {
         $map['f.master'] = ['neq', ''];
@@ -160,16 +147,6 @@ class Data extends Controller
             return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok']);
-    }
-
-    public function bonus_add()
-    {
-        $type = input('post.type');
-        if ($type === '0') {
-            return BonusOper::up('nfee', '会费积分更新');
-        } else {
-            return BonusOper::up('activity', '活动积分更新');
-        }
     }
 
     public function fame_add()

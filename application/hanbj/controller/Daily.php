@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\BonusOper;
 use app\hanbj\UserOper;
 use think\Controller;
 use think\Db;
@@ -91,6 +92,9 @@ class Daily extends Controller
         $search = input('post.search');
         $level = input('post.up/a', []);
         $level = array_intersect($level, range(0, 4));
+        if (count($level) < 1) {
+            return json(['rows' => [], 'total' => 0]);
+        }
         $map['code'] = ['in', $level];
         if (!empty($search)) {
             $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
@@ -286,6 +290,29 @@ class Daily extends Controller
             ->join($join)
             ->count();
         $data['total'] = $total;
+        return json($data);
+    }
+
+    public function bonus_add()
+    {
+        $type = input('post.type');
+        if ($type === '0') {
+            return BonusOper::up('nfee', '会费积分更新');
+        } else {
+            return BonusOper::up('activity', '活动积分更新');
+        }
+    }
+
+    public function list_act()
+    {
+        $ret = Db::table('activity')
+            ->order('id desc')
+            ->field('distinct name')
+            ->select();
+        $data = [];
+        foreach ($ret as $item) {
+            $data[] = $item['name'];
+        }
         return json($data);
     }
 }
