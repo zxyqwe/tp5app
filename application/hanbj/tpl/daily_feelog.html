@@ -1,7 +1,7 @@
 {layout name="layout_pc" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
-        <h1>活动日志</h1>
+        <h1>缴费日志</h1>
         <div id="body">
             <div class="bs-example">
                 <form class="form-inline" id="simp_form">
@@ -20,14 +20,6 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin-right: 1em">
-                        <select v-model="act_res" class="form-control">
-                            <option value="全部活动" selected>全部活动</option>
-                            <option v-for="option in act" :value="option">
-                                {{ option }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-right: 1em">
                         <button id="wxup" type="button" class="btn btn-success">
                             自动更新微信事件
                         </button>
@@ -38,16 +30,16 @@
                    data-method="post"
                    data-pagination="true"
                    data-side-pagination="server"
-                   data-url="/hanbj/data/json_act"
+                   data-url="/hanbj/daily/json_fee"
                    data-page-list="[20, 50, 100]"
                    data-query-params="wxParams">
                 <thead>
                 <tr>
                     <th data-field="id" class="sr-only">ID</th>
-                    <th data-field="n">活动</th>
                     <th data-field="u">会员编号</th>
                     <th data-field="t">昵称</th>
                     <th data-field="code" data-formatter="codeFormatter">状态</th>
+                    <th data-field="c" data-formatter="code2Formatter">操作</th>
                     <th data-field="m">操作人</th>
                     <th data-field="y">登记时间</th>
                     <th data-field="bonus">积分</th>
@@ -59,8 +51,8 @@
     </div>
 </div>
 <script>
-    var nav = 'nav2_3';
+    var nav = 'nav2_2';
     $(window).load(function () {
-        baselog.init(1);
+        feelog.init();
     });
 </script>
