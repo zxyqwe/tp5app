@@ -75,7 +75,7 @@ var nav_active = (function ($, w, undefined) {
         w.u2 = base + write + 'fee_add';
         w.u4 = base + write + 'vol_add';
         w.u10 = base + write + 'fame_add';
-        w.u15 = base + write + 'create';
+        w.u15 = base + write + 'json_create';
     };
     var init = function () {
         dict();

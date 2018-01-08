@@ -51,14 +51,6 @@ class Index extends Controller
         return redirect('/hanbj/index/home');
     }
 
-    public function volunteer()
-    {
-        $data['name'] = BonusOper::ACT_NAME;
-        $data['act'] = BonusOper::ACT;
-        $data['vol'] = BonusOper::VOLUNTEER;
-        return view('volunteer', ['data' => $data]);
-    }
-
     public function debug()
     {
     }
