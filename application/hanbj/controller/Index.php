@@ -18,7 +18,7 @@ class Index extends Controller
     protected function valid_id()
     {
         if (UserOper::VERSION !== session('login')) {
-            $res = redirect('/hanbj/index/bulletin');
+            $res = redirect('/hanbj/pub/bulletin');
             throw new HttpResponseException($res);
         }
     }
@@ -42,7 +42,7 @@ class Index extends Controller
 
     public function old()//需要这个，不然route就会屏蔽入口
     {
-        return redirect('/hanbj/index/bulletin');
+        return redirect('/hanbj/pub/bulletin');
     }
 
     public function logout()

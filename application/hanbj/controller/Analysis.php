@@ -17,7 +17,7 @@ class Analysis extends Controller
     protected function valid_id()
     {
         if (UserOper::VERSION !== session('login')) {
-            $res = redirect('/hanbj/index/bulletin');
+            $res = redirect('/hanbj/pub/bulletin');
             throw new HttpResponseException($res);
         }
     }
