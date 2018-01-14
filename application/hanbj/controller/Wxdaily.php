@@ -123,7 +123,7 @@ class Wxdaily extends Controller
         }
         $order = WxPayApi::unifiedOrder($input);
         if (!array_key_exists('prepay_id', $order)) {
-            $msg = $order['return_msg'] . $input->ToXml();
+            $msg = $order['return_msg'] . json_encode($order) . $input->ToXml();
             trace($msg);
             return json(['msg' => $msg], 400);
         }
@@ -146,6 +146,11 @@ class Wxdaily extends Controller
         $hand = new HanbjNotify();
         $hand->Handle(false);
         return '';
+    }
+
+    public function old()
+    {
+        return redirect('/hanbj/wxdaily/old');
     }
 
     public function json_tempid()

@@ -1155,6 +1155,7 @@ class OrderOper
         $map['fee'] = $fee;
         $map['type'] = OrderOper::FEE;
         $map['value'] = $year;
+        $map['label']=$label;
         $map['trans'] = '';
         $res = Db::table('order')
             ->where($map)
@@ -1164,7 +1165,6 @@ class OrderOper
             ->find();
         if (null === $res) {
             $outid = session('card') . date("YmdHis");
-            $map['label'] = $label;
             $map['outid'] = $outid;
             $res = Db::table('order')
                 ->insert($map);
