@@ -1254,7 +1254,7 @@ class OrderOper
                         $res['label']);
                     break;
                 default:
-                    trace('无名氏 ' . json_encode($map) . ' ' . json_encode($res) . ' ' . json_encode($ins));
+                    throw new Exception('无名氏 ' . json_encode($map) . ' ' . json_encode($res) . ' ' . json_encode($ins));
             }
         } catch (\Exception $e) {
             Db::rollback();

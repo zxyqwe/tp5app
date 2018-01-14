@@ -2,9 +2,7 @@
 
 namespace app\hanbj\controller;
 
-
-use app\hanbj\BonusOper;
-use app\hanbj\MemberOper;
+use app\hanbj\OrderOper;
 use app\hanbj\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -53,5 +51,9 @@ class Index extends Controller
 
     public function debug()
     {
+        $data["out_trade_no"] = '07181927178620170928164140';
+        $data['total_fee'] = 3000;
+        $data['transaction_id'] = '4200000076201801143988819403';
+        OrderOper::handle($data);
     }
 }
