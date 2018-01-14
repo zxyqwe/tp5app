@@ -11,5 +11,6 @@
 
 return [
     'index.php/hyb' => 'hanbj/index/old',
-    'hanfubj' => 'hanbj/index/old'
+    'hanfubj' => 'hanbj/index/old',
+    'hanbj/wx/notify'=>'hanbj/wxdaily/old'
 ];
