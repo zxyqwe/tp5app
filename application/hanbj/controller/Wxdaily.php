@@ -19,7 +19,7 @@ use think\exception\HttpResponseException;
 class Wxdaily extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'notify']
+        'valid_id' => ['except' => 'notify,old']
     ];
 
     protected function valid_id()
@@ -150,7 +150,7 @@ class Wxdaily extends Controller
 
     public function old()
     {
-        return redirect('/hanbj/wxdaily/old');
+        return redirect('/hanbj/wxdaily/notify');
     }
 
     public function json_tempid()
