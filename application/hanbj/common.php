@@ -1155,7 +1155,7 @@ class OrderOper
         $map['fee'] = $fee;
         $map['type'] = OrderOper::FEE;
         $map['value'] = $year;
-        $map['label']=$label;
+        $map['label'] = $label;
         $map['trans'] = '';
         $res = Db::table('order')
             ->where($map)
@@ -1176,6 +1176,93 @@ class OrderOper
             $input->SetOut_trade_no($res['outid']);
         }
         return $input;
+    }
+
+    private static function handleFee($value, $uname, $trans, $d)
+    {
+        $value = intval($value) + 1;
+        $ins = [];
+        $oper = 'Weixin_' . substr($trans, strlen($trans) - 6);
+        while (count($ins) < $value) {
+            $ins[] = [
+                'unique_name' => $uname,
+                'oper' => $oper,
+                'code' => 1,
+                'fee_time' => $d,
+                'bonus' => BonusOper::FEE
+            ];
+        }
+        $up = Db::table('nfee')
+            ->insertAll($ins);
+        FeeOper::uncache($uname);
+        if ($up != $value) {
+            throw new Exception('nfee ' . $value);
+        }
+    }
+
+    public static function handle($data)
+    {
+        $outid = $data["out_trade_no"];
+        $total_fee = $data['total_fee'];
+        $transaction_id = $data['transaction_id'];
+        $d = date("Y-m-d H:i:s");
+        $map['outid'] = $outid;
+        $map['fee'] = $total_fee;
+        $ins['trans'] = $transaction_id;
+        $ins['time'] = $d;
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        Db::startTrans();
+        try {
+            $res = Db::table('order')
+                ->alias('f')
+                ->where($map)
+                ->join($join)
+                ->field([
+                    'f.type',
+                    'f.value',
+                    'f.label',
+                    'm.unique_name',
+                    'm.openid'
+                ])
+                ->find();
+            if (null === $res) {
+                throw new Exception(json_encode($map));
+            }
+            $map['trans'] = '';
+            $up = Db::table('order')
+                ->where($map)
+                ->data($ins)
+                ->update();
+            if ($up === 0) {
+                Db::rollback();
+                trace('重来订单 ' . json_encode($data));
+                return true;
+            }
+            if (strlen($res['unique_name']) <= 1) {
+                $res['type'] = -1;
+            }
+            switch ($res['type']) {
+                case 1:
+                    self::handleFee($res['value'], $res['unique_name'], $transaction_id, $d);
+                    Db::commit();
+                    WxTemp::notifyFee($res['openid'],
+                        $res['unique_name'],
+                        intval($total_fee) / 100,
+                        FeeOper::cache_fee($res['unique_name']),
+                        $res['label']);
+                    break;
+                default:
+                    trace('无名氏 ' . json_encode($map) . ' ' . json_encode($res) . ' ' . json_encode($ins));
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            $e = $e->getMessage();
+            trace('NotifyProcess ' . $e . json_encode($data));
+            return false;
+        }
+        return true;
     }
 }
 
@@ -1283,85 +1370,10 @@ class HanbjNotify extends WxPayNotify
             return false;
         }
         //查询订单，判断订单真实性
-        $outid = $data["out_trade_no"];
-        if (!$this->Queryorder($outid)) {
+        if (!$this->Queryorder($data["out_trade_no"])) {
             return false;
         }
-        $total_fee = $data['total_fee'];
-        $transaction_id = $data['transaction_id'];
-        $d = date("Y-m-d H:i:s");
-        $map['outid'] = $outid;
-        $map['fee'] = $total_fee;
-        $ins['trans'] = $transaction_id;
-        $ins['time'] = $d;
-        $join = [
-            ['member m', 'm.openid=f.openid', 'left']
-        ];
-        Db::startTrans();
-        try {
-            $res = Db::table('order')
-                ->alias('f')
-                ->where($map)
-                ->join($join)
-                ->field([
-                    'f.type',
-                    'f.value',
-                    'f.label',
-                    'm.unique_name',
-                    'm.openid'
-                ])
-                ->find();
-            if (null === $res) {
-                throw new Exception(json_encode($map));
-            }
-            $map['trans'] = '';
-            $up = Db::table('order')
-                ->where($map)
-                ->data($ins)
-                ->update();
-            if ($up === 0) {
-                Db::rollback();
-                trace('重来订单 ' . json_encode($data));
-                return true;
-            }
-            if ('1' === $res['type']) {
-                $this->handleFee($res['value'], $res['unique_name'], $transaction_id, $d);
-                Db::commit();
-                WxTemp::notifyFee($res['openid'],
-                    $res['unique_name'],
-                    intval($total_fee) / 100,
-                    FeeOper::cache_fee($res['unique_name']),
-                    $res['label']);
-            }
-        } catch (\Exception $e) {
-            Db::rollback();
-            $e = $e->getMessage();
-            trace('NotifyProcess ' . $e . json_encode($data));
-            return false;
-        }
-        return true;
-    }
-
-    private function handleFee($value, $uname, $trans, $d)
-    {
-        $value = intval($value) + 1;
-        $ins = [];
-        $oper = 'Weixin_' . substr($trans, strlen($trans) - 6);
-        while (count($ins) < $value) {
-            $ins[] = [
-                'unique_name' => $uname,
-                'oper' => $oper,
-                'code' => 1,
-                'fee_time' => $d,
-                'bonus' => BonusOper::FEE
-            ];
-        }
-        $up = Db::table('nfee')
-            ->insertAll($ins);
-        FeeOper::uncache($uname);
-        if ($up != $value) {
-            throw new Exception('nfee ' . $value);
-        }
+        return OrderOper::handle($data);
     }
 }
 
