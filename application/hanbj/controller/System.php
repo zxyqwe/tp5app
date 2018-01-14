@@ -21,7 +21,7 @@ class System extends Controller
     protected function valid_id()
     {
         if (UserOper::VERSION !== session('login')) {
-            $res = redirect('/hanbj/pub/bulletin');
+            $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
             throw new HttpResponseException($res);
         }
     }
@@ -39,7 +39,7 @@ class System extends Controller
     {
         MemberOper::daily();
         if (session('name') !== '坎丙午') {
-            return redirect('/hanbj/index/home');
+            return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         if (-1 < $data) {
             $par = input('post.par');
