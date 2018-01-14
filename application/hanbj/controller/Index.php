@@ -18,7 +18,7 @@ class Index extends Controller
     protected function valid_id()
     {
         if (UserOper::VERSION !== session('login')) {
-            $res = redirect('/hanbj/pub/bulletin');
+            $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
             throw new HttpResponseException($res);
         }
     }
@@ -35,20 +35,20 @@ class Index extends Controller
     public function index()
     {
         if (UserOper::VERSION === session('login')) {
-            return redirect('/hanbj/index/home');
+            return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         return view('login');
     }
 
     public function old()//需要这个，不然route就会屏蔽入口
     {
-        return redirect('/hanbj/pub/bulletin');
+        return redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
     }
 
     public function logout()
     {
         session(null);
-        return redirect('/hanbj/index/home');
+        return redirect('https://app.zxyqwe.com/hanbj/index/home');
     }
 
     public function debug()

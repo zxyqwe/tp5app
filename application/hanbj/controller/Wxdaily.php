@@ -150,7 +150,7 @@ class Wxdaily extends Controller
 
     public function old()
     {
-        return redirect('/hanbj/wxdaily/notify');
+        return redirect('https://app.zxyqwe.com/hanbj/wxdaily/notify');
     }
 
     public function json_tempid()
