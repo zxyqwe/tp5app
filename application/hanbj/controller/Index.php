@@ -51,9 +51,5 @@ class Index extends Controller
 
     public function debug()
     {
-        $data["out_trade_no"] = '07181927178620170928164140';
-        $data['total_fee'] = 3000;
-        $data['transaction_id'] = '4200000076201801143988819403';
-        OrderOper::handle($data);
     }
 }
