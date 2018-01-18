@@ -438,9 +438,6 @@ class BiliDanmu extends BiliBase
         $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
-        if ($data['code'] === -400) {//没有需要提示的小电视
-            return json(['msg' => "-400"], 400);
-        }
         if ($data['code'] !== 0) {
             trace("unknown_smallTV $raw");
             return json(['msg' => "1 $raw"], 400);
@@ -500,7 +497,9 @@ class BiliDanmu extends BiliBase
         }
         $urlapi = $this->prefix . $url . $payload;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-        if (false !== strpos($raw, '正在抽奖中')) {
+        if (false !== strpos($raw, '正在抽奖中')
+            || false !== strpos($raw, '尚未开奖')
+        ) {
             return json(['msg' => 'WAIT']);
         }
         $data = json_decode($raw, true);
