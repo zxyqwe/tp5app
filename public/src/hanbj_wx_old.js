@@ -98,6 +98,9 @@ var wx_New = (function ($, Vue, w, undefined) {
             var tmp = data[i];
             if (tmp[0] !== s0) {
                 if (c0 !== undefined) {
+                    if (c1 !== undefined) {
+                        c0.children.push(c1);
+                    }
                     adata.push(c0);
                 }
                 c0 = {
@@ -106,6 +109,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                 };
                 s0 = tmp[0];
                 s1 = undefined;
+                c1 = undefined;
             }
             if (tmp[1] !== s1) {
                 if (c1 !== undefined) {
