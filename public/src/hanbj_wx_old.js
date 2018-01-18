@@ -105,6 +105,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                     children: []
                 };
                 s0 = tmp[0];
+                s1 = undefined;
             }
             if (tmp[1] !== s1) {
                 if (c1 !== undefined) {
