@@ -52,6 +52,5 @@ class Index extends Controller
 
     public function debug()
     {
-        MemberOper::create_unique_unused();
     }
 }
