@@ -120,10 +120,22 @@ class BiliOnline extends BiliBase
 
     public function unknown_heart()//看起来没用 100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
     {
+        $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . microtime(true);
+        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false, true, true);
+        $data = json_decode($res, true);
+        if (!in_array($data['code'], [0])) {
+            trace("unknown_notice $res");
+        }
     }
 
     public function unknown_notice()//link 动态 100 sec {"code":0,"msg":" ","message":" ","data":{"num":0}}
     {
+        $urlapi = $this->prefix . 'feed_svr/v1/feed_svr/notice';
+        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, ['csrf_token' => $this->csrf_token]);
+        $data = json_decode($res, true);
+        if (!in_array($data['code'], [0])) {
+            trace("unknown_notice $res");
+        }
     }
 
     public function heart_gift_receive()
