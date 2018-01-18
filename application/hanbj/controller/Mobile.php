@@ -218,7 +218,9 @@ class Mobile extends Controller
                 $ret = MemberOper::list_code(MemberOper::UNUSED);
                 $rst = [];
                 foreach ($ret as $i) {
-                    if (strpos($i, '夏') !== false) {
+                    if (strpos($i, '夏') !== false
+                        || strpos($i, '商') !== false
+                    ) {
                         $rst[] = $i;
                     }
                 }

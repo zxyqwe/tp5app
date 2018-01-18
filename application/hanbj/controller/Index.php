@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\MemberOper;
 use app\hanbj\OrderOper;
 use app\hanbj\UserOper;
 use think\Controller;
@@ -51,5 +52,6 @@ class Index extends Controller
 
     public function debug()
     {
+        MemberOper::create_unique_unused();
     }
 }
