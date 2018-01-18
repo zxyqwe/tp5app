@@ -23,7 +23,6 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 1);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 1);
-        curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_USERAGENT, $this->agent);
 
         $this->cookie = config('bili_cron_cookie');
@@ -33,14 +32,17 @@ class BiliBase
         $this->csrf_token = isset($token[1]) ? $token[1] : '';
     }
 
-    protected function bili_Post($url, $cookie, $room, $data = false, $sub = true)
+    protected function bili_Post($url, $cookie, $room, $data = false, $sub = true, $post = true)
     {
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
-        if ($data !== false) {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
-        } else {
-            curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
+        curl_setopt($this->curl, CURLOPT_POST, $post);
+        if ($post) {
+            if ($data !== false) {
+                curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+            } else {
+                curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
+            }
         }
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
