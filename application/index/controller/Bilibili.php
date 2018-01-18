@@ -47,10 +47,12 @@ class Bilibili
             return json(['msg' => 'too fast', 'time' => $time]);
         }
         $bili->lock('cookie', 290);
-        //$bili->online();
-        //cache('bili_cron_user_past', cache('bili_cron_user'));
-        //$res = $bili->getInfo();
-        //cache('bili_cron_user', $res);
+        $bili->online();
+        $bili->unknown_notice();
+        $bili->unknown_heart();
+        cache('bili_cron_user_past', cache('bili_cron_user'));
+        $res = $bili->getInfo();
+        cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
         //$bili->freeGift();
         //$bili->heart_gift_receive();
