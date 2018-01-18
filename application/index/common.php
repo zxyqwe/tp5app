@@ -49,8 +49,10 @@ class BiliBase
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
-            if (false === strpos($return_str, 'Timeout')
-                && false === strpos($return_str, 'SSL connect error')
+            if (!(false !== strpos($return_str, 'Timeout')
+                || false !== strpos($return_str, 'SSL connect error')
+                || false !== strpos($return_str, 'Empty reply')
+            )
             ) {
                 trace("url => $url, res => $return_str");
             }
@@ -513,7 +515,7 @@ class BiliDanmu extends BiliBase
                 $data = $data['data'];
                 if ($data['gift_num'] > 0) {
                     $data_for = "$key {$data['gift_num']} 个 {$data['gift_name']}";
-                    if ($data['gift_name'] !== '辣条') {
+                    if (!in_array($data['gift_name'], ['辣条', '小红包'])) {
                         trace($data_for);
                     }
                     return json(['msg' => $data_for]);
