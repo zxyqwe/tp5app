@@ -38,7 +38,7 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
         curl_setopt($this->curl, CURLOPT_POST, $post);
         if ($post) {
-            if ($data !== false) {
+            if (false !== $data) {
                 curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
             } else {
                 curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
@@ -465,13 +465,14 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $join = json_decode($raw, true);
         if (in_array($join['code'], [0, 65531])
-            || strpos($raw, '已加入') !== false
-            || strpos($raw, '已结束') !== false
+            || false !== strpos($raw, '已加入')
+            || false !== strpos($raw, '已结束')
+            || false !== strpos($raw, '已经结束')
         ) {
             $this->lock("unknown_smallTV$payload", $this->long_timeout());
             return;
         }
-        if (strpos($raw, '不存在') !== false) {
+        if (false !== strpos($raw, '不存在')) {
             return;
         }
         trace('unknown_smallTV' . json_encode($item) . $raw);
@@ -562,13 +563,14 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
         $join = json_decode($raw, true);
         if (in_array($join['code'], [0, 65531])
-            || strpos($raw, '已加入') !== false
-            || strpos($raw, '已结束') !== false
+            || false !== strpos($raw, '已加入')
+            || false !== strpos($raw, '已结束')
+            || false !== strpos($raw, '已经结束')
         ) {
             $this->lock("unknown_raffle$payload", $this->long_timeout());
             return;
         }
-        if (strpos($raw, '不存在') !== false) {
+        if (false !== strpos($raw, '不存在')) {
             return;
         }
         trace('unknown_raffle' . json_encode($raffle) . $raw);
