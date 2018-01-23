@@ -3,9 +3,6 @@
 namespace hanbj;
 
 
-use think\Db;
-use hanbj\vote\WxOrg;
-
 class UserOper
 {
     const VERSION = 'succ_1';
@@ -19,18 +16,7 @@ class UserOper
 
     public static function reg()
     {
-        $map['year'] = WxOrg::year;
-        $map['grade'] = ['in', [0, 1]];
-        $ret = Db::table('fame')
-            ->where($map)
-            ->field('unique_name as u')
-            ->cache(600)
-            ->select();
-        $data = [];
-        foreach ($ret as $i) {
-            $data[] = $i['u'];
-        }
-        $data = array_merge($data, self::FIXED);
+        $data = array_merge(FameOper::getTop(), self::FIXED);
         return array_unique($data);
     }
 

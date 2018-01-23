@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use hanbj\FameOper;
 use think\Db;
 use think\exception\HttpResponseException;
 use hanbj\weixin\WxHanbj;
@@ -102,38 +103,9 @@ class WxOrg
 
     function __construct()
     {
-        $map['year'] = self::year;
-        $map['grade'] = ['<=', '3'];
-        $ret = Db::table('fame')
-            ->where($map)
-            ->field([
-                'unique_name as u',
-                'grade as g'
-            ])
-            ->select();
-        $upper = [];
-        $lower = [];
-        $obj = [];
-        foreach ($ret as $item) {
-            switch ($item['g']) {
-                case 0:
-                case 1:
-                    $obj[] = $item['u'];
-                    $upper[] = $item['u'];
-                    break;
-                case 2:
-                    $upper[] = $item['u'];
-                    break;
-                case 3:
-                    $lower[] = $item['u'];
-                    break;
-                default:
-                    trace(json_encode($item));
-            }
-        }
-        $this->upper = $upper;
-        $this->lower = $lower;
-        $this->obj = $obj;
+        $this->upper = FameOper::getUp();
+        $this->lower = FameOper::getDeputy();
+        $this->obj = FameOper::getTop();
     }
 
     public function getAll()

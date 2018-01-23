@@ -3,7 +3,6 @@
 namespace hanbj;
 
 use think\Db;
-use hanbj\vote\WxOrg;
 
 class BonusOper
 {
@@ -15,18 +14,7 @@ class BonusOper
 
     public static function getWorkers()
     {
-        $map['year'] = WxOrg::year;
-        $map['grade'] = ['in', [0, 1, 2]];
-        $ret = Db::table('fame')
-            ->where($map)
-            ->field('unique_name as u')
-            ->cache(600)
-            ->select();
-        $data = [];
-        foreach ($ret as $i) {
-            $data[] = $i['u'];
-        }
-        $data = array_merge($data, self::_WORKER);
+        $data = array_merge(FameOper::getUp(), self::_WORKER);
         //zxyqwe, 魁儿, 花西, 哈利, 紫菀
         $data = array_merge($data, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
         return array_unique($data);
