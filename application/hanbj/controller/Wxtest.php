@@ -2,8 +2,8 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\MemberOper;
-use app\hanbj\WxOrg;
+use app\hanbj\model\MemberOper;
+use app\hanbj\model\WxOrg;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;

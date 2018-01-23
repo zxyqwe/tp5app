@@ -2,10 +2,10 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\BonusOper;
-use app\hanbj\FeeOper;
-use app\hanbj\MemberOper;
-use app\hanbj\UserOper;
+use app\hanbj\model\BonusOper;
+use app\hanbj\model\FeeOper;
+use app\hanbj\model\MemberOper;
+use app\hanbj\model\UserOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;

@@ -2,7 +2,7 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\UserOper;
+use app\hanbj\model\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
 
