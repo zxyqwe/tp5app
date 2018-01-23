@@ -979,13 +979,26 @@ class BonusOper
     const FEE = 30;
     const ACT = 5;
     const VOLUNTEER = 30;
-    const ACT_NAME = '2017冬至';
-    const _WORKER = ['兑壬子', '兑癸卯'];
+    const ACT_NAME = '2018腊八';
+    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳'];
 
     public static function getWorkers()
     {
+        $map['year'] = WxOrg::year;
+        $map['grade'] = ['in', [0, 1, 2]];
+        $ret = Db::table('fame')
+            ->where($map)
+            ->field('unique_name as u')
+            ->cache(600)
+            ->select();
+        $data = [];
+        foreach ($ret as $i) {
+            $data[] = $i['u'];
+        }
+        $data = array_merge($data, self::_WORKER);
         //zxyqwe, 魁儿, 花西, 哈利, 紫菀
-        return array_merge(self::_WORKER, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
+        $data = array_merge($data, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
+        return array_unique($data);
     }
 
     public static function reCalc($uname)
