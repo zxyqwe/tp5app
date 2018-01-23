@@ -3,7 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\MemberOper;
-use hanbj\WxOrg;
+use hanbj\vote\WxOrg;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;

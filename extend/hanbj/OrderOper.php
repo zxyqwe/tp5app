@@ -4,6 +4,7 @@ namespace hanbj;
 
 use think\Db;
 use Exception;
+use hanbj\weixin\WxTemp;
 
 class OrderOper
 {

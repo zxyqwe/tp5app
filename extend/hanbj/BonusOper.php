@@ -3,6 +3,7 @@
 namespace hanbj;
 
 use think\Db;
+use hanbj\vote\WxOrg;
 
 class BonusOper
 {

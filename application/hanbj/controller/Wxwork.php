@@ -5,7 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
-use hanbj\WxTemp;
+use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
