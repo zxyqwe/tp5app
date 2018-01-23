@@ -8,8 +8,8 @@ use think\Db;
 use hanbj\BonusOper;
 use app\hanbj\LogUtil;
 use hanbj\MemberOper;
-use hanbj\WxHanbj;
-use hanbj\WxOrg;
+use hanbj\weixin\WxHanbj;
+use hanbj\vote\WxOrg;
 use think\exception\HttpResponseException;
 
 class System extends Controller

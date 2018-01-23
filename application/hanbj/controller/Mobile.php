@@ -5,7 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\BonusOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
-use hanbj\WxVote;
+use hanbj\vote\WxVote;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Controller;
@@ -13,7 +13,7 @@ use think\Db;
 use think\exception\HttpResponseException;
 use think\Response;
 use hanbj\FeeOper;
-use hanbj\WxHanbj;
+use hanbj\weixin\WxHanbj;
 use hanbj\CardOper;
 
 class Mobile extends Controller
