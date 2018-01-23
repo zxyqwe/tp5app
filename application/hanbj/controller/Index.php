@@ -2,8 +2,8 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\model\BonusOper;
-use app\hanbj\model\UserOper;
+use hanbj\BonusOper;
+use hanbj\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
 

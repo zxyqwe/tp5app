@@ -1,6 +1,6 @@
 <?php
 
-namespace app\hanbj\model;
+namespace hanbj;
 
 use think\Db;
 use think\exception\HttpResponseException;
