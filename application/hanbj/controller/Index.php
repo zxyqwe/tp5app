@@ -2,8 +2,7 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\MemberOper;
-use app\hanbj\OrderOper;
+use app\hanbj\model\Bonus;
 use app\hanbj\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -52,5 +51,6 @@ class Index extends Controller
 
     public function debug()
     {
+        return Bonus::ACT_NAME;
     }
 }
