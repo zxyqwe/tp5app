@@ -2,14 +2,14 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\UserOper;
+use app\hanbj\model\UserOper;
 use think\Controller;
 use think\Db;
-use app\hanbj\BonusOper;
+use app\hanbj\model\BonusOper;
 use app\hanbj\LogUtil;
-use app\hanbj\MemberOper;
-use app\hanbj\WxHanbj;
-use app\hanbj\WxOrg;
+use app\hanbj\model\MemberOper;
+use app\hanbj\model\WxHanbj;
+use app\hanbj\model\WxOrg;
 use think\exception\HttpResponseException;
 
 class System extends Controller

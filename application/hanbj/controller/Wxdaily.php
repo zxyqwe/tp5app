@@ -2,16 +2,17 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\BonusOper;
-use app\hanbj\MemberOper;
-use app\hanbj\OrderOper;
-use app\hanbj\HanbjRes;
-use app\hanbj\WxOrg;
+use app\hanbj\model\BonusOper;
+use app\hanbj\model\MemberOper;
+use app\hanbj\model\OrderOper;
+use app\hanbj\model\HanbjRes;
+use app\hanbj\model\WxOrg;
 use think\Controller;
 use think\Db;
-use app\hanbj\HanbjNotify;
-use app\hanbj\FeeOper;
-use app\hanbj\CardOper;
+use app\hanbj\model\HanbjNotify;
+use app\hanbj\model\FeeOper;
+use app\hanbj\model\CardOper;
+use app\hanbj\WxPayConfig;
 use app\WxPayUnifiedOrder;
 use app\WxPayApi;
 use think\exception\HttpResponseException;
@@ -127,7 +128,7 @@ class Wxdaily extends Controller
             trace($msg);
             return json(['msg' => $msg], 400);
         }
-        $data['appId'] = \WxPayConfig::APPID;
+        $data['appId'] = WxPayConfig::APPID;
         $data['timeStamp'] = time();
         $data['nonceStr'] = getNonceStr();
         $data['package'] = 'prepay_id=' . $order['prepay_id'];

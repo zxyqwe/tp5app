@@ -3,7 +3,7 @@
 namespace app;
 
 use Exception;
-use WxPayConfig;
+use app\hanbj\WxPayConfig;
 
 
 /**
