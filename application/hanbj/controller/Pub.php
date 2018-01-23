@@ -2,9 +2,9 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\model\BonusOper;
-use app\hanbj\model\MemberOper;
-use app\hanbj\model\UserOper;
+use hanbj\BonusOper;
+use hanbj\MemberOper;
+use hanbj\UserOper;
 use think\Controller;
 use think\Db;
 use Endroid\QrCode\QrCode;

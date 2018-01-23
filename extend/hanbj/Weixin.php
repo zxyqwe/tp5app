@@ -1,6 +1,6 @@
 <?php
 
-namespace app\hanbj\model;
+namespace hanbj;
 
 use app\WxPayOrderQuery;
 use app\WxPayApi;

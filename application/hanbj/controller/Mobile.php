@@ -2,19 +2,19 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\model\BonusOper;
-use app\hanbj\model\MemberOper;
-use app\hanbj\model\UserOper;
-use app\hanbj\model\WxVote;
+use hanbj\BonusOper;
+use hanbj\MemberOper;
+use hanbj\UserOper;
+use hanbj\WxVote;
 use app\SHA1;
 use app\WXBizMsgCrypt;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 use think\Response;
-use app\hanbj\model\FeeOper;
-use app\hanbj\model\WxHanbj;
-use app\hanbj\model\CardOper;
+use hanbj\FeeOper;
+use hanbj\WxHanbj;
+use hanbj\CardOper;
 
 class Mobile extends Controller
 {

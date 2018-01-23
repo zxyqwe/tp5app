@@ -2,16 +2,16 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\model\BonusOper;
-use app\hanbj\model\MemberOper;
-use app\hanbj\model\OrderOper;
-use app\hanbj\model\HanbjRes;
-use app\hanbj\model\WxOrg;
+use hanbj\BonusOper;
+use hanbj\MemberOper;
+use hanbj\OrderOper;
+use hanbj\HanbjRes;
+use hanbj\WxOrg;
 use think\Controller;
 use think\Db;
-use app\hanbj\model\HanbjNotify;
-use app\hanbj\model\FeeOper;
-use app\hanbj\model\CardOper;
+use hanbj\HanbjNotify;
+use hanbj\FeeOper;
+use hanbj\CardOper;
 use app\hanbj\WxPayConfig;
 use app\WxPayUnifiedOrder;
 use app\WxPayApi;
