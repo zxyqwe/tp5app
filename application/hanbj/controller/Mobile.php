@@ -19,7 +19,7 @@ use hanbj\CardOper;
 class Mobile extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,reg,event']
+        'valid_id' => ['except' => 'index,reg,event,help']
     ];
 
     protected function valid_id()
@@ -246,6 +246,6 @@ class Mobile extends Controller
 
     public function help()
     {
-        return redirect('https://mp.weixin.qq.com/s/jfVoYA8ezZUFmoFU6bMndg');
+        return view('help');
     }
 }

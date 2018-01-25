@@ -1,0 +1,76 @@
+{layout name="layout_wx" /}
+<script type="text/html" id="tpl_home">
+    <div class="page">
+        <div class="page__hd">
+            <h1 class="page__title">帮助说明</h1>
+            <p class="page__desc"></p>
+        </div>
+        <div class="page__bd page__bd_spacing">
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">推文列表</div>
+                <div class="weui-panel__bd">
+                    <a href="#rules" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="//mmbiz.qpic.cn/mmbiz_jpg/61BvD6ArKsZrObb8qtCjHD0b0y3kp9WxwcCjfMFYQ3U39x3Ln8uYuStRWu8YFr3A6xFegMSgANIl8My52rjAZA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">注册须知</h4>
+                            <p class="weui-media-box__desc"></p>
+                        </div>
+                    </a>
+                    <a href="#ucode" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="//mmbiz.qpic.cn/mmbiz_jpg/61BvD6ArKsZrObb8qtCjHD0b0y3kp9WxwcCjfMFYQ3U39x3Ln8uYuStRWu8YFr3A6xFegMSgANIl8My52rjAZA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">会员状态</h4>
+                            <p class="weui-media-box__desc"></p>
+                        </div>
+                    </a>
+                    <a href="//mp.weixin.qq.com/s/jfVoYA8ezZUFmoFU6bMndg" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="//mmbiz.qpic.cn/mmbiz_jpg/61BvD6ArKsZrObb8qtCjHD0b0y3kp9WxwcCjfMFYQ3U39x3Ln8uYuStRWu8YFr3A6xFegMSgANIl8My52rjAZA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">号外！号外！听说实名会员参加活动可以扫码积分啦！</h4>
+                            <p class="weui-media-box__desc">2017-09-26 汉北·活动中心</p>
+                        </div>
+                    </a>
+                    <a href="//mp.weixin.qq.com/s/tBObNvqgu-vnXZiZxUDQNA" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="//mmbiz.qpic.cn/mmbiz_jpg/61BvD6ArKsZrObb8qtCjHD0b0y3kp9WxwcCjfMFYQ3U39x3Ln8uYuStRWu8YFr3A6xFegMSgANIl8My52rjAZA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">诶？以后会员不用考试了？一只企鹅亲测有效。</h4>
+                            <p class="weui-media-box__desc">2018-01-01 汉北·会员中心</p>
+                        </div>
+                    </a>
+                    <a href="//mp.weixin.qq.com/s/c1YMx4u2EhVLeXOwD74uTw" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="//mmbiz.qpic.cn/mmbiz_jpg/61BvD6ArKsZrObb8qtCjHD0b0y3kp9WxwcCjfMFYQ3U39x3Ln8uYuStRWu8YFr3A6xFegMSgANIl8My52rjAZA/640?wx_fmt=jpeg&tp=webp&wxfrom=5&wx_lazy=1" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">【实名会员条例】如何成为一名合格的汉北实名会员？</h4>
+                            <p class="weui-media-box__desc"> 2018-01-24 人力会员部</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="weui-panel__ft">
+                </div>
+            </div>
+        </div>
+        <div class="page__ft">
+        </div>
+    </div>
+</script>
+<script type="text/html" id="tpl_ucode">
+    {include file="mobile_help_ucode" /}
+</script>
+<script type="text/html" id="tpl_rules">
+    {include file="mobile_help_rules" /}
+</script>
+<script>
+    $(window).on("load", function () {
+        wx_init.init(false);
+    });
+</script>
