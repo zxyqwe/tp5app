@@ -151,7 +151,9 @@ class Daily extends Controller
             ->field([
                 'f.oper',
                 'f.fee_time',
-                'f.code'
+                'f.code',
+                'bonus',
+                'up'
             ])
             ->select();
         $act = Db::table('member')
@@ -162,7 +164,9 @@ class Daily extends Controller
             ->field([
                 'oper',
                 'name',
-                'act_time'
+                'act_time',
+                'bonus',
+                'up'
             ])
             ->select();
         $fame = Db::table('member')

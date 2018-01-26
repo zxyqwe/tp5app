@@ -1,6 +1,6 @@
 var all_mem = (function ($, w, undefined) {
     'use strict';
-    var alr, nye, jsr = '经手人：', sj = "时间：", vmain, $table;
+    var alr, nye, jsr = '经手人：', sj = "时间：", jf = "积分：", rz = "状态：", yrz = "已入账", wrz = "未入账", vmain, $table;
     var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
@@ -16,9 +16,9 @@ var all_mem = (function ($, w, undefined) {
         for (var i in fee) {
             var tmp = fee[i];
             if (tmp.code === '1')
-                data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time]));
+                data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time, jf + tmp.bonus, rz + (tmp.up === '1' ? yrz : wrz)]));
             else
-                data.push(listitem(nye + '撤销', [jsr + tmp.oper, sj + tmp.fee_time]));
+                data.push(listitem(nye + '撤销', [jsr + tmp.oper, sj + tmp.fee_time, jf + tmp.bonus, rz + (tmp.up === '1' ? yrz : wrz)]));
 
         }
         return data.join("");
@@ -27,7 +27,7 @@ var all_mem = (function ($, w, undefined) {
         var data = [];
         for (var i in act) {
             var tmp = act[i];
-            data.push(listitem(tmp.name, [jsr + tmp.oper, sj + tmp.act_time]));
+            data.push(listitem(tmp.name, [jsr + tmp.oper, sj + tmp.act_time, jf + tmp.bonus, rz + (tmp.up === '1' ? yrz : wrz)]));
         }
         return data.join("");
     };
