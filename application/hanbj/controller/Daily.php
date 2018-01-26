@@ -152,7 +152,7 @@ class Daily extends Controller
                 'f.oper',
                 'f.fee_time',
                 'f.code',
-                'bonus',
+                'f.bonus',
                 'up'
             ])
             ->select();
@@ -165,7 +165,7 @@ class Daily extends Controller
                 'oper',
                 'name',
                 'act_time',
-                'bonus',
+                'f.bonus',
                 'up'
             ])
             ->select();
