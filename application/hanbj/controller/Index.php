@@ -51,7 +51,7 @@ class Index extends Controller
 
     public function debug()
     {
-        $ret = '';
+        $ret = MemberOper::fixBanned();
         return json([$ret, date_default_timezone_get()]);
     }
 }
