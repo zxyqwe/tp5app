@@ -414,7 +414,7 @@ class MemberOper
         }
     }
 
-    public static function fixBanned()
+    private static function fixBanned()
     {
         $map['code'] = self::BANNED;
         $map['year_time'] = ['>', intval(date('Y')) - 2];
@@ -424,14 +424,14 @@ class MemberOper
             ->select();
         foreach ($ret as $i) {
             FeeOper::uncache($i['u']);
-            self::Banned2Normal($i['u']);
+            self::Banned2Normal($i['u'], 0);
         }
         return $ret;
     }
 
-    private static function Banned2Normal($unique_name)
+    private static function Banned2Normal($unique_name, $panelty = 2)
     {
-        if (FeeOper::owe($unique_name, 2)) {
+        if (FeeOper::owe($unique_name, $panelty)) {
             return false;
         }
         $map['code'] = self::BANNED;
