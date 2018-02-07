@@ -11,8 +11,8 @@ class FeeOper
 
     public static function cache_fee($uname)
     {
-        $cache_name = 'cache_fee' . $uname;
-        if (cache('?' . $cache_name)) {
+        $cache_name = "cache_fee$uname";
+        if (cache("?$cache_name")) {
             return cache($cache_name);
         }
         $map['unique_name'] = $uname;
@@ -52,6 +52,6 @@ class FeeOper
 
     public static function uncache($uname)
     {
-        cache('cache_fee' . $uname, null);
+        cache("cache_fee$uname", null);
     }
 }

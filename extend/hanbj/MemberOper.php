@@ -166,6 +166,7 @@ class MemberOper
         foreach ($ret as $i) {
             self::Normal2Banned($i);
         }
+        self::fixBanned();
     }
 
     public static function Unused2Temp($unique_name, $tieba_id, $openid)
@@ -413,7 +414,7 @@ class MemberOper
         }
     }
 
-    public static function fixBanned()
+    private static function fixBanned()
     {
         $map['code'] = self::BANNED;
         $map['year_time'] = ['>', intval(date('Y')) - 2];
