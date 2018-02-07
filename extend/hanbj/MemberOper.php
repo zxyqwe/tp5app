@@ -414,7 +414,7 @@ class MemberOper
         }
     }
 
-    private static function fixBanned()
+    public static function fixBanned()
     {
         $map['code'] = self::BANNED;
         $map['year_time'] = ['>', intval(date('Y')) - 2];
