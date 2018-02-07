@@ -2,7 +2,7 @@
 
 namespace app\hanbj\controller;
 
-use hanbj\BonusOper;
+use hanbj\MemberOper;
 use hanbj\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -51,6 +51,6 @@ class Index extends Controller
 
     public function debug()
     {
-        return BonusOper::ACT_NAME;
+        MemberOper::fixBanned();
     }
 }
