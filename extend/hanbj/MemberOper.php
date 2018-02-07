@@ -422,6 +422,7 @@ class MemberOper
             ->field(['unique_name as u'])
             ->select();
         foreach ($ret as $i) {
+            FeeOper::uncache($i['u']);
             self::Banned2Normal($i['u']);
         }
         return $ret;
