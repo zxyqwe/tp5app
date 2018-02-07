@@ -424,6 +424,7 @@ class MemberOper
         foreach ($ret as $i) {
             self::Banned2Normal($i['u']);
         }
+        return $ret;
     }
 
     private static function Banned2Normal($unique_name)
