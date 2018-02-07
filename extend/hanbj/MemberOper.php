@@ -413,6 +413,19 @@ class MemberOper
         }
     }
 
+    public static function fixBanned()
+    {
+        $map['code'] = self::BANNED;
+        $map['year_time'] = ['>', intval(date('Y')) - 2];
+        $ret = Db::table('member')
+            ->where($map)
+            ->field(['unique_name as u'])
+            ->select();
+        foreach ($ret as $i) {
+            self::Banned2Normal($i['u']);
+        }
+    }
+
     private static function Banned2Normal($unique_name)
     {
         if (FeeOper::owe($unique_name, 2)) {
