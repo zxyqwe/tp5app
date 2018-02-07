@@ -9,7 +9,7 @@ class BonusOper
     const FEE = 30;
     const ACT = 5;
     const VOLUNTEER = 30;
-    const ACT_NAME = '2018腊八';
+    const ACT_NAME = '2018小年';
     const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳'];
 
     public static function getWorkers()
