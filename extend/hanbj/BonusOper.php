@@ -7,7 +7,7 @@ use think\Db;
 class BonusOper
 {
     const FEE = 30;
-    const ACT = 5;
+    const ACT = 20;
     const VOLUNTEER = 30;
     const ACT_NAME = '2018小年';
     const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳'];
