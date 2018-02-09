@@ -12,6 +12,7 @@ class FameOper
     const manager = 2;//部长
     const deputy = 3;//副部长
     const member = 4;//干事
+    const assistant = 5;//助理
 
     public static function getUp()
     {

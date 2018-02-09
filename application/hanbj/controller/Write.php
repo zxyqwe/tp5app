@@ -6,6 +6,7 @@ use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
+use hanbj\vote\WxOrg;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -149,7 +150,7 @@ class Write extends Controller
         $year = input('post.year', 1, FILTER_VALIDATE_INT);
         $grade = input('post.grade', 0, FILTER_VALIDATE_INT);
         $label = input('post.label', '');
-        if (empty($label) || $year < 1 || $year > 12 || $grade < 0 || $grade > 4) {
+        if (empty($label) || $year < WxOrg::year || $year > WxOrg::year + 1 || $grade < 0 || $grade > 5) {
             return json(['msg' => '参数错误'], 400);
         }
         $data = [];
