@@ -50,6 +50,10 @@ class UserOper
 
     public static function valid_pc($json = false)
     {
+        $unique = session('unique_name');
+        if (!self::limit($unique)) {
+            session('login', null);
+        }
         if (self::VERSION !== session('login')) {
             if ($json) {
                 $res = json(['msg' => '未登录'], 400);
