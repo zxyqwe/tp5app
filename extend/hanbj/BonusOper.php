@@ -10,7 +10,8 @@ class BonusOper
     const ACT = 20;
     const VOLUNTEER = 30;
     const ACT_NAME = '2018小年';
-    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳'];
+    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰'];
+    //陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸
 
     public static function getWorkers()
     {
