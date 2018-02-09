@@ -3,6 +3,8 @@
 namespace hanbj;
 
 
+use think\exception\HttpResponseException;
+
 class UserOper
 {
     const VERSION = 'succ_1';
@@ -24,6 +26,7 @@ class UserOper
     {
         $unique = session('unique_name');
         if (!self::limit($unique)) {
+            session('login', null);
             return;
         }
         if (self::VERSION === session('login')) {
@@ -43,5 +46,17 @@ class UserOper
         $data = ['login' => self::VERSION, 'uni' => $unique];
         cache("login$nonce", json_encode($data), self::time * 2);
         trace("$unique 登录网页");
+    }
+
+    public static function valid_pc($json = false)
+    {
+        if (self::VERSION !== session('login')) {
+            if ($json) {
+                $res = json(['msg' => '未登录'], 400);
+            } else {
+                $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
+            }
+            throw new HttpResponseException($res);
+        }
     }
 }

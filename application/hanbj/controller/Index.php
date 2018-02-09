@@ -2,7 +2,6 @@
 
 namespace app\hanbj\controller;
 
-use hanbj\MemberOper;
 use hanbj\UserOper;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -15,10 +14,7 @@ class Index extends Controller
 
     protected function valid_id()
     {
-        if (UserOper::VERSION !== session('login')) {
-            $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
-            throw new HttpResponseException($res);
-        }
+        UserOper::valid_pc();
     }
 
     public function _empty()

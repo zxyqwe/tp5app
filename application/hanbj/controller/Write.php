@@ -19,10 +19,7 @@ class Write extends Controller
 
     protected function valid_id()
     {
-        if (UserOper::VERSION !== session('login')) {
-            $res = json(['msg' => '未登录'], 400);
-            throw new HttpResponseException($res);
-        }
+        UserOper::valid_pc(true);
     }
 
     public function _empty()
