@@ -9,7 +9,7 @@ use hanbj\weixin\WxHanbj;
 
 class WxOrg
 {
-    const year = 12;
+    const year = 13;
     const name = '2017会长层测评';
     const test = [
         [
