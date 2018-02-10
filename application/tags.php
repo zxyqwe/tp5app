@@ -14,7 +14,7 @@ use \think\App;
 
 Hook::add('app_end', function () {
     $runtime = Debug::getUseTime();
-    if ($runtime > 0.5) {
+    if ($runtime > 1) {
         App::$debug = true;
         Debug::remark('behavior_start', 'time');
     }
