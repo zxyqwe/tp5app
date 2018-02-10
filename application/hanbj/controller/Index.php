@@ -47,7 +47,6 @@ class Index extends Controller
 
     public function debug()
     {
-        $ret = '';
-        return json([$ret, date_default_timezone_get()]);
+        sleep(2);
     }
 }
