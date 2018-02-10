@@ -8,13 +8,18 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+use \think\Debug;
+use \think\Hook;
+use \think\App;
 
-\think\Hook::add('app_end', function () {
-    $runtime = number_format(microtime(true) - THINK_START_TIME, 10);
-    if ($runtime > 1) {
-        \think\App::$debug = true;
+Hook::add('app_end', function () {
+    $runtime = Debug::getUseTime();
+    if ($runtime > 0.5) {
+        App::$debug = true;
+        Debug::remark('behavior_start', 'time');
     }
 });
+
 // 应用行为扩展定义文件
 return [
     // 应用初始化
