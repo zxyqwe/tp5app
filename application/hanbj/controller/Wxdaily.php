@@ -11,7 +11,6 @@ use think\Controller;
 use think\Db;
 use hanbj\weixin\HanbjNotify;
 use hanbj\FeeOper;
-use hanbj\CardOper;
 use app\hanbj\WxPayConfig;
 use app\WxPayUnifiedOrder;
 use app\WxPayApi;
@@ -88,13 +87,7 @@ class Wxdaily extends Controller
             return json(['msg' => '每天可以重新核算一次'], 400);
         }
         cache($key, $key, 86400);
-        $bonus = BonusOper::reCalc($uname);
-        $map['unique_name'] = $uname;
-        $map['code'] = ['in', MemberOper::getMember()];
-        Db::table('member')
-            ->where($map)
-            ->setField('bonus', $bonus);
-        CardOper::renew($uname);
+        $bonus = BonusOper::renew($uname);
         return json(['msg' => $bonus]);
     }
 
