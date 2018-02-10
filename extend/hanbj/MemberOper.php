@@ -142,11 +142,17 @@ class MemberOper
         foreach ($ret as $i) {
             self::Temp2Junior($i);
         }
+
         $name = "MemberOper::daily()";
         if (cache("?$name")) {
             return;
         }
         cache($name, $name, 86300);
+
+        $name = "MemberOper::daily()renew";
+        $renew = !cache("?$name");
+        cache($name, $name, 86400 * 30);
+
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
             $t = self::Temp2Junior($i);
@@ -154,17 +160,26 @@ class MemberOper
                 self::Temp2Unused($i);
             }
         }
+
         $ret = self::list_code(self::JUNIOR);
         foreach ($ret as $i) {
             self::Junior2Temp($i);
+            if ($renew) {
+                BonusOper::renew($i);
+            }
         }
+
         $ret = self::list_code(self::BANNED);
         foreach ($ret as $i) {
             self::Banned2Normal($i);
         }
+
         $ret = self::list_code(self::NORMAL);
         foreach ($ret as $i) {
             self::Normal2Banned($i);
+            if ($renew) {
+                BonusOper::renew($i);
+            }
         }
         self::fixBanned();
     }

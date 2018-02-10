@@ -11,6 +11,7 @@ class BonusOper
     const VOLUNTEER = 30;
     const ACT_NAME = '2018小年';
     const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰'];
+
     //陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸
 
     public static function getWorkers()
@@ -19,6 +20,20 @@ class BonusOper
         //zxyqwe, 魁儿, 花西, 哈利, 紫菀
         $data = array_merge($data, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
         return array_unique($data);
+    }
+
+    public static function renew($uname)
+    {
+        $bonus = self::reCalc($uname);
+        $map['unique_name'] = $uname;
+        $map['code'] = ['in', MemberOper::getMember()];
+        $ret = Db::table('member')
+            ->where($map)
+            ->setField('bonus', $bonus);
+        if ($ret > 0) {
+            CardOper::renew($uname);
+        }
+        return $bonus;
     }
 
     public static function reCalc($uname)
