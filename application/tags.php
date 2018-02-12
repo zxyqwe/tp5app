@@ -17,6 +17,19 @@ Hook::add('app_end', function () {
     if ($runtime > 1) {
         App::$debug = true;
         Debug::remark('behavior_start', 'time');
+        $ret = [
+            'GET' => $_GET,
+            'POST' => $_POST,
+            'Files' => $_FILES,
+            'Cookies' => $_COOKIE,
+            'Session' => isset($_SESSION) ? $_SESSION : [],
+            'Server' => $_SERVER,
+            'Env' => $_ENV,
+            'Const' => get_defined_constants(true)['user']
+        ];
+        foreach ($ret as $k => $v) {
+            trace("[$k] " . json_encode($v));
+        }
     }
 });
 
