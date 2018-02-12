@@ -47,6 +47,5 @@ class Index extends Controller
 
     public function debug()
     {
-        sleep(1.5);
     }
 }
