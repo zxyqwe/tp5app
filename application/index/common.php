@@ -46,6 +46,8 @@ class BiliBase
         }
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
+        $c_info = curl_getinfo($this->curl);
+        trace('[ Curl ] ' . json_encode($c_info), 'debug');
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);

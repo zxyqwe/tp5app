@@ -37,6 +37,8 @@ function Curl_Post($curlPost, $url, $easy = true)
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
     curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
+    $c_info = curl_getinfo($curl);
+    trace('[ Curl ] ' . json_encode($c_info), 'debug');
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
@@ -56,11 +58,14 @@ function Curl_Get($url)
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
     curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
+    $c_info = curl_getinfo($curl);
+    trace('[ Curl ] ' . json_encode($c_info), 'debug');
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-        if(false===strpos($url,'127.0.0.1')){
-        trace(['method' => 'get', 'url' => $url, 'res' => $return_str]);}
+        if (false === strpos($url, '127.0.0.1')) {
+            trace(['method' => 'get', 'url' => $url, 'res' => $return_str]);
+        }
         throw new think\exception\HttpResponseException(json(['msg' => 'Curl_Get ' . $return_str]));
     }
     curl_close($curl);
