@@ -27,8 +27,9 @@ Hook::add('app_end', function () {
             'Env' => $_ENV,
             'Const' => get_defined_constants(true)['user']
         ];
-        foreach ($ret as $k => $v) {
-            trace("[$k] " . json_encode($v));
+        $ret = explode_dict($ret);
+        foreach ($ret as $i) {
+            trace($i);
         }
     }
 });

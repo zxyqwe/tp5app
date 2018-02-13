@@ -1728,8 +1728,7 @@ class WxPayApi
         curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
         //运行curl
         $data = curl_exec($ch);
-        $c_info = curl_getinfo($ch);
-        trace('[ Curl ] ' . json_encode($c_info), 'debug');
+        explode_curl($ch);
         //返回结果
         if ($data) {
             curl_close($ch);
