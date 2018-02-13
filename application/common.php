@@ -156,7 +156,7 @@ function explode_dict($d, $prefix = '')
 function explode_curl($ch)
 {
     $c_info = curl_getinfo($ch);
-    $ret = explode_dict($c_info, 'Curl');
+    $ret = explode_dict($c_info, 'Curl' . microtime(true));
     foreach ($ret as $i) {
         trace($i, 'debug');
     }
