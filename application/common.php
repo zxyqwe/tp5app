@@ -147,7 +147,7 @@ function explode_dict($d, $prefix = '')
         if (is_array($v)) {
             $ret = array_merge($ret, explode_dict($v, "$prefix $k"));
         } else {
-            $ret[] = "[$prefix $k] $v";
+            $ret[] = "[$prefix $k] ".var_export($v,true);
         }
     }
     return $ret;
