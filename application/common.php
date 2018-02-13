@@ -141,6 +141,7 @@ function WX_access($api, $sec, $name)
 
 function explode_dict($d, $prefix = '')
 {
+    $prefix = ltrim($prefix);
     $ret = [];
     foreach ($d as $k => $v) {
         if (is_array($v)) {
