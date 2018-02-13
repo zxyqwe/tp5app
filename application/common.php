@@ -37,8 +37,7 @@ function Curl_Post($curlPost, $url, $easy = true)
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
     curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
-    $c_info = curl_getinfo($curl);
-    trace('[ Curl ] ' . json_encode($c_info), 'debug');
+    explode_curl($curl);
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
@@ -58,8 +57,7 @@ function Curl_Get($url)
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
     curl_setopt($curl, CURLOPT_TIMEOUT, 1);
     $return_str = curl_exec($curl);
-    $c_info = curl_getinfo($curl);
-    trace('[ Curl ] ' . json_encode($c_info), 'debug');
+    explode_curl($curl);
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
@@ -139,4 +137,26 @@ function WX_access($api, $sec, $name)
     trace("Weixin Access " . $res['access_token']);
     cache($name, $res['access_token'], intval($res['expires_in']));
     return $res['access_token'];
+}
+
+function explode_dict($d, $prefix = '')
+{
+    $ret = [];
+    foreach ($d as $k => $v) {
+        if (is_array($v)) {
+            $ret = array_merge($ret, explode_dict($v, $k));
+        } else {
+            $ret[] = "[$prefix $k] $v";
+        }
+    }
+    return $ret;
+}
+
+function explode_curl($ch)
+{
+    $c_info = curl_getinfo($ch);
+    $ret = explode_dict($c_info, 'Curl');
+    foreach ($ret as $i) {
+        trace($i, 'debug');
+    }
 }
