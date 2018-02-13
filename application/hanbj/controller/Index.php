@@ -47,7 +47,5 @@ class Index extends Controller
 
     public function debug()
     {
-        Curl_Get('www.baidu.com');
-        sleep(2);
     }
 }
