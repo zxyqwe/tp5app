@@ -16,6 +16,20 @@ class OrderOper
         ['label' => '续费三年-66折', 'value' => 2, 'fee' => 60]
     ];
 
+    public static function dropfee($outid, $year)
+    {
+        $openid = session('openid');
+        $map['openid'] = $openid;
+        $map['type'] = OrderOper::FEE;
+        $map['value'] = $year;
+        $map['trans'] = '';
+        $map['outid'] = $outid;
+        $d['label'] = '作废';
+        Db::table('order')
+            ->where($map)
+            ->update($d);
+    }
+
     /**
      *
      * @param \app\WxPayUnifiedOrder $input

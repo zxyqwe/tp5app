@@ -117,8 +117,9 @@ class Wxdaily extends Controller
         }
         $order = WxPayApi::unifiedOrder($input);
         if (!array_key_exists('prepay_id', $order)) {
-            $msg = $order['return_msg'] . json_encode($order) . $input->ToXml();
+            $msg = $order['return_msg'] . json_encode($order) . json_encode($input->ToXml());
             trace($msg);
+            OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
         $data['appId'] = WxPayConfig::APPID;
