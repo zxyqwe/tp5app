@@ -390,6 +390,7 @@ class BiliSilver extends BiliBase
         }
         $data = $data['data']['img'];
         $raw = base64_decode($data);
+        $raw = substr($raw, strpos($raw, 'base64,') + 7);
         $image = imagecreatefromstring($raw);
         $width = imagesx($image);
         $height = imagesy($image);
