@@ -338,6 +338,9 @@ class BiliSilver extends BiliBase
             return;
         }
         $captcha = $this->captcha();
+        if ($captcha === false) {
+            return;
+        }
         $urlapi = $this->prefix . "freeSilver/getAward?time_start=$start&time_end=$end&captcha=$captcha";
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
@@ -380,9 +383,13 @@ class BiliSilver extends BiliBase
     {
         $urlapi = $this->prefix . 'freeSilver/getCaptcha?ts=' . time();
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false, false);
-        if (!is_null(json_decode($raw))) {
-            return 0;
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace("captcha $raw");
+            return false;
         }
+        $data = $data['data']['img'];
+        $raw = base64_decode($data);
         $image = imagecreatefromstring($raw);
         $width = imagesx($image);
         $height = imagesy($image);
