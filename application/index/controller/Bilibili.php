@@ -41,6 +41,7 @@ class Bilibili
 
     public function cron()
     {
+        define('TAG_TIMEOUT_EXCEPTION',true);
         $time = date("Y-m-d H:i:s");
         $bili = new BiliOnline();
         if ($bili->lock('cookie')) {
