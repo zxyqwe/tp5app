@@ -381,7 +381,7 @@ class BiliSilver extends BiliBase
 
     private function captcha()
     {
-        $urlapi = $this->prefix . 'freeSilver/getCaptcha?ts=' . time();
+        $urlapi = $this->prefix . 'lottery/v1/SilverBox/getCaptcha?ts=' . time();
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
