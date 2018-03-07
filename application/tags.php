@@ -13,6 +13,9 @@ use \think\Hook;
 use \think\App;
 
 Hook::add('app_end', function () {
+    if (defined('TAG_TIMEOUT_EXCEPTION')) {
+        return;
+    }
     $runtime = Debug::getUseTime();
     if ($runtime > 1) {
         App::$debug = true;
