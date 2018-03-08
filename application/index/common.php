@@ -11,7 +11,7 @@ class BiliBase
     protected $prefix = 'https://api.live.bilibili.com/';
     protected $cookie = '';
     protected $csrf_token = '';
-    protected $room_id = 218;
+    protected $room_id = 5294;
     protected $ruid = 116683;
     protected $uid = 649681;
     private $curl;
