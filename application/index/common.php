@@ -220,7 +220,7 @@ class BiliSend extends BiliBase
         if ($data['code'] == -500) {
             return;
         }
-        $urlapi = $this->prefix . 'giftBag/sendDaily?_=' . round(microtime(true) * 1000);
+        $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
@@ -238,6 +238,7 @@ class BiliSend extends BiliBase
             return;
         }
         $this->sign();
+        /*
         $urlapi = $this->prefix . 'giftBag/getSendGift';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
@@ -248,6 +249,7 @@ class BiliSend extends BiliBase
         foreach ($data['data'] as $item) {
             trace("getSendGift {$item['giftTypeName']}");
         }
+        */
         $this->lock('getSendGift', $this->long_timeout());
     }
 
