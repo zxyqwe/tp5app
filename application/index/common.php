@@ -11,7 +11,7 @@ class BiliBase
     protected $prefix = 'https://api.live.bilibili.com/';
     protected $cookie = '';
     protected $csrf_token = '';
-    protected $room_id = 5294;//218
+    protected $room_id = 218;
     protected $ruid = 116683;
     protected $uid = 649681;
     private $curl;
@@ -67,7 +67,7 @@ class BiliBase
         }
         if ($sub && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = urlencode(substr($return_str, 0, 100));
+            $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
         }
         return $return_str;
     }
