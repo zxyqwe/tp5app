@@ -83,7 +83,7 @@ class BiliBase
                 return null;
             case 1:
                 if (null !== $res) {
-                    cache($name, $res);
+                    cache($name, $res, $this->long_timeout());
                     return $res;
                 }
                 return cache($name);
@@ -343,7 +343,7 @@ class BiliSilver extends BiliBase
         if ($captcha === false) {
             return;
         }
-        $urlapi = $this->prefix . "freeSilver/getAward?time_start=$start&time_end=$end&captcha=$captcha";
+        $urlapi = $this->prefix . "lottery/v1/SilverBox/getAward?time_start=$start&time_end=$end&captcha=$captcha";
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
