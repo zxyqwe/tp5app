@@ -366,7 +366,7 @@ class BiliSilver extends BiliBase
         if ($this->lock('silverTask')) {
             return $this->lock('silverTask', 1);
         }
-        $urlapi = $this->prefix . 'FreeSilver/getCurrentTask';
+        $urlapi = $this->prefix . 'lottery/v1/SilverBox/getCurrentTask';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         switch ($data['code']) {
