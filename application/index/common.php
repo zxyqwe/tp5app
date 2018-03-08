@@ -389,9 +389,13 @@ class BiliSilver extends BiliBase
             return false;
         }
         $data = $data['data']['img'];
-        $raw = base64_decode($data);
-        $raw = substr($raw, strpos($raw, 'base64,') + 7);
+        $raw = substr($data, strpos($data, 'base64,') + 7);
+        $raw = base64_decode($raw);
         $image = imagecreatefromstring($raw);
+        if ($image === false) {
+            trace("captcha image $raw");
+            return false;
+        }
         $width = imagesx($image);
         $height = imagesy($image);
         $vis = [];
