@@ -66,6 +66,7 @@ class Bilibili
 
     public function un()
     {
+        define('TAG_TIMEOUT_EXCEPTION',true);
         $sk = input('post.sk');
         if (config('raffle_sk') !== $sk) {
             return json(['msg' => 'sk'], 400);
