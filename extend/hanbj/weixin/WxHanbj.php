@@ -85,6 +85,7 @@ class WxHanbj
                         $cont = $cont['msg'];
                     } catch (HttpResponseException $e) {
                         $cont = '机器人不在线';
+                        define('TAG_TIMEOUT_EXCEPTION',true);
                     }
                     $cont = "检查口令...失败\n身份验证...成功\n\n" . $cont;
                     return self::auto($from, $to, $cont);
