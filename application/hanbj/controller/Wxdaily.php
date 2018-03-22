@@ -159,15 +159,15 @@ class Wxdaily extends Controller
             return json(['msg' => '欠费'], 400);
         }
         $tempid = 0;
-        if (cache("?json_tempid" . $uniq)) {
-            $tempid = cache("json_tempid" . $uniq);
+        if (cache("?json_tempid$uniq")) {
+            $tempid = cache("json_tempid$uniq");
         } else {
             while ($tempid === 0) {
                 $tempnum = rand(1000, 9999);
-                if (!cache('?tempnum' . $tempnum)) {
-                    cache('tempnum' . $tempnum, '', 1800);
+                if (!cache("?tempnum$tempnum")) {
+                    cache("tempnum$tempnum", '', 1800);
                     $tempid = $tempnum;
-                    cache("json_tempid" . $uniq, $tempid, 1700);
+                    cache("json_tempid$uniq", $tempid, 1700);
                 }
             }
         }
@@ -175,7 +175,8 @@ class Wxdaily extends Controller
         $data['time2'] = date("H:i:s");
         $data['uniq'] = $uniq;
         $data['nick'] = session('tieba_id');
-        cache('tempnum' . $tempid, json_encode($data), 1800);
+        trace("临时身份 $tempid {$data['uniq']} {$data['nick']}");
+        cache("tempnum$tempid", json_encode($data), 1800);
         return json(['msg' => 'OK', 'temp' => $tempid]);
     }
 

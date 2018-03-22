@@ -74,23 +74,24 @@ class WxHanbj
                     $org = new WxOrg();
                     $cont = $org->listobj($from);
                     return self::auto($from, $to, $cont, '投票');
-                } elseif (strlen($cont) === 4 && is_numeric($cont) && cache('?tempnum' . $cont)) {
-                    $cont = cache('tempnum' . $cont);
+                } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
+                    $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));
-                    return self::auto($from, $to, $cont, '临时身份');
+                    return self::auto($from, $to, $cont, "临时身份 $cont");
                 } elseif (cache("?chatbot$from")) {
+                    $old_cont = $cont;
                     try {
                         $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . rawurlencode($cont));
                         $cont = json_decode($cont, true);
                         $cont = $cont['msg'];
                     } catch (HttpResponseException $e) {
                         $cont = '机器人不在线';
-                        define('TAG_TIMEOUT_EXCEPTION',true);
+                        define('TAG_TIMEOUT_EXCEPTION', true);
                     }
-                    $cont = "检查口令...失败\n身份验证...成功\n\n" . $cont;
+                    $cont = "检查口令...失败\n身份验证...成功\n\n文字信息：$old_cont\n\n$cont";
                     return self::auto($from, $to, $cont);
                 }
-                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：" . $cont;
+                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：$cont";
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
@@ -115,9 +116,9 @@ class WxHanbj
     private static function auto($to, $from, $type, $debug_msg = '')
     {
         if (empty($debug_msg)) {
-            trace("TO => $to, TEXT => " . preg_replace('/\s*/', '', $type));
+            trace("TO => $to, TEXT => " . preg_replace('/\s*/', '|', $type));
         } else {
-            trace($to . ' ' . preg_replace('/\s*/', '', $debug_msg));
+            trace($to . ' ' . preg_replace('/\s*/', '|', $debug_msg));
         }
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
