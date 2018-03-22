@@ -116,9 +116,9 @@ class WxHanbj
     private static function auto($to, $from, $type, $debug_msg = '')
     {
         if (empty($debug_msg)) {
-            trace("TO => $to, TEXT => " . preg_replace('/\s*/', '|', $type));
+            trace("TO => $to, TEXT => " . str_replace('\n', '|', $type));
         } else {
-            trace($to . ' ' . preg_replace('/\s*/', '|', $debug_msg));
+            trace($to . ' ' . str_replace('\n', '|', $debug_msg));
         }
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
