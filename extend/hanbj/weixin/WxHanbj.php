@@ -70,6 +70,7 @@ class WxHanbj
                 trace(json_encode($msg));
             case 'text':
                 $cont = (string)$msg->Content;
+                    $old_cont = $cont;
                 if ($cont === '投票') {
                     $org = new WxOrg();
                     $cont = $org->listobj($from);
@@ -77,9 +78,8 @@ class WxHanbj
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));
-                    return self::auto($from, $to, $cont, "临时身份 $cont");
+                    return self::auto($from, $to, $cont, "临时身份 $old_cont");
                 } elseif (cache("?chatbot$from")) {
-                    $old_cont = $cont;
                     try {
                         $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . rawurlencode($cont));
                         $cont = json_decode($cont, true);
