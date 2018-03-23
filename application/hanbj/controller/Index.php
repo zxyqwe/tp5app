@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\UserOper;
+use hanbj\MemberOper;
 use think\Controller;
 use think\exception\HttpResponseException;
 
@@ -47,5 +48,6 @@ class Index extends Controller
 
     public function debug()
     {
+        MemberOper::create_unique_unused();
     }
 }
