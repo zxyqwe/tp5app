@@ -220,6 +220,7 @@ class Mobile extends Controller
                 foreach ($ret as $i) {
                     if (false !== strpos($i, '夏')
                         || false !== strpos($i, '商')
+                        || false !== strpos($i, '周')
                     ) {
                         $rst[] = $i;
                     }
