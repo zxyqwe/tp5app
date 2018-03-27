@@ -84,4 +84,22 @@ class Analysis extends Controller
         }
         return json($ret);
     }
+
+    public function json_tree()
+    {
+        $map['f.master'] = ['neq', ''];
+        $map['f.code'] = ['not in', [MemberOper::UNUSED, MemberOper::JUNIOR, MemberOper::TEMPUSE]];
+        $tmp = Db::table('member')
+            ->alias('f')
+            ->where($map)
+            ->cache(600)
+            ->field([
+                'f.tieba_id as t',
+                'f.unique_name as u',
+                'f.master as m',
+                'f.code as c'
+            ])
+            ->select();
+        return json($tmp);
+    }
 }
