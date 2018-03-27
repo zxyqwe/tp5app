@@ -1668,7 +1668,7 @@ var tree = (function ($, w, undefined) {
                 });
 
             node.append("circle")
-                .attr("r", 2.5);
+                .attr("r", 7.5);
 
             node.append("text")
                 .attr("dy", "0.31em")
