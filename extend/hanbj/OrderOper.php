@@ -87,7 +87,7 @@ class OrderOper
                 'oper' => $oper,
                 'code' => 1,
                 'fee_time' => $d,
-                'bonus' => BonusOper::FEE
+                'bonus' => BonusOper::getFeeBonus()
             ];
         }
         $up = Db::table('nfee')
