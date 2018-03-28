@@ -1,0 +1,45 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>设置系统参数</h1>
+        <div id="body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">活动名称</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="不应该显示！！！">
+                            <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">Go!</button>
+                        </span>
+                        </div><!-- /input-group -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nav = 'nav3_5';
+    $(window).on("load", function () {
+        wToken.init();
+    });
+    var wToken = (function ($, Vue, w, undefined) {
+        'use strict';
+        var build_vue = function (refresh) {
+            var vmain = new Vue({
+                el: '#body',
+                data: {},
+                methods: {
+                    get_res: function () {
+                    }
+                }
+            });
+        };
+        var init = function () {
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
+</script>
