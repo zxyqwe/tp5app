@@ -4,13 +4,13 @@
         <h1>设置系统参数</h1>
         <div id="body">
             <div class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">活动名称</label>
-                    <div class="col-sm-10">
+                <div class="form-group" v-for="item in settings">
+                    <label class="col-sm-2 control-label">{{ item.name }}</label>
+                    <div class="col-sm-4">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="不应该显示！！！">
+                            <input type="text" class="form-control" placeholder="不应该显示！！！" v-model="item.value">
                             <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
+                            <button class="btn btn-default" type="button" v-on:click="up(item)">提交</button>
                         </span>
                         </div><!-- /input-group -->
                     </div>
@@ -29,14 +29,29 @@
         var build_vue = function (refresh) {
             var vmain = new Vue({
                 el: '#body',
-                data: {},
+                data: {
+                    settings: [
+                        {
+                            name: '123',
+                            key: 'asd',
+                            value: 'aee'
+                        },
+                        {
+                            name: '123s',
+                            key: 'asds',
+                            value: 'aees'
+                        }
+                    ]
+                },
                 methods: {
-                    get_res: function () {
+                    up: function (item) {
+                        console.log(item);
                     }
                 }
             });
         };
         var init = function () {
+            build_vue();
         };
         return {
             init: init
