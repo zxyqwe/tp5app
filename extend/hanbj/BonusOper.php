@@ -7,7 +7,7 @@ use think\Db;
 
 class BonusOper
 {
-    const FEE = 30;
+    const _FEE_BONUS = 30;
     const _ACT_BONUS = 5;
     const VOLUNTEER = 30;
     const _ACT_NAME = '2018小年';
@@ -29,6 +29,11 @@ class BonusOper
     public static function getActBonus()
     {
         return Cache::get('BonusOper::ACT_BONUS', self::_ACT_BONUS);
+    }
+
+    public static function getFeeBonus()
+    {
+        return Cache::get('BonusOper::FEE_BONUS', self::_FEE_BONUS);
     }
 
     public static function renew($uname)

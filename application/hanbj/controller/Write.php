@@ -80,7 +80,7 @@ class Write extends Controller
                 'oper' => $oper,
                 'code' => $type,
                 'fee_time' => $d,
-                'bonus' => $type * BonusOper::FEE
+                'bonus' => $type * BonusOper::getFeeBonus()
             ];
             FeeOper::uncache($tmp['u']);
         }
