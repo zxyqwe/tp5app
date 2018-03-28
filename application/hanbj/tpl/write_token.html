@@ -2,7 +2,7 @@
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>设置系统参数</h1>
-        <div id="body">
+        <div id="body" class="sr-only">
             <div class="form-horizontal">
                 <div class="form-group" v-for="item in settings">
                     <label class="col-sm-2 control-label">{{ item.name }}</label>
@@ -35,8 +35,28 @@
                 },
                 methods: {
                     up: function (item) {
-                        console.log(item);
+                        w.waitloading();
+                        $.ajax({
+                            type: "POST",
+                            url: w.u18,
+                            data: {
+                                key: item.key,
+                                value: item.value
+                            },
+                            dataType: "json",
+                            success: function (msg) {
+                            },
+                            error: function (msg) {
+                                w.msgto(msg);
+                            },
+                            complete: function () {
+                                w.cancelloading();
+                            }
+                        });
                     }
+                },
+                ready: function () {
+                    $('#body').removeClass('sr-only');
                 }
             });
         };

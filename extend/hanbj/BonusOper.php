@@ -28,17 +28,17 @@ class BonusOper
 
     public static function getActBonus()
     {
-        return Cache::get('BonusOper::ACT_BONUS', self::_ACT_BONUS);
+        return intval(Cache::get('BonusOper::ACT_BONUS', self::_ACT_BONUS));
     }
 
     public static function getFeeBonus()
     {
-        return Cache::get('BonusOper::FEE_BONUS', self::_FEE_BONUS);
+        return intval(Cache::get('BonusOper::FEE_BONUS', self::_FEE_BONUS));
     }
 
     public static function getVolBonus()
     {
-        return Cache::get('BonusOper::VOLUNTEER', self::_VOLUNTEER);
+        return intval(Cache::get('BonusOper::VOLUNTEER', self::_VOLUNTEER));
     }
 
     public static function renew($uname)

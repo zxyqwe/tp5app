@@ -253,6 +253,24 @@ class Write extends Controller
                     ]
                 ]);
             case 'POST':
+                $key = input('post.key');
+                $value = input('post.value');
+                switch ($key) {
+                    case '_ACT_NAME':
+                        cache('BonusOper::ACT_NAME', $value);
+                        return json(['msg' => 'ok']);
+                    case '_VOLUNTEER':
+                        cache('BonusOper::VOLUNTEER', intval($value));
+                        return json(['msg' => 'ok']);
+                    case '_ACT_BONUS':
+                        cache('BonusOper::ACT_BONUS', intval($value));
+                        return json(['msg' => 'ok']);
+                    case '_FEE_BONUS':
+                        cache('BonusOper::FEE_BONUS', intval($value));
+                        return json(['msg' => 'ok']);
+                    default:
+                        return json(['msg' => $key], 400);
+                }
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
