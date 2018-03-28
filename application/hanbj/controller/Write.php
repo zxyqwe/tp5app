@@ -34,7 +34,7 @@ class Write extends Controller
 
     public function volunteer()
     {
-        $data['name'] = BonusOper::ACT_NAME;
+        $data['name'] = BonusOper::getActName();
         $data['act'] = BonusOper::ACT;
         $data['vol'] = BonusOper::VOLUNTEER;
         return view('volunteer', ['data' => $data]);
@@ -116,7 +116,7 @@ class Write extends Controller
                 'oper' => $oper,
                 'act_time' => $d,
                 'bonus' => BonusOper::VOLUNTEER,
-                'name' => BonusOper::ACT_NAME . '志愿者'
+                'name' => BonusOper::getActName() . '志愿者'
             ];
         }
         Db::startTrans();

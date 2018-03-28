@@ -69,7 +69,7 @@ class System extends Controller
         $map['会费增加积分'] = BonusOper::FEE;
         $map['志愿者增加积分'] = BonusOper::VOLUNTEER;
         $map['活动增加积分'] = BonusOper::ACT;
-        $map['活动预置名称'] = BonusOper::ACT_NAME;
+        $map['活动预置名称'] = BonusOper::getActName();
         $res = Db::table('member')
             ->where(['unique_name' => ['in', BonusOper::getWorkers()]])
             ->field('tieba_id as t')

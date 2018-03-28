@@ -54,7 +54,7 @@ class Wxwork extends Controller
             return json(['msg' => '查无此人：' . $code], 400);
         }
         $res['fee'] = FeeOper::cache_fee($res['uni']);
-        $res['act'] = BonusOper::ACT_NAME;
+        $res['act'] = BonusOper::getActName();
         return json($res);
     }
 
@@ -84,13 +84,13 @@ class Wxwork extends Controller
         $data['unique_name'] = $res['unique_name'];
         $data['oper'] = session('unique_name');
         $data['act_time'] = date("Y-m-d H:i:s");
-        $data['name'] = BonusOper::ACT_NAME;
+        $data['name'] = BonusOper::getActName();
         $data['bonus'] = BonusOper::ACT;
         try {
             Db::table('activity')
                 ->data($data)
                 ->insert();
-            WxTemp::regAct($res['openid'], $res['unique_name'], BonusOper::ACT_NAME);
+            WxTemp::regAct($res['openid'], $res['unique_name'], BonusOper::getActName());
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
             $e = '' . $e;
@@ -107,7 +107,7 @@ class Wxwork extends Controller
         $own = input('post.own', false, FILTER_VALIDATE_BOOLEAN);
         $size = 5;
         $offset = max(0, $offset);
-        $act = BonusOper::ACT_NAME;
+        $act = BonusOper::getActName();
         $map['name'] = $act;
         if ($own) {
             $map['f.oper'] = session('unique_name');

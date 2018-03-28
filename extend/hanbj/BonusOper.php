@@ -2,6 +2,7 @@
 
 namespace hanbj;
 
+use think\Cache;
 use think\Db;
 
 class BonusOper
@@ -10,9 +11,7 @@ class BonusOper
     const ACT = 20;
     const VOLUNTEER = 30;
     const ACT_NAME = '2018小年';
-    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰'];
-
-    //陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸
+    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰'];//陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸
 
     public static function getWorkers()
     {
@@ -20,6 +19,11 @@ class BonusOper
         //zxyqwe, 魁儿, 花西, 哈利, 紫菀
         $data = array_merge($data, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
         return array_unique($data);
+    }
+
+    public static function getActName()
+    {
+        return Cache::get('BonusOper::ACT_NAME', self::ACT_NAME);
     }
 
     public static function renew($uname)
