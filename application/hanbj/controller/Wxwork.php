@@ -85,7 +85,7 @@ class Wxwork extends Controller
         $data['oper'] = session('unique_name');
         $data['act_time'] = date("Y-m-d H:i:s");
         $data['name'] = BonusOper::getActName();
-        $data['bonus'] = BonusOper::ACT;
+        $data['bonus'] = BonusOper::getActBonus();
         try {
             Db::table('activity')
                 ->data($data)

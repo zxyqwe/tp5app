@@ -8,9 +8,9 @@ use think\Db;
 class BonusOper
 {
     const FEE = 30;
-    const ACT = 20;
+    const _ACT_BONUS = 5;
     const VOLUNTEER = 30;
-    const ACT_NAME = '2018小年';
+    const _ACT_NAME = '2018小年';
     const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰'];//陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸
 
     public static function getWorkers()
@@ -23,7 +23,12 @@ class BonusOper
 
     public static function getActName()
     {
-        return Cache::get('BonusOper::ACT_NAME', self::ACT_NAME);
+        return Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
+    }
+
+    public static function getActBonus()
+    {
+        return Cache::get('BonusOper::ACT_BONUS', self::_ACT_BONUS);
     }
 
     public static function renew($uname)

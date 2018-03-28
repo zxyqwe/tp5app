@@ -35,7 +35,7 @@ class Write extends Controller
     public function volunteer()
     {
         $data['name'] = BonusOper::getActName();
-        $data['act'] = BonusOper::ACT;
+        $data['act'] = BonusOper::getActBonus();
         $data['vol'] = BonusOper::VOLUNTEER;
         return view('volunteer', ['data' => $data]);
     }
