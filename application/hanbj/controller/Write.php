@@ -255,6 +255,8 @@ class Write extends Controller
             case 'POST':
                 $key = input('post.key');
                 $value = input('post.value');
+                $unique = session('unique_name');
+                trace("$unique $key $value");
                 switch ($key) {
                     case '_ACT_NAME':
                         cache('BonusOper::ACT_NAME', $value);
