@@ -225,4 +225,36 @@ class Write extends Controller
                 return json(['msg' => $this->request->method()], 400);
         }
     }
+
+    public function json_token()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                return json([
+                    [
+                        'name' => '活动预置名称',
+                        'key' => '_ACT_NAME',
+                        'value' => BonusOper::getActName()
+                    ],
+                    [
+                        'name' => '志愿者增加积分',
+                        'key' => '_VOLUNTEER',
+                        'value' => BonusOper::getVolBonus()
+                    ],
+                    [
+                        'name' => '活动增加积分',
+                        'key' => '_ACT_BONUS',
+                        'value' => BonusOper::getActBonus()
+                    ],
+                    [
+                        'name' => '会费增加积分',
+                        'key' => '_FEE_BONUS',
+                        'value' => BonusOper::getFeeBonus()
+                    ]
+                ]);
+            case 'POST':
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
+    }
 }
