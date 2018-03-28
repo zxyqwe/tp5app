@@ -67,7 +67,7 @@ class System extends Controller
         $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
         $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
         $map['会费增加积分'] = BonusOper::getFeeBonus();
-        $map['志愿者增加积分'] = BonusOper::VOLUNTEER;
+        $map['志愿者增加积分'] = BonusOper::getVolBonus();
         $map['活动增加积分'] = BonusOper::getActBonus();
         $map['活动预置名称'] = BonusOper::getActName();
         $res = Db::table('member')

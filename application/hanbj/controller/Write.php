@@ -36,7 +36,7 @@ class Write extends Controller
     {
         $data['name'] = BonusOper::getActName();
         $data['act'] = BonusOper::getActBonus();
-        $data['vol'] = BonusOper::VOLUNTEER;
+        $data['vol'] = BonusOper::getVolBonus();
         return view('volunteer', ['data' => $data]);
     }
 
@@ -115,7 +115,7 @@ class Write extends Controller
                 'unique_name' => $tmp['u'],
                 'oper' => $oper,
                 'act_time' => $d,
-                'bonus' => BonusOper::VOLUNTEER,
+                'bonus' => BonusOper::getVolBonus(),
                 'name' => BonusOper::getActName() . '志愿者'
             ];
         }
