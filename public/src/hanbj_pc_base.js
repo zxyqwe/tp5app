@@ -58,7 +58,7 @@ var nav_active = (function ($, w, undefined) {
         var pub = 'pub/';
         var index = 'index/';
         var system = 'system/';
-        var analysis='analysis/';
+        var analysis = 'analysis/';
         w.u9 = base + pub + 'json_fame';
         w.u11 = base + pub + 'json_login';
         w.u5 = base + daily + 'actlog';
@@ -76,6 +76,7 @@ var nav_active = (function ($, w, undefined) {
         w.u4 = base + write + 'vol_add';
         w.u10 = base + write + 'fame_add';
         w.u15 = base + write + 'json_create';
+        w.u18 = base + write + 'json_token';
     };
     var init = function () {
         dict();

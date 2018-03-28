@@ -26,22 +26,12 @@
     });
     var wToken = (function ($, Vue, w, undefined) {
         'use strict';
+        var settingsdata;
         var build_vue = function (refresh) {
             var vmain = new Vue({
                 el: '#body',
                 data: {
-                    settings: [
-                        {
-                            name: '123',
-                            key: 'asd',
-                            value: 'aee'
-                        },
-                        {
-                            name: '123s',
-                            key: 'asds',
-                            value: 'aees'
-                        }
-                    ]
+                    settings: settingsdata
                 },
                 methods: {
                     up: function (item) {
@@ -51,7 +41,22 @@
             });
         };
         var init = function () {
-            build_vue();
+            w.waitloading();
+            $.ajax({
+                type: "GET",
+                url: w.u18,
+                dataType: "json",
+                success: function (msg) {
+                    settingsdata = msg;
+                    build_vue();
+                },
+                error: function (msg) {
+                    w.msgto(msg);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
         };
         return {
             init: init
