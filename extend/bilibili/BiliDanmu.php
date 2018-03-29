@@ -4,16 +4,36 @@ namespace bilibili;
 
 class BiliDanmu extends BiliBase
 {
-    public function unknown_smallTV($real_roomid)
+    private function _unknown($real_roomid, $url, $key)
     {
-        $urlapi = $this->prefix . 'gift/v2/smalltv/check?roomid=' . $real_roomid;
+        $urlapi = $this->prefix . $url . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("unknown_smallTV $raw");
+            trace("$key $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
+        return $data;
+    }
+
+    public function unknown_lottery()
+    {
+    }
+
+    public function unknown_raffle($real_roomid)
+    {
+        $data = $this->_unknown($real_roomid, 'activity/v1/Raffle/check?roomid=', 'unknown_raffle');
+        $ret = [];
+        foreach ($data as $item) {
+            $this->_handle_raffle($real_roomid, $item, $ret);
+        }
+        return json($ret);
+    }
+
+    public function unknown_smallTV($real_roomid)
+    {
+        $data = $this->_unknown($real_roomid, 'gift/v2/smalltv/check?roomid=', 'unknown_smallTV');
         $ret = [];
         foreach ($data as $item) {
             $this->_handle_smallTV($real_roomid, $item, $ret);
@@ -21,7 +41,7 @@ class BiliDanmu extends BiliBase
         return json($ret);
     }
 
-    private function _handle_smallTV($real_roomid, $item, &$ret)
+    private function _handle($real_roomid, $item, $key, $url, &$ret)
     {
         $payload = [
             'roomid' => $real_roomid,
@@ -29,11 +49,17 @@ class BiliDanmu extends BiliBase
         ];
         $ret[] = $payload;
         $payload = http_build_query($payload);
-        if ($this->lock("unknown_smallTV$payload")) {
+        if ($this->lock("$key$payload")) {
             return;
         }
-        $urlapi = $this->prefix . 'gift/v2/smalltv/join?' . $payload;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $urlapi = $this->prefix . $url;
+        if (false !== strpos($url, '?')) {
+            $urlapi .= $payload;
+            $postdata = false;
+        } else {
+            $postdata = $payload;
+        }
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
         $join = json_decode($raw, true);
         if (in_array($join['code'], [0, 65531])
             || false !== strpos($raw, '已加入')
@@ -41,13 +67,23 @@ class BiliDanmu extends BiliBase
             || false !== strpos($raw, '已经结束')
             || false !== strpos($raw, '访问被拒绝')
         ) {
-            $this->lock("unknown_smallTV$payload", $this->long_timeout());
+            $this->lock("$key$payload", $this->long_timeout());
             return;
         }
         if (false !== strpos($raw, '不存在')) {
             return;
         }
-        trace('unknown_smallTV ' . json_encode($item) . $raw);
+        trace("$key " . json_encode($item) . $raw);
+    }
+
+    private function _handle_raffle($real_roomid, $item, &$ret)
+    {
+        $this->_handle($real_roomid, $item, 'unknown_raffle', 'activity/v1/Raffle/join', $ret);
+    }
+
+    private function _handle_smallTV($real_roomid, $item, &$ret)
+    {
+        $this->_handle($real_roomid, $item, 'unknown_smallTV', 'gift/v2/smalltv/join?', $ret);
     }
 
     public function notice_any($giftId, $real_roomid, $url, $key)
@@ -97,55 +133,5 @@ class BiliDanmu extends BiliBase
                 trace("notice_any $raw");
                 return json(['msg' => "1 $raw"], 400);
         }
-    }
-
-    public function unknown_lottery()
-    {
-    }
-
-    public function unknown_raffle($real_roomid)
-    {
-        $urlapi = $this->prefix . 'activity/v1/Raffle/check?roomid=' . $real_roomid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
-        $data = json_decode($raw, true);
-        if ($data['code'] !== 0) {
-            trace("unknown_raffle $raw");
-            return json(['msg' => "1 $raw"], 400);
-        }
-        $data = $data['data'];
-        $ret = [];
-        foreach ($data as $item) {
-            $this->_handle_raffle($real_roomid, $item, $ret);
-        }
-        return json($ret);
-    }
-
-    private function _handle_raffle($real_roomid, $raffle, &$ret)
-    {
-        $payload = [
-            'roomid' => $real_roomid,
-            'raffleId' => $raffle['raffleId']
-        ];
-        $ret[] = $payload;
-        $payload = http_build_query($payload);
-        if ($this->lock("unknown_raffle$payload")) {
-            return;
-        }
-        $urlapi = $this->prefix . 'activity/v1/Raffle/join';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $payload);
-        $join = json_decode($raw, true);
-        if (in_array($join['code'], [0, 65531])
-            || false !== strpos($raw, '已加入')
-            || false !== strpos($raw, '已结束')
-            || false !== strpos($raw, '已经结束')
-            || false !== strpos($raw, '访问被拒绝')
-        ) {
-            $this->lock("unknown_raffle$payload", $this->long_timeout());
-            return;
-        }
-        if (false !== strpos($raw, '不存在')) {
-            return;
-        }
-        trace('unknown_raffle ' . json_encode($raffle) . $raw);
     }
 }
