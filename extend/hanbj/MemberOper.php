@@ -247,6 +247,8 @@ class MemberOper
             }
             trace("$unique_name TEMPUSE UNUSED 1");
             FeeOper::clear($unique_name);
+            ActivityOper::clear($unique_name);
+            FameOper::clear($unique_name);
             Db::commit();
             return true;
         } catch (\Exception $e) {
