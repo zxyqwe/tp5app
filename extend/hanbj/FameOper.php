@@ -44,4 +44,16 @@ class FameOper
         }
         return $data;
     }
+
+    public static function clear($uname)
+    {
+        $map['unique_name'] = $uname;
+        $data['unique_name'] = $uname . date("Y-m-d H:i:s");
+        $ret = Db::table('fame')
+            ->where($map)
+            ->update($data);
+        if (intval($ret) !== 0) {
+            trace("Fame Clear $uname $ret");
+        }
+    }
 }

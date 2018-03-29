@@ -46,7 +46,9 @@ class FeeOper
         $ret = Db::table('nfee')
             ->where($map)
             ->update($data);
-        trace("Fee Clear $uname $ret");
+        if (intval($ret) !== 0) {
+            trace("Fee Clear $uname $ret");
+        }
         self::uncache($uname);
     }
 
