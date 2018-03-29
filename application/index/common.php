@@ -483,6 +483,7 @@ class BiliDanmu extends BiliBase
             || false !== strpos($raw, '已加入')
             || false !== strpos($raw, '已结束')
             || false !== strpos($raw, '已经结束')
+            || false !== strpos($raw, '访问被拒绝')
         ) {
             $this->lock("unknown_smallTV$payload", $this->long_timeout());
             return;
@@ -490,7 +491,7 @@ class BiliDanmu extends BiliBase
         if (false !== strpos($raw, '不存在')) {
             return;
         }
-        trace('unknown_smallTV' . json_encode($item) . $raw);
+        trace('unknown_smallTV ' . json_encode($item) . $raw);
     }
 
     public function notice_any($giftId, $real_roomid, $url, $key)
@@ -581,6 +582,7 @@ class BiliDanmu extends BiliBase
             || false !== strpos($raw, '已加入')
             || false !== strpos($raw, '已结束')
             || false !== strpos($raw, '已经结束')
+            || false !== strpos($raw, '访问被拒绝')
         ) {
             $this->lock("unknown_raffle$payload", $this->long_timeout());
             return;
@@ -588,7 +590,7 @@ class BiliDanmu extends BiliBase
         if (false !== strpos($raw, '不存在')) {
             return;
         }
-        trace('unknown_raffle' . json_encode($raffle) . $raw);
+        trace('unknown_raffle ' . json_encode($raffle) . $raw);
     }
 }
 
