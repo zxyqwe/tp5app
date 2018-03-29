@@ -34,6 +34,7 @@ class System extends Controller
 
     public function runlog($data = -1)
     {
+        define('TAG_TIMEOUT_EXCEPTION',true);
         MemberOper::daily();
         if (session('name') !== '坎丙午') {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
