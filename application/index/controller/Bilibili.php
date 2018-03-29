@@ -3,10 +3,10 @@
 namespace app\index\controller;
 
 
-use app\index\BiliDanmu;
-use app\index\BiliOnline;
-use app\index\BiliSend;
-use app\index\BiliSilver;
+use bilibili\BiliDanmu;
+use bilibili\BiliOnline;
+use bilibili\BiliSend;
+use bilibili\BiliSilver;
 
 class Bilibili
 {
@@ -41,7 +41,7 @@ class Bilibili
 
     public function cron()
     {
-        define('TAG_TIMEOUT_EXCEPTION',true);
+        define('TAG_TIMEOUT_EXCEPTION', true);
         $time = date("Y-m-d H:i:s");
         $bili = new BiliOnline();
         if ($bili->lock('cookie')) {
@@ -66,7 +66,7 @@ class Bilibili
 
     public function un()
     {
-        define('TAG_TIMEOUT_EXCEPTION',true);
+        define('TAG_TIMEOUT_EXCEPTION', true);
         $sk = input('post.sk');
         if (config('raffle_sk') !== $sk) {
             return json(['msg' => 'sk'], 400);
