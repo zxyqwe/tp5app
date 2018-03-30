@@ -117,7 +117,8 @@ class BiliDanmu extends BiliBase
                 return json(['msg' => $raw], 400);
             case 0:
                 $this->lock("$key$payload", -1);
-                if (false !== strpos($data['msg'], '很遗憾')) {
+                if (false !== strpos($data['msg'], '很遗憾')
+                   || false !== strpos($data['msg'], '错过')) {
                     return json(['msg' => 'NOTHING']);
                 }
                 $data = $data['data'];
