@@ -88,10 +88,10 @@ class WxHanbj
                         $cont = '机器人不在线';
                         define('TAG_TIMEOUT_EXCEPTION', true);
                     }
-                    $cont = "检查口令...失败\n身份验证...成功\n\n文字信息：$old_cont\n\n$cont";
+                    $cont = "检查口令...失败\n身份验证...成功\n\n文字信息：$old_cont\n\n$cont\n\n欢迎关注，此号仅做汉北平台技术支持使用，如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing";
                     return self::auto($from, $to, $cont);
                 }
-                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：$cont";
+                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：$cont\n\n欢迎关注，此号仅做汉北平台技术支持使用，如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing";
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
