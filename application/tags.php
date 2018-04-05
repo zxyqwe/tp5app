@@ -17,7 +17,7 @@ Hook::add('app_end', function () {
         return;
     }
     $runtime = Debug::getUseTime();
-    if ($runtime > 1) {
+    if ($runtime > 1.5) {
         App::$debug = true;
         Debug::remark('behavior_start', 'time');
         $ret = [

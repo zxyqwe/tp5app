@@ -44,6 +44,9 @@ class Bilibili
         define('TAG_TIMEOUT_EXCEPTION', true);
         $time = date("Y-m-d H:i:s");
         $bili = new BiliOnline();
+        if ($bili->lock("Bili400")) {
+            return json(['msg' => 'Bili400']);
+        }
         if ($bili->lock('cookie')) {
             return json(['msg' => 'too fast', 'time' => $time]);
         }
@@ -72,6 +75,9 @@ class Bilibili
             return json(['msg' => 'sk'], 400);
         }
         $bili = new BiliDanmu();
+        if ($bili->lock("Bili400")) {
+            return json(['msg' => 'Bili400']);
+        }
         $id = input('get.id');
         $giftId = input('post.giftId');
         $real_roomid = input('post.real_roomid');
