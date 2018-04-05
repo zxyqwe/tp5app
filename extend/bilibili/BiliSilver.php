@@ -46,6 +46,9 @@ class BiliSilver extends BiliBase
             $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
+            if ('访问被拒绝' === $data['msg']){
+                return;
+            }
             if (-903 === $data['code'] || false !== strpos($data['msg'], '过期')) {
                 trace("领取失败：{$data['msg']}");
                 $this->lock('silverTask', -1);
