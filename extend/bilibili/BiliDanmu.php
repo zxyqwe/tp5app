@@ -61,11 +61,15 @@ class BiliDanmu extends BiliBase
         }
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
         $join = json_decode($raw, true);
+        if (false !== strpos($raw, '访问被拒绝')) {
+            trace("Bili400 $raw");
+            $this->lock("Bili400", $this->long_timeout());
+            return;
+        }
         if (in_array($join['code'], [0, 65531])
             || false !== strpos($raw, '已加入')
             || false !== strpos($raw, '已结束')
             || false !== strpos($raw, '已经结束')
-            || false !== strpos($raw, '访问被拒绝')
         ) {
             $this->lock("$key$payload", $this->long_timeout());
             return;
@@ -118,7 +122,8 @@ class BiliDanmu extends BiliBase
             case 0:
                 $this->lock("$key$payload", -1);
                 if (false !== strpos($data['msg'], '很遗憾')
-                   || false !== strpos($data['msg'], '错过')) {
+                    || false !== strpos($data['msg'], '错过')
+                ) {
                     return json(['msg' => 'NOTHING']);
                 }
                 $data = $data['data'];
