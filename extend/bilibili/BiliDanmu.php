@@ -6,6 +6,9 @@ class BiliDanmu extends BiliBase
 {
     private function _unknown($real_roomid, $url, $key)
     {
+        if (!$this->bili_entry($real_roomid)) {
+            return [];
+        }
         $urlapi = $this->prefix . $url . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
@@ -92,6 +95,9 @@ class BiliDanmu extends BiliBase
 
     public function notice_any($giftId, $real_roomid, $url, $key)
     {
+        if (!$this->bili_entry($real_roomid)) {
+            return json(['msg' => 'FISH']);
+        }
         $payload = [
             'roomid' => $real_roomid,
             'raffleId' => $giftId

@@ -72,6 +72,40 @@ class BiliBase
         return $return_str;
     }
 
+    protected function bili_entry($rid)
+    {
+        $urlapi = 'https://live.bilibili.com/' . $rid;
+        $this->bili_Post($urlapi, $this->cookie, $rid);
+
+        $urlapi = $this->prefix . 'room/v1/Room/room_init?id=' . $rid;
+        $raw = $this->bili_Post($urlapi, $this->cookie, $rid);
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace("钓鱼 $raw");
+            return false;
+        }
+        $data = $data['data'];
+        if ($data['encrypted'] || $data['is_hidden'] || $data['is_locked']) {
+            trace("钓鱼 $raw");
+            return false;
+        }
+
+        $urlapi = $this->prefix . 'room/v1/Room/room_entry_action';
+        $payload = [
+            'room_id' => $rid,
+            'platform' => 'pc',
+            'csrf_token' => $this->csrf_token
+        ];
+        $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($payload));
+        $data = json_decode($raw, true);
+        if ($data['code'] !== 0) {
+            trace("历史记录 $raw");
+            return false;
+        }
+
+        return true;
+    }
+
     public function lock($name, $time = 0, $res = null)
     {
         $name = "bili_cron_$name";
