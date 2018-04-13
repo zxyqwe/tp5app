@@ -50,6 +50,7 @@ class BiliSend extends BiliBase
         if ($this->lock('send_gift')) {
             return;
         }
+        $this->bili_entry($this->room_id);
         $this->getSendGift();
         $urlapi = $this->prefix . 'gift/v2/gift/bag_list';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
