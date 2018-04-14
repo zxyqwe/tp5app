@@ -271,12 +271,13 @@ var wx_init = (function ($, w, undefined) {
         w.home = function () {
             location.hash = '';
         };
-        w.msgto = function (msg) {
+        w.msgto = function (jqXHR, smsg, ethrow) {
+            var msg;
             try {
-                msg = JSON.parse(msg.responseText);
+                msg = JSON.parse(jqXHR.responseText);
                 msg = msg.msg;
             } catch (err) {
-                msg = msg.readyState + '-' + msg.status + '-' + msg.responseText;
+                msg = jqXHR.readyState + '-' + jqXHR.status + '-' + jqXHR.responseText + '-' + smsg + '-' + ethrow;
             }
             w.msgto2(msg);
         };

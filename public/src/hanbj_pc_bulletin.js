@@ -62,7 +62,7 @@ var login = (function ($, Vue, w, undefined) {
                 location.reload(true);
                 location.search += '&_=' + Date.now();
             },
-            error: function () {
+            error: function (jqXHR, msg, ethrow) {
                 setTimeout(heartbeat, 1000);
             }
         });
