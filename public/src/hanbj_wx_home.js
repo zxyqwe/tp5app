@@ -43,9 +43,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     add_card(msg)
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     $loading.addClass('sr-only');
                 }
@@ -91,9 +89,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     }]
                 });
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -109,9 +105,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             success: function (msg) {
                 w.msgok();
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -146,9 +140,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vwork_act_log.items.push.apply(vwork_act_log.items, da);
                 vwork_act_log.name = msg.name;
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -192,9 +184,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     w.location.search += '&_=' + Date.now();
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     $loading.addClass('sr-only');
                 }
@@ -212,9 +202,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     open_card(msg);
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                }
+                error: w.msgto
             });
         });
         ticketapi();
@@ -235,9 +223,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 }
                 vact.items.push.apply(vact.items, da);
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -260,9 +246,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vvalid.items.push.apply(vvalid.items, da);
                 vvalid.real_year = msg.real_year;
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -279,9 +263,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.msgok();
                     w.home();
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -339,9 +321,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     });
                 });
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -370,9 +350,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     };
                     wx.chooseWXPay(msg);
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -404,9 +382,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                     w.msgok();
                     w.location.search += '&_=' + Date.now();
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -455,9 +431,7 @@ var wx_prom = (function ($, w, undefined) {
                     var temp = msg.temp;
                     weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -496,9 +470,7 @@ var wx_hist = (function ($, Vue, w, undefined) {
                 vmain.hist = msg.hist;
                 $('#vmain').removeClass('sr-only');
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }

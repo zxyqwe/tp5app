@@ -78,9 +78,7 @@ var all_mem = (function ($, w, undefined) {
                     $('#act' + id).html(itact(msg.act));
                     $('#fame' + id).html(itfame(msg.fame));
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -159,9 +157,9 @@ var baselog = (function ($, Vue, w, undefined) {
             success: function (msg) {
                 vmain.act = msg;
             },
-            error: function (msg) {
+            error: function (jqXHR, msg, ethrow) {
                 vmain.act = [];
-                w.msgto(msg);
+                w.msgto(jqXHR, msg, ethrow);
             },
             complete: function () {
                 w.cancelloading();
@@ -212,9 +210,9 @@ var baselog = (function ($, Vue, w, undefined) {
                         }, 500);
                     }
                 },
-                error: function (msg) {
+                error: function (jqXHR, msg, ethrow) {
                     w.cancelloading();
-                    w.msgto(msg);
+                    w.msgto(jqXHR, msg, ethrow);
                 }
             });
         });
@@ -356,9 +354,9 @@ var volunteer = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     vmain.candy = msg;
                 },
-                error: function (msg) {
+                error: function (jqXHR, msg, ethrow) {
                     vmain.candy = [];
-                    w.msgto(msg);
+                    w.msgto(jqXHR, msg, ethrow);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -377,9 +375,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     w.location.href = w.u5;
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -423,9 +419,9 @@ var fee = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     vmain.candy = msg;
                 },
-                error: function (msg) {
+                error: function (jqXHR, msg, ethrow) {
                     vmain.candy = [];
-                    w.msgto(msg);
+                    w.msgto(jqXHR, msg, ethrow);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -445,9 +441,7 @@ var fee = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     w.location.href = w.u3;
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -466,9 +460,7 @@ var fee = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     w.location.href = w.u3;
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -517,9 +509,7 @@ var tlog = (function ($, w, undefined) {
                 tenc_len = msg.len;
                 cont($cont.html() + mtext, par + ' - ' + chi);
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -580,9 +570,9 @@ var fame = (function ($, Vue, w, undefined) {
             success: function (msg) {
                 vmain.fames = msg;
             },
-            error: function (msg) {
+            error: function (jqXHR, msg, ethrow) {
                 vmain.fames = [];
-                w.msgto(msg);
+                w.msgto(jqXHR, msg, ethrow);
             },
             complete: function () {
                 w.cancelloading();
@@ -627,9 +617,9 @@ var fame = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     vmain.candy = msg;
                 },
-                error: function (msg) {
+                error: function (jqXHR, msg, ethrow) {
                     vmain.candy = [];
-                    w.msgto(msg);
+                    w.msgto(jqXHR, msg, ethrow);
                 },
                 complete: function () {
                     w.cancelloading();
@@ -651,9 +641,7 @@ var fame = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     vmain.res = [];
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -869,9 +857,7 @@ var brief = (function ($, w, undefined) {
                 get_gender_year();
                 get_catalog_ret();
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -1066,9 +1052,7 @@ var group = (function ($, w, undefined) {
                 get_gender_ret();
                 get_join_ret();
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -1460,9 +1444,7 @@ var birth = (function ($, w, undefined) {
                 get_join_ret();
                 get_birthday_ret();
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -1538,9 +1520,7 @@ var create = (function ($, Vue, w, undefined) {
                         success: function (msg) {
                             clear();
                         },
-                        error: function (msg) {
-                            w.msgto(msg);
-                        },
+                        error: w.msgto,
                         complete: function () {
                             w.cancelloading();
                         }
@@ -1560,9 +1540,9 @@ var create = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     vmain.candy = msg;
                 },
-                error: function (msg) {
+                error: function (jqXHR, msg, ethrow) {
                     clear();
-                    w.msgto(msg);
+                    w.msgto(jqXHR, msg, ethrow);
                 },
                 complete: function () {
                     w.cancelloading();

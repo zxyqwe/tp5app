@@ -34,9 +34,7 @@ var wx_Old = (function ($, w, undefined) {
                         w.location.search += '&_=' + Date.now();
                     }, 1000);
                 },
-                error: function (msg) {
-                    w.msgto(msg);
-                },
+                error: w.msgto,
                 complete: function () {
                     w.cancelloading();
                 }
@@ -84,9 +82,7 @@ var wx_New = (function ($, Vue, w, undefined) {
                     w.location.search += '&_=' + Date.now();
                 }, 1000);
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -138,9 +134,7 @@ var wx_New = (function ($, Vue, w, undefined) {
             success: function (msg) {
                 un_data = assm_data(msg.data);
             },
-            error: function (msg) {
-                w.msgto(msg);
-            },
+            error: w.msgto,
             complete: function () {
                 w.cancelloading();
             }
@@ -307,9 +301,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                                 WeixinJSBridge.call('closeWindow');
                             }, 1000);
                         },
-                        error: function (msg) {
-                            w.msgto(msg);
-                        },
+                        error: w.msgto,
                         complete: function () {
                             w.cancelloading();
                         }
