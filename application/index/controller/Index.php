@@ -13,12 +13,12 @@ class Index
 
     public function index()
     {
-        $qrCode = new QrCode('Life is too short to be generating QR codes');
+        $qrCode = new QrCode('https://app.zxyqwe.com/index/index/index');
         $qrCode
             ->setSize(300)
             ->setErrorCorrection(QrCode::LEVEL_HIGH)
             ->setLogo($qrCode->getImagePath() . DS . 'logo.png')
-            ->setLogoSize(150)
+            ->setLogoSize(50)
             ->setLabelFontPath(APP_PATH . "../public/static/noto_sans.otf")
             ->setLabelFontSize(25)
             ->setLabel("中文asd");
@@ -26,5 +26,17 @@ class Index
             'Cache-control' => "no-store, no-cache, must-revalidate, post-check=0, pre-check=0",
             'Content-Type' => "image/png; charset=utf-8"
         ]);
+    }
+
+    public function github()
+    {
+        $sk = '688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6';
+        $post_data = file_get_contents('php://input');
+        $signature = hash_hmac('sha1', $post_data, $sk);
+        $gh = $_SERVER['HTTP_X-Hub-Signature'];
+        if ($gh !== $signature) {
+            trace("$gh $signature");
+        }
+        trace(json_encode($_POST));
     }
 }
