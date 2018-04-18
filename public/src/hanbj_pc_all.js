@@ -1557,7 +1557,7 @@ var create = (function ($, Vue, w, undefined) {
 
 var tree = (function ($, w, undefined) {
     'use strict';
-    var dragx, dragy, g, scale = 1;
+    var dragx, dragy, g, scale = 0.185302019;
     var changeScale = function (step) {
         scale *= 1 + step;
         updateG();
@@ -1597,7 +1597,7 @@ var tree = (function ($, w, undefined) {
             });
 
         var tree = d3.tree()
-            .size([2 * Math.PI, 1200])
+            .size([2 * Math.PI, 2400])
             .separation(function (a, b) {
                 return (a.parent === b.parent ? 1 : 2) / a.depth;
             });
