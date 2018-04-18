@@ -19,7 +19,8 @@
         "php": ">=5.4.0",
         "topthink/framework": "^5.0",
         "endroid/qrcode": "^1.9",
-        "topthink/think-captcha": "^1.0"
+        "topthink/think-captcha": "^1.0",
+        "thiagoalessio/tesseract_ocr": "^2.0"
     },
     "extra": {
         "think-path": "thinkphp"
