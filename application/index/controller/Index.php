@@ -33,7 +33,7 @@ class Index
         $sk = '688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6';
         $post_data = file_get_contents('php://input');
         $signature = 'sha1=' . hash_hmac('sha1', $post_data, $sk);
-        $gh = $_SERVER['HTTP_X-Hub-Signature'];
+        $gh = $_SERVER['HTTP_X_HUB_SIGNATURE'];
         if ($gh !== $signature) {
             return json(["$gh $signature"], 400);
         }
