@@ -36,7 +36,7 @@ class WxHanbj
             trace("JsApi $raw");
             return '';
         }
-        trace("WxHanbj JsApi {$res['ticket']}");
+        // trace("WxHanbj JsApi {$res['ticket']}");
         cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -52,7 +52,7 @@ class WxHanbj
             trace("TicketApi $raw");
             return '';
         }
-        trace("WxHanbj TicketApi {$res['ticket']}");
+        // trace("WxHanbj TicketApi {$res['ticket']}");
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -144,13 +144,9 @@ class WxHanbj
                     trace(json_encode($msg));
                 }
                 return '';
-            case 'update_member_card':
-                $UserCardCode = (string)$msg->UserCardCode;
-                $ModifyBonus = (string)$msg->ModifyBonus;
-                trace($UserCardCode . ' --> ' . $ModifyBonus);
-                return '';
             default:
                 trace(json_encode($msg));
+            case 'update_member_card':
             case 'subscribe':
             case 'unsubscribe':
             case 'SCAN':
