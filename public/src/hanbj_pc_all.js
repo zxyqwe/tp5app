@@ -1,6 +1,6 @@
 var all_mem = (function ($, w, undefined) {
     'use strict';
-    var alr, nye, jsr = '经手人：', sj = "时间：", jf = "积分：", rz = "状态：", yrz = "已入账", wrz = "未入账", vmain, $table;
+    var alr, nye, jsr = '经手人：', sj = "时间：", jf = "积分：", rz = "状态：", yrz = "已积分", wrz = "未积分", vmain, $table;
     var listitem = function (head, data) {
         var str = '<a href="#" class="list-group-item">' +
             '<h4 class="list-group-item-heading">' + head +
