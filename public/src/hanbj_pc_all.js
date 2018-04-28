@@ -711,7 +711,7 @@ var test = (function ($, Vue, w, undefined) {
 var brief = (function ($, w, undefined) {
     'use strict';
     var ret, catalog_choice = [], catalog_set = {},
-        catalog_set_male = {}, catalog_set_female = {}, gender = {g0: 0, g1: 0},
+        catalog_set_male = {}, catalog_set_female = {}, catalog_set_ung = {}, gender = {g0: 0, g1: 0, g2: 0},
         dist_set = {};
     var get_catalog = function (y, g) {
         catalog_choice.push(y);
@@ -719,22 +719,26 @@ var brief = (function ($, w, undefined) {
             catalog_set[y] = 0;
             catalog_set_male[y] = 0;
             catalog_set_female[y] = 0;
+            catalog_set_ung[y] = 0;
         }
         if (g === 0) {
             catalog_set_male[y]++;
-        } else {
+        } else if (g === 1) {
             catalog_set_female[y]++;
+        } else {
+            catalog_set_ung[y]++;
         }
     };
     var get_catalog_ret = function () {
         var myChart = echarts.init(document.getElementById('catalog'));
         catalog_choice = Array.from(new Set(catalog_choice));
         catalog_choice = catalog_choice.sort();
-        var a = [], b = [];
+        var a = [], b = [], c = [];
         for (var i in catalog_choice) {
             var k = catalog_choice[i];
             a.push(catalog_set_male[k]);
             b.push(catalog_set_female[k]);
+            c.push(catalog_set_ung[k]);
         }
         var option = {
             title: {
@@ -746,7 +750,7 @@ var brief = (function ($, w, undefined) {
             },
             legend: {
                 top: '40',
-                data: ['男', '女']
+                data: ['男', '女', '未知']
             },
             xAxis: {
                 data: catalog_choice
@@ -762,6 +766,11 @@ var brief = (function ($, w, undefined) {
                 type: 'bar',
                 stack: '总量',
                 data: b
+            }, {
+                name: '未知',
+                type: 'bar',
+                stack: '总量',
+                data: c
             }]
         };
         myChart.setOption(option);
@@ -783,7 +792,7 @@ var brief = (function ($, w, undefined) {
                 top: '60',
                 orient: 'vertical',
                 x: 'left',
-                data: ['男', '女']
+                data: ['男', '女', '未知']
             },
             series: [
                 {
@@ -792,7 +801,8 @@ var brief = (function ($, w, undefined) {
                     radius: '50%',
                     data: [
                         {value: gender.g0, name: '男'},
-                        {value: gender.g1, name: '女'}
+                        {value: gender.g1, name: '女'},
+                        {value: gender.g2, name: '未知'}
                     ]
                 }
             ]
@@ -1069,7 +1079,7 @@ var group = (function ($, w, undefined) {
 
 var birth = (function ($, w, undefined) {
     'use strict';
-    var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {},
+    var ret, year_set = {}, year_choice = [], year_set_male = {}, year_set_female = {}, year_set_ung = {},
         birthday_set = {}, default_year = new Date().getFullYear(), join = {}, join1 = [], join2 = [], cata = {},
         cata1 = [], cata2 = [];
     var trans_year = function (y) {
@@ -1195,11 +1205,14 @@ var birth = (function ($, w, undefined) {
             year_set[y] = 0;
             year_set_male[y] = 0;
             year_set_female[y] = 0;
+            year_set_ung[y] = 0;
         }
         if (g === 0) {
             year_set_male[y]++;
-        } else {
+        } else if (g === 1) {
             year_set_female[y]++;
+        } else {
+            year_set_ung[y]++;
         }
     };
     var get_year_ret = function () {
@@ -1211,6 +1224,7 @@ var birth = (function ($, w, undefined) {
             var k = year_choice[i];
             a.push(year_set_male[k]);
             b.push(year_set_female[k]);
+            c.push(year_set_ung[k]);
         }
         var option = {
             title: {
@@ -1222,7 +1236,7 @@ var birth = (function ($, w, undefined) {
             },
             legend: {
                 top: '40',
-                data: ['男', '女']
+                data: ['男', '女', '未知']
             },
             xAxis: {
                 data: year_choice
@@ -1238,6 +1252,11 @@ var birth = (function ($, w, undefined) {
                 type: 'bar',
                 stack: '总量',
                 data: b
+            }, {
+                name: '未知',
+                type: 'bar',
+                stack: '总量',
+                data: c
             }]
         };
         myChart.setOption(option);

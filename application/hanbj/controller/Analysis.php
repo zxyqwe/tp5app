@@ -54,7 +54,17 @@ class Analysis extends Controller
             ->cache(600)
             ->select();
         foreach ($ret as &$item) {
-            $item['gender'] = $item['gender'] === '男' ? 0 : 1;
+            switch ($item['gender']) {
+                case '男':
+                    $item['gender'] = 0;
+                    break;
+                case '女':
+                    $item['gender'] = 1;
+                    break;
+                default:
+                    $item['gender'] = 2;
+                    break;
+            }
         }
         return json($ret);
     }
@@ -80,7 +90,17 @@ class Analysis extends Controller
             } else {
                 $item['eid'] = false;
             }
-            $item['gender'] = $item['gender'] === '男' ? 0 : 1;
+            switch ($item['gender']) {
+                case '男':
+                    $item['gender'] = 0;
+                    break;
+                case '女':
+                    $item['gender'] = 1;
+                    break;
+                default:
+                    $item['gender'] = 2;
+                    break;
+            }
         }
         return json($ret);
     }
