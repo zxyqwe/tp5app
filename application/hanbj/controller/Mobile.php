@@ -215,7 +215,7 @@ class Mobile extends Controller
     {
         switch ($this->request->method()) {
             case 'GET':
-                $ret = MemberOper::list_code(MemberOper::UNUSED);
+                $ret = MemberOper::list_code(MemberOper::UNUSED, false);
                 $rst = [];
                 foreach ($ret as $i) {
                     if (false !== strpos($i, '秦')
@@ -225,6 +225,7 @@ class Mobile extends Controller
                         $rst[] = $i;
                     }
                 }
+                trace("可选编号 " . count($rst));
                 sort($rst);
                 return json(['data' => $rst]);
             case 'POST':
