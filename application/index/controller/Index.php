@@ -3,6 +3,8 @@
 namespace app\index\controller;
 
 use Endroid\QrCode\QrCode;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class Index
 {
@@ -30,13 +32,55 @@ class Index
 
     public function github()
     {
-        $sk = '688787d8ff144c502c7f5cffaafe2cc588d86079f9de88304c26b0cb99ce91c6';
         $post_data = file_get_contents('php://input');
-        $signature = 'sha1=' . hash_hmac('sha1', $post_data, $sk);
+        $signature = 'sha1=' . hash_hmac('sha1', $post_data, config('github_sk'));
         $gh = $_SERVER['HTTP_X_HUB_SIGNATURE'];
         if ($gh !== $signature) {
             return json(["$gh $signature"], 400);
         }
         return json();
+    }
+
+    public function amail()
+    {
+        $to = input('post.to');
+        $sub = input('post.sub');
+        $main = input('post.main');
+        $sign = input('post.sign');
+        if ($sign !== md5($to . $sub . $main . config('amail_sk'))) {
+            return json('a', 400);
+        }
+        if (cache("?amail$to")) {
+            return json('d', 400);
+        }
+
+        $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+        try {
+            //Server settings
+            $mail->SMTPDebug = 2;                                 // Enable verbose debug output
+            $mail->isSMTP();                                      // Set mailer to use SMTP
+            $mail->Host = 'smtp.mxhichina.com';                   // Specify main and backup SMTP servers
+            $mail->SMTPAuth = true;                               // Enable SMTP authentication
+            $mail->Username = 'postmaster@zxyqwe.com';                 // SMTP username
+            $mail->Password = config('amail_sk');                           // SMTP password
+            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+            $mail->Port = 587;                                    // TCP port to connect to
+
+            //Recipients
+            $mail->setFrom('postmaster@zxyqwe.com', 'AutoMail');
+            $mail->addAddress($to);
+
+            //Content
+            $mail->isHTML(false);
+            $mail->Subject = $sub;
+            $mail->Body = $main;
+
+            $mail->send();
+            cache("amail$to", 'a', 600);
+            return json('c');
+        } catch (Exception $e) {
+            trace($mail->ErrorInfo);
+            return json('b', 400);
+        }
     }
 }
