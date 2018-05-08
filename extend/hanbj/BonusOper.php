@@ -111,7 +111,7 @@ class BonusOper
             }
             $nfee = Db::table('member')
                 ->where(['unique_name' => $item['unique_name']])
-                ->setField('bonus', ['exp', 'bonus+(' . $bonus . ')']);
+                ->exp('bonus', "bonus+($bonus)")->update();
             if ($nfee !== 1) {
                 throw new \Exception($label . '失败' . json_encode($item));
             }

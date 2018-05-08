@@ -105,7 +105,7 @@ class Mobile extends Controller
         $phone = input('post.phone', FILTER_VALIDATE_INT);
         $eid = input('post.eid');
         $map['phone'] = $phone;
-        $map['openid'] = ['EXP', 'IS NULL'];
+        $map['openid'] = ['null'];
         $res = Db::table('member')
             ->where($map)
             ->value('eid');
