@@ -147,7 +147,7 @@ var baselog = (function ($, Vue, w, undefined) {
             refresh(this.get_res());
         });
         vmain.$watch('act', function (nv) {
-            $('select').selectpicker({size: false});
+            $('select').selectpicker({liveSearch: true});
         });
         w.waitloading();
         $.ajax({
@@ -200,10 +200,10 @@ var baselog = (function ($, Vue, w, undefined) {
                 data: {type: uptype},
                 dataType: "json",
                 success: function (msg) {
-                    refresh(t_data);
                     if (msg.c > 0) {
                         $wxup.click();
                     } else {
+                        refresh(t_data);
                         w.cancelloading();
                         setTimeout(function () {
                             $wxup.removeClass('sr-only');
