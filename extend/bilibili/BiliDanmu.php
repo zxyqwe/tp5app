@@ -46,6 +46,9 @@ class BiliDanmu extends BiliBase
 
     private function _handle($real_roomid, $item, $key, $url, &$ret)
     {
+        if (rand(0, 100) > 30) {
+            return;
+        }
         $payload = [
             'roomid' => $real_roomid,
             'raffleId' => $item['raffleId']
