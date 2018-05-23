@@ -46,9 +46,6 @@ class BiliDanmu extends BiliBase
 
     private function _handle($real_roomid, $item, $key, $url, &$ret)
     {
-        if (rand(0, 100) > 30) {
-            return;
-        }
         $payload = [
             'roomid' => $real_roomid,
             'raffleId' => $item['raffleId']
@@ -56,6 +53,13 @@ class BiliDanmu extends BiliBase
         $ret[] = $payload;
         $payload = http_build_query($payload);
         if ($this->lock("$key$payload")) {
+            return;
+        }
+        if (rand(0, 100) > 30) {
+            $this->lock("$key$payload", $this->long_timeout());
+            return;
+        }
+        if (!$this->bili_entry($real_roomid)) {
             return;
         }
         $urlapi = $this->prefix . $url;
@@ -68,7 +72,7 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
         $join = json_decode($raw, true);
         if (false !== strpos($raw, '访问被拒绝')) {
-            trace("Bili400 $raw");
+            trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]));
             $this->lock("Bili400", $this->long_timeout());
             return;
         }
