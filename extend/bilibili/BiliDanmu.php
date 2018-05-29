@@ -76,7 +76,12 @@ class BiliDanmu extends BiliBase
             $this->lock("Bili400", $this->long_timeout());
             return;
         }
-        if (in_array($join['code'], [0, 65531])
+        if ($join['code'] === 0) {
+            trace(json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]));
+            $this->lock("$key$payload", $this->long_timeout());
+            return;
+        }
+        if ($join['code'] === 65531
             || false !== strpos($raw, '已加入')
             || false !== strpos($raw, '已结束')
             || false !== strpos($raw, '已经结束')
