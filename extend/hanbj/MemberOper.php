@@ -151,7 +151,7 @@ class MemberOper
 
         $name = "MemberOper::daily()renew";
         $renew = !cache("?$name");
-        if($renew){cache($name, $name, 86400 * 30)};
+        if($renew){cache($name, $name, 86400 * 30);}
 
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
