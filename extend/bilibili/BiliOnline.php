@@ -26,8 +26,8 @@ class BiliOnline extends BiliBase
         $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . microtime(true);
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
-        if (!in_array($data['code'], [0])) {
-            trace("unknown_notice $res");
+        if (!in_array($data['code'], [0, 65531])) {
+            trace("unknown_heart $res");
         }
     }
 
@@ -36,7 +36,7 @@ class BiliOnline extends BiliBase
         $urlapi = $this->prefix . 'feed_svr/v1/feed_svr/notice';
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, ['csrf_token' => $this->csrf_token]);
         $data = json_decode($res, true);
-        if (!in_array($data['code'], [0])) {
+        if (!in_array($data['code'], [0, 65531])) {
             trace("unknown_notice $res");
         }
     }
