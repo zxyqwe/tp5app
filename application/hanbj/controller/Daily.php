@@ -94,7 +94,7 @@ class Daily extends Controller
         }
         $map['code'] = ['in', $level];
         if (!empty($search)) {
-            $map['tieba_id|unique_name'] = ['like', '%' . $search . '%'];
+            $map['tieba_id|unique_name|rn'] = ['like', '%' . $search . '%'];
         }
         $tmp = Db::table('member')
             ->alias('f')
