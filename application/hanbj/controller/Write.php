@@ -288,6 +288,19 @@ class Write extends Controller
                     ])
                     ->select();
                 return json($ret);
+            case 'POST':
+                $name = input('post.name');
+                if (strlen($name) < 1) {
+                    return json(['msg' => 'name len short'], 400);
+                }
+                try {
+                    Db::table('prom')
+                        ->data(['name' => $name])
+                        ->insert();
+                } catch (\Exception $e) {
+                    return json(['msg' => '' . $e], 400);
+                }
+                return json();
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
