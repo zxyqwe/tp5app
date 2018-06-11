@@ -3,7 +3,16 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>商家优惠登记</h1>
         <div id="body">
+            <div id="toolbar">
+                <div class="form-inline" role="form">
+                    <div class="form-group" style="margin-right: 1em">
+                        <input id="add_name" type="text" class="form-control" placeholder="商户名称">
+                    </div>
+                    <button type="button" class="btn btn-default" id="add_prom">添加商家</button>
+                </div>
+            </div>
             <table id="table"
+                   data-toolbar="#toolbar"
                    data-url="/hanbj/write/edit_prom">
                 <thead>
                 <tr>
@@ -26,8 +35,27 @@
     });
     var wprom = (function ($, w, undefined) {
         'use strict';
-        var $table;
+        var $table, $add_name;
         var init = function () {
+            $add_name = $('#add_name');
+            $('#add_prom').click(function () {
+                w.waitloading();
+                $.ajax({
+                    type: "POST",
+                    url: w.u19,
+                    data: {
+                        name: $add_name.val()
+                    },
+                    dataType: "json",
+                    success: function (msg) {
+
+                    },
+                    error: w.msgto,
+                    complete: function () {
+                        w.cancelloading();
+                    }
+                });
+            });
             $table = $('#table');
             $table.bootstrapTable({});
         };
