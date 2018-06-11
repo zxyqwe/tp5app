@@ -13,7 +13,8 @@
             </div>
             <table id="table"
                    data-toolbar="#toolbar"
-                   data-url="/hanbj/write/edit_prom">
+                   data-url="/hanbj/write/edit_prom"
+                   data-editable-url="/hanbj/write/edit_prom">
                 <thead>
                 <tr>
                     <th data-field="id" class="sr-only">ID</th>
@@ -48,7 +49,7 @@
                     },
                     dataType: "json",
                     success: function (msg) {
-
+                        $table.bootstrapTable('refresh');
                     },
                     error: w.msgto,
                     complete: function () {
