@@ -37,6 +37,6 @@ class Wxclub extends Controller
 
     public function index()
     {
-        return view('home');
+        return view('home', ['obj' => json_encode([])]);
     }
 }
