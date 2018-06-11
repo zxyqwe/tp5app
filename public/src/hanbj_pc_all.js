@@ -569,10 +569,12 @@ var fame = (function ($, Vue, w, undefined) {
             dataType: "json",
             success: function (msg) {
                 vmain.fames = msg;
-                $('.fame-row').masonry({
-                    columnWidth: '.fame-panel',
-                    itemSelector: '.fame-panel'
-                });
+                setTimeout(function () {
+                    $('.fame-row').masonry({
+                        columnWidth: '.fame-panel',
+                        itemSelector: '.fame-panel'
+                    });
+                }, 1000);
             },
             error: function (jqXHR, msg, ethrow) {
                 vmain.fames = [];
