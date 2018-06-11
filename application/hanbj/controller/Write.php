@@ -291,19 +291,22 @@ class Write extends Controller
             case 'POST':
                 $name = input('post.name');
                 $pk = intval(input('post.pk'));
+                $value = input('post.value');
                 if (strlen($name) < 1) {
                     return json(['msg' => 'name len short'], 400);
                 }
                 try {
                     if ($pk > 0) {
                         Db::table('prom')
-                            ->data([$name => input('post.value')])
+                            ->data([$name => $value])
                             ->where(['id' => $pk])
                             ->update();
+                        trace("Prom Edit $pk $name $value");
                     } else {
                         Db::table('prom')
                             ->data(['name' => $name])
                             ->insert();
+                        trace("Prom Add $name");
                     }
                 } catch (\Exception $e) {
                     return json(['msg' => '' . $e], 400);
