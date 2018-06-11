@@ -3,7 +3,20 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>商家优惠登记</h1>
         <div id="body">
-
+            <table id="table"
+                   data-method="post"
+                   data-url="/hanbj/write/edit_prom">
+                <thead>
+                <tr>
+                    <th data-field="id" class="sr-only">ID</th>
+                    <th data-field="name">商户名称</th>
+                    <th data-field="img" data-editable="true">Logo</th>
+                    <th data-field="desc" data-editable="true">描述信息</th>
+                    <th data-field="info" data-editable="true">尾注信息</th>
+                    <th data-field="show" data-editable="true">是否显示</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
@@ -14,7 +27,10 @@
     });
     var wprom = (function ($, w, undefined) {
         'use strict';
+        var $table;
         var init = function () {
+            $table = $('#table');
+            $table.bootstrapTable({});
         };
         return {
             init: init
