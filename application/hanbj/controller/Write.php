@@ -280,5 +280,16 @@ class Write extends Controller
 
     public function edit_prom()
     {
+        switch ($this->request->method()) {
+            case 'GET':
+                $ret = Db::table('prom')
+                    ->field([
+                        'id', 'name', 'img', 'desc', 'info', 'show'
+                    ])
+                    ->select();
+                return json($ret);
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
     }
 }
