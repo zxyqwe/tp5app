@@ -1,0 +1,40 @@
+{layout name="layout_wx" /}
+<script type="text/html" id="tpl_home">
+    <div class="page" id="objmain">
+        <div class="page__hd">
+            <h1 class="page__title"></h1>
+            <p class="page__desc"></p>
+        </div>
+        <div class="page__bd page__bd_spacing">
+        </div>
+        <div class="page__ft">
+        </div>
+    </div>
+</script>
+<div id="clubdata" class="sr-only">{$obj}</div>
+<script>
+    $(window).on("load", function () {
+        wx_init.init(false);
+    });
+
+    var wx_test = (function ($, Vue, w, undefined) {
+        'use strict';
+        var vmain, clubdata;
+        var init = function () {
+            clubdata = $('#clubdata').html();
+            clubdata = JSON.parse(clubdata);
+            vmain = new Vue({
+                el: '#objmain',
+                data: {
+                },
+                computed: {
+                },
+                methods: {
+                }
+            });
+        };
+        return {
+            init: init
+        };
+    })(Zepto, Vue, window);
+</script>
