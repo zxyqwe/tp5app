@@ -1,0 +1,32 @@
+<div class="page" id="objmain">
+    <div class="page__hd">
+        <h1 class="page__title">雅聚</h1>
+        <p class="page__desc">见微知萌</p>
+    </div>
+    <div class="page__bd page__bd_spacing">
+        申请 批准
+    </div>
+    <div class="page__ft">
+    </div>
+</div>
+<div id="clubdata" class="sr-only">{$obj}</div>
+<script>
+    var wx_club = (function ($, Vue, w, undefined) {
+        'use strict';
+        var vmain, clubdata;
+        var init = function () {
+            clubdata = $('#clubdata').html();
+            clubdata = JSON.parse(clubdata);
+            vmain = new Vue({
+                el: '#objmain',
+                data: {},
+                computed: {},
+                methods: {}
+            });
+        };
+        return {
+            init: init
+        };
+    })(Zepto, Vue, window);
+    wx_club.init();
+</script>
