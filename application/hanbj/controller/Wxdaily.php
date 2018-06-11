@@ -242,4 +242,15 @@ class Wxdaily extends Controller
             return json(['msg' => '' . $e], 400);
         }
     }
+
+    public function prom()
+    {
+        $ret = Db::table('prom')
+            ->where(['show' => 0])
+            ->field([
+                'name', 'img', 'desc', 'info'
+            ])
+            ->select();
+        return json($ret);
+    }
 }
