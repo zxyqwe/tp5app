@@ -290,17 +290,25 @@ class Write extends Controller
                 return json($ret);
             case 'POST':
                 $name = input('post.name');
+                $pk = intval(input('post.pk'));
                 if (strlen($name) < 1) {
                     return json(['msg' => 'name len short'], 400);
                 }
                 try {
-                    Db::table('prom')
-                        ->data(['name' => $name])
-                        ->insert();
+                    if ($pk > 0) {
+                        Db::table('prom')
+                            ->data([$name => input('post.value')])
+                            ->where(['id' => $pk])
+                            ->update();
+                    } else {
+                        Db::table('prom')
+                            ->data(['name' => $name])
+                            ->insert();
+                    }
                 } catch (\Exception $e) {
                     return json(['msg' => '' . $e], 400);
                 }
-                return json();
+                return json('修改成功！');
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
