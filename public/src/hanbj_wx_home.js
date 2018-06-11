@@ -420,6 +420,20 @@ var wx_home = (function ($, Vue, w, undefined) {
 
 var wx_prom = (function ($, w, undefined) {
     'use strict';
+    var vmain;
+    var vue_init = function (prom) {
+        vmain = new Vue({
+            el: '#vmain',
+            data: {
+                hist: prom
+            },
+            methods: {
+                imgurl: function (u) {
+                    return '/static/prom/' + u;
+                }
+            }
+        });
+    };
     var init = function () {
         $('#tempid').click(function () {
             w.waitloading();
@@ -436,6 +450,19 @@ var wx_prom = (function ($, w, undefined) {
                     w.cancelloading();
                 }
             });
+        });
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: w.u19,
+            dataType: "json",
+            success: function (msg) {
+                vue_init(msg);
+            },
+            error: w.msgto,
+            complete: function () {
+                w.cancelloading();
+            }
         });
     };
     return {
