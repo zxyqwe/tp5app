@@ -277,4 +277,8 @@ class Write extends Controller
                 return json(['msg' => $this->request->method()], 400);
         }
     }
+
+    public function edit_prom()
+    {
+    }
 }
