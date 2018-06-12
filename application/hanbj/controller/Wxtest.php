@@ -60,7 +60,7 @@ class Wxtest extends Controller
         if (null === $ans) {
             $data['ans'] = [];
         } else {
-            $data['ans'] = $ans;
+            $data['ans'] = json_decode($ans['ans'], true);
         }
         return view('home', ['obj' => json_encode($data)]);
     }
@@ -96,6 +96,10 @@ class Wxtest extends Controller
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
+            if (isset($token[2])) {
+                return json(['msg' => 'OK']);
+            }
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);
