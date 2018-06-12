@@ -127,7 +127,8 @@ class WxOrg
         $ans_list = [];
         $ans = Db::table('score')
             ->where([
-                'year' => WxOrg::year
+                'year' => WxOrg::year,
+                'unique_name' => ['neq', '坎丙午']
             ])
             ->field([
                 'ans',
@@ -254,20 +255,20 @@ class WxOrg
     public static function checkAns(&$ans)
     {
         if (!is_array($ans)) {
-            throw new HttpResponseException(json(['msg' => 'array'], 400));
+            throw new HttpResponseException(json(['msg' => '答案类型不匹配！'], 400));
         }
         $len = count(self::test);
         if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
-            throw new HttpResponseException(json(['msg' => 'sel'], 400));
+            throw new HttpResponseException(json(['msg' => '没有答案啊？'], 400));
         }
         if (array_sum($ans['sel']) === 100) {
-            throw new HttpResponseException(json(['msg' => '满分'], 400));
+            throw new HttpResponseException(json(['msg' => '不能给满分！'], 400));
         }
         if (!isset($ans['sel_add'])) {
             $ans['sel_add'] = [];
         }
         if (!is_array($ans['sel_add'])) {
-            throw new HttpResponseException(json(['msg' => 'sel_add'], 400));
+            throw new HttpResponseException(json(['msg' => '文字类型不匹配！'], 400));
         }
         foreach (range(0, $len - 1) as $i) {
             $tmp = self::test[$i];
@@ -278,11 +279,10 @@ class WxOrg
             if (isset($tmp['s'])) {
                 $s = $tmp['s'];
             }
-            $s *= 0.6;
-            if ($ans['sel'][$i] < $s
+            if (($ans['sel'][$i] < $s * 0.6 || $ans['sel'][$i] === $s)
                 && (!isset($ans['sel_add'][$i]) || count($ans['sel_add'][$i]) < 15)
             ) {
-                throw new HttpResponseException(json(['msg' => 'sel ' . $i], 400));
+                throw new HttpResponseException(json(['msg' => "第 $i 题没有文字！"], 400));
             }
         }
     }
@@ -326,7 +326,7 @@ class WxOrg
 
         foreach ($this->obj as $item) {
             $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 20);
-            if (!isset($ans_list[$item])) {
+            if (!in_array($item, $ans_list)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
                 $finish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">已完成-$item</a>\n";

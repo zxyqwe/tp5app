@@ -60,7 +60,7 @@ class Wxtest extends Controller
         if (null === $ans) {
             $data['ans'] = [];
         } else {
-            $data['ans'] = json_decode($ans, true);
+            $data['ans'] = $ans;
         }
         return view('home', ['obj' => json_encode($data)]);
     }
