@@ -123,12 +123,27 @@ class WxOrg
         $user = $this->getAll();
         $data = [];
         $miss = [];
+
+        $ans_list = [];
+        $ans = Db::table('score')
+            ->where([
+                'year' => WxOrg::year
+            ])
+            ->field([
+                'ans',
+                'unique_name',
+                'name'
+            ])
+            ->select();
+        foreach ($ans as $item) {
+            $ans_list[$item['unique_name'] . $item['name']] = $item['ans'];
+        }
+
         foreach ($user as $u) {
             foreach ($this->obj as $o) {
-                $c_name = $u . $o . WxOrg::name;
-                if (cache('?' . $c_name)) {
+                if (isset($ans_list[$u . $o])) {
                     $data[] = [
-                        'ans' => json_decode(cache($c_name), true),
+                        'ans' => json_decode($ans_list[$u . $o], true),
                         'u' => $u,
                         'o' => $o,
                         'w' => in_array($u, $this->upper) ? 2.0 : 1.0
@@ -221,15 +236,13 @@ class WxOrg
     {
         $all = $this->getAll();
         $len = count($all) * count($this->obj);
-        $acc = 0;
-        foreach ($this->obj as $obj) {
-            foreach ($all as $item) {
-                $c_name = $item . $obj . self::name;
-                if (cache('?' . $c_name)) {
-                    $acc++;
-                }
-            }
-        }
+
+        $acc = Db::table('score')
+            ->where([
+                'year' => WxOrg::year
+            ])
+            ->count('id');
+
         if ($acc !== $len) {
             $res = $acc * 100.0 / $len;
             return self::name . "\n投票数量：$acc / $len\n总进度：" . round($res, 2) . "%\n";
@@ -298,10 +311,22 @@ class WxOrg
         $ret = "检查口令...成功\n身份验证...成功\n提取投票...成功\n\n有以下投票，二十分钟有效，过时重新取号\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
+
+        $ans_list = [];
+        $ans = Db::table('score')
+            ->where([
+                'year' => WxOrg::year,
+                'unique_name' => $uname
+            ])
+            ->field('name')
+            ->select();
+        foreach ($ans as $item) {
+            $ans_list[] = $item['name'];
+        }
+
         foreach ($this->obj as $item) {
-            $c_name = $uname . $item . self::name;
             $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 20);
-            if (!cache('?' . $c_name)) {
+            if (!isset($ans_list[$item])) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
                 $finish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">已完成-$item</a>\n";
