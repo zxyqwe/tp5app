@@ -127,8 +127,7 @@ class WxOrg
         $ans_list = [];
         $ans = Db::table('score')
             ->where([
-                'year' => WxOrg::year,
-                'unique_name' => ['neq', '坎丙午']
+                'year' => WxOrg::year
             ])
             ->field([
                 'ans',
@@ -240,7 +239,8 @@ class WxOrg
 
         $acc = Db::table('score')
             ->where([
-                'year' => WxOrg::year
+                'year' => WxOrg::year,
+                'unique_name' => ['neq', '坎丙午']
             ])
             ->count('id');
 
