@@ -49,11 +49,18 @@ class Wxtest extends Controller
         $data['uname'] = "$obj - {$ret['u']}";
         $data['name'] = WxOrg::name;
         $data['test'] = WxOrg::test;
-        $c_name = $uname . $obj . WxOrg::name;
-        if (!cache('?' . $c_name)) {
+        $ans = Db::table('score')
+            ->where([
+                'unique_name' => $uname,
+                'name' => $obj,
+                'year' => WxOrg::year
+            ])
+            ->field('ans')
+            ->find();
+        if (null === $ans) {
             $data['ans'] = [];
         } else {
-            $data['ans'] = json_decode(cache($c_name), true);
+            $data['ans'] = json_decode($ans, true);
         }
         return view('home', ['obj' => json_encode($data)]);
     }
@@ -67,9 +74,30 @@ class Wxtest extends Controller
         }
         $ans = input('post.ans/a', []);
         WxOrg::checkAns($ans);
+        $ans = json_encode($ans);
         $uname = session('unique_name');
-        $c_name = $uname . $obj . WxOrg::name;
-        cache($c_name, json_encode($ans));
+        try {
+            $ret = Db::table('score')
+                ->where([
+                    'unique_name' => $uname,
+                    'name' => $obj,
+                    'year' => WxOrg::year
+                ])
+                ->data(['ans' => $ans])
+                ->update();
+            if ($ret <= 0) {
+                Db::table('score')
+                    ->data([
+                        'ans' => $ans,
+                        'unique_name' => $uname,
+                        'name' => $obj,
+                        'year' => WxOrg::year])
+                    ->insert();
+            }
+        } catch (\Exception $e) {
+            $e = $e->getMessage();
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
         return json(['msg' => 'OK']);
     }
 }
