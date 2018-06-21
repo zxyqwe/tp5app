@@ -598,9 +598,7 @@ var fame = (function ($, Vue, w, undefined) {
                 labelname: '中枢',
                 candy: [],
                 res: [],
-                labellist: ['中枢', '会员部', '会员中心', '外联部', '外事中心', '外事部', '宣传部', '宣传中心',
-                    '活动部', '活动中心', '人力部', '人力资源与会员事务部', '秘书处', '办公室', '产业中心', '社推部',
-                    '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会'].sort()
+                labellist: w.department
             },
             methods: {
                 sel_candy: function (item) {
@@ -655,9 +653,12 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var fameori = function () {
-        var le = {};
+        var le = [], de = [];
         for (var i in Array.from(Array(6).keys())) {
-            le[i] = w.mem_code(i);
+            le.push({value: i, text: w.grade(i)});
+        }
+        for (var i in w.department) {
+            de.push({value: i, text: i});
         }
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
@@ -672,7 +673,16 @@ var fame = (function ($, Vue, w, undefined) {
                 {
                     field: 'y',
                     title: '吧务组'
-                }, {field: 'l', title: '单位'}, {
+                },
+                {
+                    field: 'l',
+                    title: '单位',
+                    editable: {
+                        type: 'select',
+                        source: de
+                    }
+                },
+                {
                     field: 'g',
                     title: '级别',
                     editable: {
