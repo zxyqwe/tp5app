@@ -659,14 +659,19 @@ var fame = (function ($, Vue, w, undefined) {
         for (var i in Array.from(Array(6).keys())) {
             le[i] = w.mem_code(i);
         }
-        w.grade_edit = function () {
-            return le;
-        };
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
         };
         var $table = $('#table');
         $table.bootstrapTable({
+            columns: [{
+                field: 'g',
+                title: '级别',
+                editable: {
+                    type: 'select',
+                    source: le
+                }
+            }],
             formatSearch: function () {
                 return '搜索昵称或会员编号';
             }
