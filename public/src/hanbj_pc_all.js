@@ -658,7 +658,7 @@ var fame = (function ($, Vue, w, undefined) {
             le.push({value: i, text: w.grade(i)});
         }
         for (var i in w.department) {
-            de.push({value: i, text: i});
+            de.push({value: w.department[i], text: w.department[i]});
         }
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
