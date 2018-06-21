@@ -239,8 +239,8 @@ class Daily extends Controller
                 'f.unique_name as u',
                 'tieba_id as t',
                 'year as y',
-                'grade as g',
-                'label as l',
+                'grade',
+                'label',
                 'm.code'
             ])
             ->select();

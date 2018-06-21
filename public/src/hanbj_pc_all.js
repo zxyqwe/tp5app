@@ -675,7 +675,7 @@ var fame = (function ($, Vue, w, undefined) {
                     title: '吧务组'
                 },
                 {
-                    field: 'l',
+                    field: 'label',
                     title: '单位',
                     editable: {
                         type: 'select',
@@ -683,7 +683,7 @@ var fame = (function ($, Vue, w, undefined) {
                     }
                 },
                 {
-                    field: 'g',
+                    field: 'grade',
                     title: '级别',
                     editable: {
                         type: 'select',

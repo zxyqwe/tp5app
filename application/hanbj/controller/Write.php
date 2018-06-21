@@ -292,6 +292,7 @@ class Write extends Controller
                 $name = input('post.name');
                 $pk = intval(input('post.pk'));
                 $value = input('post.value');
+                $unique = session('unique_name');
                 if (strlen($name) < 1) {
                     return json(['msg' => 'name len short'], 400);
                 }
@@ -301,12 +302,12 @@ class Write extends Controller
                             ->data([$name => $value])
                             ->where(['id' => $pk])
                             ->update();
-                        trace("Prom Edit $pk $name $value");
+                        trace("Prom Edit $unique $pk $name $value");
                     } else {
                         Db::table('prom')
                             ->data(['name' => $name])
                             ->insert();
-                        trace("Prom Add $name");
+                        trace("Prom Add $unique $name");
                     }
                 } catch (\Exception $e) {
                     return json(['msg' => '' . $e], 400);
@@ -315,5 +316,26 @@ class Write extends Controller
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
+    }
+
+    public function edit_fame()
+    {
+        $name = input('post.name');
+        $pk = intval(input('post.pk'));
+        $value = input('post.value');
+        $unique = session('unique_name');
+        if (strlen($name) < 1) {
+            return json(['msg' => 'name len short'], 400);
+        }
+        try {
+            Db::table('fame')
+                ->data([$name => $value])
+                ->where(['id' => $pk])
+                ->update();
+            trace("Fame Edit $unique $pk $name $value");
+        } catch (\Exception $e) {
+            return json(['msg' => '' . $e], 400);
+        }
+        return json('修改成功！');
     }
 }
