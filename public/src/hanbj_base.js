@@ -20,9 +20,9 @@ window.wx_mem_code = function (value) {
     switch (value) {
         case '0':
         case '4':
-            return '<p>状态：'+window.mem_code(value);
+            return '<p>状态：' + window.mem_code(value);
         default:
-            return '<p class="temp-text">状态：'+window.mem_code(value);
+            return '<p class="temp-text">状态：' + window.mem_code(value);
     }
 };
 window.grade = function (n) {
@@ -72,3 +72,6 @@ window.repeat_icon = function (target, n) {
     }
     return total;
 };
+window.department = ['中枢', '会员部', '会员中心', '外联部', '外事中心', '外事部', '宣传部', '宣传中心',
+    '活动部', '活动中心', '人力部', '人力资源与会员事务部', '秘书处', '办公室', '产业中心', '社推部',
+    '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会'].sort();
