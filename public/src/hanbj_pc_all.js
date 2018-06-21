@@ -664,14 +664,22 @@ var fame = (function ($, Vue, w, undefined) {
         };
         var $table = $('#table');
         $table.bootstrapTable({
-            columns: [{
-                field: 'g',
-                title: '级别',
-                editable: {
-                    type: 'select',
-                    source: le
-                }
-            }],
+            columns: [
+                {field: 'id', title: 'ID'},
+                {field: 'u', title: '会员编号'},
+                {field: 't', title: '昵称'},
+                {field: 'code', title: '状态', formatter: w.codeFormatter},
+                {
+                    field: 'y',
+                    title: '吧务组'
+                }, {field: 'l', title: '单位'}, {
+                    field: 'g',
+                    title: '级别',
+                    editable: {
+                        type: 'select',
+                        source: le
+                    }
+                }],
             formatSearch: function () {
                 return '搜索昵称或会员编号';
             }
