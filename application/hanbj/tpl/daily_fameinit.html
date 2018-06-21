@@ -5,6 +5,8 @@
         <div id="body">
             <table id="table"
                    data-url="/hanbj/daily/json_fameinit"
+                   data-id-field="id"
+                   data-editable-url="/hanbj/write/edit_fame"
                    data-search="true">
                 <thead>
                 <tr>
@@ -13,7 +15,7 @@
                     <th data-field="t">昵称</th>
                     <th data-field="code" data-formatter="codeFormatter">状态</th>
                     <th data-field="y">吧务组</th>
-                    <th data-field="g" data-formatter="code2Formatter">级别</th>
+                    <th data-field="g" data-editable="true" data-editable-type="select" data-editable-source="grade_edit()">级别</th>
                     <th data-field="l">单位</th>
                 </tr>
                 </thead>

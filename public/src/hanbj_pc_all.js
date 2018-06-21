@@ -655,8 +655,12 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var fameori = function () {
-        w.code2Formatter = function (value, row) {
-            return w.grade(value);
+        var le = {};
+        for (var i in Array.from(Array(6).keys())) {
+            le[i] = w.mem_code(i);
+        }
+        w.grade_edit = function () {
+            return le;
         };
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
