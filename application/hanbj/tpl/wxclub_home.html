@@ -1,9 +1,11 @@
 {layout name="layout_wx" /}
 <script type="text/html" id="tpl_home">
     {include file="wxclub_home_home" /}
+</script><script type="text/html" id="tpl_club_apply">
+    {include file="wxclub_home_club_apply" /}
 </script>
 <script>
     $(window).on("load", function () {
-        wx_init.init(false);
+        wx_init.init();
     });
 </script>

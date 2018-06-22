@@ -4,7 +4,34 @@
         <p class="page__desc">见微知萌</p>
     </div>
     <div class="page__bd page__bd_spacing">
-        申请 批准
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">
+                <a href="#club_apply" class="weui-cell weui-cell_access" style="padding: 0">
+                    会员小活动
+                    <div class="weui-cell__bd"></div>
+                    <span class="weui-cell__ft slideShine">我要申请</span>
+                </a>
+            </div>
+            <div class="weui-panel__bd">
+                <template v-for="item in items">
+                    <div class="weui-media-box weui-media-box_text" v-on:click="scan(item.id)">
+                        <h4 class="weui-media-box__title">{{ item.name }}</h4>
+                        <p class="weui-media-box__desc">
+                            时间：{{ item.start_time }} 至 {{ item.stop_time }}
+                            <br>
+                            举办者：{{ item.owner }} - {{ item.nick }}
+                        </p>
+                        <ul class="weui-media-box__info">
+                            <li class="weui-media-box__info__meta">
+                                工作人员：{{ item.worker }}
+                            </li>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+            <div class="weui-panel__ft">
+            </div>
+        </div>
     </div>
     <div class="page__ft">
     </div>
@@ -19,9 +46,15 @@
             clubdata = JSON.parse(clubdata);
             vmain = new Vue({
                 el: '#objmain',
-                data: {},
+                data: {
+                    items: clubdata
+                },
                 computed: {},
-                methods: {}
+                methods: {
+                    scan: function (name) {
+
+                    }
+                }
             });
         };
         return {
