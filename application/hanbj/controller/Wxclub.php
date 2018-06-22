@@ -37,6 +37,26 @@ class Wxclub extends Controller
 
     public function index()
     {
-        return view('home', ['obj' => json_encode([])]);
+        $d = date("Y-m-d");
+        $map['stop_time'] = ['GEQ', $d];
+        $map['m.code'] = 1;
+        $join = [
+            ['member f', 'm.owner=f.unique_name', 'left']
+        ];
+        $ret = Db::table('club')
+            ->alias('m')
+            ->join($join)
+            ->where($map)
+            ->field([
+                'id',
+                'name',
+                'owner',
+                'worker',
+                'start_time',
+                'stop_time',
+                'f.tieba_id as nick'
+            ])
+            ->select();
+        return view('home', ['obj' => json_encode($ret)]);
     }
 }
