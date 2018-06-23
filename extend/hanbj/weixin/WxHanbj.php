@@ -63,7 +63,7 @@ class WxHanbj
         $type = (string)$msg->MsgType;
         $from = (string)$msg->FromUserName;
         $to = (string)$msg->ToUserName;
-        $welcome = "欢迎关注，此号仅做汉北平台技术支持使用，如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing\n\n点击这里进入微店<a href=\"https://weidian.com/?userid=1353579309\">汉服北京的小店</a>~";
+        $welcome = "欢迎关注，此服务号仅做汉北平台技术支持使用，无人值守，全程自动。如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing\n\n点击这里进入微店<a href=\"https://weidian.com/?userid=1353579309\">汉服北京的小店</a>~";
         switch ($type) {
             case 'event':
                 return self::do_event($msg);
