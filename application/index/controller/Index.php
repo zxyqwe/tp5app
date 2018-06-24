@@ -51,7 +51,7 @@ class Index
         if ($sign !== md5($to . $sub . $main . config('amail_sk'))) {
             return json('a', 400);
         }
-        if (cache("?amail$to")) {
+        if (cache("?amail$to$sub")) {
             return json('d', 400);
         }
 
@@ -76,7 +76,7 @@ class Index
             $mail->Body = $main;
 
             $mail->send();
-            cache("amail$to", 'a', 600);
+            cache("amail$to$sub", 'a', 600);
             return json('c');
         } catch (Exception $e) {
             trace($mail->ErrorInfo);
