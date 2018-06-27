@@ -55,14 +55,18 @@ class Wxclub extends Controller
         $map['unique_name'] = ['NEQ', $unique_name];
         $mem = Db::table('member')
             ->where($map)
-            ->field('unique_name')
+            ->field('unique_name as u')
             ->cache(600)
             ->select();
+        $already = [];
+        foreach ($mem as $i) {
+            $already[] = $i['u'];
+        }
         return view('home', [
             'obj' => json_encode($club),
             'apply' => json_encode([
                 'uni' => $unique_name,
-                'worker' => $mem
+                'worker' => $already
             ])
         ]);
     }
