@@ -25,6 +25,9 @@
                             <li class="weui-media-box__info__meta">
                                 工作人员：{{ item.worker }}
                             </li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                {{ item.code==1?'已批准':'未批准' }}
+                            </li>
                         </ul>
                     </div>
                 </template>
