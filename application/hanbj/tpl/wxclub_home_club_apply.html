@@ -18,9 +18,9 @@
                     <label class="weui-label">活动名称</label>
                 </div>
                 <div>
-                    <div class="weui-vcode-img">
+                    <button class="weui-vcode-img">
                         {{ year }}
-                    </div>
+                    </button>
                 </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" v-model="a_name" placeholder="请输入">
@@ -136,7 +136,7 @@
                             w.msgto2('请阅读并同意《相关条款》');
                             return;
                         }
-                        if (this.a_name.length === 0) {
+                        if (this.a_name.length === 0 || this.a_time > this.e_time) {
                             return;
                         }
                         submit();

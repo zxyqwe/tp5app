@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\MemberOper;
+use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -31,6 +32,8 @@ class Wxclub extends Controller
         if (!MemberOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
+        $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
+        session('json_wx', WxHanbj::json_wx($url));
         $unique_name = session('unique_name');
         $d = date("Y-m-d");
         $join = [
@@ -62,6 +65,7 @@ class Wxclub extends Controller
         foreach ($mem as $i) {
             $already[] = $i['u'];
         }
+        sort($already);
         return view('home', [
             'obj' => json_encode($club),
             'apply' => json_encode([
