@@ -41,7 +41,7 @@ class Wxclub extends Controller
             ->join($join)
             ->where('stop_time >= :d AND (m.code = 1 OR owner = :uni)', ['d' => $d, 'uni' => $unique_name])
             ->field([
-                'id',
+                'm.id',
                 'name',
                 'owner',
                 'worker',
