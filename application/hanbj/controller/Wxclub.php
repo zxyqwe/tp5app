@@ -47,7 +47,8 @@ class Wxclub extends Controller
                 'worker',
                 'start_time',
                 'stop_time',
-                'f.tieba_id as nick'
+                'f.tieba_id as nick',
+                'm.code'
             ])
             ->select();
         $map['m.code'] = ['in', MemberOper::getMember()];

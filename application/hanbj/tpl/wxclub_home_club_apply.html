@@ -8,6 +8,12 @@
         </div>
         <div class="weui-cells">
             <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>申请人</p>
+                </div>
+                <div class="weui-cell__ft">{$apply.uni}</div>
+            </div>
+            <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">活动名称</label>
                 </div>
@@ -40,7 +46,7 @@
     <div class="page__ft">
     </div>
 </div>
-<div id="applydata" class="sr-only">{$apply}</div>
+<div id="applydata" class="sr-only">{$apply.worker}</div>
 <script>
     var wx_club_apply = (function ($, Vue, w, undefined) {
         'use strict';
@@ -83,7 +89,7 @@
         var init = function () {
             applydata = $('#applydata').html();
             applydata = JSON.parse(applydata);
-            w_data = w.assm_data(applydata.worker);
+            w_data = w.assm_data(applydata);
             $weuiAgree = $('#weuiAgree');
             vmain = new Vue({
                 el: '#applymain',
