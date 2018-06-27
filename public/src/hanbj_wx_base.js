@@ -242,6 +242,43 @@ var wx_init = (function ($, w, undefined) {
             w.location.search = '';
         });
     };
+    w.assm_data = function (data) {
+        var adata = [], c0, c1, s0, s1;
+        for (var i in data) {
+            var tmp = data[i];
+            if (tmp[0] !== s0) {
+                if (c0 !== undefined) {
+                    if (c1 !== undefined) {
+                        c0.children.push(c1);
+                    }
+                    adata.push(c0);
+                }
+                c0 = {
+                    label: tmp[0],
+                    children: []
+                };
+                s0 = tmp[0];
+                s1 = undefined;
+                c1 = undefined;
+            }
+            if (tmp[1] !== s1) {
+                if (c1 !== undefined) {
+                    c0.children.push(c1);
+                }
+                c1 = {
+                    label: tmp[1],
+                    children: []
+                };
+                s1 = tmp[1];
+            }
+            c1.children.push({
+                label: tmp[2]
+            });
+        }
+        c0.children.push(c1);
+        adata.push(c0);
+        return adata;
+    };
     var dict = function () {
         var hanbj = '/hanbj/';
         var mobile = 'mobile/';
