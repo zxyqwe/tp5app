@@ -17,8 +17,29 @@
                 <div class="weui-cell__hd">
                     <label class="weui-label">活动名称</label>
                 </div>
+                <div>
+                    <div class="weui-vcode-img">
+                        {$apply.year}
+                    </div>
+                </div>
                 <div class="weui-cell__bd">
                     <input class="weui-input" type="text" v-model="a_name" placeholder="请输入">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">开始日期</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="date" v-model="a_time">
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">结束日期</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="date" v-model="e_time">
                 </div>
             </div>
             <div class="weui-cell weui-cell_access" v-on:click="w_sel()" href="javascript:">
@@ -73,7 +94,9 @@
                 url: '',
                 data: {
                     a_name: '',
-                    w_name: ''
+                    w_name: '',
+                    a_time: '',
+                    e_time: ''
                 },
                 dataType: "json",
                 success: function (msg) {

@@ -66,7 +66,8 @@ class Wxclub extends Controller
             'obj' => json_encode($club),
             'apply' => json_encode([
                 'uni' => $unique_name,
-                'worker' => $already
+                'worker' => $already,
+                'year' => date("Y")
             ])
         ]);
     }
