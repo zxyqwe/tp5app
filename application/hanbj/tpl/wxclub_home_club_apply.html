@@ -11,7 +11,7 @@
                 <div class="weui-cell__bd">
                     <p>申请人</p>
                 </div>
-                <div class="weui-cell__ft">{$apply.uni}</div>
+                <div class="weui-cell__ft">{{ uni }}</div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd">
@@ -19,7 +19,7 @@
                 </div>
                 <div>
                     <div class="weui-vcode-img">
-                        {$apply.year}
+                        {{ year }}
                     </div>
                 </div>
                 <div class="weui-cell__bd">
@@ -67,7 +67,7 @@
     <div class="page__ft">
     </div>
 </div>
-<div id="applydata" class="sr-only">{$apply.worker}</div>
+<div id="applydata" class="sr-only">{$apply}</div>
 <script>
     var wx_club_apply = (function ($, Vue, w, undefined) {
         'use strict';
@@ -112,14 +112,18 @@
         var init = function () {
             applydata = $('#applydata').html();
             applydata = JSON.parse(applydata);
-            w_data = w.assm_data(applydata);
+            w_data = w.assm_data(applydata.worker);
             $weuiAgree = $('#weuiAgree');
             vmain = new Vue({
                 el: '#applymain',
                 data: {
                     u_name: applydata.uni,
                     a_name: '',
-                    w_name: ''
+                    w_name: '',
+                    year: applydata.year,
+                    uni: applydata.uni,
+                    a_time: '',
+                    e_time: ''
                 },
                 computed: {},
                 methods: {

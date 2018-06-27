@@ -39,7 +39,7 @@ class Wxclub extends Controller
         $club = Db::table('club')
             ->alias('m')
             ->join($join)
-            ->where('stop_time >= :d AND (m.code = 1 OR owner = :uni)', ['d' => $d, 'uni' => $unique_name])
+            ->where('`stop_time` >= :d AND (`m`.`code` = 1 OR `owner` = :uni)', ['d' => $d, 'uni' => $unique_name])
             ->field([
                 'm.id',
                 'name',
@@ -51,7 +51,7 @@ class Wxclub extends Controller
                 'm.code'
             ])
             ->select();
-        $map['m.code'] = ['in', MemberOper::getMember()];
+        $map['code'] = ['in', MemberOper::getMember()];
         $map['unique_name'] = ['NEQ', $unique_name];
         $mem = Db::table('member')
             ->where($map)
