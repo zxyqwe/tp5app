@@ -14,7 +14,7 @@
             </div>
             <div class="weui-panel__bd">
                 <template v-for="item in items">
-                    <div class="weui-media-box weui-media-box_text" v-on:click="scan(item.id)">
+                    <div class="weui-media-box weui-media-box_text" v-on:click="scan(item)">
                         <h4 class="weui-media-box__title">{{ item.name }}</h4>
                         <p class="weui-media-box__desc">
                             时间：{{ item.start_time }} 至 {{ item.stop_time }}
@@ -51,7 +51,7 @@
                 },
                 computed: {},
                 methods: {
-                    scan: function (name) {
+                    scan: function (item) {
 
                     }
                 }
