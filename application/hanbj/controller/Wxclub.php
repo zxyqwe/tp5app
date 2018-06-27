@@ -2,24 +2,15 @@
 
 namespace app\hanbj\controller;
 
-use hanbj\BonusOper;
 use hanbj\MemberOper;
-use hanbj\OrderOper;
-use hanbj\weixin\HanbjRes;
-use hanbj\vote\WxOrg;
 use think\Controller;
 use think\Db;
-use hanbj\weixin\HanbjNotify;
-use hanbj\FeeOper;
-use app\hanbj\WxPayConfig;
-use app\WxPayUnifiedOrder;
-use app\WxPayApi;
 use think\exception\HttpResponseException;
 
 class Wxclub extends Controller
 {
     protected $beforeActionList = [
-        'valid_id'
+        'valid_id' => ['except' => 'index']
     ];
 
     protected function valid_id()
@@ -37,16 +28,18 @@ class Wxclub extends Controller
 
     public function index()
     {
+        if (!MemberOper::wx_login()) {
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
+        }
+        $unique_name = session('unique_name');
         $d = date("Y-m-d");
-        $map['stop_time'] = ['GEQ', $d];
-        $map['m.code'] = 1;
         $join = [
             ['member f', 'm.owner=f.unique_name', 'left']
         ];
-        $ret = Db::table('club')
+        $club = Db::table('club')
             ->alias('m')
             ->join($join)
-            ->where($map)
+            ->where('stop_time >= :d AND (m.code = 1 OR owner = :uni)', ['d' => $d, 'uni' => $unique_name])
             ->field([
                 'id',
                 'name',
@@ -57,6 +50,19 @@ class Wxclub extends Controller
                 'f.tieba_id as nick'
             ])
             ->select();
-        return view('home', ['obj' => json_encode($ret)]);
+        $map['m.code'] = ['in', MemberOper::getMember()];
+        $map['unique_name'] = ['NEQ', $unique_name];
+        $mem = Db::table('member')
+            ->where($map)
+            ->field('unique_name')
+            ->cache(600)
+            ->select();
+        return view('home', [
+            'obj' => json_encode($club),
+            'apply' => json_encode([
+                'uni' => $unique_name,
+                'worker' => $mem
+            ])
+        ]);
     }
 }

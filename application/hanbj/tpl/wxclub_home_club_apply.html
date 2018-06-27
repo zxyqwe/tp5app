@@ -1,4 +1,4 @@
-<div class="page" id="objmain">
+<div class="page" id="applymain">
     <div class="page__hd">
         <h1 class="page__title">雅聚</h1>
         <p class="page__desc">见微知萌</p>
@@ -8,18 +8,17 @@
     <div class="page__ft">
     </div>
 </div>
-<div id="clubdata" class="sr-only">{$obj}</div>
+<div id="applydata" class="sr-only">{$apply}</div>
 <script>
     var wx_club_apply = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, clubdata;
+        var vmain, applydata;
         var init = function () {
-            clubdata = $('#clubdata').html();
-            clubdata = JSON.parse(clubdata);
+            applydata = $('#applydata').html();
+            applydata = JSON.parse(applydata);
             vmain = new Vue({
-                el: '#objmain',
+                el: '#applymain',
                 data: {
-                    items:[]
                 },
                 computed: {},
                 methods: {}
