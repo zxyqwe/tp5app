@@ -233,9 +233,6 @@ var wx_init = (function ($, w, undefined) {
             jsApiList: ['openCard', 'addCard', 'scanQRCode', 'chooseWXPay']
         });
         wx.ready(function () {
-            WeixinJSBridge.call('hideOptionMenu');
-            WeixinJSBridge.call('hideToolbar');
-            wx.hideAllNonBaseMenuItem();
             w.cancelloading();
         });
         wx.error(function (res) {
