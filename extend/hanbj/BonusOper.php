@@ -10,7 +10,7 @@ class BonusOper
     const _FEE_BONUS = 30;
     const _ACT_BONUS = 5;
     const _VOLUNTEER = 30;
-    const _ACT_NAME = '2018小年';
+    const _ACT_NAME = '小年';
     //陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸, 第三颗耳洞, Li秋林, 飞飞
     const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰', '兑庚午', '兑丙子', '夏辛未'];
 
@@ -24,7 +24,7 @@ class BonusOper
 
     public static function getActName()
     {
-        return Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
+        return date('Y') . Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
     }
 
     public static function getActBonus()

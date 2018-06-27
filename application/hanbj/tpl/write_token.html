@@ -8,6 +8,7 @@
                     <label class="col-sm-2 control-label">{{ item.name }}</label>
                     <div class="col-sm-4">
                         <div class="input-group">
+                            <span class="input-group-addon" v-if="item.addon">{{ item.addon }}</span>
                             <input type="text" class="form-control" placeholder="不应该显示！！！" v-model="item.value">
                             <span class="input-group-btn">
                             <button class="btn btn-default" type="button" v-on:click="up(item)">提交</button>
