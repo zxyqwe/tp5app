@@ -34,7 +34,7 @@ class System extends Controller
 
     public function runlog($data = -1)
     {
-        define('TAG_TIMEOUT_EXCEPTION',true);
+        define('TAG_TIMEOUT_EXCEPTION', true);
         MemberOper::daily();
         if (session('name') !== '坎丙午') {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
@@ -166,6 +166,41 @@ class System extends Controller
             ->select();
         $data['rows'] = $res;
         $total = Db::table('order')
+            ->alias('f')
+            ->count();
+        $data['total'] = $total;
+        return json($data);
+    }
+
+    public function json_club()
+    {
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.unique_name=f.owner', 'left'],
+            ['member n', 'n.unique_name=f.worker', 'left']
+        ];
+        $res = Db::table('club')
+            ->alias('f')
+            ->join($join)
+            ->order('f.id', 'desc')
+            ->limit($offset, $size)
+            ->field([
+                'f.id',
+                'f.owner',
+                'm.tieba_id as m',
+                'n.tieba_id as n',
+                'f.worker',
+                'f.start_time',
+                'f.name',
+                'f.stop_time',
+                'f.code'
+            ])
+            ->select();
+        $data['rows'] = $res;
+        $total = Db::table('club')
             ->alias('f')
             ->count();
         $data['total'] = $total;
