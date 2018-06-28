@@ -339,4 +339,25 @@ class Write extends Controller
         }
         return json('修改成功！');
     }
+
+    public function edit_club()
+    {
+        $name = input('post.name');
+        $pk = intval(input('post.pk'));
+        $value = input('post.value');
+        $unique = session('unique_name');
+        if ($name != 'code') {
+            return json(['msg' => '参数错误'], 400);
+        }
+        try {
+            Db::table('club')
+                ->data(['code' => $value])
+                ->where(['id' => $pk])
+                ->update();
+            trace("Club Edit $unique $pk $value");
+        } catch (\Exception $e) {
+            return json(['msg' => '' . $e], 400);
+        }
+        return json('修改成功！');
+    }
 }
