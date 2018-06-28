@@ -75,4 +75,33 @@ class Wxclub extends Controller
             ])
         ]);
     }
+
+    public function add_club()
+    {
+        $a_name = input('post.a_name');
+        $w_name = input('post.w_name', '');
+        $a_time = input('post.a_time');
+        $e_time = input('post.e_time');
+        if (strlen($a_name) < 1 || $a_time > $e_time) {
+            return json(['msg' => '参数错误'], 400);
+        }
+        $a_name = date('Y') . $a_name;
+        $unique_name = session('unique_name');
+        $data = [
+            'name' => $a_name,
+            'owner' => $unique_name,
+            'worker' => $w_name,
+            'start_time' => $a_time,
+            'stop_time' => $e_time
+        ];
+        try {
+            Db::table('club')
+                ->data($data)
+                ->insert();
+            trace("Club Apply " . json_encode($data));
+            return json('提交成功！');
+        } catch (\Exception $e) {
+            return json(['msg' => '' . $e], 400);
+        }
+    }
 }
