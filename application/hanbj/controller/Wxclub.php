@@ -38,7 +38,7 @@ class Wxclub extends Controller
         $d = date("Y-m-d");
         $join = [
             ['member f', 'm.owner=f.unique_name', 'left'],
-            ['member n', 'n.unique_name=f.worker', 'left']
+            ['member n', 'n.unique_name=m.worker', 'left']
         ];
         $club = Db::table('club')
             ->alias('m')
