@@ -44,18 +44,67 @@
     var wx_club = (function ($, Vue, w, undefined) {
         'use strict';
         var vmain, clubdata;
+        var get_club = function (work_card_code, item) {
+            weui.confirm('确认在<p>' + item.name + '</p>中登记用户<p>' + work_card_code + '</p>', {
+                title: '扫码结果',
+                buttons: [{
+                    label: '取消',
+                    type: 'default',
+                    onClick: function () {
+                    }
+                }, {
+                    label: '登记',
+                    type: 'primary',
+                    onClick: function () {
+                        w.waitloading();
+                        $.ajax({
+                            type: "POST",
+                            url: w.u21,
+                            data: {code: work_card_code, pk: item.id},
+                            dataType: "json",
+                            success: function (msg) {
+                                w.msgok();
+                            },
+                            error: w.msgto,
+                            complete: function () {
+                                w.cancelloading();
+                            }
+                        });
+                    }
+                }]
+            });
+        };
+        var up_scan = function (item) {
+            wx.scanQRCode({
+                needResult: 1,
+                scanType: ["qrCode"],
+                success: function (res) {
+                    get_club(res.resultStr, item);
+                }
+            });
+        };
         var init = function () {
             clubdata = $('#clubdata').html();
             clubdata = JSON.parse(clubdata);
             vmain = new Vue({
                 el: '#objmain',
                 data: {
-                    items: clubdata
+                    items: clubdata.list
                 },
                 computed: {},
                 methods: {
                     scan: function (item) {
-
+                        if (item.owner !== clubdata.uni
+                            || item.worker !== clubdata.uni
+                            || item.code !== 1) {
+                            return;
+                        }
+                        var today = new Date();
+                        today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                        if (today < item.a_time || today > item.e_time) {
+                            return;
+                        }
+                        up_scan(item);
                     }
                 }
             });
