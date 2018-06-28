@@ -96,7 +96,7 @@ class Write extends Controller
             }
         } catch (\Exception $e) {
             Db::rollback();
-            return json(['msg' => '' . $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
         return json(['msg' => 'ok']);
     }
@@ -311,7 +311,7 @@ class Write extends Controller
                         trace("Prom Add $unique $name");
                     }
                 } catch (\Exception $e) {
-                    return json(['msg' => '' . $e], 400);
+                    return json(['msg' => $e->getMessage()], 400);
                 }
                 return json('修改成功！');
             default:
@@ -335,7 +335,7 @@ class Write extends Controller
                 ->update();
             trace("Fame Edit $unique $pk $name $value");
         } catch (\Exception $e) {
-            return json(['msg' => '' . $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
         return json('修改成功！');
     }
@@ -356,7 +356,7 @@ class Write extends Controller
                 ->update();
             trace("Club Edit $unique $pk $value");
         } catch (\Exception $e) {
-            return json(['msg' => '' . $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
         return json('修改成功！');
     }

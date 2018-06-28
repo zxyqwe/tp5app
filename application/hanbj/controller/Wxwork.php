@@ -93,11 +93,10 @@ class Wxwork extends Controller
             WxTemp::regAct($res['openid'], $res['unique_name'], BonusOper::getActName());
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
-            $e = '' . $e;
-            if (false != strpos($e, 'constraint')) {
+            if (false != strpos('' . $e, 'constraint')) {
                 return json(['msg' => 'ok']);
             }
-            return json(['msg' => $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
     }
 

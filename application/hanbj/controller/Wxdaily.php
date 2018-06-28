@@ -239,7 +239,7 @@ class Wxdaily extends Controller
                 ->insert($data);
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
-            return json(['msg' => '' . $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
     }
 
