@@ -22,9 +22,13 @@ class BonusOper
         return array_unique($data);
     }
 
-    public static function getActName()
+    public static function getActName($prefix = true)
     {
-        return date('Y') . Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
+        if ($prefix) {
+            return date('Y') . Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
+        } else {
+            return Cache::get('BonusOper::ACT_NAME', self::_ACT_NAME);
+        }
     }
 
     public static function getActBonus()

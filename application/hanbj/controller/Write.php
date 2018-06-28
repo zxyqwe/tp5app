@@ -234,7 +234,7 @@ class Write extends Controller
                     [
                         'name' => '活动预置名称',
                         'key' => '_ACT_NAME',
-                        'value' => BonusOper::getActName(),
+                        'value' => BonusOper::getActName(false),
                         'addon' => date('Y')
                     ],
                     [
