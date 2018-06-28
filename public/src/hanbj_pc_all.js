@@ -1724,3 +1724,93 @@ var tree = (function ($, w, undefined) {
         change: changeScale
     };
 })(jQuery, window);
+
+var wToken = (function ($, Vue, w, undefined) {
+    'use strict';
+    var settingsdata;
+    var build_vue = function (refresh) {
+        var vmain = new Vue({
+            el: '#body',
+            data: {
+                settings: settingsdata
+            },
+            methods: {
+                up: function (item) {
+                    w.waitloading();
+                    $.ajax({
+                        type: "POST",
+                        url: w.u18,
+                        data: {
+                            key: item.key,
+                            value: item.value
+                        },
+                        dataType: "json",
+                        success: function (msg) {
+                        },
+                        error: function (msg) {
+                            w.msgto(msg);
+                        },
+                        complete: function () {
+                            w.cancelloading();
+                        }
+                    });
+                }
+            },
+            ready: function () {
+                $('#body').removeClass('sr-only');
+            }
+        });
+    };
+    var init = function () {
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: w.u18,
+            dataType: "json",
+            success: function (msg) {
+                settingsdata = msg;
+                build_vue();
+            },
+            error: function (msg) {
+                w.msgto(msg);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, Vue, window);
+
+var wprom = (function ($, w, undefined) {
+    'use strict';
+    var $table, $add_name;
+    var init = function () {
+        $add_name = $('#add_name');
+        $('#add_prom').click(function () {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u19,
+                data: {
+                    name: $add_name.val()
+                },
+                dataType: "json",
+                success: function (msg) {
+                    $table.bootstrapTable('refresh');
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        });
+        $table = $('#table');
+        $table.bootstrapTable({});
+    };
+    return {
+        init: init
+    };
+})(jQuery, window);

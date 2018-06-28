@@ -35,34 +35,4 @@
     $(window).on("load", function () {
         wprom.init();
     });
-    var wprom = (function ($, w, undefined) {
-        'use strict';
-        var $table, $add_name;
-        var init = function () {
-            $add_name = $('#add_name');
-            $('#add_prom').click(function () {
-                w.waitloading();
-                $.ajax({
-                    type: "POST",
-                    url: w.u19,
-                    data: {
-                        name: $add_name.val()
-                    },
-                    dataType: "json",
-                    success: function (msg) {
-                        $table.bootstrapTable('refresh');
-                    },
-                    error: w.msgto,
-                    complete: function () {
-                        w.cancelloading();
-                    }
-                });
-            });
-            $table = $('#table');
-            $table.bootstrapTable({});
-        };
-        return {
-            init: init
-        };
-    })(jQuery, window);
 </script>
