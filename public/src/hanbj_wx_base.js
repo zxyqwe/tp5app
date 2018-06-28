@@ -305,6 +305,7 @@ var wx_init = (function ($, w, undefined) {
         w.u18 = hanbj + wx + 'vote';
         w.u19 = hanbj + wx + 'prom';
         w.u20 = hanbj + club + 'add_club';
+        w.u21 = hanbj + club + 'add_club_act';
     };
     var init = function (jssign) {
         dict();

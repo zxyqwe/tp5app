@@ -69,7 +69,10 @@ class Wxclub extends Controller
         }
         sort($already);
         return view('home', [
-            'obj' => json_encode($club),
+            'obj' => json_encode([
+                'list' => $club,
+                'uni' => $unique_name
+            ]),
             'apply' => json_encode([
                 'uni' => $unique_name,
                 'worker' => $already,
@@ -105,5 +108,9 @@ class Wxclub extends Controller
         } catch (\Exception $e) {
             return json(['msg' => $e->getMessage()], 400);
         }
+    }
+
+    public function add_club_act()
+    {
     }
 }
