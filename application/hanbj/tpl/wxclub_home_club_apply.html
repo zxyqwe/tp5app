@@ -91,12 +91,12 @@
             w.waitloading();
             $.ajax({
                 type: "POST",
-                url: '',
+                url: w.u20,
                 data: {
-                    a_name: '',
-                    w_name: '',
-                    a_time: '',
-                    e_time: ''
+                    a_name: vmain.a_name,
+                    w_name: vmain.w_name,
+                    a_time: vmain.a_time,
+                    e_time: vmain.e_time
                 },
                 dataType: "json",
                 success: function (msg) {
