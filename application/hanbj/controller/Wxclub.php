@@ -37,7 +37,8 @@ class Wxclub extends Controller
         $unique_name = session('unique_name');
         $d = date("Y-m-d");
         $join = [
-            ['member f', 'm.owner=f.unique_name', 'left']
+            ['member f', 'm.owner=f.unique_name', 'left'],
+            ['member n', 'n.unique_name=f.worker', 'left']
         ];
         $club = Db::table('club')
             ->alias('m')
@@ -51,6 +52,7 @@ class Wxclub extends Controller
                 'start_time',
                 'stop_time',
                 'f.tieba_id as nick',
+                'n.tieba_id as nick2',
                 'm.code'
             ])
             ->select();
