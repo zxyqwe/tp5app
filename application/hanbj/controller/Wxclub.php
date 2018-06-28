@@ -103,7 +103,7 @@ class Wxclub extends Controller
             trace("Club Apply " . json_encode($data));
             return json('提交成功！');
         } catch (\Exception $e) {
-            return json(['msg' => '' . $e], 400);
+            return json(['msg' => $e->getMessage()], 400);
         }
     }
 }
