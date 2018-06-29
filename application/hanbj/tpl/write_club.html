@@ -8,7 +8,6 @@
                    data-pagination="true"
                    data-side-pagination="server"
                    data-url="/hanbj/system/json_club"
-                   data-editable-url="/hanbj/write/edit_club"
                    data-id-field="id"
                    data-page-list="[20, 50, 100]">
                 <thead>
@@ -19,7 +18,7 @@
                     <th data-field="worker">协助者</th>
                     <th data-field="start_time">开始时间</th>
                     <th data-field="stop_time">结束时间</th>
-                    <th data-field="code" data-editable="true" data-editable-type="select" data-editable-source="{0:'未批准',1:'已批准',2:'已驳回'}">审批状态</th>
+                    <th data-field="code">审批状态</th>
                 </tr>
                 </thead>
             </table>
@@ -34,6 +33,12 @@
     var s_club = (function ($, w, undefined) {
         'use strict';
         var $table;
+        w.club_ok = function (pk) {
+
+        };
+        w.club_no = function (ok) {
+
+        };
         var init = function () {
             $table = $('#table');
             $table.bootstrapTable({
@@ -43,6 +48,22 @@
                     for (var i in msg) {
                         msg[i].owner = msg[i].owner + '-' + msg[i].m;
                         msg[i].worker = msg[i].worker + '-' + msg[i].n;
+                        switch (msg[i].code) {
+                            case 0:
+                                msg[i].code = '<a type="button" class="btn btn-success" href="club_ok(' +
+                                    msg[i].id +
+                                    ')"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>' +
+                                    '<a type="button" class="btn btn-danger" href="club_no(' +
+                                    msg[i].id +
+                                    ')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
+                                break;
+                            case 1:
+                                msg[i].code = '已批准';
+                                break;
+                            case 2:
+                                msg[i].code = '已驳回';
+                                break;
+                        }
                     }
                     return res;
                 }
