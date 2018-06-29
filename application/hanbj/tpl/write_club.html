@@ -49,18 +49,18 @@
                         msg[i].owner = msg[i].owner + '-' + msg[i].m;
                         msg[i].worker = msg[i].worker + '-' + msg[i].n;
                         switch (msg[i].code) {
-                            case 0:
-                                msg[i].code = '<a type="button" class="btn btn-success" href="club_ok(' +
+                            case '0':
+                                msg[i].code = '<a type="button" class="btn btn-success" href="javascript:club_ok(' +
                                     msg[i].id +
-                                    ')"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>' +
-                                    '<a type="button" class="btn btn-danger" href="club_no(' +
+                                    ')" style="margin-right: 1em;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>' +
+                                    '<a type="button" class="btn btn-danger" href="javascript:club_no(' +
                                     msg[i].id +
                                     ')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>';
                                 break;
-                            case 1:
+                            case '1':
                                 msg[i].code = '已批准';
                                 break;
-                            case 2:
+                            case '2':
                                 msg[i].code = '已驳回';
                                 break;
                         }
