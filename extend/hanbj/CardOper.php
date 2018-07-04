@@ -90,6 +90,28 @@ class CardOper
         return $ret;
     }
 
+    public static function Card2U($code)
+    {
+        $map['f.code'] = $code;
+        $map['m.code'] = ['in', MemberOper::getMember()];
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        $res = Db::table('card')
+            ->alias('f')
+            ->where($map)
+            ->join($join)
+            ->field([
+                'm.unique_name',
+                'm.openid'
+            ])
+            ->find();
+        if (null === $res) {
+            throw new HttpResponseException(json(['msg' => '查无此人：' . $code], 400));
+        }
+        return $res;
+    }
+
     public static function renew($uname)
     {
         $ret = self::U2Card($uname);
