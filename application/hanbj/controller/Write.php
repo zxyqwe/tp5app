@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
+use hanbj\ClubOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
@@ -344,16 +345,6 @@ class Write extends Controller
     {
         $pk = intval(input('post.pk'));
         $value = intval(input('post.value'));
-        $unique = session('unique_name');
-        try {
-            Db::table('club')
-                ->data(['code' => $value])
-                ->where(['id' => $pk, 'code' => 0])
-                ->update();
-            trace("Club Edit $unique $pk $value");
-        } catch (\Exception $e) {
-            return json(['msg' => $e->getMessage()], 400);
-        }
-        return json('修改成功！');
+        return ClubOper::grantClub($pk, $value);
     }
 }
