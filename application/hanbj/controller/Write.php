@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\ClubOper;
 use hanbj\FeeOper;
@@ -110,37 +111,8 @@ class Write extends Controller
         if (empty($name)) {
             return json(['msg' => 'empty name'], 400);
         }
-        $data = [];
-        $oper = session('name');
-        $d = date("Y-m-d H:i:s");
         foreach ($name as $tmp) {
-            $data[] = [
-                'unique_name' => $tmp['u'],
-                'oper' => $oper,
-                'act_time' => $d,
-                'bonus' => BonusOper::getVolBonus(),
-                'name' => BonusOper::getActName() . '志愿者'
-            ];
-        }
-        Db::startTrans();
-        try {
-            $res = Db::table('activity')
-                ->insertAll($data);
-            if ($res === count($data)) {
-                Db::commit();
-            } else {
-                Db::rollback();
-                return json(['msg' => $res], 400);
-            }
-        } catch (\Exception $e) {
-            Db::rollback();
-            $e = $e->getMessage();
-            trace("Vol Add $e");
-            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
-            if (isset($token[2])) {
-                $e = "错误！【 {$token[2]} 】已经被登记在【 {$token[1]} 】活动中了。请删除此项，重试。";
-            }
-            return json(['msg' => $e], 400);
+            ActivityOper::signAct($tmp['u'], '', BonusOper::getActName() . '志愿者', BonusOper::getVolBonus());
         }
         return json(['msg' => 'ok']);
     }

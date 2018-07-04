@@ -4,6 +4,7 @@ namespace hanbj;
 
 use hanbj\weixin\WxTemp;
 use think\Db;
+use think\exception\HttpResponseException;
 
 class ActivityOper
 {
@@ -39,7 +40,9 @@ class ActivityOper
             if (false != strpos('' . $e, 'constraint')) {
                 return json(['msg' => 'ok']);
             }
-            return json(['msg' => $e->getMessage()], 400);
+            $e = $e->getMessage();
+            trace("signAct $e");
+            throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 }
