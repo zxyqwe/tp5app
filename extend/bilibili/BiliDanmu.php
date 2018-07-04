@@ -46,12 +46,11 @@ class BiliDanmu extends BiliBase
 
     private function _handle($real_roomid, $item, $key, $url, &$ret)
     {
-        $payload = [
+        $payload_raw = [
             'roomid' => $real_roomid,
             'raffleId' => $item['raffleId']
         ];
-        $ret[] = $payload;
-        $payload = http_build_query($payload);
+        $payload = http_build_query($payload_raw);
         if ($this->lock("$key$payload")) {
             return;
         }
@@ -79,6 +78,7 @@ class BiliDanmu extends BiliBase
         if ($join['code'] === 0) {
             trace(json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]));
             $this->lock("$key$payload", $this->long_timeout());
+            $ret[] = $payload_raw;
             return;
         }
         if ($join['code'] === 65531
