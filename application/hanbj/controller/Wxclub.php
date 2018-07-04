@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\CardOper;
 use hanbj\ClubOper;
 use hanbj\MemberOper;
 use hanbj\weixin\WxHanbj;
@@ -93,5 +94,12 @@ class Wxclub extends Controller
 
     public function add_club_act()
     {
+        $pk = intval(input('post.pk'));
+        $code = input('post.code');
+        if (!is_numeric($code)) {
+            $code = 0;
+        }
+        $res = CardOper::Card2U($code);
+        return ClubOper::signClub($res['unique_name'], $res['openid'], $pk);
     }
 }

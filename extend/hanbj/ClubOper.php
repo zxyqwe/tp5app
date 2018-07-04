@@ -51,6 +51,22 @@ class ClubOper
         ActivityOper::signAct($ret['o2'], $ret['n2'], $ret['name'], 8);
     }
 
+    public static function signClub($user, $openid, $pk)
+    {
+        $unique_name = session('unique_name');
+        $map['owner|worker'] = $unique_name;
+        $map['id'] = $pk;
+        $ret = Db::table('club')
+            ->where($map)
+            ->field('name')
+            ->find();
+        if ($ret === null) {
+            return json(['msg' => '没有活动'], 400);
+        }
+        ActivityOper::signAct($user, $openid, $ret['name'], 5);
+        return json(['msg' => 'ok']);
+    }
+
     public static function applyClub($a_name, $w_name, $a_time, $e_time)
     {
         if (strlen($a_name) < 1 || $a_time > $e_time) {
