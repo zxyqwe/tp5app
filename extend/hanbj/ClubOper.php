@@ -30,11 +30,23 @@ class ClubOper
 
     private static function actClub($pk)
     {
+        $join = [
+            ['member f', 'm.owner=f.unique_name', 'left'],
+            ['member n', 'n.unique_name=m.worker', 'left']
+        ];
         $ret = Db::table('club')
+            ->alias('m')
             ->where(['id' => $pk])
-            ->field(['owner', 'worker'])
+            ->join($join)
+            ->field([
+                'name',
+                'm.owner as o1',
+                'm.worker as o2',
+                'f.openid as n1',
+                'n.openid as n2',])
             ->find();
-
+        ActivityOper::signAct($ret['o1'], $ret['n1'], $ret['name'], 8);
+        ActivityOper::signAct($ret['o2'], $ret['n2'], $ret['name'], 8);
     }
 
     public static function applyClub($a_name, $w_name, $a_time, $e_time)
