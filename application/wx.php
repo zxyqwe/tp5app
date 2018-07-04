@@ -29,6 +29,8 @@ class XMLParse
             $tousername = $array_a->item(0)->nodeValue;
             return array(0, $encrypt, $tousername);
         } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("wx extravt $e");
             //print $e . "\n";
             return array(ErrorCode::$ParseXmlError, null, null);
         }
@@ -217,6 +219,8 @@ class SHA1
             $str = implode($array);
             return array(ErrorCode::$OK, sha1($str));
         } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("wx SHA1 $e");
             return array(ErrorCode::$ComputeSignatureError, null);
         }
     }
@@ -317,6 +321,8 @@ class Prpcrypt
             //使用BASE64对加密后的字符串进行编码
             return array(ErrorCode::$OK, base64_encode($encrypted));
         } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("wx Encrypt $e");
             //print $e;
             return array(ErrorCode::$EncryptAESError, null);
         }
@@ -343,6 +349,8 @@ class Prpcrypt
             mcrypt_generic_deinit($module);
             mcrypt_module_close($module);
         } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("wx Decrypt $e");
             return array(ErrorCode::$DecryptAESError, null);
         }
 
@@ -360,6 +368,8 @@ class Prpcrypt
             $xml_content = substr($content, 4, $xml_len);
             $from_appid = substr($content, $xml_len + 4);
         } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("wx Decrypt2 $e");
             //print $e;
             return array(ErrorCode::$IllegalBuffer, null);
         }
