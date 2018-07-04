@@ -23,7 +23,9 @@ class ClubOper
                 self::actClub($pk);
             }
         } catch (\Exception $e) {
-            return json(['msg' => $e->getMessage()], 400);
+            $e = $e->getMessage();
+            trace("grantClub $e");
+            return json(['msg' => $e], 400);
         }
         return json('修改成功！');
     }
@@ -71,7 +73,9 @@ class ClubOper
             trace("Club Apply " . json_encode($data));
             return json('提交成功！');
         } catch (\Exception $e) {
-            return json(['msg' => $e->getMessage()], 400);
+            $e = $e->getMessage();
+            trace("applyClub $e");
+            return json(['msg' => $e], 400);
         }
     }
 }
