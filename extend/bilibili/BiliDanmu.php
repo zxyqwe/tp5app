@@ -70,7 +70,7 @@ class BiliDanmu extends BiliBase
         }
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
         $join = json_decode($raw, true);
-        if (false !== strpos($raw, '访问被拒绝')) {
+        if (false !== strpos($raw, '访问被拒绝') || $join['code'] == 400) {
             trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]));
             $this->lock("Bili400", $this->long_timeout());
             return;
