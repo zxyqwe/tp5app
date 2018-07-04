@@ -2,10 +2,10 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
-use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -81,23 +81,7 @@ class Wxwork extends Controller
         if (null === $res) {
             return json(['msg' => '查无此人：' . $code], 400);
         }
-        $data['unique_name'] = $res['unique_name'];
-        $data['oper'] = session('unique_name');
-        $data['act_time'] = date("Y-m-d H:i:s");
-        $data['name'] = BonusOper::getActName();
-        $data['bonus'] = BonusOper::getActBonus();
-        try {
-            Db::table('activity')
-                ->data($data)
-                ->insert();
-            WxTemp::regAct($res['openid'], $res['unique_name'], BonusOper::getActName());
-            return json(['msg' => 'ok']);
-        } catch (\Exception $e) {
-            if (false != strpos('' . $e, 'constraint')) {
-                return json(['msg' => 'ok']);
-            }
-            return json(['msg' => $e->getMessage()], 400);
-        }
+        return ActivityOper::signAct($res['unique_name'], $res['openid'], BonusOper::getActName(), BonusOper::getActBonus());
     }
 
     public function act_log()
