@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
+use hanbj\CardOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use think\Controller;
@@ -64,23 +65,7 @@ class Wxwork extends Controller
         if (!is_numeric($code)) {
             $code = 0;
         }
-        $map['f.code'] = $code;
-        $map['m.code'] = ['in', MemberOper::getMember()];
-        $join = [
-            ['member m', 'm.openid=f.openid', 'left']
-        ];
-        $res = Db::table('card')
-            ->alias('f')
-            ->where($map)
-            ->join($join)
-            ->field([
-                'm.unique_name',
-                'm.openid'
-            ])
-            ->find();
-        if (null === $res) {
-            return json(['msg' => '查无此人：' . $code], 400);
-        }
+        $res=CardOper::Card2U($code);
         return ActivityOper::signAct($res['unique_name'], $res['openid'], BonusOper::getActName(), BonusOper::getActBonus());
     }
 
