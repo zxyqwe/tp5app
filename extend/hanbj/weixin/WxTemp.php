@@ -7,6 +7,9 @@ class WxTemp
 {
     public static function notifyFee($openid, $uname, $fee, $cache_fee, $label)
     {
+        if (strlen($openid) <= 1) {
+            return;
+        }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
         $data = [
@@ -49,6 +52,9 @@ class WxTemp
 
     public static function regAct($openid, $uname, $act)
     {
+        if (strlen($openid) <= 1) {
+            return;
+        }
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
         $data = [

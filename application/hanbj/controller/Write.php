@@ -97,7 +97,9 @@ class Write extends Controller
             }
         } catch (\Exception $e) {
             Db::rollback();
-            return json(['msg' => $e->getMessage()], 400);
+            $e = $e->getMessage();
+            trace("Fee Add $e");
+            return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok']);
     }
@@ -132,7 +134,8 @@ class Write extends Controller
             }
         } catch (\Exception $e) {
             Db::rollback();
-            $e = $e->__toString();
+            $e = $e->getMessage();
+            trace("Vol Add $e");
             preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
                 $e = "错误！【 {$token[2]} 】已经被登记在【 {$token[1]} 】活动中了。请删除此项，重试。";
@@ -175,7 +178,8 @@ class Write extends Controller
             }
         } catch (\Exception $e) {
             Db::rollback();
-            $e = $e->__toString();
+            $e = $e->getMessage();
+            trace("Fame Add $e");
             preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
                 $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
@@ -312,7 +316,9 @@ class Write extends Controller
                         trace("Prom Add $unique $name");
                     }
                 } catch (\Exception $e) {
-                    return json(['msg' => $e->getMessage()], 400);
+                    $e = $e->getMessage();
+                    trace("Prom Edit $e");
+                    return json(['msg' => $e], 400);
                 }
                 return json('修改成功！');
             default:
@@ -336,7 +342,9 @@ class Write extends Controller
                 ->update();
             trace("Fame Edit $unique $pk $name $value");
         } catch (\Exception $e) {
-            return json(['msg' => $e->getMessage()], 400);
+            $e = $e->getMessage();
+            trace("Fame Edit $e");
+            return json(['msg' => $e], 400);
         }
         return json('修改成功！');
     }

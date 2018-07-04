@@ -100,6 +100,7 @@ class Wxtest extends Controller
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
+            trace("Test UP $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);

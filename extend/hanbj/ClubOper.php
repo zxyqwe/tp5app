@@ -4,7 +4,6 @@ namespace hanbj;
 
 
 use think\Db;
-use think\exception\HttpResponseException;
 
 class ClubOper
 {

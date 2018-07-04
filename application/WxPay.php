@@ -1589,6 +1589,8 @@ class WxPayApi
             $result = WxPayResults::Init($xml);
         } catch (WxPayException $e) {
             $msg = $e->errorMessage();
+            $e = $e->getMessage();
+            trace("wxPay Notify $e");
             return false;
         }
 
@@ -1680,6 +1682,8 @@ class WxPayApi
         try {
             self::report($objInput);
         } catch (WxPayException $e) {
+            $e = $e->getMessage();
+            trace("wx Report $e");
             //不做任何处理
         }
     }

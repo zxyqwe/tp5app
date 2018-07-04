@@ -134,6 +134,7 @@ class BonusOper
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
+            trace("Bonus UP $e");
             return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok', 'c' => 1]);
