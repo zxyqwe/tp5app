@@ -19,7 +19,7 @@ class ClubOper
                 ->where(['id' => $pk, 'code' => 0])
                 ->update();
             trace("Club Edit $unique $pk $value");
-            if ($ret === 1) {
+            if ($ret === 1 && $value === 1) {
                 self::actClub($pk);
             }
         } catch (\Exception $e) {
