@@ -27,8 +27,7 @@ Hook::add('app_end', function () {
             'Cookies' => $_COOKIE,
             'Session' => isset($_SESSION) ? $_SESSION : [],
             'Server' => $_SERVER,
-            'Env' => $_ENV,
-            'Const' => get_defined_constants(true)['user']
+            'Env' => $_ENV
         ];
         $ret = explode_dict($ret);
         foreach ($ret as $i) {
