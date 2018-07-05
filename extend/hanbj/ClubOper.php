@@ -53,9 +53,12 @@ class ClubOper
 
     public static function signClub($user, $openid, $pk)
     {
+        $d = date("Y-m-d");
         $unique_name = session('unique_name');
         $map['owner|worker'] = $unique_name;
         $map['id'] = $pk;
+        $map['start_time'] = ['LE', $d];
+        $map['stop_time'] = ['GE', $d];
         $ret = Db::table('club')
             ->where($map)
             ->field('name')
