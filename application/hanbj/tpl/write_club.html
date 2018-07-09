@@ -33,11 +33,30 @@
     var s_club = (function ($, w, undefined) {
         'use strict';
         var $table;
-        w.club_ok = function (pk) {
-
+        var up_club = function (pk, v) {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u20,
+                data: {
+                    pk: pk,
+                    value: v
+                },
+                dataType: "json",
+                success: function (msg) {
+                    $table.bootstrapTable('refresh');
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
         };
-        w.club_no = function (ok) {
-
+        w.club_ok = function (pk) {
+            up_club(pk, 1);
+        };
+        w.club_no = function (pk) {
+            up_club(pk, 2);
         };
         var init = function () {
             $table = $('#table');
