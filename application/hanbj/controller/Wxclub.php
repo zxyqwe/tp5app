@@ -45,7 +45,8 @@ class Wxclub extends Controller
         $club = Db::table('club')
             ->alias('m')
             ->join($join)
-            ->where('`stop_time` >= :d AND (`m`.`code` = 1 OR `owner` = :uni)', ['d' => $d, 'uni' => $unique_name])
+            ->where('`stop_time` >= :d AND (`m`.`code` = 1 OR ((`owner` = :uni OR `worker` = :unii) AND `m`.`code` <> 2))',
+                ['d' => $d, 'uni' => $unique_name, 'unii' => $unique_name])
             ->field([
                 'm.id',
                 'name',
