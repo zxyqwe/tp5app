@@ -34,7 +34,7 @@ class ActivityOper
             Db::table('activity')
                 ->data($data)
                 ->insert();
-            WxTemp::regAct($openid, $user, BonusOper::getActName());
+            WxTemp::regAct($openid, $user, $act_name);
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
             if (false != strpos('' . $e, 'constraint')) {

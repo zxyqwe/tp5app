@@ -38,7 +38,7 @@ class ClubOper
         ];
         $ret = Db::table('club')
             ->alias('m')
-            ->where(['id' => $pk])
+            ->where(['m.id' => $pk])
             ->join($join)
             ->field([
                 'name',
