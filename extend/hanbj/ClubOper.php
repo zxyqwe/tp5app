@@ -66,8 +66,7 @@ class ClubOper
         if ($ret === null) {
             return json(['msg' => '没有活动'], 400);
         }
-        ActivityOper::signAct($user, $openid, $ret['name'], 5);
-        return json(['msg' => 'ok']);
+        return ActivityOper::signAct($user, $openid, $ret['name'], 5);
     }
 
     public static function applyClub($a_name, $w_name, $a_time, $e_time)
