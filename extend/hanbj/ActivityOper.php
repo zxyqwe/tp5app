@@ -37,10 +37,10 @@ class ActivityOper
             WxTemp::regAct($openid, $user, $act_name);
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
-            if (false != strpos('' . $e, 'constraint')) {
-                return json(['msg' => 'ok']);
-            }
             $e = $e->getMessage();
+            if (false != strpos('' . $e, 'Duplicate')) {
+                return json(['msg' => '重复登记活动'], 400);
+            }
             trace("signAct $e");
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
