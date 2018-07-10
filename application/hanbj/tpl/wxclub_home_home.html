@@ -96,12 +96,11 @@
                     scan: function (item) {
                         if ((item.owner !== clubdata.uni
                             && item.worker !== clubdata.uni)
-                            || item.code !== 1) {
+                            || item.code !== '1') {
                             return;
                         }
-                        var today = new Date();
-                        today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                        if (today < item.a_time || today > item.e_time) {
+                        var today = new Date().toISOString().split('T')[0];
+                        if (today < item.start_time || today > item.stop_time) {
                             return;
                         }
                         up_scan(item);
