@@ -94,8 +94,8 @@
                 computed: {},
                 methods: {
                     scan: function (item) {
-                        if (item.owner !== clubdata.uni
-                            || item.worker !== clubdata.uni
+                        if ((item.owner !== clubdata.uni
+                            && item.worker !== clubdata.uni)
                             || item.code !== 1) {
                             return;
                         }
