@@ -57,8 +57,8 @@ class ClubOper
         $unique_name = session('unique_name');
         $map['owner|worker'] = $unique_name;
         $map['id'] = $pk;
-        $map['start_time'] = ['LE', $d];
-        $map['stop_time'] = ['GE', $d];
+        $map['start_time'] = ['ELT', $d];
+        $map['stop_time'] = ['EGT', $d];
         $ret = Db::table('club')
             ->where($map)
             ->field('name')
