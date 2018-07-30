@@ -219,8 +219,9 @@ class Mobile extends Controller
                 $rst = [];
                 foreach ($ret as $i) {
                     if (false !== strpos($i, '秦')
-                        || false !== strpos($i, '汉')
                         || false !== strpos($i, '周')
+                        || false !== strpos($i, '晋')
+                        || false !== strpos($i, '隋')
                     ) {
                         $rst[] = $i;
                     }
