@@ -2,7 +2,6 @@
 
 namespace hanbj;
 
-
 use think\Db;
 use think\exception\HttpResponseException;
 
@@ -26,9 +25,9 @@ class MemberOper
         "甲申", "乙酉", "丙戌", "丁亥", "戊子", "己丑", "庚寅", "辛卯", "壬辰", "癸巳",
         "甲午", "乙未", "丙申", "丁酉", "戊戌", "己亥", "庚子", "辛丑", "壬寅", "癸卯",
         "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
-        "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥"
+        "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥",
     ];
-    const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏", "商", "周", "秦", "汉","晋","隋"];
+    const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏", "商", "周", "秦", "汉", "晋", "隋"];
     const VERSION = 'wx_succ_2';
 
     public static function wx_login()
@@ -111,12 +110,29 @@ class MemberOper
             $data[] = [
                 'unique_name' => $u,
                 'tieba_id' => $u,
-                'code' => self::UNUSED
+                'code' => self::UNUSED,
             ];
         }
         $ret = Db::table('member')
             ->insertAll($data);
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
+    }
+
+    public static function get_open()
+    {
+        $map['code'] = MemberOper::UNUSED;
+        $map['id'] = ['>', 863];
+        $ret = Db::table('member')
+            ->where($map)
+            ->field('unique_name  as u')
+            ->select();
+        $already = [];
+        foreach ($ret as $i) {
+            $already[] = $i['u'];
+        }
+        trace("可选编号 " . count($already));
+        sort($already);
+        return $already;
     }
 
     public static function list_code($c, $debug = true)
@@ -151,7 +167,7 @@ class MemberOper
 
         $name = "MemberOper::daily()renew";
         $renew = !cache("?$name");
-        if($renew){cache($name, $name, 86400 * 30);}
+        if ($renew) {cache($name, $name, 86400 * 30);}
 
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {

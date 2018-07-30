@@ -2,24 +2,24 @@
 
 namespace app\hanbj\controller;
 
+use app\SHA1;
+use app\WXBizMsgCrypt;
 use hanbj\BonusOper;
+use hanbj\CardOper;
+use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
 use hanbj\vote\WxVote;
-use app\SHA1;
-use app\WXBizMsgCrypt;
+use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 use think\Response;
-use hanbj\FeeOper;
-use hanbj\weixin\WxHanbj;
-use hanbj\CardOper;
 
 class Mobile extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,reg,event,help']
+        'valid_id' => ['except' => 'index,reg,event,help'],
     ];
 
     protected function valid_id()
@@ -58,7 +58,7 @@ class Mobile extends Controller
                 'pref',
                 'web_name',
                 'bonus',
-                'phone'
+                'phone',
             ])
             ->find();
         if (null === $res) {
@@ -85,7 +85,7 @@ class Mobile extends Controller
             'card' => CardOper::mod_ret($map),
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y'),
-            'vote' => WxVote::result($res['unique_name'])
+            'vote' => WxVote::result($res['unique_name']),
         ]);
     }
 
@@ -105,7 +105,7 @@ class Mobile extends Controller
         $phone = input('post.phone', FILTER_VALIDATE_INT);
         $eid = input('post.eid');
         $map['phone'] = $phone;
-        $map['openid'] = ['exp', Db::raw('is null')];;
+        $map['openid'] = ['exp', Db::raw('is null')];
         $res = Db::table('member')
             ->where($map)
             ->value('eid');
@@ -215,19 +215,7 @@ class Mobile extends Controller
     {
         switch ($this->request->method()) {
             case 'GET':
-                $ret = MemberOper::list_code(MemberOper::UNUSED, false);
-                $rst = [];
-                foreach ($ret as $i) {
-                    if (false !== strpos($i, '秦')
-                        || false !== strpos($i, '周')
-                        || false !== strpos($i, '晋')
-                        || false !== strpos($i, '隋')
-                    ) {
-                        $rst[] = $i;
-                    }
-                }
-                trace("可选编号 " . count($rst));
-                sort($rst);
+                $rst = MemberOper::get_open();
                 return json(['data' => $rst]);
             case 'POST':
                 $openid = session('openid');
