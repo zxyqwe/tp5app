@@ -9,7 +9,9 @@ var gulp = require('gulp'),
 gulp.task('js', function () {
     return gulp.src('public/src/*.js')
         .pipe(rev())
-        .pipe(uglify({mangle: true}))
+        .pipe(uglify({
+            mangle: true
+        }))
         .pipe(gulp.dest('public/static/'))
         .pipe(rev.manifest())
         .pipe(gulp.dest('public/static/rev/js'));

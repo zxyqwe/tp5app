@@ -14,7 +14,7 @@ class GeoHelper
     public function getPos($pos)
     {
         $prefix = 'baidu_' . $pos;
-        if (cache('?' . $prefix)) {
+        if (cache("?$prefix")) {
             return cache($prefix);
         }
         if (cache('?baidu_limit_geopos')) {
