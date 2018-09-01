@@ -231,7 +231,7 @@ class WxOrg
             ->field('unique_name')
             ->find();
         $uname = $res['unique_name'];
-        $ret = "提取投票......{$this->name}";
+        $ret = "\n\n提取投票......{$this->name}";
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";
         }
