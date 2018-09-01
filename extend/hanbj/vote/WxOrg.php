@@ -161,12 +161,15 @@ class WxOrg
         $all = $this->getAll();
         $len = count($all) * count($this->obj);
 
+        $map = [
+            'year' => WxOrg::year,
+            'catg' => $this->catg
+        ];
+        if (!in_array('坎丙午', $this->getAll())) {
+            $map['unique_name'] = ['neq', '坎丙午'];
+        }
         $acc = Db::table('score')
-            ->where([
-                'year' => WxOrg::year,
-                'catg' => $this->catg,
-                'unique_name' => ['neq', '坎丙午']
-            ])
+            ->where($map)
             ->count('id');
 
         if ($acc !== $len) {
