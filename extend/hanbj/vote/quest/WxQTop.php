@@ -3,6 +3,7 @@
 namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
+use think\Db;
 
 class WxQTop
 {
@@ -10,7 +11,19 @@ class WxQTop
     {
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::getDeputy();
-        $this->obj = FameOper::getTop();
+        $this->obj = [];
+        $ret = Db::table('member')
+            ->where([
+                'unique_name' => ['in', FameOper::getTop()]
+            ])
+            ->field([
+                'unique_name as u',
+                'tieba_id as t'
+            ])
+            ->select();
+        foreach ($ret as $item) {
+            $this->obj[] = "{$item['u']} - {$item['t']}";
+        }
         $this->max_score = 80;
         $this->name = date('Y') . '会长层测评';
         $this->test = [

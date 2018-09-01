@@ -13,8 +13,12 @@ class WxQDep
         $this->upper = [];
         $this->lower = array_merge(FameOper::getUp(), FameOper::getTop());
         $ret = Db::table('fame')
-            ->where(['year' => WxOrg::year])
-            ->field(['distinct label'])
+            ->where([
+                'year' => WxOrg::year
+            ])
+            ->field([
+                'distinct label'
+            ])
             ->select();
         $this->obj = [];
         foreach ($ret as $item) {
