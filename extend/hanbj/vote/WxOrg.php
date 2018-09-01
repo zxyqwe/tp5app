@@ -226,15 +226,16 @@ class WxOrg
             ->field('unique_name')
             ->find();
         $uname = $res['unique_name'];
+        $ret = "提取投票...{$this->name}";
         if (!in_array($uname, $this->getUser())) {
-            return "检查口令...成功\n身份验证...失败\n\n文字信息：投票";
+            return "$ret\n身份验证...失败\n";
         }
         $prog = $this->progress();
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "检查口令...成功\n身份验证...成功\n提取投票...成功\n\n有以下投票，一小时有效，过时重新取号\n" . $prog;
-        $finish = "-----\n";
+        $ret = "\n身份验证...成功\n有以下投票，一小时有效，过时重新取号\n$prog";
+        $finish = "-----\n\n";
         $unfinish = "-----\n";
 
         $ans_list = [];

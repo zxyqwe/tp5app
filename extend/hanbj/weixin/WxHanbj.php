@@ -72,14 +72,13 @@ class WxHanbj
             case 'text':
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
-                if ($cont === '投票会长') {
+                if ($cont === '投票') {
+                    $cont = "检查口令...成功\n";
                     $org = new WxOrg(1);
-                    $cont = $org->listobj($from);
-                    return self::auto($from, $to, $cont, '投票会长');
-                } elseif ($cont === '投票部门') {
+                    $cont .= $org->listobj($from);
                     $org = new WxOrg(2);
-                    $cont = $org->listobj($from);
-                    return self::auto($from, $to, $cont, '投票部门');
+                    $cont .= $org->listobj($from);
+                    return self::auto($from, $to, $cont, '投票');
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));
