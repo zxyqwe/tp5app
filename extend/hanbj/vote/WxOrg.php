@@ -28,6 +28,7 @@ class WxOrg
         $this->obj = $quest->obj;
         $this->name = $quest->name;
         $this->test = $quest->test;
+        $this->max_score = $quest->max_score;
     }
 
     public function getAll()
@@ -49,7 +50,8 @@ class WxOrg
         $ans_list = [];
         $ans = Db::table('score')
             ->where([
-                'year' => WxOrg::year
+                'year' => WxOrg::year,
+                'catg' => $this->catg
             ])
             ->field([
                 'ans',
@@ -121,7 +123,7 @@ class WxOrg
             }
             $ret[] = $tmp;
         }
-        $tmp = ['q' => '总分（100分）'];
+        $tmp = ['q' => "总分（{$this->max_score}分）"];
         foreach ($this->obj as $o) {
             if (isset($ans[$o])) {
                 $tmp[$o] = number_format(array_sum($ans[$o]), 2, '.', '');
@@ -162,6 +164,7 @@ class WxOrg
         $acc = Db::table('score')
             ->where([
                 'year' => WxOrg::year,
+                'catg' => $this->catg,
                 'unique_name' => ['neq', '坎丙午']
             ])
             ->count('id');
@@ -183,7 +186,7 @@ class WxOrg
         if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
             throw new HttpResponseException(json(['msg' => '没有答案啊？'], 400));
         }
-        if (array_sum($ans['sel']) === 100) {
+        if (array_sum($ans['sel']) === $this->max_score) {
             throw new HttpResponseException(json(['msg' => '不能给满分！'], 400));
         }
         if (!isset($ans['sel_add'])) {
@@ -238,6 +241,7 @@ class WxOrg
         $ans = Db::table('score')
             ->where([
                 'year' => WxOrg::year,
+                'catg' => $this->catg,
                 'unique_name' => $uname
             ])
             ->field('name')
