@@ -25,7 +25,7 @@ class WxQTop
             $this->obj[] = "{$item['u']}~{$item['t']}";
         }
         $this->max_score = 80;
-        $this->name = date('Y') . '会长层测评';
+        $this->name = date('Y') . '年度会长层测评';
         $this->test = [
             [
                 'q' => '你对该会长个人工作状态的评价'

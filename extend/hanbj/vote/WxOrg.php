@@ -234,7 +234,7 @@ class WxOrg
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "$ret\n身份验证......成功\n有以下投票，一小时有效，过时重新取号\n$prog";
+        $ret = "$ret\n身份验证......成功\n链接有效期......一小时（过时重新取号）\n$prog";
         $finish = '';
         $unfinish = '';
         $sep = "---------------\n";
