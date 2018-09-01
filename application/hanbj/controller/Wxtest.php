@@ -58,9 +58,9 @@ class Wxtest extends Controller
             $data['ans'] = [];
         } else {
             $data['ans'] = json_decode($ans['ans'], true);
-        }
-        if (count($data['ans']['sel']) != count($data['test'])) {
-            $data['ans'] = [];
+            if (count($data['ans']['sel']) != count($data['test'])) {
+                $data['ans'] = [];
+            }
         }
         return view('home', ['obj' => json_encode($data)]);
     }
