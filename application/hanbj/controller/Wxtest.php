@@ -51,6 +51,7 @@ class Wxtest extends Controller
         $data['uname'] = "$obj - {$ret['u']}";
         $data['name'] = $org->name;
         $data['test'] = $org->test;
+        $data['catg'] = $catg;
         $ans = Db::table('score')
             ->where([
                 'unique_name' => $uname,

@@ -169,6 +169,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                 uname: testdata.uname,
                 name: testdata.name,
                 test: testdata.test,//问卷
+                catg: testdata.catg,
                 ans: testdata.ans.sel,//答案
                 ans_add: testdata.ans.sel_add,//答案补充
                 cur_q: '',//问题
@@ -237,16 +238,6 @@ var wx_test = (function ($, Vue, w, undefined) {
                 up: function () {
                     w.waitloading();
                     this.next(0);
-                    var sum = 0;
-                    var i = this.ans.length;
-                    while (i--) {
-                        sum += this.ans[i];
-                    }
-                    if (sum === 100) {
-                        w.msgto2('全满分');
-                        w.cancelloading();
-                        return;
-                    }
                     $.ajax({
                         type: "POST",
                         url: "/hanbj/wxtest/up",
@@ -256,7 +247,8 @@ var wx_test = (function ($, Vue, w, undefined) {
                                 sel: this.ans,
                                 sel_add: this.ans_add
                             },
-                            obj: this.uname.split(' - ')[0]
+                            obj: this.uname.split(' - ')[0],
+                            catg: this.catg
                         },
                         success: function (msg) {
                             w.msgok('提交成功');
