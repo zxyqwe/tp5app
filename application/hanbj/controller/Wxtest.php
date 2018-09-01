@@ -41,14 +41,7 @@ class Wxtest extends Controller
         if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
-        $map['unique_name'] = $obj;
-        $ret = Db::table('member')
-            ->where($map)
-            ->field([
-                'tieba_id as u'
-            ])
-            ->find();
-        $data['uname'] = "$obj - {$ret['u']}";
+        $data['uname'] = $obj;
         $data['name'] = $org->name;
         $data['test'] = $org->test;
         $data['catg'] = $catg;
@@ -66,7 +59,7 @@ class Wxtest extends Controller
         } else {
             $data['ans'] = json_decode($ans['ans'], true);
         }
-        if (count($data['ans']) != count($data['test'])) {
+        if (count($data['ans']['sel']) != count($data['test'])) {
             $data['ans'] = [];
         }
         return view('home', ['obj' => json_encode($data)]);
