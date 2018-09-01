@@ -8,7 +8,7 @@ class WxVote
 {
     private static function weight()
     {
-        $org = new WxOrg();
+        $org = new WxOrg(1);
         $ret = Db::table('vote')
             ->where([
                 'year' => WxOrg::year

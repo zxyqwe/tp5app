@@ -17,7 +17,7 @@ class Wxtest extends Controller
     protected function valid_id()
     {
         $uname = session('unique_name');
-        $org = new WxOrg();
+        $org = new WxOrg(1);
         if (!MemberOper::wx_login() || !in_array($uname, $org->getUser())) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
@@ -35,7 +35,7 @@ class Wxtest extends Controller
         $obj = json_decode($obj, true);
         $obj = $obj['val'];
         $uname = session('unique_name');
-        $org = new WxOrg();
+        $org = new WxOrg(1);
         if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
@@ -47,8 +47,8 @@ class Wxtest extends Controller
             ])
             ->find();
         $data['uname'] = "$obj - {$ret['u']}";
-        $data['name'] = WxOrg::name;
-        $data['test'] = WxOrg::test;
+        $data['name'] = $org->name;
+        $data['test'] = $org->test;
         $ans = Db::table('score')
             ->where([
                 'unique_name' => $uname,
@@ -68,12 +68,12 @@ class Wxtest extends Controller
     public function up()
     {
         $obj = input('post.obj');
-        $org = new WxOrg();
+        $org = new WxOrg(1);
         if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
         $ans = input('post.ans/a', []);
-        WxOrg::checkAns($ans);
+        $org->checkAns($ans);
         $ans = json_encode($ans);
         $uname = session('unique_name');
         try {

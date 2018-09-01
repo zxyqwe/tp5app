@@ -73,7 +73,7 @@ class WxHanbj
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
                 if ($cont === '投票') {
-                    $org = new WxOrg();
+                    $org = new WxOrg(1);
                     $cont = $org->listobj($from);
                     return self::auto($from, $to, $cont, '投票');
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
