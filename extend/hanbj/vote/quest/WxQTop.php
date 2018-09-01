@@ -22,7 +22,7 @@ class WxQTop
             ])
             ->select();
         foreach ($ret as $item) {
-            $this->obj[] = "{$item['u']} - {$item['t']}";
+            $this->obj[] = "{$item['u']}~{$item['t']}";
         }
         $this->max_score = 80;
         $this->name = date('Y') . '会长层测评';
