@@ -4,7 +4,7 @@ namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
 
-class WxQTop
+class WxQDep
 {
     function __construct()
     {
