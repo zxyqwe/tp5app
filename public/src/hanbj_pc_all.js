@@ -707,9 +707,6 @@ var test = (function ($, Vue, w, undefined) {
     var init = function () {
         var msg = $('#data').html();
         msg = JSON.parse(msg);
-        var trans = function (item) {
-            return item + '-' + msg.trn[item];
-        };
         var vmain = new Vue({
             el: '#body',
             data: {
@@ -717,15 +714,7 @@ var test = (function ($, Vue, w, undefined) {
                 mis: msg.mis,
                 rto: msg.rto
             },
-            methods: {
-                trans: function (item) {
-                    return trans(item);
-                }
-            },
             ready: function () {
-                w.codeFormatter = function (value, row) {
-                    return trans(value);
-                };
                 $('#table1').bootstrapTable({
                     data: msg.avg
                 });

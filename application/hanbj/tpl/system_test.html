@@ -18,7 +18,7 @@
                 <thead>
                 <tr>
                     <th data-field="q">问题</th>
-                    <th data-field="{{ item }}" v-for="item in obj">{{ trans(item) }}</th>
+                    <th data-field="{{ item }}" v-for="item in obj">{{ item }}</th>
                 </tr>
                 </thead>
             </table>
@@ -27,7 +27,7 @@
                 <thead>
                 <tr>
                     <th data-field="q">问题</th>
-                    <th data-field="o" data-formatter="codeFormatter">被测人</th>
+                    <th data-field="o">被测人</th>
                     <th data-field="s">分数</th>
                     <th data-field="t">意见</th>
                 </tr>

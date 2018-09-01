@@ -113,23 +113,10 @@ class System extends Controller
         $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
         $ratio = number_format($ratio, 2, '.', '');
         $miss = cache($org->name . 'getAns.miss');
-        $map['unique_name'] = ['in', $org->obj];
-        $ret = Db::table('member')
-            ->where($map)
-            ->field([
-                'unique_name as u',
-                'tieba_id as t'
-            ])
-            ->select();
-        $dict = [];
-        foreach ($ret as $t) {
-            $dict[$t['u']] = $t['t'];
-        }
         $ans = [
             'avg' => $org->getAvg($ans),
             'cmt' => $org->getComment($ans),
             'obj' => $org->obj,
-            'trn' => $dict,
             'mis' => $miss,
             'rto' => $ratio
         ];
