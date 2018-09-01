@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -14,8 +15,12 @@ class WxOrg
     function __construct($catg)
     {
         switch ($catg) {
+            case 2:
+                $quest = new WxQDep();
+                break;
             default:
                 $quest = new WxQTop();
+                break;
         }
         $this->catg = $catg;
         $this->upper = $quest->upper;
