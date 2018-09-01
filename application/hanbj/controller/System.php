@@ -108,11 +108,11 @@ class System extends Controller
 
     public function test()
     {
-        $org = new WxOrg();
+        $org = new WxOrg(1);
         $ans = $org->getAns();
         $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
         $ratio = number_format($ratio, 2, '.', '');
-        $miss = cache(WxOrg::name . 'getAns.miss');
+        $miss = cache($org->name . 'getAns.miss');
         $map['unique_name'] = ['in', $org->obj];
         $ret = Db::table('member')
             ->where($map)
