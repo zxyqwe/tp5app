@@ -25,7 +25,7 @@ class WxQDep
             $this->obj[] = $item['label'];
         }
         $this->max_score = 80;
-        $this->name = date('Y') . '年度部门考核投票';
+        $this->name = date('Y') . '年度部门考核';
         $this->test = [
             [
                 'q' => '您对该部门工作状态的评价'
