@@ -73,7 +73,7 @@ class WxHanbj
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
                 if ($cont === '投票') {
-                    $cont = "检查口令...成功\n";
+                    $cont = "检查口令......成功\n";
                     $org = new WxOrg(1);
                     $cont .= $org->listobj($from);
                     $org = new WxOrg(2);
@@ -92,10 +92,10 @@ class WxHanbj
                         $cont = '机器人不在线';
                         define('TAG_TIMEOUT_EXCEPTION', true);
                     }
-                    $cont = "检查口令...失败\n身份验证...成功\n\n文字信息：$old_cont\n\n$cont\n\n$welcome";
+                    $cont = "检查口令......失败\n身份验证......成功\n\n文字信息：$old_cont\n\n$cont\n\n$welcome";
                     return self::auto($from, $to, $cont);
                 }
-                $cont = "检查口令...失败\n身份验证...失败\n\n文字信息：$cont\n\n$welcome";
+                $cont = "检查口令......失败\n身份验证......失败\n\n文字信息：$cont\n\n$welcome";
                 return self::auto($from, $to, $cont);
             case 'image':
             case 'voice':
@@ -109,7 +109,7 @@ class WxHanbj
 
     private static function tempid($data)
     {
-        $cont = "检查口令...成功\n身份验证...成功\n\n临时身份信息验证\n会员编号：{$data['uniq']}\n" .
+        $cont = "检查口令......成功\n身份验证......成功\n\n临时身份信息验证\n会员编号：{$data['uniq']}\n" .
             "昵称：{$data['nick']}\n" .
             "生成日期：{$data['time']}\n" .
             "生成时间：{$data['time2']}\n" .
@@ -129,7 +129,7 @@ class WxHanbj
             '<FromUserName><![CDATA[%s]]></FromUserName>' .
             '<CreateTime>%s</CreateTime>' .
             '<MsgType><![CDATA[text]]></MsgType>' .
-            '<Content><![CDATA[***机器人自动回复***%s]]></Content>' .
+            '<Content><![CDATA[******机器人自动回复******%s]]></Content>' .
             '</xml>';
         return sprintf($data, $to, $from, time(), "\n" . $type);
     }

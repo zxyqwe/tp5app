@@ -171,7 +171,7 @@ class WxOrg
 
         if ($acc !== $len) {
             $res = $acc * 100.0 / $len;
-            return $this->name . "\n投票数量：$acc / $len\n总进度：" . round($res, 2) . "%\n";
+            return "投票数量：$acc / $len\n总进度：" . round($res, 2) . "%\n";
         } else {
             return false;
         }
@@ -226,17 +226,18 @@ class WxOrg
             ->field('unique_name')
             ->find();
         $uname = $res['unique_name'];
-        $ret = "提取投票...{$this->name}";
+        $ret = "提取投票......{$this->name}";
         if (!in_array($uname, $this->getUser())) {
-            return "$ret\n身份验证...失败\n";
+            return "$ret\n身份验证......失败\n";
         }
         $prog = $this->progress();
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "\n身份验证...成功\n有以下投票，一小时有效，过时重新取号\n$prog";
-        $finish = "-----\n\n";
-        $unfinish = "-----\n";
+        $ret = "$ret\n身份验证......成功\n有以下投票，一小时有效，过时重新取号\n$prog";
+        $finish = '';
+        $unfinish = '';
+        $sep = "---------------\n";
 
         $ans_list = [];
         $ans = Db::table('score')
@@ -259,6 +260,6 @@ class WxOrg
                 $finish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">已完成-$item</a>\n";
             }
         }
-        return $ret . $unfinish . $finish;
+        return $ret . $sep . $unfinish . $sep . $finish . $sep;
     }
 }
