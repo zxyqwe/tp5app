@@ -106,9 +106,9 @@ class System extends Controller
         return view('token', ['data' => $map]);
     }
 
-    public function test()
+    public function test($catg)
     {
-        $org = new WxOrg(1);
+        $org = new WxOrg($catg);
         $ans = $org->getAns();
         $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
         $ratio = number_format($ratio, 2, '.', '');
