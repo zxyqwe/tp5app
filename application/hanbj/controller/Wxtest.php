@@ -33,9 +33,11 @@ class Wxtest extends Controller
     {
         $obj = cache('jump' . $obj);
         $obj = json_decode($obj, true);
-        $obj = $obj['val'];
+        $obj = explode('-', $obj['val']);
+        $catg = $obj[1];
+        $obj = $obj[0];
         $uname = session('unique_name');
-        $org = new WxOrg(1);
+        $org = new WxOrg(intval($catg));
         if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
@@ -53,7 +55,8 @@ class Wxtest extends Controller
             ->where([
                 'unique_name' => $uname,
                 'name' => $obj,
-                'year' => WxOrg::year
+                'year' => WxOrg::year,
+                'catg' => $catg
             ])
             ->field('ans')
             ->find();
@@ -68,7 +71,8 @@ class Wxtest extends Controller
     public function up()
     {
         $obj = input('post.obj');
-        $org = new WxOrg(1);
+        $catg = input('post.catg');
+        $org = new WxOrg(intval($catg));
         if (!in_array($obj, $org->obj)) {
             return json(['msg' => '参数错误'], 400);
         }
@@ -81,7 +85,8 @@ class Wxtest extends Controller
                 ->where([
                     'unique_name' => $uname,
                     'name' => $obj,
-                    'year' => WxOrg::year
+                    'year' => WxOrg::year,
+                    'catg' => $catg
                 ])
                 ->data(['ans' => $ans])
                 ->update();
@@ -91,7 +96,9 @@ class Wxtest extends Controller
                         'ans' => $ans,
                         'unique_name' => $uname,
                         'name' => $obj,
-                        'year' => WxOrg::year])
+                        'year' => WxOrg::year,
+                        'catg' => $catg
+                    ])
                     ->insert();
             }
         } catch (\Exception $e) {

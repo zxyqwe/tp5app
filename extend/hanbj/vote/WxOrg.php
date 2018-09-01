@@ -251,7 +251,7 @@ class WxOrg
         }
 
         foreach ($this->obj as $item) {
-            $nonce = WxHanbj::setJump('wxtest', $item, $uname, 60 * 20);
+            $nonce = WxHanbj::setJump('wxtest', "$item-{$this->catg}", $uname, 60 * 20);
             if (!in_array($item, $ans_list)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {

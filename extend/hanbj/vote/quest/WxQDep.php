@@ -11,6 +11,7 @@ class WxQDep
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::getDeputy();
         $this->obj = FameOper::getTop();
+        $this->max_score = 80;
         $this->name = date('Y') . '会长层测评';
         $this->test = [
             [
