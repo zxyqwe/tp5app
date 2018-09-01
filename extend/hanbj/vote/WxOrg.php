@@ -233,7 +233,7 @@ class WxOrg
         if (false === $prog) {
             return $this->all_done();
         }
-        $ret = "检查口令...成功\n身份验证...成功\n提取投票...成功\n\n有以下投票，二十分钟有效，过时重新取号\n" . $prog;
+        $ret = "检查口令...成功\n身份验证...成功\n提取投票...成功\n\n有以下投票，一小时有效，过时重新取号\n" . $prog;
         $finish = "-----\n";
         $unfinish = "-----\n";
 
@@ -251,7 +251,7 @@ class WxOrg
         }
 
         foreach ($this->obj as $item) {
-            $nonce = WxHanbj::setJump('wxtest', "$item-{$this->catg}", $uname, 60 * 20);
+            $nonce = WxHanbj::setJump('wxtest', "$item-{$this->catg}", $uname, 60 * 60);
             if (!in_array($item, $ans_list)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
             } else {
