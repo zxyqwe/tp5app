@@ -3,14 +3,23 @@
 namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
+use hanbj\vote\WxOrg;
+use think\Db;
 
 class WxQDep
 {
     function __construct()
     {
-        $this->upper = FameOper::getUp();
-        $this->lower = FameOper::getDeputy();
-        $this->obj = FameOper::getTop();
+        $this->upper = [];
+        $this->lower = array_merge(FameOper::getUp(), FameOper::getTop());
+        $ret = Db::table('fame')
+            ->where(['year' => WxOrg::year])
+            ->field(['distinct label'])
+            ->select();
+        $this->obj = [];
+        foreach ($ret as $item) {
+            $this->obj[] = $item['label'];
+        }
         $this->max_score = 80;
         $this->name = date('Y') . '年度部门考核投票';
         $this->test = [
@@ -58,6 +67,5 @@ class WxQDep
                 's' => 20
             ]
         ];
-
     }
 }
