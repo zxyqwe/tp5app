@@ -73,7 +73,7 @@ class WxHanbj
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
                 if ($cont === '投票') {
-                    $cont = "检查口令......成功\n\n";
+                    $cont = "检查口令......成功\n";
                     $org = new WxOrg(1);
                     $cont .= $org->listobj($from);
                     $org = new WxOrg(2);
