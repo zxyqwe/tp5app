@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
+use hanbj\FameOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
 use think\Controller;
@@ -104,18 +105,18 @@ class Pub extends Controller
         $res = Db::table('fame')
             ->alias('f')
             ->join($join)
-            ->order('year desc,grade')
             ->field([
                 'f.unique_name',
                 'tieba_id',
-                'year',
+                'year as y',
                 'grade',
                 'label'
             ])
             ->select();
+        $res = FameOper::sort($res);
         $data = [];
         foreach ($res as $item) {
-            $year = $item['year'];
+            $year = $item['y'];
             if (!isset($data[$year])) {
                 $data[$year] = ['name' => $year];
                 $data[$year]['teams'] = [];

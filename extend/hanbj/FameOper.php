@@ -66,8 +66,8 @@ class FameOper
     {
         $order = array_flip(self::order);
         //year desc,grade asc,label asc
-        if ($a['year'] !== $b['year']) {
-            return $a['year'] < $b['year'] ? 1 : -1;
+        if ($a['y'] !== $b['y']) {
+            return $a['y'] < $b['y'] ? 1 : -1;
         }
         if ($a['grade'] !== $b['grade']) {
             return $order[$a['grade']] < $order[$b['grade']] ? -1 : 1;
@@ -80,7 +80,7 @@ class FameOper
 
     public static function sort($ret)
     {
-        usort($ret, ['FameOper', 'cmp']);
+        usort($ret, [self::class, 'cmp']);
         return $ret;
     }
 
