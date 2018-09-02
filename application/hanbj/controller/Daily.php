@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
+use hanbj\FameOper;
 use hanbj\UserOper;
 use think\Controller;
 use think\Db;
@@ -233,7 +234,6 @@ class Daily extends Controller
         $res = Db::table('fame')
             ->alias('f')
             ->join($join)
-            ->order('year desc,grade asc,label asc')
             ->field([
                 'f.id',
                 'f.unique_name as u',
@@ -244,6 +244,7 @@ class Daily extends Controller
                 'm.code'
             ])
             ->select();
+        $res = FameOper::sort($res);
         return json($res);
     }
 

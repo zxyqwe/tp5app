@@ -10,8 +10,8 @@ class WxQDep
 {
     function __construct()
     {
-        $this->upper = [];
-        $this->lower = array_merge(FameOper::getUp(), FameOper::getTop());
+        $this->upper = FameOper::getUp();
+        $this->lower = FameOper::get([FameOper::vice_manager]);
         $ret = Db::table('fame')
             ->where([
                 'year' => WxOrg::year
