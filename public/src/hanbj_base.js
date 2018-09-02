@@ -39,6 +39,12 @@ window.grade = function (n) {
             return '干事';
         case '5':
             return '助理';
+        case '6':
+            return '专员';
+        case '7':
+            return '秘书长';
+        case '8':
+            return '副秘书长';
     }
 };
 window.fame_img = function (n) {
@@ -54,6 +60,12 @@ window.fame_img = function (n) {
         case '4':
             return '/static/arrow-up.png';
         case '5':
+            return '/static/arrow-up.png';
+        case '6':
+            return '/static/arrow-up.png';
+        case '7':
+            return '/static/arrow-up.png';
+        case '8':
             return '/static/arrow-up.png';
     }
 };
