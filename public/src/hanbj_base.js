@@ -45,6 +45,12 @@ window.grade = function (n) {
             return '秘书长';
         case '8':
             return '副秘书长';
+        case '9':
+            return '名誉会长';
+        case '10':
+            return '代理部长';
+        case '11':
+            return '离职';
     }
 };
 window.fame_img = function (n) {
@@ -66,6 +72,12 @@ window.fame_img = function (n) {
         case '7':
             return '/static/arrow-up.png';
         case '8':
+            return '/static/arrow-up.png';
+        case '9':
+            return '/static/arrow-up.png';
+        case '10':
+            return '/static/arrow-up.png';
+        case '11':
             return '/static/arrow-up.png';
     }
 };
