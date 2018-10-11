@@ -654,7 +654,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var fameori = function () {
         var le = [], de = [];
-        for (var i in Array.from(Array(9).keys())) {
+        for (var i in Array.from(Array(12).keys())) {
             le.push({value: i, text: w.grade(i)});
         }
         for (var i in w.department) {
