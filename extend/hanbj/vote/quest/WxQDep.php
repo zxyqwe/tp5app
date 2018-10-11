@@ -11,7 +11,7 @@ class WxQDep
     function __construct()
     {
         $this->upper = FameOper::getUp();
-        $this->lower = FameOper::get([FameOper::vice_manager]);
+        $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager]);
         $ret = Db::table('fame')
             ->where([
                 'year' => WxOrg::year

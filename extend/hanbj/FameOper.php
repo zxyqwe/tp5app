@@ -16,16 +16,22 @@ class FameOper
     const commissioner = 6;//专员
     const secretary = 7;//秘书长
     const vice_secretary = 8;//副秘书长
+    const fame_chair = 9;//名誉会长
+    const like_manager = 10;//代理部长
+    const leave = 11;//离职
     const order = [
         self::chairman,
+        self::fame_chair,
         self::vice_chairman,
         self::secretary,
         self::manager,
+        self::like_manager,
         self::vice_secretary,
         self::vice_manager,
         self::commissioner,
         self::assistant,
-        self::member
+        self::member,
+        self::leave
     ];
 
     public static function getUp()//会长层、部长
@@ -69,11 +75,11 @@ class FameOper
         if ($a['y'] !== $b['y']) {
             return $a['y'] < $b['y'] ? 1 : -1;
         }
-        if ($a['grade'] !== $b['grade']) {
-            return $order[$a['grade']] < $order[$b['grade']] ? -1 : 1;
-        }
         if ($a['label'] !== $b['label']) {
             return $a['label'] < $b['label'] ? -1 : 1;
+        }
+        if ($a['grade'] !== $b['grade']) {
+            return $order[$a['grade']] < $order[$b['grade']] ? -1 : 1;
         }
         return 0;
     }
