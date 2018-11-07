@@ -221,7 +221,7 @@ class MemberOper
             $e = $e->getMessage();
             trace("Unused2Temp $unique_name $e");
             if (false !== strpos($e, 'Duplicate')) {
-                $e = '名称重复';
+                $e = "昵称 $tieba_id 已被使用";
             }
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
