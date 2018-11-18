@@ -35,6 +35,7 @@ class System extends Controller
     public function runlog($data = -1)
     {
         define('TAG_TIMEOUT_EXCEPTION', true);
+        $data = intval($data);
         MemberOper::daily();
         if (session('name') !== '坎丙午') {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
@@ -42,7 +43,6 @@ class System extends Controller
         if (-1 < $data) {
             $par = input('post.par');
             $chi = input('post.chi');
-            $data = intval($data);
             if (!is_numeric($par) || !is_numeric($chi)) {
                 return json(['msg' => $par . '-' . $chi], 400);
             }
@@ -108,6 +108,7 @@ class System extends Controller
 
     public function test($catg)
     {
+        $catg = intval($catg);
         $org = new WxOrg($catg);
         $ans = $org->getAns();
         $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
