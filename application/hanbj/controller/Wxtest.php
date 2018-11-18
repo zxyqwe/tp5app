@@ -16,9 +16,7 @@ class Wxtest extends Controller
 
     protected function valid_id()
     {
-        $uname = session('unique_name');
-        $org = new WxOrg(1);
-        if (!MemberOper::wx_login() || !in_array($uname, $org->getUser())) {
+        if (!MemberOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -34,12 +32,15 @@ class Wxtest extends Controller
         $obj = cache('jump' . $obj);
         $obj = json_decode($obj, true);
         $obj = explode('-', $obj['val']);
-        $catg = $obj[1];
+        $catg = intval($obj[1]);
         $obj = $obj[0];
-        $uname = session('unique_name');
-        $org = new WxOrg(intval($catg));
+        $org = new WxOrg($catg);
         if (!in_array($obj, $org->obj)) {
-            return json(['msg' => '参数错误'], 400);
+            return json(['msg' => '投票目标错误'], 400);
+        }
+        $uname = session('unique_name');
+        if (!in_array($uname, $org->getUser())) {
+            return json(['msg' => '没有投票权'], 400);
         }
         $data['uname'] = $obj;
         $data['name'] = $org->name;
@@ -68,15 +69,18 @@ class Wxtest extends Controller
     public function up()
     {
         $obj = input('post.obj');
-        $catg = input('post.catg');
-        $org = new WxOrg(intval($catg));
+        $catg = intval(input('post.catg'));
+        $org = new WxOrg($catg);
         if (!in_array($obj, $org->obj)) {
-            return json(['msg' => '参数错误'], 400);
+            return json(['msg' => '投票目标错误'], 400);
         }
         $ans = input('post.ans/a', []);
         $org->checkAns($ans);
         $ans = json_encode($ans);
         $uname = session('unique_name');
+        if (!in_array($uname, $org->getUser())) {
+            return json(['msg' => '没有投票权'], 400);
+        }
         try {
             $ret = Db::table('score')
                 ->where([

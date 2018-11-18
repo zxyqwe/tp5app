@@ -11,6 +11,7 @@ use hanbj\weixin\WxHanbj;
 class WxOrg
 {
     const year = 13;
+    const vote_cart = [1, 2];
 
     function __construct($catg)
     {
@@ -18,8 +19,12 @@ class WxOrg
             case 2:
                 $quest = new WxQDep();
                 break;
-            default:
+            case 1:
                 $quest = new WxQTop();
+                break;
+            default:
+                $res = json(['msg' => '投票分类错误'], 400);
+                throw new HttpResponseException($res);
                 break;
         }
         $this->catg = $catg;

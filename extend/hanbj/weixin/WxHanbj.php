@@ -74,10 +74,10 @@ class WxHanbj
                 $old_cont = $cont;
                 if ($cont === '投票') {
                     $cont = "检查口令......成功\n";
-                    $org = new WxOrg(1);
-                    $cont .= $org->listobj($from);
-                    $org = new WxOrg(2);
-                    $cont .= $org->listobj($from);
+                    foreach (WxOrg::vote_cart as $item) {
+                        $org = new WxOrg(intval($item));
+                        $cont .= $org->listobj($from);
+                    }
                     return self::auto($from, $to, $cont, '投票');
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
