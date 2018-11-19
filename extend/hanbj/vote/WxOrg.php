@@ -150,12 +150,19 @@ class WxOrg
             $sel = $item['ans']['sel'];
             for ($i = 0; $i < count($cmt); $i++) {
                 if (!empty($cmt[$i])) {
-                    $ret[] = [
-                        'q' => $this->test[$i]['q'],
-                        'o' => $item['o'],
-                        't' => $cmt[$i],
-                        's' => $sel[$i]
-                    ];
+                    $tmp = $this->test[$i];
+                    $s = 10;
+                    if (isset($tmp['s'])) {
+                        $s = $tmp['s'];
+                    }
+                    if ($sel[$i] < $s * 0.6 || $sel[$i] === $s) {
+                        $ret[] = [
+                            'q' => $tmp['q'],
+                            'o' => $item['o'],
+                            't' => $cmt[$i],
+                            's' => $sel[$i]
+                        ];
+                    }
                 }
             }
         }
