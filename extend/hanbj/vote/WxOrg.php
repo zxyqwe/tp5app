@@ -217,7 +217,7 @@ class WxOrg
                 if (!isset($ans['sel_add'][$i])) {
                     throw new HttpResponseException(json(['msg' => "{$tmp['q']}没有文字！"], 400));
                 }
-                $tmp_count = count($ans['sel_add'][$i]);
+                $tmp_count = strlen($ans['sel_add'][$i]);
                 if ($tmp_count < 15) {
                     throw new HttpResponseException(json(['msg' => "{$tmp['q']}文字数量不对 $tmp_count ！ {$ans['sel_add'][$i]}"], 400));
                 }
