@@ -101,6 +101,9 @@ class Wxtest extends Controller
                         'catg' => $catg
                     ])
                     ->insert();
+                trace("投票add $uname $catg $obj");
+            } else {
+                trace("投票update $uname $catg $obj");
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();

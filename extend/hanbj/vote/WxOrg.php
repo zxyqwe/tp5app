@@ -213,9 +213,14 @@ class WxOrg
                 $s = $tmp['s'];
             }
             if (($ans['sel'][$i] < $s * 0.6 || $ans['sel'][$i] === $s)
-                && (!isset($ans['sel_add'][$i]) || count($ans['sel_add'][$i]) < 15)
             ) {
-                throw new HttpResponseException(json(['msg' => "第 $i 题没有文字！"], 400));
+                if (!isset($ans['sel_add'][$i])) {
+                    throw new HttpResponseException(json(['msg' => "{$tmp['q']}没有文字！"], 400));
+                }
+                $tmp_count = count($ans['sel_add'][$i]);
+                if ($tmp_count < 15) {
+                    throw new HttpResponseException(json(['msg' => "{$tmp['q']}文字数量不对$tmp_count！"], 400));
+                }
             }
         }
     }

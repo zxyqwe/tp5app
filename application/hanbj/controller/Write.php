@@ -92,6 +92,7 @@ class Write extends Controller
                 ->insertAll($data);
             if ($res === count($data)) {
                 Db::commit();
+                trace("Fee " . json_encode($name));
             } else {
                 Db::rollback();
                 return json(['msg' => $res], 400);
@@ -144,6 +145,7 @@ class Write extends Controller
                 ->insertAll($data);
             if ($res === count($data)) {
                 Db::commit();
+                trace("Fame " . json_encode($name));
             } else {
                 Db::rollback();
                 return json(['msg' => $res], 400);
