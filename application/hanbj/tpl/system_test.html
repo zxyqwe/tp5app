@@ -3,7 +3,9 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>会长评测结果</h1>
         <div id="body">
-            <h4>未投票者（少于半数时公开）</h4>
+            <h4>投票人总名单</h4>
+            <code>{{ all_v }}</code>
+            <h4>未投票者（少于1/3时公开）</h4>
             <code v-if="mis.length > 0">{{ mis }}</code>
             <h4>总进度</h4>
             <div class="progress">

@@ -84,7 +84,7 @@ class WxOrg
             }
         }
         $miss = array_unique($miss);
-        if (count($miss) > count($user) / 2) {
+        if (count($miss) > count($user) / 3) {
             $miss = [];
         }
         $miss = implode(', ', $miss);

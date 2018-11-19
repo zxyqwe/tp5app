@@ -712,7 +712,8 @@ var test = (function ($, Vue, w, undefined) {
             data: {
                 obj: msg.obj,
                 mis: msg.mis,
-                rto: msg.rto
+                rto: msg.rto,
+                all_v: msg.all
             },
             ready: function () {
                 $('#table1').bootstrapTable({

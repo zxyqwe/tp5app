@@ -119,7 +119,8 @@ class System extends Controller
             'cmt' => $org->getComment($ans),
             'obj' => $org->obj,
             'mis' => $miss,
-            'rto' => $ratio
+            'rto' => $ratio,
+            'all' => implode(', ', $org->getAll())
         ];
         return view('test', ['data' => json_encode($ans)]);
     }
