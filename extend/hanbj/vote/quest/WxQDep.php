@@ -22,6 +22,8 @@ class WxQDep
             ->select();
         $this->obj = [];
         foreach ($ret as $item) {
+            if (in_array($item['label'], ['中枢', '秘书处']))
+                continue;
             $this->obj[] = $item['label'];
         }
         $this->max_score = 80;
