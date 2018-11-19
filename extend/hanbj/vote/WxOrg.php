@@ -219,7 +219,7 @@ class WxOrg
                 }
                 $tmp_count = count($ans['sel_add'][$i]);
                 if ($tmp_count < 15) {
-                    throw new HttpResponseException(json(['msg' => "{$tmp['q']}文字数量不对$tmp_count！"], 400));
+                    throw new HttpResponseException(json(['msg' => "{$tmp['q']}文字数量不对 $tmp_count ！ {$ans['sel_add'][$i]}"], 400));
                 }
             }
         }
