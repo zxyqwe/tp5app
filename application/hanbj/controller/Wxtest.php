@@ -75,9 +75,10 @@ class Wxtest extends Controller
             return json(['msg' => '投票目标错误'], 400);
         }
         $ans = input('post.ans/a', []);
+        $uname = session('unique_name');
+        trace("问卷 $uname " . json_encode($ans));
         $org->checkAns($ans);
         $ans = json_encode($ans);
-        $uname = session('unique_name');
         if (!in_array($uname, $org->getUser())) {
             return json(['msg' => '没有投票权'], 400);
         }
