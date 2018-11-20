@@ -149,21 +149,23 @@ class WxOrg
             $cmt = $item['ans']['sel_add'];
             $sel = $item['ans']['sel'];
             for ($i = 0; $i < count($cmt); $i++) {
-                if (!empty($cmt[$i])) {
-                    $tmp = $this->test[$i];
-                    $s = 10;
-                    if (isset($tmp['s'])) {
-                        $s = $tmp['s'];
-                    }
-                    if ($sel[$i] < $s * 0.6 || $sel[$i] === $s) {
-                        $ret[] = [
-                            'q' => $tmp['q'],
-                            'o' => $item['o'],
-                            't' => $cmt[$i],
-                            's' => $sel[$i]
-                        ];
-                    }
+                if (empty($cmt[$i]))
+                    continue;
+                $tmp = $this->test[$i];
+                $s = 10;
+                if (isset($tmp['s'])) {
+                    $s = $tmp['s'];
                 }
+                $i_score = intval($sel[$i]);
+                if ($i_score < $s * 0.6 || $i_score === $s) {
+                    $ret[] = [
+                        'q' => $tmp['q'],
+                        'o' => $item['o'],
+                        't' => $cmt[$i],
+                        's' => $sel[$i]
+                    ];
+                }
+
             }
         }
         return $ret;
@@ -219,7 +221,8 @@ class WxOrg
             if (isset($tmp['s'])) {
                 $s = $tmp['s'];
             }
-            if (($ans['sel'][$i] < $s * 0.6 || $ans['sel'][$i] === $s)
+            $i_score = intval($ans['sel'][$i]);
+            if (($i_score < $s * 0.6 || $i_score === $s)
             ) {
                 if (!isset($ans['sel_add'][$i])) {
                     throw new HttpResponseException(json(['msg' => "{$tmp['q']}没有文字！"], 400));
