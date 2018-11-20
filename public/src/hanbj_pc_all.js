@@ -714,10 +714,10 @@ var test = (function ($, Vue, w, undefined) {
             },
             ready: function () {
                 for (var i in msg) {
-                    $('#' + i.name + 'table1').bootstrapTable({
+                    $('#' + i.name + '-table1').bootstrapTable({
                         data: i.avg
                     });
-                    $('#' + i.name + 'table2').bootstrapTable({
+                    $('#' + i.name + '-table2').bootstrapTable({
                         data: i.cmt
                     });
                 }
