@@ -710,18 +710,17 @@ var test = (function ($, Vue, w, undefined) {
         var vmain = new Vue({
             el: '#body',
             data: {
-                obj: msg.obj,
-                mis: msg.mis,
-                rto: msg.rto,
-                all_v: msg.all
+                item: msg
             },
             ready: function () {
-                $('#table1').bootstrapTable({
-                    data: msg.avg
-                });
-                $('#table2').bootstrapTable({
-                    data: msg.cmt
-                });
+                for (var i in msg) {
+                    $('#' + i.name + 'table1').bootstrapTable({
+                        data: i.avg
+                    });
+                    $('#' + i.name + 'table2').bootstrapTable({
+                        data: i.cmt
+                    });
+                }
             }
         });
     };
