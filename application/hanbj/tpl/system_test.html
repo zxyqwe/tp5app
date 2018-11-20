@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <h4>评分汇总</h4>
-                    <table :id="{ msg.name }-table1">
+                    <table :id="msg.name+'-table1'">
                         <thead>
                         <tr>
                             <th data-field="q">问题</th>
@@ -27,7 +27,7 @@
                         </thead>
                     </table>
                     <h4 style="margin-top: 2em">意见与建议</h4>
-                    <table :id="{ msg.name }-table2">
+                    <table :id="msg.name+'-table2'">
                         <thead>
                         <tr>
                             <th data-field="q">问题</th>
