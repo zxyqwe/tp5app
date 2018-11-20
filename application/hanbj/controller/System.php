@@ -108,14 +108,14 @@ class System extends Controller
 
     public function test()
     {
-        $ans = [];
+        $ret = [];
         foreach (WxOrg::vote_cart as $catg) {
             $org = new WxOrg($catg);
             $ans = $org->getAns();
             $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
             $ratio = number_format($ratio, 2, '.', '');
             $miss = cache($org->name . 'getAns.miss');
-            $ans[] = [
+            $ret[] = [
                 'avg' => $org->getAvg($ans),
                 'cmt' => $org->getComment($ans),
                 'obj' => $org->obj,
@@ -125,7 +125,7 @@ class System extends Controller
                 'name' => $org->name
             ];
         }
-        return view('test', ['data' => json_encode($ans)]);
+        return view('test', ['data' => json_encode($ret)]);
     }
 
     public function json_order()
