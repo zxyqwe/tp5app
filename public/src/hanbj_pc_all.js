@@ -714,6 +714,7 @@ var test = (function ($, Vue, w, undefined) {
             },
             ready: function () {
                 for (var i in msg) {
+                    i = msg[i];
                     $('#' + i.name + '-table1').bootstrapTable({
                         data: i.avg
                     });
