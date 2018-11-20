@@ -106,22 +106,25 @@ class System extends Controller
         return view('token', ['data' => $map]);
     }
 
-    public function test($catg)
+    public function test()
     {
-        $catg = intval($catg);
-        $org = new WxOrg($catg);
-        $ans = $org->getAns();
-        $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
-        $ratio = number_format($ratio, 2, '.', '');
-        $miss = cache($org->name . 'getAns.miss');
-        $ans = [
-            'avg' => $org->getAvg($ans),
-            'cmt' => $org->getComment($ans),
-            'obj' => $org->obj,
-            'mis' => $miss,
-            'rto' => $ratio,
-            'all' => implode(', ', $org->getAll())
-        ];
+        $ans = [];
+        foreach (WxOrg::vote_cart as $catg) {
+            $org = new WxOrg($catg);
+            $ans = $org->getAns();
+            $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
+            $ratio = number_format($ratio, 2, '.', '');
+            $miss = cache($org->name . 'getAns.miss');
+            $ans[] = [
+                'avg' => $org->getAvg($ans),
+                'cmt' => $org->getComment($ans),
+                'obj' => $org->obj,
+                'mis' => $miss,
+                'rto' => $ratio,
+                'all' => implode(', ', $org->getAll()),
+                'name' => $org->name
+            ];
+        }
         return view('test', ['data' => json_encode($ans)]);
     }
 
