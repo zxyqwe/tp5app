@@ -85,7 +85,7 @@ class WxOrg
         }
         $miss = array_unique($miss);
         if (count($miss) > count($user) / 3) {
-            $miss = [];
+            $miss = ['秘密'];
         }
         $miss = implode(', ', $miss);
         cache($this->name . 'getAns.miss', $miss);
