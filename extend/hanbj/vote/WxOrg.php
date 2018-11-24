@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use hanbj\MemberOper;
 use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
@@ -84,8 +85,14 @@ class WxOrg
             }
         }
         $miss = array_unique($miss);
-        if (count($miss) > count($user) / 3) {
+        if (count($miss) * 3 > count($user)) {
             $miss = ['秘密'];
+        } else {
+            $ret = MemberOper::get_tieba($miss);
+            $miss = [];
+            foreach ($ret as $item) {
+                $miss[] = "{$item['u']}~{$item['t']}";
+            }
         }
         $miss = implode(', ', $miss);
         cache($this->name . 'getAns.miss', $miss);

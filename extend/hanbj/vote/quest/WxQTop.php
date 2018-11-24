@@ -3,7 +3,7 @@
 namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
-use think\Db;
+use hanbj\MemberOper;
 
 class WxQTop
 {
@@ -12,15 +12,7 @@ class WxQTop
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::commissioner, FameOper::vice_secretary]);
         $this->obj = [];
-        $ret = Db::table('member')
-            ->where([
-                'unique_name' => ['in', FameOper::getTop()]
-            ])
-            ->field([
-                'unique_name as u',
-                'tieba_id as t'
-            ])
-            ->select();
+        $ret = MemberOper::get_tieba(FameOper::getTop());
         foreach ($ret as $item) {
             $this->obj[] = "{$item['u']}~{$item['t']}";
         }

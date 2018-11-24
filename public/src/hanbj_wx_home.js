@@ -443,7 +443,7 @@ var wx_prom = (function ($, w, undefined) {
                 dataType: "json",
                 success: function (msg) {
                     var temp = msg.temp;
-                    weui.alert('<p>临时身份码</p><p class="temp-text">' + temp + '</p>');
+                    weui.alert('<p>临时身份码</p><p>有效期：30分钟</p><p class="temp-text">' + temp + '</p>');
                 },
                 error: w.msgto,
                 complete: function () {
