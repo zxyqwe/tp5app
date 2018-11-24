@@ -71,22 +71,16 @@ class System extends Controller
         $map['志愿者增加积分'] = BonusOper::getVolBonus();
         $map['活动增加积分'] = BonusOper::getActBonus();
         $map['活动预置名称'] = BonusOper::getActName();
-        $res = Db::table('member')
-            ->where(['unique_name' => ['in', BonusOper::getWorkers()]])
-            ->field('tieba_id as t')
-            ->select();
+        $res = MemberOper::get_tieba(BonusOper::getWorkers());
         $data = [];
         foreach ($res as $item) {
-            $data[] = $item['t'];
+            $data[] = $item['u'] . '~' . $item['t'];
         }
         $map['当前工作人员'] = implode('，', $data);
-        $res = Db::table('member')
-            ->where(['unique_name' => ['in', UserOper::reg()]])
-            ->field('tieba_id as t')
-            ->select();
+        $res = MemberOper::get_tieba(UserOper::reg());
         $data = [];
         foreach ($res as $item) {
-            $data[] = $item['t'];
+            $data[] = $item['u'] . '~' . $item['t'];
         }
         $map['内网权限'] = implode('，', $data);
         $map['当前吧务组'] = '第' . WxOrg::year . '届';

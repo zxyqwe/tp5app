@@ -32,7 +32,7 @@ class MemberOper
 
     public static function wx_login()
     {
-        if (MemberOper::VERSION !== session('wx_login')) {
+        if (self::VERSION !== session('wx_login')) {
             session(null);
         } else {
             return true;
@@ -44,7 +44,7 @@ class MemberOper
             if (is_string($openid)) {
                 session('openid', $openid);
                 session('unique_name', $openid);
-                session('wx_login', MemberOper::VERSION);
+                session('wx_login', self::VERSION);
                 return true;
             }
         }
@@ -58,7 +58,7 @@ class MemberOper
 
     public static function getAllReal()
     {
-        return [MemberOper::NORMAL, MemberOper::FREEZE, MemberOper::BANNED];
+        return [self::NORMAL, self::FREEZE, self::BANNED];
     }
 
     public static function trans($v)
@@ -92,11 +92,7 @@ class MemberOper
         if (count($unique) == 0) {
             return ['g' => [], 'r' => 0, 'l' => 0];
         }
-        $map['unique_name'] = ['in', $unique];
-        $ret = Db::table('member')
-            ->where($map)
-            ->field('unique_name  as u')
-            ->select();
+        $ret = self::get_tieba($unique);
         $already = [];
         foreach ($ret as $i) {
             $already[] = $i['u'];
@@ -120,7 +116,7 @@ class MemberOper
 
     public static function get_open()
     {
-        $map['code'] = MemberOper::UNUSED;
+        $map['code'] = self::UNUSED;
         $map['id'] = ['>', 863];
         $ret = Db::table('member')
             ->where($map)
@@ -152,6 +148,22 @@ class MemberOper
         return $already;
     }
 
+    public static function get_tieba($list)
+    {
+        if (count($list) == 0) {
+            return [];
+        }
+        $res = Db::table('member')
+            ->where(['unique_name' => ['in', $list]])
+            ->field([
+                'tieba_id as t',
+                'unique_name as u'
+            ])
+            ->cache(600)
+            ->select();
+        return $res;
+    }
+
     public static function daily()
     {
         $ret = self::list_code(self::TEMPUSE, false);
@@ -167,7 +179,9 @@ class MemberOper
 
         $name = "MemberOper::daily()renew";
         $renew = !cache("?$name");
-        if ($renew) {cache($name, $name, 86400 * 30);}
+        if ($renew) {
+            cache($name, $name, 86400 * 30);
+        }
 
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
