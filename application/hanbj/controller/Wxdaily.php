@@ -150,8 +150,8 @@ class Wxdaily extends Controller
 
     public function json_tempid()
     {
-        $member_code = intval(session('member_code'));
-        if (!in_array($member_code, MemberOper::getMember())) {
+        $member_code = session('member_code');
+        if ($member_code == null || !in_array(intval($member_code), MemberOper::getMember())) {
             return json(['msg' => '用户锁住'], 400);
         }
         $uniq = session('unique_name');
@@ -224,8 +224,8 @@ class Wxdaily extends Controller
     public function vote()
     {
         //TODO login
-        $member_code = intval(session('member_code'));
-        if ($member_code !== MemberOper::NORMAL) {
+        $member_code = session('member_code');
+        if ($member_code == null || intval($member_code) !== MemberOper::NORMAL) {
             return json(['msg' => '用户锁住'], 400);
         }
         $ans = input('post.ans/a', []);
