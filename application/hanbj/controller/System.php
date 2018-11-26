@@ -57,7 +57,14 @@ class System extends Controller
             ]);
         }
         $data = LogUtil::list_dir(LOG_PATH, '日志');
-        return view('runlog', ['data' => json_encode($data['nodes'])]);
+        $base = intval(date('Ym'));
+        $ret = [];
+        foreach ($data['nodes'] as $item) {
+            if ($base - intval($item['text']) <= 3) {
+                $ret[] = $item;
+            }
+        }
+        return view('runlog', ['data' => json_encode($ret)]);
     }
 
     public function token()
