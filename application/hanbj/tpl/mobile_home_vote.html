@@ -1,108 +1,62 @@
+<style>
+    .color-item.dragging {
+        background-color: #5f5f5f;
+    }
+</style>
 <div class="page">
     <div class="page__hd">
-        <h1 class="page__title">换届吧务组选举投票</h1>
+        <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
     <div class="page__bd page__bd_spacing sr-only" id="votemain">
-        <div class="weui-cells__title">候选人，可多选，可弃权。</div>
-        <div class="weui-cells weui-cells_checkbox">
-            <label class="weui-cell weui-check__label" v-for="i in candi" :for="i.v">
-                <div class="weui-cell__hd">
-                    <input type="checkbox" class="weui-check" v-model="ans" :value="i.v" :id="i.v" :disabled="!unvote">
-                    <i class="weui-icon-checked"></i>
-                </div>
+        <div class="weui-cells__title">上下拖动。</div>
+        <div class="weui-cells">
+            <div class="weui-cell color-item"
+                 v-for="color in colors"
+                 v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
                 <div class="weui-cell__bd">
-                    <p>{{ i.n }}</p>
+                    {{ color.u }}
                 </div>
-            </label>
-        </div>
-        <div class="weui-flex">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <p>已选择：{{ ans_res }}</p>
+                <div class="weui-cell__ft">
+                    <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
                 </div>
-            </div>
-        </div>
-        <div class="weui-flex" v-if="unvote">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <a v-on:click="sub()" href="javascript:"
-                       class="weui-btn weui-btn_plain-primary">投票无悔</a>
-                </div>
-            </div>
-        </div>
-        <div class="weui-panel" v-if="result">
-            <div class="weui-panel__hd">
-                投票结果
-            </div>
-            <div class="weui-panel__bd">
-            </div>
-            <div class="weui-panel__ft">
             </div>
         </div>
     </div>
     <div class="page__ft">
-        <div class="sr-only" id="votedata">
-            {$vote}
-        </div>
     </div>
 </div>
 <script type="text/javascript">
     //ToDo
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain, cand = ['aaa-bbb', 'ccc-ddd', 'eee-fff'];
-        var init = function () {
-            var votedata = $('#votedata').html();
-            votedata = JSON.parse(votedata);
+        var vmain;
+        var build_vue = function () {
             vmain = new Vue({
                 el: '#votemain',
                 data: {
-                    candi: [],
-                    ans: votedata.ans,
-                    unvote: votedata.unvote,
-                    result: votedata.result
-                },
-                computed: {
-                    ans_res: function () {
-                        if (this.ans.length === 0) {
-                            return '弃权';
+                    colors: [
+                        {
+                            u: '123'
+                        },
+                        {
+                            u: '1234'
+                        },
+                        {
+                            u: '12345'
+                        },
+                        {
+                            u: '123456'
                         }
-                        return this.ans.join(', ');
-                    }
-                },
-                methods: {
-                    sub: function () {
-                        console.log(this.ans);
-                        w.waitloading();
-                        $.ajax({
-                            type: "POST",
-                            url: w.u18,
-                            data: {ans: vmain.ans},
-                            dataType: "json",
-                            success: function (msg) {
-                                w.msgok();
-                                setTimeout(function () {
-                                    w.location.search += '&_=' + Date.now();
-                                    WeixinJSBridge.call('closeWindow');
-                                }, 1000);
-                            },
-                            error: function (msg) {
-                                w.msgto(msg);
-                            },
-                            complete: function () {
-                                w.cancelloading();
-                            }
-                        });
-                    }
+                    ]
                 },
                 ready: function () {
-                    for (var i in cand) {
-                        var tmp = cand[i];
-                        this.candi.push({v: tmp.split('-')[0], n: tmp})
-                    }
                     $('#votemain').removeClass('sr-only');
+                    w.cancelloading();
                 }
             });
+        };
+        var init = function () {
+            w.waitloading();
         };
         return {
             init: init
