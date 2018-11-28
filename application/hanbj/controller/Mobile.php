@@ -75,11 +75,12 @@ class Mobile extends Controller
         UserOper::login();
         $res['bonus_top'] = BonusOper::mod_ret($res['bonus']);
         $res['code'] = MemberOper::trans($res['code']);
-        $res['fee_code'] = FeeOper::cache_fee(session('unique_name'));
+        $res['fee_code'] = FeeOper::cache_fee($res['unique_name']);
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
+        trace("微信首页 {$res['unique_name']}");
         return view('home', [
             'user' => $res,
             'card' => CardOper::mod_ret($map),
