@@ -240,6 +240,7 @@ var wx_init = (function ($, w, undefined) {
             console.log(res);
             w.msgto2(JSON.stringify(res));
             w.location.search = '';
+            w.location.reload(true);
         });
     };
     w.assm_data = function (data) {

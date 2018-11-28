@@ -8,7 +8,8 @@ use think\exception\HttpResponseException;
 class UserOper
 {
     const VERSION = 'succ_1';
-    const FIXED = ['坎丙午', '坤丁酉', '离丙申', '乾壬申', '兑丙子'];
+    const coder = '坎丙午';
+    const FIXED = [self::coder, '坤丁酉', '离丙申', '乾壬申', '兑丙子'];
     const time = 60;
 
     private static function limit($unique)
