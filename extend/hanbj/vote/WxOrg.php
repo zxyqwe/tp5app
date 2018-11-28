@@ -3,6 +3,7 @@
 namespace hanbj\vote;
 
 use hanbj\MemberOper;
+use hanbj\UserOper;
 use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
@@ -44,7 +45,7 @@ class WxOrg
 
     public function getUser()
     {
-        return array_merge($this->getAll(), ['坎丙午']);
+        return array_merge($this->getAll(), [UserOper::coder]);
     }
 
     public function getAns()

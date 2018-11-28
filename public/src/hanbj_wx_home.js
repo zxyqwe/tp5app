@@ -9,6 +9,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 cardExt: JSON.stringify(msg)
             }],
             success: function (res) {
+                w.location.reload(true);
                 w.location.search += '&_=' + Date.now();
             },
             fail: function (msg) {
@@ -182,6 +183,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: w.u5,
                 dataType: "json",
                 success: function (msg) {
+                    w.location.reload(true);
                     w.location.search += '&_=' + Date.now();
                 },
                 error: w.msgto,
@@ -344,6 +346,8 @@ var wx_home = (function ($, Vue, w, undefined) {
                 success: function (msg) {
                     msg.success = function (res) {
                         w.msgok();
+                        w.location.reload(true);
+                        w.location.search += '&_=' + Date.now();
                     };
                     msg.fail = function (msg) {
                         w.msgto2(msg.errMsg);
@@ -380,6 +384,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 },
                 success: function (msg) {
                     w.msgok();
+                    w.location.reload(true);
                     w.location.search += '&_=' + Date.now();
                 },
                 error: w.msgto,

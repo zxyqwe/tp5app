@@ -18,7 +18,7 @@ class BonusOper
     {
         $data = array_merge(FameOper::getUp(), self::_WORKER);
         //zxyqwe, 魁儿, 花西, 哈利, 紫菀
-        $data = array_merge($data, ['坎丙午', '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
+        $data = array_merge($data, [UserOper::coder, '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
         return array_unique($data);
     }
 
@@ -154,7 +154,7 @@ class BonusOper
             ])
             ->select();
         $map['bonus'] = ['>=', intval($tmp[0]['o'])];
-        $map['unique_name'] = ['neq', '坎丙午'];
+        $map['unique_name'] = ['neq', UserOper::coder];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)

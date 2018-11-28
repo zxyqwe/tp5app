@@ -91,7 +91,7 @@ class Mobile extends Controller
 
     public function reg()
     {
-        if (session('?tieba_id') && session('unique_name') !== '坎丙午') {
+        if (session('?tieba_id') && session('unique_name') !== UserOper::coder) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
         }
         if (!MemberOper::wx_login()) {

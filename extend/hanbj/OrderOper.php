@@ -39,7 +39,7 @@ class OrderOper
     public static function fee($input, $year)
     {
         $fee = OrderOper::FEE_YEAR[$year]['fee'] * 100;
-        if (session('unique_name') === '坎丙午') {
+        if (session('unique_name') === UserOper::coder) {
             $fee = 1;
         }
         $label = OrderOper::FEE_YEAR[$year]['label'];

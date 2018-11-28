@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use hanbj\UserOper;
 use think\Db;
 
 class WxVote
@@ -38,7 +39,7 @@ class WxVote
 
     private static function watcher($unique)
     {
-        return in_array($unique, ['坎丙午']);
+        return in_array($unique, [UserOper::coder]);
     }
 
     private static function make_res($unique_name)

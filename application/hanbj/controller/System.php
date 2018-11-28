@@ -37,7 +37,7 @@ class System extends Controller
         define('TAG_TIMEOUT_EXCEPTION', true);
         $data = intval($data);
         MemberOper::daily();
-        if (session('name') !== '坎丙午') {
+        if (session('name') !== UserOper::coder) {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         if (-1 < $data) {
