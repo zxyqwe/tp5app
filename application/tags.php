@@ -15,6 +15,7 @@ use \think\App;
 Hook::add('app_end', function () {
     if (defined('TAG_TIMEOUT_EXCEPTION')) {
         WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        \hanbj\MemberOper::daily();
         return;
     }
     $runtime = Debug::getUseTime();
