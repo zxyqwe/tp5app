@@ -6,7 +6,7 @@ namespace app\index\controller;
 use bilibili\BiliDanmu;
 use bilibili\BiliOnline;
 use bilibili\BiliSend;
-use bilibili\BiliSilver;
+use hanbj\MemberOper;
 
 class Bilibili
 {
@@ -42,6 +42,7 @@ class Bilibili
     public function cron()
     {
         define('TAG_TIMEOUT_EXCEPTION', true);
+        MemberOper::daily();
         $time = date("Y-m-d H:i:s");
         $bili = new BiliOnline();
         if ($bili->lock("Bili400")) {
@@ -58,7 +59,7 @@ class Bilibili
         $res = $bili->getInfo();
         cache('bili_cron_user', $res);
         cache('bili_cron_time', $time);
-        
+
         $bili = new BiliSend();
         $bili->send();
         return json(['msg' => 'ok', 'time' => $time]);
