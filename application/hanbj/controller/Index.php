@@ -53,6 +53,7 @@ class Index extends Controller
 
     public function cron()
     {
+        define('TAG_TIMEOUT_EXCEPTION', true);
         $name = 'indexHanbjCron';
         if (cache("?$name"))
             return;
