@@ -10,7 +10,7 @@ use think\exception\HttpResponseException;
 class Index extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,old']
+        'valid_id' => ['except' => 'index,old,cron']
     ];
 
     protected function valid_id()
@@ -49,5 +49,14 @@ class Index extends Controller
     public function debug()
     {
         MemberOper::create_unique_unused();
+    }
+
+    public function cron()
+    {
+        $name = 'indexHanbjCron';
+        if (cache("?$name"))
+            return;
+        cache($name, $name, 290);
+        MemberOper::daily();
     }
 }
