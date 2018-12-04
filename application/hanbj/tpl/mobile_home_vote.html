@@ -26,12 +26,8 @@
                 </div>
             </div>
         </div>
-        <div class="weui-flex">
-            <div class="weui-flex__item">
-                <div class="placeholder">
-                    <button class="btn btn-default btn-block" v-on:click="upvote()">提交</button>
-                </div>
-            </div>
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">确定</a>
         </div>
     </div>
     <div class="page__ft">
@@ -42,27 +38,6 @@
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
         var vmain;
-        var upvote = function () {
-            w.waitloading();
-            var ret = [];
-            for (var item in vmain.colors) {
-                ret.push(item['u']);
-            }
-            ret = ret.join(',');
-            $.ajax({
-                type: "POST",
-                url: w.u18,
-                data: {ans: ret},
-                dataType: "json",
-                success: function (msg) {
-                    w.msgok('提交成功');
-                },
-                error: w.msgto,
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-        };
         var getvote = function () {
             w.waitloading();
             $.ajax({
@@ -84,6 +59,28 @@
                 el: '#votemain',
                 data: {
                     colors: undefined
+                }, methods: {
+                    upvote: function () {
+                        w.waitloading();
+                        var ret = [];
+                        for (var item in vmain.colors) {
+                            ret.push(item['u']);
+                        }
+                        ret = ret.join(',');
+                        $.ajax({
+                            type: "POST",
+                            url: w.u18,
+                            data: {ans: ret},
+                            dataType: "json",
+                            success: function (msg) {
+                                w.msgok('提交成功');
+                            },
+                            error: w.msgto,
+                            complete: function () {
+                                w.cancelloading();
+                            }
+                        });
+                    }
                 },
                 ready: function () {
                     getvote();
