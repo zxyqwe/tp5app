@@ -63,8 +63,9 @@
                     upvote: function () {
                         w.waitloading();
                         var ret = [];
-                        for (var item in vmain.colors) {
-                            ret.push(item.u);
+                        var items = vmain.colors;
+                        for (var i in items) {
+                            ret.push(items[i].u);
                         }
                         ret = ret.join(',');
                         $.ajax({

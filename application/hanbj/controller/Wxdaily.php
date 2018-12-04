@@ -247,14 +247,14 @@ class Wxdaily extends Controller
             return json(['msg' => '候选人错误' . input('post.ans')], 400);
         }
         $data = [
-            'uniaue_name' => $uniq,
+            'unique_name' => $uniq,
             'year' => WxOrg::year,//这一届投票下一届
             'ans' => implode(',', $ans)
         ];
         try {
             $ret = Db::table('vote')
                 ->where([
-                    'uniaue_name' => $uniq,
+                    'unique_name' => $uniq,
                     'year' => WxOrg::year,//这一届投票下一届
                 ])
                 ->data(['ans' => $data['ans']])
