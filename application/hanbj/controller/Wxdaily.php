@@ -268,7 +268,7 @@ class Wxdaily extends Controller
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
+            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
