@@ -13,7 +13,7 @@ class WxVote
     public static function initView()
     {
         $member_code = session('member_code');
-        if ($member_code === null && !in_array(intval($member_code), MemberOper::getMember())) {
+        if ($member_code === null || intval($member_code) !== MemberOper::NORMAL) {
             return null;
         }
 
@@ -34,6 +34,9 @@ class WxVote
         }
         $front = [];
         foreach ($ret as $item) {
+            if (!isset($map[$item])) {
+                continue;
+            }
             $map[$item]['sel'] = true;
             $front[] = $map[$item];
             unset($map[$item]);

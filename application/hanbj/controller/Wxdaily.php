@@ -234,8 +234,8 @@ class Wxdaily extends Controller
     public function vote()
     {
         $member_code = session('member_code');
-        if ($member_code == null || !in_array(intval($member_code), MemberOper::getMember())) {
-            return json(['msg' => '用户锁住'], 400);
+        if ($member_code == null || intval($member_code) !== MemberOper::NORMAL) {
+            return json(['msg' => '用户状态不是实名'], 400);
         }
         $uniq = session('unique_name');
         if (FeeOper::owe($uniq)) {

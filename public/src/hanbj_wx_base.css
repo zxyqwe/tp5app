@@ -223,3 +223,20 @@ ul {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.color-item {
+    transition: transform 2s;
+}
+
+.color-item.dragging {
+    background-color: #ff5f5f;
+    transform: scale(1.1);
+}
+
+.candi {
+    background-color: #EC8B89;
+}
+
+.candi_sel {
+    background-color: #1AAD19;
+}
