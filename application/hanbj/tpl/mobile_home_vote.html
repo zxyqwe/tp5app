@@ -1,31 +1,15 @@
-<style>
-    .color-item {
-        transition: transform 2s;
-    }
-
-    .color-item.dragging {
-        background-color: #ff5f5f;
-        transform: scale(1.1);
-    }
-
-    .candi {
-        background-color: #9ED99D;
-    }
-
-    .candi_sel {
-        background-color: #1AAD19;
-    }
-</style>
 <div class="page" id="votemain">
     <div class="page__hd">
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
     <div class="page__bd page__bd_spacing">
-        <div class="weui-cells__title">这里有一段话。</div>
+        <div class="weui-cells__title">这里有一段话。与资格赛相关，选择是否赞同。</div>
         <div class="weui-grids">
-            <a class="weui-grid" v-for="ca in candi" :class="ca.sel ? candi_sel : candi" v-on:click="sel(ca)">{{ ca.u }}</a>
+            <div class="weui-grid" v-for="ca in candi" :class="[ca.sel ? 'candi_sel' : 'candi']" v-on:click="sel(ca)">
+                <p class="weui-grid__label">{{ ca.u }}<br>{{ ca.t }}</p>
+            </div>
         </div>
-        <div class="weui-cells__title" v-if="colors.length > 0">上下拖动。这里有一段话。</div>
+        <div class="weui-cells__title" v-if="colors.length > 0">上下拖动。这里有一段话。与排位赛相关，名词代表分数。</div>
         <div class="weui-cells" v-if="colors.length > 0">
             <div class="weui-cell color-item"
                  v-for="color in colors"
@@ -38,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="weui-btn-area">
+        <div class="weui-btn-area" v-if="colors.length > 0">
             <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">投票</a>
         </div>
     </div>
@@ -109,12 +93,12 @@
                     sel: function (ca) {
                         ca.sel = !ca.sel;
                         if (ca.sel) {
-                            vmain.colors.push(ca);
+                            vmain.colors.push({u: ca.u, s: ca.s, t: ca.t});
                         } else {
                             for (var i in vmain.colors) {
                                 if (vmain.colors[i].u === ca.u) {
-                                    vmain.colors.slice(i, 1);
-                                    return;
+                                    vmain.colors.splice(i, 1);
+                                    break;
                                 }
                             }
                         }
