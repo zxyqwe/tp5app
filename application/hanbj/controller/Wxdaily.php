@@ -226,7 +226,7 @@ class Wxdaily extends Controller
     {
         $ret = WxVote::initView();
         if (null === $ret) {
-            return json(['msg' => '没有投票权¬'], 400);
+            return json(['msg' => '没有投票权'], 400);
         }
         return json(['msg' => $ret]);
     }
