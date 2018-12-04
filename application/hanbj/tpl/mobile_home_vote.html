@@ -7,14 +7,26 @@
         background-color: #ff5f5f;
         transform: scale(1.1);
     }
+
+    .candi {
+        background-color: #9ED99D;
+    }
+
+    .candi_sel {
+        background-color: #1AAD19;
+    }
 </style>
-<div class="page">
+<div class="page" id="votemain">
     <div class="page__hd">
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
-    <div class="page__bd page__bd_spacing" id="votemain" v-if="colors != undefined">
-        <div class="weui-cells__title">上下拖动。这里有一段话。</div>
-        <div class="weui-cells">
+    <div class="page__bd page__bd_spacing">
+        <div class="weui-cells__title">这里有一段话。</div>
+        <div class="weui-grids">
+            <a class="weui-grid" v-for="ca in candi" :class="ca.sel ? candi_sel : candi" v-on:click="sel(ca)">{{ ca.u }}</a>
+        </div>
+        <div class="weui-cells__title" v-if="colors.length > 0">上下拖动。这里有一段话。</div>
+        <div class="weui-cells" v-if="colors.length > 0">
             <div class="weui-cell color-item"
                  v-for="color in colors"
                  v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
@@ -45,7 +57,13 @@
                 url: w.u22,
                 dataType: "json",
                 success: function (msg) {
-                    vmain.colors = msg.msg;
+                    vmain.colors = [];
+                    vmain.candi = msg.msg;
+                    for (var i in msg.msg) {
+                        if (msg.msg[i].sel) {
+                            vmain.colors.push(msg.msg[i]);
+                        }
+                    }
                 },
                 error: w.msgto,
                 complete: function () {
@@ -58,16 +76,21 @@
             vmain = new Vue({
                 el: '#votemain',
                 data: {
-                    colors: undefined
+                    candi: [],
+                    colors: []
                 }, methods: {
                     upvote: function () {
-                        w.waitloading();
                         var ret = [];
                         var items = vmain.colors;
                         for (var i in items) {
                             ret.push(items[i].u);
                         }
+                        if (ret.length === 0) {
+                            w.msgto2('至少选择1人');
+                            return;
+                        }
                         ret = ret.join(',');
+                        w.waitloading();
                         $.ajax({
                             type: "POST",
                             url: w.u18,
@@ -82,6 +105,19 @@
                                 w.cancelloading();
                             }
                         });
+                    },
+                    sel: function (ca) {
+                        ca.sel = !ca.sel;
+                        if (ca.sel) {
+                            vmain.colors.push(ca);
+                        } else {
+                            for (var i in vmain.colors) {
+                                if (vmain.colors[i].u === ca.u) {
+                                    vmain.colors.slice(i, 1);
+                                    return;
+                                }
+                            }
+                        }
                     }
                 },
                 ready: function () {
