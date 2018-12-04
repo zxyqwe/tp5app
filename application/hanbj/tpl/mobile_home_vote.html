@@ -13,7 +13,7 @@
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
     <div class="page__bd page__bd_spacing" id="votemain" v-if="colors != undefined">
-        <div class="weui-cells__title">上下拖动。</div>
+        <div class="weui-cells__title">上下拖动。这里有一段话。</div>
         <div class="weui-cells">
             <div class="weui-cell color-item"
                  v-for="color in colors"
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="weui-btn-area">
-            <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">确定</a>
+            <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">投票</a>
         </div>
     </div>
     <div class="page__ft">
@@ -64,7 +64,7 @@
                         w.waitloading();
                         var ret = [];
                         for (var item in vmain.colors) {
-                            ret.push(item['u']);
+                            ret.push(item.u);
                         }
                         ret = ret.join(',');
                         $.ajax({
