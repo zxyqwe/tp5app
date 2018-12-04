@@ -9,7 +9,6 @@ use hanbj\CardOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
-use hanbj\vote\WxVote;
 use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
@@ -86,7 +85,6 @@ class Mobile extends Controller
             'card' => CardOper::mod_ret($map),
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
             'status' => $res['fee_code'] >= date('Y'),
-            'vote' => WxVote::result($res['unique_name']),
         ]);
     }
 

@@ -12,14 +12,14 @@
     <div class="page__hd">
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
-    <div class="page__bd page__bd_spacing sr-only" id="votemain">
+    <div class="page__bd page__bd_spacing" id="votemain">
         <div class="weui-cells__title">上下拖动。</div>
-        <div class="weui-cells">
+        <div class="weui-cells" v-if="colors != undefined">
             <div class="weui-cell color-item"
                  v-for="color in colors"
                  v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
                 <div class="weui-cell__bd">
-                    {{ color.u }}
+                    {{ color.s }}
                 </div>
                 <div class="weui-cell__ft">
                     <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
@@ -35,34 +35,55 @@
     var vote = (function ($, Vue, w, undefined) {
         'use strict';
         var vmain;
+        var upvote = function () {
+            w.waitloading();
+            var ret = [];
+            for (var item in vmain.colors) {
+                ret.push(item['u']);
+            }
+            ret = ret.join(',');
+            $.ajax({
+                type: "POST",
+                url: w.u18,
+                data: {ans: ret},
+                dataType: "json",
+                success: function (msg) {
+                    w.msgok('提交成功');
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        var getvote = function () {
+            w.waitloading();
+            $.ajax({
+                type: "GET",
+                url: w.u22,
+                dataType: "json",
+                success: function (msg) {
+                    vmain.colors = msg.msg;
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
         var build_vue = function () {
             Vue.use(VueDragging);
             vmain = new Vue({
                 el: '#votemain',
                 data: {
-                    colors: [
-                        {
-                            u: '123'
-                        },
-                        {
-                            u: '1234'
-                        },
-                        {
-                            u: '12345'
-                        },
-                        {
-                            u: '123456'
-                        }
-                    ]
+                    colors: undefined
                 },
                 ready: function () {
-                    $('#votemain').removeClass('sr-only');
-                    w.cancelloading();
+                    getvote();
                 }
             });
         };
         var init = function () {
-            w.waitloading();
             build_vue();
         };
         return {
