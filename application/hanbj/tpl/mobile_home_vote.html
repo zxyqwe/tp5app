@@ -12,9 +12,9 @@
     <div class="page__hd">
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
-    <div class="page__bd page__bd_spacing" id="votemain">
+    <div class="page__bd page__bd_spacing" id="votemain" v-if="colors != undefined">
         <div class="weui-cells__title">上下拖动。</div>
-        <div class="weui-cells" v-if="colors != undefined">
+        <div class="weui-cells">
             <div class="weui-cell color-item"
                  v-for="color in colors"
                  v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
@@ -23,6 +23,13 @@
                 </div>
                 <div class="weui-cell__ft">
                     <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="placeholder">
+                    <button class="btn btn-default btn-block" v-on:click="upvote()">提交</button>
                 </div>
             </div>
         </div>
