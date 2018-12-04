@@ -244,7 +244,7 @@ class Wxdaily extends Controller
         $ans = input('post.ans');
         $ans = explode(',', $ans);//a1,a2,a3
         if (count(array_intersect($ans, WxVote::obj)) !== count(WxVote::obj)) {
-            return json(['msg' => '候选人错误'], 400);
+            return json(['msg' => '候选人错误' . input('post.ans')], 400);
         }
         $data = [
             'uniaue_name' => $uniq,
