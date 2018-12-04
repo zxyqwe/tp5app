@@ -286,6 +286,7 @@ var wx_init = (function ($, w, undefined) {
         var wx = 'wxdaily/';
         var work = 'wxwork/';
         var club = 'wxclub/';
+        var test = 'wxtest/';
         w.u1 = hanbj + mobile + 'json_addcard';
         w.u2 = hanbj + work + 'json_card';
         w.u3 = hanbj + work + 'json_act';
@@ -307,6 +308,8 @@ var wx_init = (function ($, w, undefined) {
         w.u19 = hanbj + wx + 'prom';
         w.u20 = hanbj + club + 'add_club';
         w.u21 = hanbj + club + 'add_club_act';
+        w.u22 = hanbj + wx + 'getvote';
+        w.u23 = hanbj + test + 'up';
     };
     var init = function (jssign) {
         dict();

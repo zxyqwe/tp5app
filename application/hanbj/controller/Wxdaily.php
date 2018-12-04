@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\BonusOper;
 use hanbj\MemberOper;
 use hanbj\OrderOper;
+use hanbj\vote\WxVote;
 use hanbj\weixin\HanbjRes;
 use hanbj\vote\WxOrg;
 use think\Controller;
@@ -221,28 +222,60 @@ class Wxdaily extends Controller
         return json(['hist' => $ret]);
     }
 
+    public function getvote()
+    {
+        $ret = WxVote::initView();
+        if (null === $ret) {
+            return json(['msg' => '没有投票权¬'], 400);
+        }
+        return json(['msg' => $ret]);
+    }
+
     public function vote()
     {
-        //TODO login
         $member_code = session('member_code');
-        if ($member_code == null || intval($member_code) !== MemberOper::NORMAL) {
+        if ($member_code == null || !in_array(intval($member_code), MemberOper::getMember())) {
             return json(['msg' => '用户锁住'], 400);
         }
-        $ans = input('post.ans/a', []);
+        $uniq = session('unique_name');
+        if (FeeOper::owe($uniq)) {
+            return json(['msg' => '欠费'], 400);
+        }
+        $ans = input('post.ans');
+        $ans = explode(',', $ans);//a1,a2,a3
+        if (count(array_intersect($ans, WxVote::obj)) !== count(WxVote::obj)) {
+            return json(['msg' => '候选人错误'], 400);
+        }
         $data = [
-            'uniaue_name' => session('unique_name'),
-            'year' => WxOrg::year,
-            'ans' => json_encode($ans)
+            'uniaue_name' => $uniq,
+            'year' => WxOrg::year,//这一届投票下一届
+            'ans' => implode(',', $ans)
         ];
         try {
-            Db::table('vote')
-                ->insert($data);
-            return json(['msg' => 'ok']);
+            $ret = Db::table('vote')
+                ->where([
+                    'uniaue_name' => $uniq,
+                    'year' => WxOrg::year,//这一届投票下一届
+                ])
+                ->data(['ans' => $data['ans']])
+                ->update();
+            if ($ret <= 0) {
+                Db::table('vote')
+                    ->insert($data);
+                trace("选举add $uniq {$data['ans']}");
+            } else {
+                trace("投票update $uniq {$data['ans']}");
+            }
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Vote $e");
-            return json(['msg' => $e], 400);
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
+            if (isset($token[2])) {
+                return json(['msg' => 'OK']);
+            }
+            trace("Test Vote $e");
+            throw new HttpResponseException(json(['msg' => $e], 400));
         }
+        return json(['msg' => 'OK']);
     }
 
     public function prom()

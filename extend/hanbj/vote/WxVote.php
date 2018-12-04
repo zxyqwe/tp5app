@@ -2,71 +2,51 @@
 
 namespace hanbj\vote;
 
-use hanbj\UserOper;
+use hanbj\MemberOper;
 use think\Db;
 
 class WxVote
 {
-    private static function weight()
+    //乾壬申~夜娘_魁児，乾甲申~鸿胪寺少卿，坤丁酉~素?问，离庚寅~紫菀灯芯，艮甲辰~采娈
+    const obj = ['乾壬申', '乾甲申', '坤丁酉', '离庚寅', '艮甲辰'];
+
+    public static function initView()
     {
-        $org = new WxOrg(1);
+        $member_code = session('member_code');
+        if ($member_code === null && !in_array(intval($member_code), MemberOper::getMember())) {
+            return null;
+        }
+
+        $map = self::getMap();
         $ret = Db::table('vote')
             ->where([
+                'unique_name' => session('unique_name'),
                 'year' => WxOrg::year
-            ])->field([
-                'unique_name as u',
+            ])
+            ->field([
                 'ans'
             ])
-            ->select();
-        $data = [];
-        foreach ($ret as $i) {
-            $ans = json_decode($i['ans'], true);
-            $w = 1.0;
-            if (in_array($i['u'], $org->lower)) {
-                $w = 1.5;
-            } elseif (in_array($i['u'], $org->upper)) {
-                $w = 2.0;
-            }
-            foreach ($ans as $j) {
-                if (!isset($data[$j])) {
-                    $data[$j] = 0;
-                }
-                $data[$j] += $w;
-            }
-        }
-        return $data;
-    }
-
-    private static function watcher($unique)
-    {
-        return in_array($unique, [UserOper::coder]);
-    }
-
-    private static function make_res($unique_name)
-    {
-        $data = [];
-        $data['result'] = self::watcher($unique_name);
-        if ($data['result']) {
-            $data['res_ans'] = self::weight();
-        }
-        return $data;
-    }
-
-    public static function result($unique_name)
-    {
-        $data = self::make_res($unique_name);
-        $data['ans'] = Db::table('vote')
-            ->where([
-                'year' => WxOrg::year,
-                'unique_name' => $unique_name
-            ])->value('ans');
-        $data['unvote'] = false;
-        if (is_null($data['ans'])) {
-            $data['ans'] = [];
-            $data['unvote'] = true;
+            ->find();
+        if (null === $ret) {
+            $ret = self::obj;
         } else {
-            $data['ans'] = json_decode($data['ans'], true);
+            $ret = explode(',', $ret);
         }
-        return json_encode($data);
+        $view = [];
+        foreach ($ret as $item) {
+            $view[] = $map[$item];
+        }
+        return $view;
+    }
+
+    private static function getMap()
+    {
+        $res = MemberOper::get_tieba(self::obj);
+        $map = [];
+        foreach ($res as $item) {
+            $map[$item['u']] = $item;
+            $map[$item['u']]['s'] = $item['u'] . '~' . $item['t'];
+        }
+        return $map;
     }
 }

@@ -240,7 +240,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                     this.next(0);
                     $.ajax({
                         type: "POST",
-                        url: "/hanbj/wxtest/up",
+                        url: w.u23,
                         dataType: "json",
                         data: {
                             ans: {
