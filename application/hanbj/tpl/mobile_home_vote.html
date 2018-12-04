@@ -75,6 +75,7 @@
                             dataType: "json",
                             success: function (msg) {
                                 w.msgok('提交成功');
+                                history.back();
                             },
                             error: w.msgto,
                             complete: function () {

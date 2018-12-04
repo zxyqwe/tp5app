@@ -30,7 +30,7 @@ class WxVote
         if (null === $ret) {
             $ret = self::obj;
         } else {
-            $ret = explode(',', $ret);
+            $ret = explode(',', $ret['ans']);
         }
         $view = [];
         foreach ($ret as $item) {
