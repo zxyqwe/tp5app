@@ -28,15 +28,20 @@ class WxVote
             ])
             ->find();
         if (null === $ret) {
-            $ret = self::obj;
+            $ret = [];
         } else {
             $ret = explode(',', $ret['ans']);
         }
-        $view = [];
+        $front = [];
         foreach ($ret as $item) {
-            $view[] = $map[$item];
+            $map[$item]['sel'] = true;
+            $front[] = $map[$item];
+            unset($map[$item]);
         }
-        return $view;
+        foreach (array_values($map) as $item) {
+            $front[] = $item;
+        }
+        return $front;
     }
 
     private static function getMap()
@@ -46,6 +51,7 @@ class WxVote
         foreach ($res as $item) {
             $map[$item['u']] = $item;
             $map[$item['u']]['s'] = $item['u'] . '~' . $item['t'];
+            $map[$item['u']]['sel'] = false;
         }
         return $map;
     }
