@@ -3,28 +3,78 @@
         <h1 class="page__title">吧务组 - 换届选举</h1>
     </div>
     <div class="page__bd page__bd_spacing">
-        <div class="weui-cells__title">这里有一段话。与资格赛相关，选择是否赞同。</div>
-        <div class="weui-grids">
-            <div class="weui-grid" v-for="ca in candi" :class="[ca.sel ? 'candi_sel' : 'candi']" v-on:click="sel(ca)">
-                <p class="weui-grid__label">{{ ca.u }}<br>{{ ca.t }}</p>
-            </div>
-        </div>
-        <div class="weui-cells__title" v-if="colors.length > 0">上下拖动。这里有一段话。与排位赛相关，名词代表分数。</div>
-        <div class="weui-cells" v-if="colors.length > 0">
-            <div class="weui-cell color-item"
-                 v-for="color in colors"
-                 v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
-                <div class="weui-cell__bd">
-                    {{ color.s }}
-                </div>
-                <div class="weui-cell__ft">
-                    <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
-                </div>
-            </div>
-        </div>
-        <div class="weui-btn-area" v-if="colors.length > 0">
-            <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">投票</a>
-        </div>
+        <article class="weui-article">
+            <h1>本次选举共两轮投票</h1>
+            <section>
+                <h2 class="title">一、资格赛</h2>
+                <section>
+                    <h3>1.1 说明</h3>
+                    <p>
+                        请点击写有名字的方框给你心目中的第14届会长层成员投票，【可多选】，方框变为绿色表示选择成功，再次点击取消选择。
+                        可发送【？？？】至后台查看候选人参选材料。
+                    </p>
+                </section>
+                <section>
+                    <h3>1.2 规则</h3>
+                    <p>
+                        普通实名会员票力为1，第13届理事会干事票力为2，第13届理事会副部以上骨干票力为3，所获总票力不足60%的候选人，落选会长层。
+                        票力根据后台信息自动计算，可到【汉服北京服务号】-【我的】-【个人中心】-【会员状态】查看是否实名会员，【任职履历】可查看自己当前职务。
+                    </p>
+                </section>
+                <section>
+                    <div class="weui-cells__title">请选择：</div>
+                    <div class="weui-grids">
+                        <div class="weui-grid" v-for="ca in candi" :class="[ca.sel ? 'candi_sel' : 'candi']" v-on:click="sel(ca)">
+                            <p class="weui-grid__label">{{ ca.u }}<br>{{ ca.t }}</p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+            <section>
+                <h2 class="title">二、排位赛</h2>
+                <section>
+                    <h3>2.1 说明</h3>
+                    <p>
+                        请上下拖动候选人ID进行排序，选出心目中的会长人选。
+                    </p>
+                </section>
+                <section>
+                    <h3>2.2 规则</h3>
+                    <p>
+                        排位第一者得？？？分，第二者得？？？分，以此类推。
+                        得票最高者当选会长，其余当选副会长。
+                    </p>
+                </section>
+                <section>
+                    <div class="weui-cells__title" v-if="colors.length > 0">请拖动：</div>
+                    <div class="weui-cells" v-if="colors.length > 0">
+                        <div class="weui-cell color-item"
+                             v-for="color in colors"
+                             v-dragging="{ item: color, list: colors, group: 'color', key: color.u }">
+                            <div class="weui-cell__bd">
+                                {{ color.s }}
+                            </div>
+                            <div class="weui-cell__ft">
+                                <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <p>
+                        投票截止时间为？？？，在此之前可重复提交修改投票，最终记票以最后一次提交结果为准。
+                        截止时间后，不能再修改选票。
+                    </p>
+                </section>
+                <section>
+                    <div class="weui-btn-area" v-if="colors.length > 0">
+                        <a class="weui-btn weui-btn_primary" href="javascript:" v-on:click="upvote()">投票</a>
+                    </div>
+                </section>
+            </section>
+        </article>
     </div>
     <div class="page__ft">
     </div>
