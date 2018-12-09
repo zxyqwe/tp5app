@@ -16,6 +16,62 @@
     <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+        var home = (function ($, w, undefined) {
+            'use strict';
+            var $btt, $alert_html, $alert_msg;
+            var init = function () {
+                $btt = $("#back-to-top");
+                $alert_html = $('#alert_html');
+                $alert_msg = $('#alert_msg');
+                $btt.hide();
+                $(w).scroll(function () {
+                    if ($(w).scrollTop() > 100) {
+                        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                            return;
+                        }
+                        $("#back-to-top").fadeIn(700);
+                    }
+                    else {
+                        $("#back-to-top").fadeOut(700);
+                    }
+                });
+                $btt.click(function () {
+                    $('html,body').animate({scrollTop: 0}, 1000);
+                    return false;
+                });
+                w.msgto = function (jqXHR, smsg, ethrow) {
+                    var msg;
+                    try {
+                        msg = JSON.parse(jqXHR.responseText);
+                        msg = msg.msg;
+                    } catch (err) {
+                        msg = jqXHR.readyState + '-' + jqXHR.status + '-' + jqXHR.responseText + '-' + smsg + '-' + ethrow;
+                    }
+                    w.msgto2(msg);
+                };
+                w.msgto2 = function (msg) {
+                    $alert_html.html(msg);
+                    $alert_msg.modal('show');
+                };
+                w.waitloading = function (msg) {
+                    if (undefined === msg) {
+                        msg = '数据加载中';
+                    }
+                    waitingDialog.show(msg);
+                };
+                w.cancelloading = function () {
+                    waitingDialog.hide();
+                };
+            };
+            return {
+                init: init
+            };
+        })(jQuery, window);
+        $(window).load(function () {
+            home.init();
+        });
+    </script>
 </head>
 <body id="htmlbody">
 <p id="back-to-top"><a href="#top"><span></span>返回顶部</a></p>
