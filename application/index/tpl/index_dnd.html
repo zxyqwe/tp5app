@@ -11,13 +11,25 @@
     <div id="survey" class="fame-container col-md-10 col-md-offset-1 column">
         <template v-for="section in sections">
             <h1>{{ section.head }}</h1>
-            <div class="row" v-for="idx in section.body" v-if="idx.done != undefined">
-                <h2>{{ idx.q }}</h2>
-                <p :class="{{ bg[$index] }}" v-for="ans in idx.a" v-on:click="sub(idx)">{{ ans.t }}</p>
+            <div class="row" v-for="idx in section.body" v-if="idx.done === false">
+                <div class="fame-container col-md-10 col-md-offset-1 column">
+                    <p class="lead" style="padding: 15px">{{ idx.q }}</p>
+                    <p :class="[bg[$index]]" style="padding: 15px" v-for="ans in idx.a" v-on:click="sub(idx,ans.v)">{{ ans.t }}</p>
+                </div>
             </div>
         </template>
+        <div class="row" v-if="state!=undefined">
+            <div class="fame-container col-md-10 col-md-offset-1 column">
+                <p class="lead" style="padding: 15px">你的阵营是：{{ state.t }}</p>
+                <p style="padding: 15px">{{ state.v }}</p>
+                <button class="btn btn-default" v-on:click="detail()">显示详细</button>
+                <p id="dnd_join" style="height: 25em"></p>
+            </div>
+        </div>
+        <p></p>
     </div>
     <div class="fame-container col-md-10 col-md-offset-1 column">
+        <h1>附录</h1>
         <p>
             <span>作者:</span>Dr. A. Clef<br>
             <span>发布协议:</span> <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">BY-SA</a>
@@ -31,13 +43,13 @@
             answer for each question.
         </p>
         <code>
-            What Alignment Means
-
+            <strong class="text-uppercase lead">What Alignment Means</strong>
+            <br>
             Alignment is central to a DnD character's personality. DnD uses two measures to determine a specific character's ethical and moral attitudes and behavior.
-
+            <br>
             The moral axis has three positions: good, neutral and evil. Good characters generally care about the welfare of others. Neutral people generally care about their own
             welfare. Evil people generally seek to harm the others' welfare.
-
+            <br>
             The ethical axis has three positions as well: lawful, neutral, and chaotic. Lawful people generally follow the social rules as they understand them. Neutral people
             follow those rules find convenient or obviously necessary. And chaotic people seek to upset the social order and either institute change, or simply create anarchy.
         </code>
@@ -103,24 +115,162 @@
     };
     var dnd = (function ($, Vue, w, undefined) {
         'use strict';
-        var vmain;
+        var vmain, f_ret = {}, ret = {cx: 0, lx: 0, nx: 0, xe: 0, xg: 0, xn: 0}, f_max = 'nn';
+        var front = function (n) {
+            return n.lx > n.nx && n.lx > n.cx ? "l" : n.cx > n.nx && n.cx > n.lx ? "c" : "n";
+        };
+        var end = function (n) {
+            return n.xg > n.xe && n.xg > n.xn ? "g" : n.xe > n.xn && n.xe > n.xg ? "e" : "n";
+        };
         var build_vue = function () {
-            Vue.use(VueDragging);
             vmain = new Vue({
                 el: '#survey',
                 data: {
-                    bg: ["bg-success", "bg-info", "bg-warning", "bg-danger"]
+                    bg: ["bg-success", "bg-info", "bg-warning", "bg-danger"],
+                    sections: survey,
+                    state: undefined
                 },
                 methods: {
-                    sub: function (ans) {
-                        console.log(ans);
+                    sub: function (ans, v) {
+                        ans.done = true;
+                        v = v.split('-');
+                        var k = v[0];
+                        v = parseInt(v[1]);
+                        ret[k] += v;
+
+                        Object.keys(align).forEach(function (idx) {
+                            if (idx.charAt(0) === k.charAt(0) || idx.charAt(1) === k.charAt(1)) {
+                                ret[idx] += v;
+                                if (f_ret[idx] > f_ret[f_max]) {
+                                    f_max = idx;
+                                }
+                            }
+                        });
+
+                        var cnt = 0;
+                        Object.keys(align).forEach(function (idx) {
+                            if (f_ret[f_max] === f_ret[idx]) {
+                                cnt++;
+                            }
+                        });
+
+                        var state = f_max;
+                        if (cnt > 1) {
+                            state = front(ret) + end(ret);
+                        }
+                        vmain.state = align[state];
+                    },
+                    detail: function () {
+                        var myChart = echarts.init(document.getElementById('dnd_join'));
+                        var option = {
+                            title: {
+                                text: '多雷达图'
+                            },
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                x: 'center',
+                                data: ['某软件', '某主食手机', '某水果手机', '降水量', '蒸发量']
+                            },
+                            radar: [
+                                {
+                                    indicator: [
+                                        {text: '品牌', max: 100},
+                                        {text: '内容', max: 100},
+                                        {text: '可用性', max: 100},
+                                        {text: '功能', max: 100}
+                                    ],
+                                    center: ['25%', '40%'],
+                                    radius: 80
+                                },
+                                {
+                                    indicator: [
+                                        {text: '外观', max: 100},
+                                        {text: '拍照', max: 100},
+                                        {text: '系统', max: 100},
+                                        {text: '性能', max: 100},
+                                        {text: '屏幕', max: 100}
+                                    ],
+                                    radius: 80,
+                                    center: ['50%', '60%'],
+                                },
+                                {
+                                    indicator: (function () {
+                                        var res = [];
+                                        for (var i = 1; i <= 12; i++) {
+                                            res.push({text: i + '月', max: 100});
+                                        }
+                                        return res;
+                                    })(),
+                                    center: ['75%', '40%'],
+                                    radius: 80
+                                }
+                            ],
+                            series: [
+                                {
+                                    type: 'radar',
+                                    tooltip: {
+                                        trigger: 'item'
+                                    },
+                                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                    data: [
+                                        {
+                                            value: [60, 73, 85, 40],
+                                            name: '某软件'
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: 'radar',
+                                    radarIndex: 1,
+                                    data: [
+                                        {
+                                            value: [85, 90, 90, 95, 95],
+                                            name: '某主食手机'
+                                        },
+                                        {
+                                            value: [95, 80, 95, 90, 93],
+                                            name: '某水果手机'
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: 'radar',
+                                    radarIndex: 2,
+                                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                    data: [
+                                        {
+                                            name: '降水量',
+                                            value: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 75.6, 82.2, 48.7, 18.8, 6.0, 2.3],
+                                        },
+                                        {
+                                            name: '蒸发量',
+                                            value: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 35.6, 62.2, 32.6, 20.0, 6.4, 3.3]
+                                        }
+                                    ]
+                                }
+                            ]
+                        };
+                        myChart.setOption(option);
                     }
                 },
                 ready: function () {
+                    Object.keys(align).forEach(function (idx) {
+                        f_ret[idx] = 0;
+                    });
                 }
             });
         };
+        var adj_data = function () {
+            for (var i in survey) {
+                for (var j in survey[i].body) {
+                    survey[i].body[j].done = false;
+                }
+            }
+        };
         var init = function () {
+            adj_data();
             build_vue();
         };
         return {
@@ -129,27 +279,6 @@
     })(jQuery, Vue, window);
     $(function () {
         $("#submit").click(function () {
-            var n = {cx: 0, lx: 0, nx: 0, xe: 0, xg: 0, xn: 0};
-            var e, a = 0, r = -1;
-            Object.keys(alignments).forEach(function (i) {
-                var r = i.charAt(0) + "x", t = "x" + i.charAt(1), c = n[r] + n[t];
-                alignments[i].value = c;
-                if (c > a) {
-                    a = c;
-                    e = i;
-                }
-            });
-            Object.keys(alignments).forEach(function (n) {
-                if (alignments[n].value === a)
-                    ++r;
-            });
-            if (0 !== r) {
-                e = n.lx > n.nx && n.lx > n.cx ? "l" : n.cx > n.nx && n.cx > n.lx ? "c" : "n";
-                e += n.xg > n.xe && n.xg > n.xn ? "g" : n.xe > n.xn && n.xe > n.xg ? "e" : "n";
-            }
-            e = alignments[e];
-            var t = "<p>你的阵营是：</p><h3>" + e.name + "</h3>";
-            t += "<p>" + e.description + "</p>";
             t += "<h3>详细得分：</h3>";
             t += "<h4>阵营倾向：</h4>";
             Object.keys(alignments).forEach(function (n) {
@@ -185,7 +314,6 @@
             for (i = 0; i < n.xe; i++)
                 t += "X";
             t += "(" + n.xe + ")<br>";
-            $("#result").html(t)
         })
     });
     var survey = [
