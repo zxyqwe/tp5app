@@ -31,4 +31,11 @@ gulp.task('hanbj_tpl', function () {
         }))
         .pipe(gulp.dest('application/hanbj/view/'));
 });
-gulp.task('hanbj', gulpSequence(['js', 'css'], 'hanbj_tpl'));
+gulp.task('index_tpl', function () {
+    return gulp.src(['public/static/rev/**/*.json', 'application/index/tpl/*.html'])
+        .pipe(revCollector({
+            replaceReved: true
+        }))
+        .pipe(gulp.dest('application/index/view/'));
+});
+gulp.task('hanbj', gulpSequence(['js', 'css'], 'hanbj_tpl', 'index_tpl'));

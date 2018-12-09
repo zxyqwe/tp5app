@@ -1,12 +1,23 @@
 {layout name="layout_pc" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
-    <div id="container" class="col-md-10 col-md-offset-1 column">
+    <div class="fame-container col-md-10 col-md-offset-1 column">
         <h1>官方版DnD阵营测试</h1>
         <p>
             来源<a href="http://www.wizards.com/default.asp?x=dnd%2Fdnd%2F20001222b" target="_blank" rel="external">官方版</a>，
             参考<a href="http://www.padnd.com/alignment_test2.php" target="_blank" rel="external">非官方</a>，
             翻译出自<a href="https://www.douban.com/group/topic/5049348/" target="_blank" rel="external">豆瓣</a>。
         </p>
+    </div>
+    <div id="survey" class="fame-container col-md-10 col-md-offset-1 column">
+        <template v-for="section in sections">
+            <h1>{{ section.head }}</h1>
+            <div class="row" v-for="idx in section.body" v-if="idx.done != undefined">
+                <h2>{{ idx.q }}</h2>
+                <p :class="{{ bg[$index] }}" v-for="ans in idx.a" v-on:click="sub(idx)">{{ ans.t }}</p>
+            </div>
+        </template>
+    </div>
+    <div class="fame-container col-md-10 col-md-offset-1 column">
         <p>
             <span>作者:</span>Dr. A. Clef<br>
             <span>发布协议:</span> <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">BY-SA</a>
@@ -90,6 +101,32 @@
             v: "混乱邪恶的人物会因为贪婪、憎恨或欲望而做出任何事。他暴躁易怒、满怀恶意、独断暴力而且无法预料。为了得到想要的东西，他会冲动而鲁莽地行动，散播邪恶与混乱。所幸他的计划大多杂乱无章，其团体大多组织散乱。一般而言，混乱邪恶者只有被强迫时才会与人合作，其领袖常要面对斗争与暗杀。混乱邪恶的可怕在于不仅破坏美丽与生命，也破坏了美丽与生命赖以存在的秩序。"
         }
     };
+    var dnd = (function ($, Vue, w, undefined) {
+        'use strict';
+        var vmain;
+        var build_vue = function () {
+            Vue.use(VueDragging);
+            vmain = new Vue({
+                el: '#survey',
+                data: {
+                    bg: ["bg-success", "bg-info", "bg-warning", "bg-danger"]
+                },
+                methods: {
+                    sub: function (ans) {
+                        console.log(ans);
+                    }
+                },
+                ready: function () {
+                }
+            });
+        };
+        var init = function () {
+            build_vue();
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
     $(function () {
         $("#submit").click(function () {
             var n = {cx: 0, lx: 0, nx: 0, xe: 0, xg: 0, xn: 0};
@@ -507,4 +544,7 @@
             ]
         }
     ];
+    $(window).load(function () {
+        dnd.init();
+    });
 </script>
