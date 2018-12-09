@@ -5,15 +5,21 @@ namespace app\index\controller;
 use Endroid\QrCode\QrCode;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use think\Controller;
+use think\exception\HttpResponseException;
 
-class Index
+class Index extends Controller
 {
     public function _empty()
     {
+        $action = $this->request->action();
+        if (is_file(__DIR__ . "/../view/index_$action.html")) {
+            throw new HttpResponseException(view($action));
+        }
         return json([], 404);
     }
 
-    public function index()
+    public function qrcode()
     {
         $qrCode = new QrCode('https://app.zxyqwe.com/index/index/index');
         $qrCode
