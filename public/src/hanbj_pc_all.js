@@ -1526,7 +1526,7 @@ var create = (function ($, Vue, w, undefined) {
                 s: false,
                 uni: '',
                 tie: '',
-                gender: '',
+                gender: '男',
                 phone: '',
                 QQ: '',
                 eid: '',
