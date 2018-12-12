@@ -101,4 +101,46 @@ class FameOper
             trace("Fame Clear $uname $ret");
         }
     }
+
+    public static function getOrder()
+    {
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left']
+        ];
+        $res = Db::table('fame')
+            ->alias('f')
+            ->join($join)
+            ->field([
+                'f.unique_name',
+                'tieba_id',
+                'year as y',
+                'grade',
+                'label'
+            ])
+            ->select();
+        $res = self::sort($res);
+        $data = [];
+        foreach ($res as $item) {
+            $year = $item['y'];
+            if (!isset($data[$year])) {
+                $data[$year] = ['name' => $year];
+                $data[$year]['teams'] = [];
+            }
+            $team = $item['label'];
+            if (!isset($data[$year]['teams'][$team])) {
+                $data[$year]['teams'][$team] = ['name' => $team];
+                $data[$year]['teams'][$team]['ms'] = [];
+            }
+            $data[$year]['teams'][$team]['ms'][] = [
+                'u' => $item['unique_name'],
+                't' => $item['tieba_id'],
+                'id' => $item['grade']
+            ];
+        }
+        $data = array_values($data);
+        foreach ($data as &$item) {
+            $item['teams'] = array_values($item['teams']);
+        }
+        return $data;
+    }
 }

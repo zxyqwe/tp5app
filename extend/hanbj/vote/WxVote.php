@@ -117,7 +117,8 @@ class WxVote
             ->select();
         return [
             'zg' => self::test_ZG($ans),
-            'pw' => self::test_PW($ans)
+            'pw' => self::test_PW($ans),
+            'raw' => $ans
         ];
     }
 
