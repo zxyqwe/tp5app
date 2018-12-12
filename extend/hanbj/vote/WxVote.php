@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use hanbj\FameOper;
 use hanbj\MemberOper;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -114,6 +115,69 @@ class WxVote
                 'f.grade as g'
             ])
             ->select();
-        return $ans;
+        return [
+            'zg' => self::test_ZG($ans),
+            'pw' => self::test_PW($ans)
+        ];
+    }
+
+    private static function test_ZG($ans)
+    {
+        $total = 0;
+        $candidate = [];
+        foreach (self::obj as $item) {
+            $candidate[$item] = 0;
+        }
+        foreach ($ans as $item) {
+            $tmp = explode(',', $item['a']);
+            if ($item['g'] === null) {
+                $weight = 1;
+            } elseif (in_array(intval($item['g']), [
+                FameOper::chairman,
+                FameOper::vice_chairman,
+                FameOper::manager,
+                FameOper::vice_manager,
+                FameOper::commissioner,
+                FameOper::secretary,
+                FameOper::vice_secretary,
+                FameOper::fame_chair,
+                FameOper::like_manager
+            ])) {
+                $weight = 3;
+            } else {
+                if ($item['g'] !== FameOper::leave) {
+                    $weight = 2;
+                } else {
+                    $weight = 1;
+                }
+            }
+            $total += $weight;
+            foreach ($tmp as $idx) {
+                $candidate[$idx] += $weight;
+            }
+        }
+        return ['tot' => $total, 'detail' => $candidate];
+    }
+
+    private static function test_PW($ans)
+    {
+        $total = 0;
+        $candidate = [];
+        foreach (self::obj as $item) {
+            $candidate[$item] = 0;
+        }
+        foreach ($ans as $item) {
+            if ($item['g'] === null) {
+                continue;
+            }
+            $weight = 5;
+            $total += $weight;
+            $tmp = explode(',', $item['a']);
+            foreach ($tmp as $idx) {
+                $candidate[$idx] += $weight;
+                $weight--;
+            }
+        }
+        return ['tot' => $total, 'detail' => $candidate];
     }
 }
