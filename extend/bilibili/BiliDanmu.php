@@ -61,6 +61,10 @@ class BiliDanmu extends BiliBase
         if (!$this->bili_entry($real_roomid)) {
             return;
         }
+        if ($this->lock("debounce")) {
+            return;
+        }
+        $this->lock("debounce", 60);
         $urlapi = $this->prefix . $url;
         if (false !== strpos($url, '?')) {
             $urlapi .= $payload;
