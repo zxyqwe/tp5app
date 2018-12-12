@@ -85,3 +85,61 @@ var login = (function ($, Vue, w, undefined) {
         init: init
     };
 })(jQuery, Vue, window);
+
+var vote = (function ($, Vue, w, undefined) {
+    'use strict';
+    var vmain;
+    var refresh = function () {
+        w.waitloading();
+        $.ajax({
+            type: "GET",
+            url: '/hanbj/pub/json_vote',
+            dataType: "json",
+            success: function (msg) {
+                var zg = [];
+                for (var i in msg.zg.detail) {
+                    var tmp = msg.zg.detail[i];
+                    var rto = 100 * tmp / msg.zg.tot;
+                    zg.push({
+                        n: i, v: tmp, rto: rto.toFixed(2)
+                    })
+                    ;
+                }
+                var pw = [];
+                for (var i in msg.pw.detail) {
+                    var tmp = msg.pw.detail[i];
+                    var rto = 100 * tmp / msg.pw.tot;
+                    pw.push({n: i, v: tmp, rto: rto.toFixed(2)});
+                }
+                vmain.ans = {zg: zg, pw: pw, zg_tot: msg.zg.tot, pw_tot: msg.pw.tot};
+                vmain.refresh = Date();
+            },
+            error: function (jqXHR, msg, ethrow) {
+                w.msgto(jqXHR, msg, ethrow);
+            },
+            complete: function () {
+                w.cancelloading();
+            }
+        });
+        setTimeout(refresh, 600000);
+    };
+    var init = function () {
+        vmain = new Vue({
+            el: '#body',
+            data: {
+                ans: {
+                    zg: [],
+                    pw: []
+                },
+                refresh: ''
+            },
+            methods: {},
+            ready: function () {
+                refresh();
+            }
+        });
+    };
+    return {
+        init: init
+    };
+})(jQuery, Vue, window);

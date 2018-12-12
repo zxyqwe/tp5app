@@ -4,14 +4,44 @@
         <h1>换届选举 - 结果实时公示</h1>
         <div id="body" v-cloak>
             <p>刷新时间：{{ refresh }}</p>
-            <p>todo progress bar</p>
-            <p>{{ ans }}</p>
             <div class="row">
                 <div class="fame-container col-md-10 col-md-offset-1 column">
                     <p class="lead" style="padding: 15px">一、资格赛</p>
+                    <template v-for="msg in ans.zg">
+                        <div class="row">
+                            <div class="col-md-2 column">
+                                {{ msg.n }}
+                            </div>
+                            <div class="col-md-10 column">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                                         :aria-valuenow="{ msg.rto }" :style="{ width: msg.rto + '%' }" aria-valuemin="0"
+                                         :aria-valuemax="{ ans.zg_tot }" style="min-width: 2em;">
+                                        票力{{ msg.v }} （{{ msg.rto }}%）
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
                 <div class="fame-container col-md-10 col-md-offset-1 column">
                     <p class="lead" style="padding: 15px">二、排位赛</p>
+                    <template v-for="msg in ans.pw">
+                        <div class="row">
+                            <div class="col-md-2 column">
+                                {{ msg.n }}
+                            </div>
+                            <div class="col-md-10 column">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"
+                                         :aria-valuenow="{ msg.rto }" :style="{ width: msg.rto + '%' }" aria-valuemin="0"
+                                         :aria-valuemax="{ ans.pw_tot }" style="min-width: 2em;">
+                                        票力{{ msg.v }} （{{ msg.rto }}%）
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             <p></p>
@@ -20,45 +50,6 @@
 </div>
 <script>
     var nav = 'nav1_none';
-    var vote = (function ($, Vue, w, undefined) {
-        'use strict';
-        var vmain;
-        var refresh = function () {
-            w.waitloading();
-            $.ajax({
-                type: "GET",
-                url: '/hanbj/pub/json_vote',
-                dataType: "json",
-                success: function (msg) {
-                    vmain.ans = msg;
-                    vmain.refresh = Date();
-                },
-                error: function (jqXHR, msg, ethrow) {
-                    w.msgto(jqXHR, msg, ethrow);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-            setTimeout(refresh, 600000);
-        };
-        var init = function () {
-            vmain = new Vue({
-                el: '#body',
-                data: {
-                    ans: '',
-                    refresh: ''
-                },
-                methods: {},
-                ready: function () {
-                    refresh();
-                }
-            });
-        };
-        return {
-            init: init
-        };
-    })(jQuery, Vue, window);
     $(window).load(function () {
         vote.init();
     });
