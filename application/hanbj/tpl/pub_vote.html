@@ -1,11 +1,20 @@
 {layout name="layout_pc_open" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
-    <div id="container" class="col-md-10 col-md-offset-1 column">
+    <div class="fame-container col-md-10 col-md-offset-1 column">
         <h1>换届选举 - 结果实时公示</h1>
-        <div id="body">
+        <div id="body" v-cloak>
             <p>刷新时间：{{ refresh }}</p>
             <p>todo progress bar</p>
             <p>{{ ans }}</p>
+            <div class="row">
+                <div class="fame-container col-md-10 col-md-offset-1 column">
+                    <p class="lead" style="padding: 15px">一、资格赛</p>
+                </div>
+                <div class="fame-container col-md-10 col-md-offset-1 column">
+                    <p class="lead" style="padding: 15px">二、排位赛</p>
+                </div>
+            </div>
+            <p></p>
         </div>
     </div>
 </div>
@@ -35,7 +44,7 @@
         };
         var init = function () {
             vmain = new Vue({
-                el: '#fame',
+                el: '#body',
                 data: {
                     ans: '',
                     refresh: ''

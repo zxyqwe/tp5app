@@ -97,8 +97,8 @@ class WxVote
     public static function getResult()
     {
         $join = [
-            ['member m', 'm.unique_name=f.unique_name', 'left'],
-            ['fame f', 'f.unique_name=f.unique_name and f.year=' . WxOrg::year, 'left']
+            ['member m', 'm.unique_name=v.unique_name', 'left'],
+            ['fame f', 'f.unique_name=v.unique_name and f.year=' . WxOrg::year, 'left']
         ];
         $map = [
             'm.code' => MemberOper::NORMAL,
