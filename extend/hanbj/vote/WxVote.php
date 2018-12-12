@@ -125,8 +125,9 @@ class WxVote
     {
         $total = 0;
         $candidate = [];
+        $map = self::getMap();
         foreach (self::obj as $item) {
-            $candidate[$item] = 0;
+            $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
             $tmp = explode(',', $item['a']);
@@ -153,7 +154,7 @@ class WxVote
             }
             $total += $weight;
             foreach ($tmp as $idx) {
-                $candidate[$idx] += $weight;
+                $candidate[$map[$idx]['s']] += $weight;
             }
         }
         return ['tot' => $total, 'detail' => $candidate];
@@ -163,8 +164,9 @@ class WxVote
     {
         $total = 0;
         $candidate = [];
+        $map = self::getMap();
         foreach (self::obj as $item) {
-            $candidate[$item] = 0;
+            $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
             if ($item['g'] === null) {
@@ -174,7 +176,7 @@ class WxVote
             $total += $weight;
             $tmp = explode(',', $item['a']);
             foreach ($tmp as $idx) {
-                $candidate[$idx] += $weight;
+                $candidate[$map[$idx]['s']] += $weight;
                 $weight--;
             }
         }
