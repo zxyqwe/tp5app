@@ -82,39 +82,6 @@ class Wxtest extends Controller
         if (!in_array($uname, $org->getUser())) {
             return json(['msg' => '没有投票权'], 400);
         }
-        try {
-            $ret = Db::table('score')
-                ->where([
-                    'unique_name' => $uname,
-                    'name' => $obj,
-                    'year' => WxOrg::year,
-                    'catg' => $catg
-                ])
-                ->data(['ans' => $ans])
-                ->update();
-            if ($ret <= 0) {
-                Db::table('score')
-                    ->data([
-                        'ans' => $ans,
-                        'unique_name' => $uname,
-                        'name' => $obj,
-                        'year' => WxOrg::year,
-                        'catg' => $catg
-                    ])
-                    ->insert();
-                trace("投票add $uname $catg $obj");
-            } else {
-                trace("投票update $uname $catg $obj");
-            }
-        } catch (\Exception $e) {
-            $e = $e->getMessage();
-            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
-            if (isset($token[2])) {
-                return json(['msg' => 'OK']);
-            }
-            trace("Test UP $e");
-            throw new HttpResponseException(json(['msg' => $e], 400));
-        }
-        return json(['msg' => 'OK']);
+        return WxOrg::addAns($uname, $obj, $catg, $ans);
     }
 }

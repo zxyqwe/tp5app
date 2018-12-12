@@ -2,19 +2,18 @@
 
 namespace app\hanbj\controller;
 
+use app\hanbj\WxPayConfig;
+use app\WxPayApi;
+use app\WxPayUnifiedOrder;
 use hanbj\BonusOper;
+use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\OrderOper;
 use hanbj\vote\WxVote;
+use hanbj\weixin\HanbjNotify;
 use hanbj\weixin\HanbjRes;
-use hanbj\vote\WxOrg;
 use think\Controller;
 use think\Db;
-use hanbj\weixin\HanbjNotify;
-use hanbj\FeeOper;
-use app\hanbj\WxPayConfig;
-use app\WxPayUnifiedOrder;
-use app\WxPayApi;
 use think\exception\HttpResponseException;
 
 class Wxdaily extends Controller
@@ -246,36 +245,7 @@ class Wxdaily extends Controller
         if (count(array_intersect($ans, WxVote::obj)) !== count($ans)) {
             return json(['msg' => '候选人错误' . input('post.ans')], 400);
         }
-        $data = [
-            'unique_name' => $uniq,
-            'year' => WxOrg::year,//这一届投票下一届
-            'ans' => implode(',', $ans)
-        ];
-        try {
-            $ret = Db::table('vote')
-                ->where([
-                    'unique_name' => $uniq,
-                    'year' => WxOrg::year,//这一届投票下一届
-                ])
-                ->data(['ans' => $data['ans']])
-                ->update();
-            if ($ret <= 0) {
-                Db::table('vote')
-                    ->insert($data);
-                trace("选举add $uniq {$data['ans']}");
-            } else {
-                trace("投票update $uniq {$data['ans']}");
-            }
-        } catch (\Exception $e) {
-            $e = $e->getMessage();
-            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
-            if (isset($token[2])) {
-                return json(['msg' => 'OK']);
-            }
-            trace("Test Vote $e");
-            throw new HttpResponseException(json(['msg' => $e], 400));
-        }
-        return json(['msg' => 'OK']);
+        return WxVote::addAns($uniq, $ans);
     }
 
     public function prom()

@@ -4,6 +4,7 @@ namespace hanbj\vote;
 
 use hanbj\MemberOper;
 use think\Db;
+use think\exception\HttpResponseException;
 
 class WxVote
 {
@@ -57,5 +58,62 @@ class WxVote
             $map[$item['u']]['sel'] = false;
         }
         return $map;
+    }
+
+    public static function addAns($uniq, $ans)
+    {
+        $data = [
+            'unique_name' => $uniq,
+            'year' => WxOrg::year,//这一届投票下一届
+            'ans' => implode(',', $ans)
+        ];
+        try {
+            $ret = Db::table('vote')
+                ->where([
+                    'unique_name' => $uniq,
+                    'year' => WxOrg::year,//这一届投票下一届
+                ])
+                ->data(['ans' => $data['ans']])
+                ->update();
+            if ($ret <= 0) {
+                Db::table('vote')
+                    ->insert($data);
+                trace("选举add $uniq {$data['ans']}");
+            } else {
+                trace("投票update $uniq {$data['ans']}");
+            }
+        } catch (\Exception $e) {
+            $e = $e->getMessage();
+            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
+            if (isset($token[2])) {
+                return json(['msg' => 'OK']);
+            }
+            trace("Test Vote $e");
+            throw new HttpResponseException(json(['msg' => $e], 400));
+        }
+        return json(['msg' => 'OK']);
+    }
+
+    public static function getResult()
+    {
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left'],
+            ['fame f', 'f.unique_name=f.unique_name and f.year=' . WxOrg::year, 'left']
+        ];
+        $map = [
+            'm.code' => MemberOper::NORMAL,
+            'v.year' => WxOrg::year
+        ];
+        $ans = Db::table('vote')
+            ->alias('v')
+            ->join($join)
+            ->where($map)
+            ->cache(600)
+            ->field([
+                'v.ans as a',
+                'f.grade as g'
+            ])
+            ->select();
+        return $ans;
     }
 }
