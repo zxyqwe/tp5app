@@ -2,6 +2,7 @@
 
 namespace hanbj\weixin;
 
+use think\Db;
 use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
 use hanbj\CardOper;
@@ -55,6 +56,46 @@ class WxHanbj
         // trace("WxHanbj TicketApi {$res['ticket']}");
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
+    }
+
+    public static function addUnionID($access, $limit = 5)
+    {
+        $user = Db::table('member')
+            ->where([
+                'openid' => ['exp', Db::raw('is not null')],
+                'unionid' => ['exp', Db::raw('is null')]
+            ])
+            ->limit($limit)
+            ->field(['openid'])
+            ->select();
+
+        $url = 'https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=' . $access;
+        $data = ['user_list' => $user];
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
+        if (!isset($res['user_info_list'])) {
+            trace("addUnionID $raw");
+            return 0;
+        }
+
+        $cnt = 0;
+        foreach ($res['user_info_list'] as $idx) {
+            if (!isset($idx['unionid'])) {
+                continue;
+            }
+            $ret = Db::table('member')
+                ->where([
+                    'openid' => $idx['openid'],
+                    'unionid' => ['exp', Db::raw('is null')]
+                ])
+                ->data(['unionid' => $idx['unionid']])
+                ->update();
+            if ($ret > 0) {
+                trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}");
+                $cnt += $ret;
+            }
+        }
+        return $cnt;
     }
 
     public static function handle_msg($msg)
