@@ -2,6 +2,7 @@
 
 namespace hanbj;
 
+use hanbj\weixin\WxHanbj;
 use think\Db;
 use think\exception\HttpResponseException;
 
@@ -170,6 +171,7 @@ class MemberOper
         foreach ($ret as $i) {
             self::Temp2Junior($i);
         }
+        WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
 
         $name = "MemberOper::daily()";
         if (cache("?$name")) {
@@ -268,7 +270,7 @@ class MemberOper
             $map['code'] = self::UNUSED;
             $ret = Db::table('member')
                 ->where($map)
-                ->update(['openid' => null]);
+                ->update(['openid' => null, 'unionid' => null]);
             if ($ret != 1) {
                 throw new \Exception('2 fail');
             }

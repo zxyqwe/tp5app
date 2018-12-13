@@ -58,7 +58,7 @@ class WxHanbj
         return $res['ticket'];
     }
 
-    public static function addUnionID($access, $limit = 5)
+    public static function addUnionID($access, $limit = 15)
     {
         $user = Db::table('member')
             ->where([
@@ -75,10 +75,10 @@ class WxHanbj
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
             trace("addUnionID $raw");
-            return 0;
+            return $limit;
         }
 
-        $cnt = 0;
+        $limit = count($user);
         foreach ($res['user_info_list'] as $idx) {
             if (!isset($idx['unionid'])) {
                 continue;
@@ -92,10 +92,10 @@ class WxHanbj
                 ->update();
             if ($ret > 0) {
                 trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}");
-                $cnt += $ret;
+                $limit -= $ret;
             }
         }
-        return $cnt;
+        return $limit;
     }
 
     public static function handle_msg($msg)
