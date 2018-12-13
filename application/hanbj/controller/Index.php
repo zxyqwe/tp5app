@@ -4,6 +4,7 @@ namespace app\hanbj\controller;
 
 use hanbj\UserOper;
 use hanbj\MemberOper;
+use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\exception\HttpResponseException;
 
@@ -48,7 +49,16 @@ class Index extends Controller
 
     public function debug()
     {
-        MemberOper::create_unique_unused();
+        $uniq = session('unique_name');
+        if ($uniq !== UserOper::coder) {
+            return json(['msg' => $uniq]);
+        }
+
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+//      $ret =   MemberOper::create_unique_unused();
+        $ret = WxHanbj::addUnionID($access);
+
+        return json(['msg' => $ret]);
     }
 
     public function cron()
