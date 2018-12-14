@@ -5,13 +5,26 @@ namespace hanbj\weixin;
 
 class WxTemp
 {
+    const URL = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=';
+
+    private static function base($data, $log)
+    {
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = self::URL . $access;
+        $raw = Curl_Post($data, $url, false);
+        $res = json_decode($raw, true);
+        if ($res['errcode'] !== 0) {
+            trace("ERR $log $raw");
+        } else {
+            trace($log);
+        }
+    }
+
     public static function notifyFee($openid, $uname, $fee, $cache_fee, $label)
     {
-        if (strlen($openid) <= 1) {
+        if (strlen($openid) <= 10) {
             return;
         }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
         $data = [
             "touser" => $openid,
             "template_id" => "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",
@@ -41,22 +54,14 @@ class WxTemp
             ]
         ];
         $log = implode(', ', [$openid, $uname, $fee, $cache_fee, $label]);
-        $raw = Curl_Post($data, $url, false);
-        $res = json_decode($raw, true);
-        if ($res['errcode'] !== 0) {
-            trace("notifyFee $log $raw");
-        } else {
-            trace($log);
-        }
+        self::base($data, $log);
     }
 
     public static function regAct($openid, $uname, $act)
     {
-        if (strlen($openid) <= 1) {
+        if (strlen($openid) <= 10) {
             return;
         }
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=' . $access;
         $data = [
             "touser" => $openid,
             "template_id" => "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",
@@ -79,12 +84,11 @@ class WxTemp
             ]
         ];
         $log = implode(', ', [$openid, $uname, $act]);
-        $raw = Curl_Post($data, $url, false);
-        $res = json_decode($raw, true);
-        if ($res['errcode'] !== 0) {
-            trace("regAct $log $raw");
-        } else {
-            trace($log);
-        }
+        self::base($data, $log);
+    }
+
+    public static function rpc($data, $log)
+    {
+        self::base($data, $log);
     }
 }

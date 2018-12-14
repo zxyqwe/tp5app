@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\FeeOper;
+use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -75,7 +76,8 @@ class Rpc extends Controller
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
-        trace("模板 {$ret['unique_name']}");
+        $data['touser'] = $ret['openid'];
+        WxTemp::rpc($data, "模板 {$ret['unique_name']} " . json_encode($data));
         return json(['msg' => 'ok']);
     }
 }
