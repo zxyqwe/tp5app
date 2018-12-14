@@ -64,6 +64,12 @@ class Rpc extends Controller
         if (!isset($data['touser'])) {
             return json(['msg' => '无unionID']);
         }
+        if (!isset($data['template_id'])
+            || !in_array($data["template_id"], WxTemp::temp_ids)
+        ) {
+            return json(['msg' => 'template_id错误']);
+        }
+
         $unionid = strval($data['touser']);
         $ret = Db::table('member')
             ->where(['unionid' => $unionid])
@@ -76,8 +82,9 @@ class Rpc extends Controller
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
+
         $data['touser'] = $ret['openid'];
-        WxTemp::rpc($data, "模板 {$ret['unique_name']} " . json_encode($data));
-        return json(['msg' => 'ok']);
+        $raw = WxTemp::rpc($data, "模板 {$ret['unique_name']} " . json_encode($data));
+        return json(['msg' => $raw]);
     }
 }

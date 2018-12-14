@@ -6,6 +6,10 @@ namespace hanbj\weixin;
 class WxTemp
 {
     const URL = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=';
+    const temp_ids = [
+        "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",//会费通知
+        "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",//活动登记
+    ];
 
     private static function base($data, $log)
     {
@@ -15,9 +19,10 @@ class WxTemp
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
             trace("ERR $log $raw");
-        } else {
-            trace($log);
+            return $raw;
         }
+        trace($log);
+        return 'ok';
     }
 
     public static function notifyFee($openid, $uname, $fee, $cache_fee, $label)
@@ -89,6 +94,6 @@ class WxTemp
 
     public static function rpc($data, $log)
     {
-        self::base($data, $log);
+        return self::base($data, $log);
     }
 }
