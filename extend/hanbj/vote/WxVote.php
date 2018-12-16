@@ -9,8 +9,8 @@ use think\exception\HttpResponseException;
 
 class WxVote
 {
-    //乾壬申~夜娘_魁児，乾甲申~鸿胪寺少卿，坤丁酉~素?问，离庚寅~紫菀灯芯，艮甲辰~采娈
-    const obj = ['乾壬申', '乾甲申', '坤丁酉', '离庚寅', '艮甲辰'];
+    //乾壬申~夜娘_魁児，乾甲申~鸿胪寺少卿，离庚寅~紫菀灯芯，艮甲辰~采娈
+    const obj = ['乾壬申', '乾甲申', '离庚寅', '艮甲辰'];
 
     public static function initView()
     {
@@ -173,7 +173,7 @@ class WxVote
             if ($item['g'] === null) {
                 continue;
             }
-            $weight = 5;
+            $weight = count(self::obj);
             $total += $weight;
             $tmp = explode(',', $item['a']);
             foreach ($tmp as $idx) {
