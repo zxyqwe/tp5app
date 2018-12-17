@@ -26,7 +26,7 @@ function cross_site()
     }
 }
 
-function Curl_Post($curlPost, $url, $easy = true)
+function Curl_Post($curlPost, $url, $easy = true, $timeout = 1)
 {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -35,7 +35,7 @@ function Curl_Post($curlPost, $url, $easy = true)
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $easy ? http_build_query($curlPost) : json_encode($curlPost, JSON_UNESCAPED_UNICODE));
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
     $return_str = curl_exec($curl);
     explode_curl($curl);
     if ($return_str === false) {
@@ -48,14 +48,14 @@ function Curl_Post($curlPost, $url, $easy = true)
     return $return_str;
 }
 
-function Curl_Get($url)
+function Curl_Get($url, $timeout = 1)
 {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_HEADER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
-    curl_setopt($curl, CURLOPT_TIMEOUT, 1);
+    curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
     $return_str = curl_exec($curl);
     explode_curl($curl);
     if ($return_str === false) {
@@ -129,7 +129,8 @@ function WX_access($api, $sec, $name)
     $tmp = cache($name);
     if (false !== $tmp)
         return $tmp;
-    $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec);
+    $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec;
+    $raw = Curl_Get($url, 5);
     $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
         return $res;
@@ -147,7 +148,7 @@ function explode_dict($d, $prefix = '')
         if (is_array($v)) {
             $ret = array_merge($ret, explode_dict($v, "$prefix $k"));
         } else {
-            $ret[] = "[$prefix $k] ".var_export($v,true);
+            $ret[] = "[$prefix $k] " . var_export($v, true);
         }
     }
     return $ret;
