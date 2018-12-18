@@ -12,11 +12,14 @@ class BiliDanmu extends BiliBase
         $urlapi = $this->prefix . $url . $real_roomid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
-        if ($data['code'] !== 0) {
+        if ($data['code'] !== 0 || !isset($data['data'])) {
             trace("$key $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
+        if (isset($data['list'])) {
+            $data = $data['list'];
+        }
         return $data;
     }
 
@@ -36,7 +39,7 @@ class BiliDanmu extends BiliBase
 
     public function unknown_smallTV($real_roomid)
     {
-        $data = $this->_unknown($real_roomid, 'gift/v2/smalltv/check?roomid=', 'unknown_smallTV');
+        $data = $this->_unknown($real_roomid, 'gift/v3/smalltv/check?roomid=', 'unknown_smallTV');
         $ret = [];
         foreach ($data as $item) {
             $this->_handle_smallTV($real_roomid, $item, $ret);
@@ -48,7 +51,11 @@ class BiliDanmu extends BiliBase
     {
         $payload_raw = [
             'roomid' => $real_roomid,
-            'raffleId' => $item['raffleId']
+            'raffleId' => $item['raffleId'],
+            'type' => 'Gift',
+            'csrf_token' => $this->csrf_token,
+            'csrf' => $this->csrf_token,
+            'visit_id' => ''
         ];
         $payload = http_build_query($payload_raw);
         if ($this->lock("$key$payload")) {
@@ -106,7 +113,7 @@ class BiliDanmu extends BiliBase
 
     private function _handle_smallTV($real_roomid, $item, &$ret)
     {
-        $this->_handle($real_roomid, $item, 'unknown_smallTV', 'gift/v2/smalltv/join?', $ret);
+        $this->_handle($real_roomid, $item, 'unknown_smallTV', 'gift/v3/smalltv/join?', $ret);
     }
 
     public function notice_any($giftId, $real_roomid, $url, $key)
