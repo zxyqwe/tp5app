@@ -81,7 +81,7 @@ class WxVote
                     ->insert($data);
                 trace("选举add $uniq {$data['ans']}");
             } else {
-                trace("投票update $uniq {$data['ans']}");
+                trace("选举update $uniq {$data['ans']}");
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
