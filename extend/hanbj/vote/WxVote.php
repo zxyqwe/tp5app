@@ -125,7 +125,7 @@ class WxVote
             'zg' => self::test_ZG($ans),
             'pw' => self::test_PW($ans),
             'ref' => date("Y-m-d H:i:s"),
-            'last' => date("d 天 H 小时 i 分钟 s 秒", self::end_time - time())
+            'last' => date("d 天 H 小时 i 分钟 s 秒", self::end_time - time() - 8 * 3600 - 86400)
         ];
         cache($cache_name, json_encode($ans), 600);
         return $ans;
