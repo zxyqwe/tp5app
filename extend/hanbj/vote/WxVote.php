@@ -124,6 +124,8 @@ class WxVote
         $last = self::end_time - time();
         if ($last < 0) {
             $last = ' 00 秒';
+        } elseif ($last < 86400) {
+            $last = date("H 小时 i 分钟 s 秒", $last - 8 * 3600 - 86400);
         } else {
             $last = date("d 天 H 小时 i 分钟 s 秒", $last - 8 * 3600 - 86400);
         }
