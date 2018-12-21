@@ -96,23 +96,24 @@ var vote = (function ($, Vue, w, undefined) {
             url: '/hanbj/pub/json_vote',
             dataType: "json",
             success: function (msg) {
-                var zg = [];
-                for (var i in msg.zg.detail) {
-                    var tmp = msg.zg.detail[i];
-                    var rto = 100 * tmp / msg.zg.tot;
+                var zg = [], tmp, rto, i;
+                for (i in msg.zg.detail) {
+                    tmp = msg.zg.detail[i];
+                    rto = 100 * tmp / msg.zg.tot;
                     zg.push({
                         n: i, v: tmp, rto: rto.toFixed(2)
                     })
                     ;
                 }
                 var pw = [];
-                for (var i in msg.pw.detail) {
-                    var tmp = msg.pw.detail[i];
-                    var rto = 100 * tmp / msg.pw.tot;
+                for (i in msg.pw.detail) {
+                    tmp = msg.pw.detail[i];
+                    rto = 100 * tmp / msg.pw.tot;
                     pw.push({n: i, v: tmp, rto: rto.toFixed(2)});
                 }
                 vmain.ans = {zg: zg, pw: pw, zg_tot: msg.zg.tot, pw_tot: msg.pw.tot};
-                vmain.refresh = Date();
+                vmain.refresh = msg.ref;
+                vmain.last = msg.last;
             },
             error: function (jqXHR, msg, ethrow) {
                 w.msgto(jqXHR, msg, ethrow);
@@ -131,7 +132,8 @@ var vote = (function ($, Vue, w, undefined) {
                     zg: [],
                     pw: []
                 },
-                refresh: ''
+                refresh: '',
+                last: ''
             },
             methods: {},
             ready: function () {
