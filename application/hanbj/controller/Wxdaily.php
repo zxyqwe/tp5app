@@ -240,6 +240,9 @@ class Wxdaily extends Controller
         if (FeeOper::owe($uniq)) {
             return json(['msg' => '欠费'], 400);
         }
+        if (time() >= WxVote::end_time) {
+            return json(['msg' => 'OK']);
+        }
         $ans = input('post.ans');
         $ans = explode(',', $ans);//a1,a2,a3
         if (count(array_intersect($ans, WxVote::obj)) !== count($ans)) {

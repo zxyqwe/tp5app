@@ -11,6 +11,8 @@ class WxVote
 {
     //乾壬申~夜娘_魁児，乾甲申~鸿胪寺少卿，离庚寅~紫菀灯芯，艮甲辰~采娈
     const obj = ['乾壬申', '乾甲申', '离庚寅', '艮甲辰'];
+    const end_time = 1545458400; // mktime(14, 00, 00, 12, 22, 2018);
+
 
     public static function initView()
     {
@@ -97,6 +99,11 @@ class WxVote
 
     public static function getResult()
     {
+        $cache_name = 'WxVote::getResult';
+        if (cache("?$cache_name")) {
+            return json_decode(cache($cache_name), true);
+        }
+
         $join = [
             ['member m', 'm.unique_name=v.unique_name', 'left'],
             ['fame f', 'f.unique_name=v.unique_name and f.year=' . WxOrg::year, 'left']
@@ -109,16 +116,19 @@ class WxVote
             ->alias('v')
             ->join($join)
             ->where($map)
-            ->cache(600)
             ->field([
                 'v.ans as a',
                 'f.grade as g'
             ])
             ->select();
-        return [
+        $ans = [
             'zg' => self::test_ZG($ans),
-            'pw' => self::test_PW($ans)
+            'pw' => self::test_PW($ans),
+            'ref' => date("Y-m-d H:i:s"),
+            'last' => date("d 天 H 小时 i 分钟 s 秒", self::end_time - time())
         ];
+        cache($cache_name, json_encode($ans), 600);
+        return $ans;
     }
 
     private static function test_ZG($ans)
