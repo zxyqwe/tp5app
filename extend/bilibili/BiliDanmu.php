@@ -13,7 +13,7 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0 || !isset($data['data'])) {
-            trace("$key $raw");
+            trace("$url $key $raw");
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -61,7 +61,7 @@ class BiliDanmu extends BiliBase
         if ($this->lock("$key$payload")) {
             return;
         }
-        if (rand(0, 100) > 30) {
+        if (rand(0, 100) > 5) {
             $this->lock("$key$payload", $this->long_timeout());
             return;
         }
