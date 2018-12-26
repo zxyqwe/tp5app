@@ -71,7 +71,7 @@ class WxHanbj
 
         $url = 'https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=' . $access;
         $data = ['user_list' => $user];
-        $raw = Curl_Post($data, $url, false);
+        $raw = Curl_Post($data, $url, false, 5);
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
             trace("addUnionID $raw");
