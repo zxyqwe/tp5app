@@ -8,6 +8,7 @@ use hanbj\BonusOper;
 use hanbj\CardOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
+use hanbj\HBConfig;
 use hanbj\UserOper;
 use hanbj\weixin\WxHanbj;
 use think\Controller;
@@ -90,7 +91,7 @@ class Mobile extends Controller
 
     public function reg()
     {
-        if (session('?tieba_id') && session('unique_name') !== UserOper::coder) {
+        if (session('?tieba_id') && session('unique_name') !== HBConfig::CODER) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
         }
         if (!MemberOper::wx_login()) {

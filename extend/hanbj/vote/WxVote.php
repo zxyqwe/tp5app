@@ -3,14 +3,13 @@
 namespace hanbj\vote;
 
 use hanbj\FameOper;
+use hanbj\HBConfig;
 use hanbj\MemberOper;
 use think\Db;
 use think\exception\HttpResponseException;
 
 class WxVote
 {
-    //乾壬申~夜娘_魁児，乾甲申~鸿胪寺少卿，离庚寅~紫菀灯芯，艮甲辰~采娈
-    const obj = ['乾壬申', '乾甲申', '离庚寅', '艮甲辰'];
     const end_time = 1545458400; // mktime(14, 00, 00, 12, 22, 2018);
 
 
@@ -25,7 +24,7 @@ class WxVote
         $ret = Db::table('vote')
             ->where([
                 'unique_name' => session('unique_name'),
-                'year' => WxOrg::year
+                'year' => HBConfig::YEAR
             ])
             ->field([
                 'ans'
@@ -53,7 +52,7 @@ class WxVote
 
     private static function getMap()
     {
-        $res = MemberOper::get_tieba(self::obj);
+        $res = MemberOper::get_tieba(HBConfig::NEXT);
         $map = [];
         foreach ($res as $item) {
             $map[$item['u']] = $item;
@@ -67,14 +66,14 @@ class WxVote
     {
         $data = [
             'unique_name' => $uniq,
-            'year' => WxOrg::year,//这一届投票下一届
+            'year' => HBConfig::YEAR,//这一届投票下一届
             'ans' => implode(',', $ans)
         ];
         try {
             $ret = Db::table('vote')
                 ->where([
                     'unique_name' => $uniq,
-                    'year' => WxOrg::year,//这一届投票下一届
+                    'year' => HBConfig::YEAR,//这一届投票下一届
                 ])
                 ->data(['ans' => $data['ans']])
                 ->update();
@@ -106,11 +105,11 @@ class WxVote
 
         $join = [
             ['member m', 'm.unique_name=v.unique_name', 'left'],
-            ['fame f', 'f.unique_name=v.unique_name and f.year=' . WxOrg::year, 'left']
+            ['fame f', 'f.unique_name=v.unique_name and f.year=' . HBConfig::YEAR, 'left']
         ];
         $map = [
             'm.code' => MemberOper::NORMAL,
-            'v.year' => WxOrg::year
+            'v.year' => HBConfig::YEAR
         ];
         $ans = Db::table('vote')
             ->alias('v')
@@ -144,7 +143,7 @@ class WxVote
         $total = 0;
         $candidate = [];
         $map = self::getMap();
-        foreach (self::obj as $item) {
+        foreach (HBConfig::NEXT as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
@@ -183,14 +182,14 @@ class WxVote
         $total = 0;
         $candidate = [];
         $map = self::getMap();
-        foreach (self::obj as $item) {
+        foreach (HBConfig::NEXT as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
             if ($item['g'] === null) {
                 continue;
             }
-            $weight = count(self::obj);
+            $weight = count(HBConfig::NEXT);
             $total += $weight;
             $tmp = explode(',', $item['a']);
             foreach ($tmp as $idx) {

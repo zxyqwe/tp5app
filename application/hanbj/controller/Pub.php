@@ -6,7 +6,6 @@ use hanbj\BonusOper;
 use hanbj\FameOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
-use hanbj\vote\WxVote;
 use think\Controller;
 use think\Db;
 use Endroid\QrCode\QrCode;
@@ -112,7 +111,7 @@ class Pub extends Controller
 
     public function json_vote()
     {
-        $ans = WxVote::getResult();
+        $ans = '';//WxVote::getResult();
         return json($ans);
     }
 }

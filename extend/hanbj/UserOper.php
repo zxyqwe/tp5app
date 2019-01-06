@@ -8,8 +8,6 @@ use think\exception\HttpResponseException;
 class UserOper
 {
     const VERSION = 'succ_1';
-    const coder = '坎丙午';
-    const FIXED = [self::coder, '坤丁酉', '离丙申', '乾壬申'];
     const time = 60;
 
     private static function limit($unique)
@@ -19,7 +17,7 @@ class UserOper
 
     public static function reg()
     {
-        $data = array_merge(FameOper::getTop(), self::FIXED);
+        $data = array_merge(FameOper::getTop(), HBConfig::FIXED);
         return array_unique($data);
     }
 
