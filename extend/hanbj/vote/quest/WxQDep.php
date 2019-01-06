@@ -3,7 +3,7 @@
 namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
-use hanbj\vote\WxOrg;
+use hanbj\HBConfig;
 use think\Db;
 
 class WxQDep
@@ -14,7 +14,7 @@ class WxQDep
         $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::vice_secretary]);
         $ret = Db::table('fame')
             ->where([
-                'year' => WxOrg::year
+                'year' => HBConfig::YEAR
             ])
             ->field([
                 'distinct label'

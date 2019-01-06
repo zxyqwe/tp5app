@@ -11,14 +11,10 @@ class BonusOper
     const _ACT_BONUS = 5;
     const _VOLUNTEER = 30;
     const _ACT_NAME = '小年';
-    //陌上歌未央, 狼破军魂, 何处画夕阳, 姑娘_请回眸, 第三颗耳洞, Li秋林, 飞飞
-    const _WORKER = ['兑壬子', '兑癸卯', '兑癸巳', '兑甲辰', '兑庚午', '兑丙子', '夏辛未'];
 
     public static function getWorkers()
     {
-        $data = array_merge(FameOper::getUp(), self::_WORKER);
-        //zxyqwe, 魁儿, 花西, 哈利, 紫菀
-        $data = array_merge($data, [UserOper::coder, '乾壬申', '离丙申', '巽丁巳', '离庚寅']);
+        $data = array_merge(FameOper::getUp(), HBConfig::WORKER);
         return array_unique($data);
     }
 
@@ -154,7 +150,7 @@ class BonusOper
             ])
             ->select();
         $map['bonus'] = ['>=', intval($tmp[0]['o'])];
-        $map['unique_name'] = ['neq', UserOper::coder];
+        $map['unique_name'] = ['neq', HBConfig::CODER];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)

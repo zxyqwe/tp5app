@@ -3,7 +3,6 @@
 namespace hanbj;
 
 use think\Db;
-use hanbj\vote\WxOrg;
 
 class FameOper
 {
@@ -54,7 +53,7 @@ class FameOper
 
     public static function get($group)
     {
-        $map['year'] = WxOrg::year;
+        $map['year'] = HBConfig::YEAR;
         $map['grade'] = ['in', $group];
         $ret = Db::table('fame')
             ->where($map)

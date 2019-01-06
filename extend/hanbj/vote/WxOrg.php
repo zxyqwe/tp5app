@@ -2,8 +2,8 @@
 
 namespace hanbj\vote;
 
+use hanbj\HBConfig;
 use hanbj\MemberOper;
-use hanbj\UserOper;
 use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
@@ -12,7 +12,6 @@ use hanbj\weixin\WxHanbj;
 
 class WxOrg
 {
-    const year = 13;
     const vote_cart = [1, 2];
 
     function __construct($catg)
@@ -45,7 +44,7 @@ class WxOrg
 
     public function getUser()
     {
-        return array_merge($this->getAll(), [UserOper::coder]);
+        return array_merge($this->getAll(), [HBConfig::CODER]);
     }
 
     public function getAns()
@@ -57,7 +56,7 @@ class WxOrg
         $ans_list = [];
         $ans = Db::table('score')
             ->where([
-                'year' => WxOrg::year,
+                'year' => HBConfig::YEAR,
                 'catg' => $this->catg,
                 'name' => ['in', $this->obj]
             ])
@@ -185,7 +184,7 @@ class WxOrg
         $len = count($all) * count($this->obj);
 
         $map = [
-            'year' => WxOrg::year,
+            'year' => HBConfig::YEAR,
             'catg' => $this->catg,
             'name' => ['in', $this->obj],
             'unique_name' => ['in', $this->getAll()]
@@ -273,7 +272,7 @@ class WxOrg
         $ans_list = [];
         $ans = Db::table('score')
             ->where([
-                'year' => WxOrg::year,
+                'year' => HBConfig::YEAR,
                 'catg' => $this->catg,
                 'unique_name' => $uname
             ])
@@ -301,7 +300,7 @@ class WxOrg
                 ->where([
                     'unique_name' => $uname,
                     'name' => $obj,
-                    'year' => WxOrg::year,
+                    'year' => HBConfig::YEAR,
                     'catg' => $catg
                 ])
                 ->data(['ans' => $ans])
@@ -312,7 +311,7 @@ class WxOrg
                         'ans' => $ans,
                         'unique_name' => $uname,
                         'name' => $obj,
-                        'year' => WxOrg::year,
+                        'year' => HBConfig::YEAR,
                         'catg' => $catg
                     ])
                     ->insert();

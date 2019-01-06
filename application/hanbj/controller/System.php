@@ -6,6 +6,7 @@ use hanbj\UserOper;
 use think\Controller;
 use think\Db;
 use hanbj\BonusOper;
+use hanbj\HBConfig;
 use app\hanbj\LogUtil;
 use hanbj\MemberOper;
 use hanbj\weixin\WxHanbj;
@@ -37,7 +38,7 @@ class System extends Controller
         define('TAG_TIMEOUT_EXCEPTION', true);
         $data = intval($data);
         MemberOper::daily();
-        if (session('name') !== UserOper::coder) {
+        if (session('name') !== HBConfig::CODER) {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         if (-1 < $data) {
@@ -90,7 +91,7 @@ class System extends Controller
             $data[] = $item['u'] . '~' . $item['t'];
         }
         $map['内网权限'] = implode('，', $data);
-        $map['当前吧务组'] = '第' . WxOrg::year . '届';
+        $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
         $tables = Db::query('SHOW TABLES;');
         $Tables_in_hanbj = [];
         foreach ($tables as $item) {

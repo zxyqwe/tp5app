@@ -7,6 +7,7 @@ use app\WxPayApi;
 use app\WxPayUnifiedOrder;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
+use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\OrderOper;
 use hanbj\vote\WxVote;
@@ -245,7 +246,7 @@ class Wxdaily extends Controller
         }
         $ans = input('post.ans');
         $ans = explode(',', $ans);//a1,a2,a3
-        if (count(array_intersect($ans, WxVote::obj)) !== count($ans)) {
+        if (count(array_intersect($ans, HBConfig::NEXT)) !== count($ans)) {
             return json(['msg' => '候选人错误' . input('post.ans')], 400);
         }
         return WxVote::addAns($uniq, $ans);

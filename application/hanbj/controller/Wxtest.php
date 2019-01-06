@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\MemberOper;
 use hanbj\vote\WxOrg;
 use think\Controller;
+use hanbj\HBConfig;
 use think\Db;
 use think\exception\HttpResponseException;
 
@@ -50,7 +51,7 @@ class Wxtest extends Controller
             ->where([
                 'unique_name' => $uname,
                 'name' => $obj,
-                'year' => WxOrg::year,
+                'year' => HBConfig::YEAR,
                 'catg' => $catg
             ])
             ->field('ans')
