@@ -136,14 +136,12 @@ class CardOper
                 self::update("临时抢号", $code, "临时抢号");
                 break;
             case MemberOper::JUNIOR:
-                self::update($uname, $code, "激活为：会员");
                 $bonus = BonusOper::reCalc($uname);
-                self::update($uname, $code, "重新更新积分", $bonus, $bonus);
+                self::update($uname, $code, "激活为：会员", $bonus, $bonus);
                 break;
             case MemberOper::NORMAL:
-                self::update($uname, $code, "激活为：实名会员");
                 $bonus = BonusOper::reCalc($uname);
-                self::update($uname, $code, "重新更新积分", $bonus, $bonus);
+                self::update($uname, $code, "激活为：实名会员", $bonus, $bonus);
                 break;
             default:
                 trace("激活为：{$uname} {$code} {$ret['c']}");
