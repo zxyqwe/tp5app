@@ -40,6 +40,7 @@ class Bilibili
 
     public function cron()
     {
+        local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
         $time = date("Y-m-d H:i:s");
         $bili = new BiliOnline();
@@ -65,6 +66,7 @@ class Bilibili
 
     public function un()
     {
+        local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
         $sk = input('post.sk');
         if (config('raffle_sk') !== $sk) {

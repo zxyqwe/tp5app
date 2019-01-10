@@ -162,3 +162,11 @@ function explode_curl($ch)
         trace($i, 'debug');
     }
 }
+
+function local_cron()
+{
+    $ret = request()->ip();
+    if ($ret !== '60.205.145.65') {
+        throw new HttpResponseException(json(['msg' => "IP 不对 $ret"]));
+    }
+}
