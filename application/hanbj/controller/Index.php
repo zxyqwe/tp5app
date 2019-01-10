@@ -55,15 +55,17 @@ class Index extends Controller
             return json(['msg' => $uniq]);
         }
 
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+//      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+//      $ret = WxHanbj::addUnionID($access);
 //      $ret =   MemberOper::create_unique_unused();
-        $ret = WxHanbj::addUnionID($access);
 
+        $ret = request()->ip();
         return json(['msg' => $ret]);
     }
 
     public function cron()
     {
+        local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
         $name = 'indexHanbjCron';
         if (cache("?$name"))
