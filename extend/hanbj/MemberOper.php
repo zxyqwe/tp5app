@@ -172,7 +172,9 @@ class MemberOper
             self::Temp2Junior($i);
         }
         $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
-        trace("未关注者：$limit");
+        if ($limit > 0) {
+            trace("未关注者：$limit");
+        }
 
         $name = "MemberOper::daily()";
         if (cache("?$name")) {

@@ -60,7 +60,7 @@ class WxHanbj
 
     public static function addUnionID($access, $limit = 15)
     {
-        $user = Db::table('member')
+        $ret = Db::table('member')
             ->where([
                 'openid' => ['exp', Db::raw('is not null')],
                 'unionid' => ['exp', Db::raw('is null')]
@@ -68,6 +68,12 @@ class WxHanbj
             ->limit($limit)
             ->field(['openid'])
             ->select();
+        $user = [];
+        foreach ($ret as $idx) {
+            if (!cache("?addUnionID{$idx['openid']}")) {
+                $user[] = $idx;
+            }
+        }
 
         $url = 'https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=' . $access;
         $data = ['user_list' => $user];
@@ -81,6 +87,7 @@ class WxHanbj
         $limit = count($user);
         foreach ($res['user_info_list'] as $idx) {
             if (!isset($idx['unionid'])) {
+                cache("addUnionID{$idx['openid']}", 3600);
                 continue;
             }
             $ret = Db::table('member')
