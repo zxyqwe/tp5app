@@ -74,6 +74,9 @@ class WxHanbj
                 $user[] = $idx;
             }
         }
+        if (count($user) == 0) {
+            return 0;
+        }
 
         $url = 'https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=' . $access;
         $data = ['user_list' => $user];
