@@ -90,7 +90,7 @@ class WxHanbj
         $limit = count($user);
         foreach ($res['user_info_list'] as $idx) {
             if (!isset($idx['unionid'])) {
-                cache("addUnionID{$idx['openid']}", 3600);
+                cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
                 continue;
             }
             $ret = Db::table('member')
