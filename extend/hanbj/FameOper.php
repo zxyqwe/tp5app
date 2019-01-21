@@ -18,6 +18,7 @@ class FameOper
     const fame_chair = 9;//名誉会长
     const like_manager = 10;//代理部长
     const leave = 11;//离职
+    const max_pos = 11;
     const order = [
         self::chairman,
         self::fame_chair,
