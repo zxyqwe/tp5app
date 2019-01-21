@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\ClubOper;
+use hanbj\FameOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
@@ -127,7 +128,7 @@ class Write extends Controller
         $year = input('post.year', 1, FILTER_VALIDATE_INT);
         $grade = input('post.grade', 0, FILTER_VALIDATE_INT);
         $label = input('post.label', '');
-        if (empty($label) || $year < HBConfig::YEAR || $year > HBConfig::YEAR + 1 || $grade < 0 || $grade > 5) {
+        if (empty($label) || $year < HBConfig::YEAR || $year > HBConfig::YEAR + 1 || $grade < 0 || $grade > FameOper::max_pos) {
             return json(['msg' => '参数错误'], 400);
         }
         $data = [];
