@@ -2,9 +2,9 @@
 
 namespace app\hanbj\controller;
 
-use app\hanbj\WxPayConfig;
-use app\WxPayApi;
-use app\WxPayUnifiedOrder;
+use wxsdk\WxPayApi;
+use wxsdk\WxPayUnifiedOrder;
+use wxsdk\WxPayJsApiPay;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\HBConfig;
@@ -12,7 +12,7 @@ use hanbj\MemberOper;
 use hanbj\OrderOper;
 use hanbj\vote\WxVote;
 use hanbj\weixin\HanbjNotify;
-use hanbj\weixin\HanbjRes;
+use hanbj\weixin\HanbjPayConfig;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -116,20 +116,21 @@ class Wxdaily extends Controller
         } else {
             return json(['msg' => '参数错误'], 400);
         }
-        $order = WxPayApi::unifiedOrder($input);
+        $config = new HanbjPayConfig();
+        $order = WxPayApi::unifiedOrder($config, $input);
         if (!array_key_exists('prepay_id', $order)) {
             $msg = $order['return_msg'] . json_encode($order) . json_encode($input->ToXml());
             trace($msg);
             OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
-        $data['appId'] = WxPayConfig::APPID;
-        $data['timeStamp'] = time();
-        $data['nonceStr'] = getNonceStr();
-        $data['package'] = 'prepay_id=' . $order['prepay_id'];
-        $data['signType'] = 'MD5';
-        $res = new HanbjRes();
-        $data['paySign'] = $res->setValues($data);
+        $jsapi = new WxPayJsApiPay();
+        $jsapi->SetAppid($order["appid"]);
+        $jsapi->SetTimeStamp('' . time());
+        $jsapi->SetNonceStr(WxPayApi::getNonceStr());
+        $jsapi->SetPackage("prepay_id=" . $order['prepay_id']);
+        $jsapi->SetPaySign($jsapi->MakeSign($config));
+        $data = $jsapi->GetValues();
         $data['timestamp'] = $data['timeStamp'];
         return json($data);
     }
