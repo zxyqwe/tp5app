@@ -2,9 +2,9 @@
 
 namespace hanbj\weixin;
 
-use app\WxPayOrderQuery;
-use app\WxPayApi;
-use app\WxPayNotify;
+use wxsdk\WxPayOrderQuery;
+use wxsdk\WxPayApi;
+use wxsdk\WxPayNotify;
 use hanbj\OrderOper;
 
 class HanbjNotify extends WxPayNotify
@@ -13,7 +13,7 @@ class HanbjNotify extends WxPayNotify
     {
         $input = new WxPayOrderQuery();
         $input->SetOut_trade_no($out_trade_no);
-        $result = WxPayApi::orderQuery($input);
+        $result = WxPayApi::orderQuery(new HanbjPayConfig(), $input);
         if (array_key_exists("return_code", $result)
             && array_key_exists("result_code", $result)
             && $result["return_code"] == "SUCCESS"
@@ -24,9 +24,10 @@ class HanbjNotify extends WxPayNotify
         return false;
     }
 
-    public function NotifyProcess($data, &$msg)
+    public function NotifyProcess($data, $config, &$msg)
     {
         $msg = 'OK';
+        $data = $data->GetValues();
         if (!array_key_exists("out_trade_no", $data)) {
             return false;
         }

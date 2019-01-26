@@ -2,8 +2,8 @@
 
 namespace app\hanbj\controller;
 
-use app\SHA1;
-use app\WXBizMsgCrypt;
+use wxsdk\SHA1;
+use wxsdk\WXBizMsgCrypt;
 use hanbj\BonusOper;
 use hanbj\CardOper;
 use hanbj\FeeOper;

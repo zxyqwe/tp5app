@@ -2,10 +2,6 @@
 
 namespace app\hanbj;
 
-include_once APP_PATH . 'wx.php';
-include_once APP_PATH . 'hanbj/WxConfig.php';
-include_once APP_PATH . 'WxPay.php';
-
 class LogUtil
 {
     public static function list_dir($dir, $name)

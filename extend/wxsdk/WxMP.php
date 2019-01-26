@@ -1,6 +1,6 @@
 <?php
 
-namespace app;
+namespace wxsdk;
 
 use DOMDocument;
 use Exception;
