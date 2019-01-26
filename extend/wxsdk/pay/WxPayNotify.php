@@ -61,7 +61,6 @@ abstract class WxPayNotify extends WxPayNotifyReply
      **/
     public function LogAfterProcess($xmlData)
     {
-        trace("Log $xmlData");
     }
 
     /**
