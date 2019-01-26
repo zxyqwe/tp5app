@@ -2,7 +2,7 @@
 
 namespace hanbj\weixin;
 
-use wxsdk\WxPayConfigInterface;
+use wxsdk\pay\WxPayConfigInterface;
 
 
 class HanbjPayConfig extends WxPayConfigInterface
