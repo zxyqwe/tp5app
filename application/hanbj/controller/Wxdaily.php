@@ -141,7 +141,7 @@ class Wxdaily extends Controller
             return '';
         }
         $hand = new HanbjNotify();
-        $hand->Handle(false);
+        $hand->Handle(new HanbjPayConfig(), false);
         return '';
     }
 
