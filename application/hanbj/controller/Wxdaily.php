@@ -2,9 +2,9 @@
 
 namespace app\hanbj\controller;
 
-use wxsdk\WxPayApi;
-use wxsdk\WxPayUnifiedOrder;
-use wxsdk\WxPayJsApiPay;
+use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayUnifiedOrder;
+use wxsdk\pay\WxPayJsApiPay;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\HBConfig;

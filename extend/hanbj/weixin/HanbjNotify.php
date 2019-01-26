@@ -2,9 +2,9 @@
 
 namespace hanbj\weixin;
 
-use wxsdk\WxPayOrderQuery;
-use wxsdk\WxPayApi;
-use wxsdk\WxPayNotify;
+use wxsdk\pay\WxPayOrderQuery;
+use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayNotify;
 use hanbj\OrderOper;
 
 class HanbjNotify extends WxPayNotify

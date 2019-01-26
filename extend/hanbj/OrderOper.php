@@ -32,9 +32,9 @@ class OrderOper
 
     /**
      *
-     * @param \wxsdk\WxPayUnifiedOrder $input
+     * @param \wxsdk\pay\WxPayUnifiedOrder $input
      * @param int $year
-     * @return bool|\wxsdk\WxPayUnifiedOrder
+     * @return bool|\wxsdk\pay\WxPayUnifiedOrder
      */
     public static function fee($input, $year)
     {
