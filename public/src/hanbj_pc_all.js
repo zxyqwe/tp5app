@@ -475,71 +475,10 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
-    var $tree, $cont, $title, auto_handle, tenc_len = 0;
-    var cont = function (c, t) {
-        $cont.html(c);
-        $title.html(t);
-    };
-    var cancel_up = function () {
-        tenc_len = 0;
-        cont('', '');
-        clearInterval(auto_handle);
-    };
-    var auto_up = function (par, chi) {
-        up(par, chi);
-        auto_handle = setInterval(function () {
-            up(par, chi);
-        }, 600000);
-    };
-    var up = function (par, chi) {
-        w.waitloading();
-        $.ajax({
-            type: "POST",
-            url: w.u12 + tenc_len,
-            data: {
-                par: par,
-                chi: chi
-            },
-            dataType: "json",
-            success: function (msg) {
-                var mtext = msg.text;
-                if (false === mtext) {
-                    return;
-                }
-                tenc_len = msg.len;
-                cont($cont.html() + mtext, par + ' - ' + chi);
-            },
-            error: w.msgto,
-            complete: function () {
-                w.cancelloading();
-            }
-        });
-    };
     var init = function () {
-        $tree = $('#dir_tree');
-        $cont = $('#log_cont');
-        $title = $('#log_title');
-        var data = $('#dir_data').html();
-        data = JSON.parse(data);
-        $tree.treeview({
-            levels: 1,
-            data: data,
-            onNodeSelected: function (event, data) {
-                cancel_up();
-                if (undefined !== data.nodes) {
-                    $tree.treeview('expandNode', [data.nodeId, {silent: true}]);
-                    return;
-                }
-                var parent = $tree.treeview('getParent', data);
-                $tree.treeview('expandNode', [parent.nodeId, {silent: true}]);
-                auto_up(parent.text, data.text);
-            },
-            onNodeUnselected: function (event, data) {
-                cancel_up();
-                if (undefined !== data.nodes) {
-                    $tree.treeview('collapseNode', [data.nodeId, {silent: true}]);
-                }
-            }
+        var $table = $('#table');
+        $table.bootstrapTable({
+            'pageSize': 20
         });
     };
     return {

@@ -33,39 +33,44 @@ class System extends Controller
         abort(404, '页面不存在', [$action]);
     }
 
-    public function runlog($data = -1)
+    public function runlog()
     {
         define('TAG_TIMEOUT_EXCEPTION', true);
-        $data = intval($data);
         MemberOper::daily();
         if (session('name') !== HBConfig::CODER) {
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
-        if (-1 < $data) {
-            $par = input('post.par');
-            $chi = input('post.chi');
-            if (!is_numeric($par) || !is_numeric($chi)) {
-                return json(['msg' => $par . '-' . $chi], 400);
-            }
-            $dir = LOG_PATH . DIRECTORY_SEPARATOR . $par . DIRECTORY_SEPARATOR . $chi . '.log';
-            if (!is_file($dir)) {
-                return json(['msg' => $dir], 400);
-            }
-            $f = file_get_contents($dir);
-            return json([
-                'text' => substr($f, $data),
-                'len' => strlen($f)
-            ]);
+
+        switch ($this->request->method()) {
+            case 'GET':
+                return view('runlog');
+            case 'POST':
+                $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+                $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+                $size = min(100, max(0, $size));
+                $offset = max(0, $offset);
+                $tmp = Db::table('logs')
+                    ->limit($offset, $size)
+                    ->order('id', 'desc')
+                    ->field([
+                        'id',
+                        'ip',
+                        'time',
+                        'method',
+                        'url',
+                        'query',
+                        'type',
+                        'msg'
+                    ])
+                    ->select();
+                $data['rows'] = $tmp;
+                $total = Db::table('logs')
+                    ->count();
+                $data['total'] = $total;
+                return json($data);
+            default:
+                return json(['msg' => $this->request->method()], 400);
         }
-        $data = LogUtil::list_dir(LOG_PATH, '日志');
-        $base = intval(date('Ym'));
-        $ret = [];
-        foreach ($data['nodes'] as $item) {
-            if ($base - intval($item['text']) <= 3) {
-                $ret[] = $item;
-            }
-        }
-        return view('runlog', ['data' => json_encode($ret)]);
     }
 
     public function token()

@@ -14,12 +14,22 @@ class MysqlLog
      */
     public function save(array $log = [])
     {
+        $url = request()->url();
+        $pos = strpos($url, '?');
+        if ($pos) {
+            $url = [
+                substr($url, 0, $pos),
+                substr($url, $pos + 1)
+            ];
+        } else {
+            $url = [$url, ''];
+        }
         $base = [
             'ip' => request()->ip(),
             'time' => date("Y-m-d H:i:s"),
             'method' => request()->method(),
-            'url' => request()->baseUrl(),
-            'query' => request()->query()
+            'url' => $url[0],
+            'query' => $url[1]
         ];
 
         $logArr = [];
