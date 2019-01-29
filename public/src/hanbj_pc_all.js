@@ -478,7 +478,8 @@ var tlog = (function ($, w, undefined) {
     var init = function () {
         var $table = $('#table');
         $table.bootstrapTable({
-            'pageSize': 20
+            'pageSize': 20,
+            'silent': true
         });
     };
     return {
