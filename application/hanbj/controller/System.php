@@ -7,7 +7,6 @@ use think\Controller;
 use think\Db;
 use hanbj\BonusOper;
 use hanbj\HBConfig;
-use app\hanbj\LogUtil;
 use hanbj\MemberOper;
 use hanbj\weixin\WxHanbj;
 use hanbj\vote\WxOrg;
