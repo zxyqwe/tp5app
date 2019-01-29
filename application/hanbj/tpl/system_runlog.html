@@ -3,21 +3,27 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>系统日志</h1>
         <div id="body">
-            <div class="row">
-                <div class="col-md-2">
-                    <h2>日志列表</h2>
-                    <div id="dir_tree"></div>
-                </div>
-                <div class="col-md-10" style="word-wrap:break-word;white-space:normal;">
-                    <h2 id="log_title"></h2>
-                    <pre id="log_cont"
-                         style="white-space:pre-wrap;white-space:-moz-pre-wrap;white-space:-pre-wrap;white-space:-o-pre-wrap;">
-                    </pre>
-                </div>
-            </div>
+            <table id="table"
+                   data-method="post"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-url="/hanbj/system/runlog"
+                   data-page-list="[20, 50, 100]">
+                <thead>
+                <tr>
+                    <th data-field="id" class="sr-only">ID</th>
+                    <th data-field="time">时间</th>
+                    <th data-field="ip">IP</th>
+                    <th data-field="method">方法</th>
+                    <th data-field="url">目标</th>
+                    <th data-field="query">参数</th>
+                    <th data-field="type">类型</th>
+                    <th data-field="msg">消息</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
-    <div class="sr-only" id="dir_data">{$data}</div>
 </div>
 <script>
     var nav = 'nav4_4';
