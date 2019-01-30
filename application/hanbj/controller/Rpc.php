@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\ActivityOper;
 use hanbj\FeeOper;
 use hanbj\weixin\WxTemp;
 use think\Controller;
@@ -19,7 +20,11 @@ class Rpc extends Controller
         if (!isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             throw new HttpResponseException(json(['msg' => '空 POST body']));
         }
-        $sign = $GLOBALS['HTTP_RAW_POST_DATA'] . config('hanbj_rpc_sk');
+        $ts = intval(input('get.ts'));
+        if (abs(time() - $ts) > 1800) {
+            throw new HttpResponseException(json(['msg' => 'ts误差太大']));
+        }
+        $sign = $GLOBALS['HTTP_RAW_POST_DATA'] . config('hanbj_rpc_sk') . $ts;
         $sign = md5($sign);
         $post_sign = input('get.sign');
         if ($post_sign !== $sign) {
@@ -86,5 +91,37 @@ class Rpc extends Controller
         $data['touser'] = $ret['openid'];
         $raw = WxTemp::rpc($data, "模板 {$ret['unique_name']} " . json_encode($data));
         return json(['msg' => $raw]);
+    }
+
+    public function act()
+    {
+        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+        if (!isset($data['act'])
+            || !isset($data['bonus'])
+            || !isset($data['unionid'])
+        ) {
+            return json(['msg' => '缺失参数']);
+        }
+        $bonus = intval($data['bonus']);
+        if ($bonus < 5 || $bonus > 30) {
+            return json(['msg' => 'bonus err']);
+        }
+        $act = strval($data['act']);
+        if (strpos($act, date('Y')) !== 0) {
+            return json(['msg' => 'act err']);
+        }
+        $unionid = strval($data['unionid']);
+        $ret = Db::table('member')
+            ->where(['unionid' => $unionid])
+            ->cache(600)
+            ->field([
+                'unique_name',
+                'openid'
+            ])
+            ->find();
+        if (null === $ret) {
+            return json(['msg' => "查无此人"]);
+        }
+        return ActivityOper::signAct($ret['unique_name'], $ret['openid'], $act, $bonus);
     }
 }

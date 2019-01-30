@@ -13,6 +13,15 @@ class WxTemp
 
     private static function base($data, $log)
     {
+        if (!isset($data['touser']) || !isset($data['template_id'])) {
+            return 'WxTemp data missing';
+        }
+        $limit = "{$data['touser']}{$data['template_id']}";
+        if (cache("?$limit")) {
+            return 'WxTemp limit';
+        }
+        cache($limit, $limit, 60);
+
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = self::URL . $access;
         $raw = Curl_Post($data, $url, false);
