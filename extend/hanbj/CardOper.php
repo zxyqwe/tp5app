@@ -163,7 +163,7 @@ class CardOper
             'custom_field_value1' => $uni,
             'custom_field_value2' => FeeOper::cache_fee($uni),
             "notify_optional" => [
-                "is_notify_bonus" => true,
+                "is_notify_bonus" => false,
                 "is_notify_custom_field1" => true,
                 "is_notify_custom_field2" => true
             ]
