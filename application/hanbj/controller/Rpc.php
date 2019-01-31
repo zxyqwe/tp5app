@@ -55,7 +55,7 @@ class Rpc extends Controller
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
-        trace("查询 {$ret['unique_name']} {$ret['code']}");
+        trace("RPC 查询 {$ret['unique_name']} {$ret['code']}");
         return json([
             'msg' => 'ok',
             'user' => intval($ret['code']),
@@ -89,7 +89,7 @@ class Rpc extends Controller
         }
 
         $data['touser'] = $ret['openid'];
-        $raw = WxTemp::rpc($data, "模板 {$ret['unique_name']} " . json_encode($data));
+        $raw = WxTemp::rpc($data, "RPC 模板 {$ret['unique_name']} " . json_encode($data));
         return json(['msg' => $raw]);
     }
 
@@ -122,6 +122,7 @@ class Rpc extends Controller
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
+        trace("RPC 活动 {$ret['unique_name']}, $act, $bonus");
         return ActivityOper::signAct($ret['unique_name'], $ret['openid'], $act, $bonus);
     }
 }
