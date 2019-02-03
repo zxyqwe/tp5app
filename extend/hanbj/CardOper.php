@@ -172,7 +172,7 @@ class CardOper
         $res = json_decode($raw, true);
         $log = implode('; ', [$uni, $card, $msg, $add_b, $b]);
         if ($res['errcode'] !== 0) {
-            trace("update $log $raw " . json_encode($data));
+            trace("update $log $raw " . json_encode($data), 'error');
             throw new HttpResponseException(json(['msg' => $raw], 400));
         } else {
             trace($log);
@@ -195,7 +195,7 @@ class CardOper
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("active $raw " . json_encode($data));
+            trace("active $raw " . json_encode($data), 'error');
             return json(['msg' => $raw], 400);
         }
         $map['status'] = 0;
@@ -205,7 +205,7 @@ class CardOper
             ->where($map)
             ->setField('status', 1);
         if ($res !== 1) {
-            trace("active " . json_encode($data));
+            trace("active " . json_encode($data), 'error');
             return json(['msg' => '更新失败'], 500);
         }
         self::renew($uname);

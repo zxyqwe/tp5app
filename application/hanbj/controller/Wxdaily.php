@@ -120,7 +120,7 @@ class Wxdaily extends Controller
         $order = WxPayApi::unifiedOrder($config, $input);
         if (!array_key_exists('prepay_id', $order)) {
             $msg = $order['return_msg'] . json_encode($order) . json_encode($input->ToXml());
-            trace($msg);
+            trace($msg, 'error');
             OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
@@ -177,7 +177,7 @@ class Wxdaily extends Controller
         $data['time2'] = date("H:i:s");
         $data['uniq'] = $uniq;
         $data['nick'] = session('tieba_id');
-        trace("临时身份 $tempid {$data['uniq']} {$data['nick']}");
+        trace("临时身份 $tempid {$data['uniq']} {$data['nick']}", 'info');
         cache("tempnum$tempid", json_encode($data), 1800);
         return json(['msg' => 'OK', 'temp' => $tempid]);
     }

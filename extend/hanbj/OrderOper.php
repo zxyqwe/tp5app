@@ -135,7 +135,7 @@ class OrderOper
                 ->update();
             if ($up === 0) {
                 Db::rollback();
-                trace('重来订单 ' . json_encode($data));
+                trace('重来订单 ' . json_encode($data), 'error');
                 return true;
             }
             if (strlen($res['unique_name']) <= 1) {
@@ -157,7 +157,7 @@ class OrderOper
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace('NotifyProcess ' . $e . json_encode($data));
+            trace('NotifyProcess ' . $e . json_encode($data), 'error');
             return false;
         }
         return true;

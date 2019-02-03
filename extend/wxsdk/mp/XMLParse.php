@@ -30,7 +30,7 @@ class XMLParse
             return array(0, $encrypt, $tousername);
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx extravt $e");
+            trace("wx extravt $e", 'error');
             //print $e . "\n";
             return array(ErrorCode::$ParseXmlError, null, null);
         }

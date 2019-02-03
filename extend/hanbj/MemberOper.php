@@ -127,7 +127,7 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
-        trace("可选编号 " . count($already));
+        trace("可选编号 " . count($already), 'info');
         sort($already);
         return $already;
     }
@@ -173,7 +173,7 @@ class MemberOper
         }
         $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
         if ($limit > 0) {
-            trace("未关注者：$limit");
+            trace("未关注者：$limit", 'info');
         }
 
         $name = "MemberOper::daily()";
@@ -238,7 +238,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Unused2Temp $unique_name $e");
+            trace("Unused2Temp $unique_name $e", 'error');
             if (false !== strpos($e, 'Duplicate')) {
                 $e = "昵称 $tieba_id 已被使用";
             }
@@ -286,7 +286,7 @@ class MemberOper
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Temp2Unused $unique_name $e");
+            trace("Temp2Unused $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -309,7 +309,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Temp2Junior $unique_name $e");
+            trace("Temp2Junior $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -332,7 +332,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Junior2Temp $unique_name $e");
+            trace("Junior2Temp $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -364,7 +364,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Junior2Normal $unique_name $e");
+            trace("Junior2Normal $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -387,7 +387,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Normal2Banned $unique_name $e");
+            trace("Normal2Banned $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -425,7 +425,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Banned2Normal $unique_name $e");
+            trace("Banned2Normal $unique_name $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }

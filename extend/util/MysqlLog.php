@@ -37,7 +37,7 @@ class MysqlLog
             foreach ($msgArr as $msg) {
                 $tmp = $base;
                 $tmp['type'] = $type;
-                $tmp['msg'] = $msg;
+                $tmp['msg'] = is_string($msg) ? $msg : json_encode($msg);
                 $logArr[] = $tmp;
             }
         }

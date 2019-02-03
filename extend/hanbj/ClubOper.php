@@ -24,7 +24,7 @@ class ClubOper
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("grantClub $e");
+            trace("grantClub $e", 'error');
             return json(['msg' => $e], 400);
         }
         return json('修改成功！');
@@ -92,7 +92,7 @@ class ClubOper
             return json('提交成功！');
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("applyClub $e");
+            trace("applyClub $e", 'error');
             return json(['msg' => $e], 400);
         }
     }
