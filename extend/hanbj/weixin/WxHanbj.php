@@ -189,7 +189,7 @@ class WxHanbj
     {
         $type = (string)$msg->Event;
         $from = (string)$msg->FromUserName;
-        trace("WxEvent $from $type");
+        trace("WxEvent $from $type", 'info');
         switch ($type) {
             case 'user_del_card':
                 return CardOper::del_card($msg);
