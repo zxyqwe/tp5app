@@ -34,10 +34,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("JsApi $raw");
+            trace("JsApi $raw", 'error');
             return '';
         }
-        // trace("WxHanbj JsApi {$res['ticket']}");
+        trace("WxHanbj JsApi {$res['ticket']}", 'info');
         cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -50,10 +50,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("TicketApi $raw");
+            trace("TicketApi $raw", 'error');
             return '';
         }
-        // trace("WxHanbj TicketApi {$res['ticket']}");
+        trace("WxHanbj TicketApi {$res['ticket']}", 'info');
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -83,7 +83,7 @@ class WxHanbj
         $raw = Curl_Post($data, $url, false, 5);
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
-            trace("addUnionID $raw");
+            trace("addUnionID $raw", 'info');
             return $limit;
         }
 
@@ -119,7 +119,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg);
             default:
-                trace(json_encode($msg));
+                trace(json_encode($msg), 'error');
             case 'text':
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
@@ -188,6 +188,8 @@ class WxHanbj
     private static function do_event($msg)
     {
         $type = (string)$msg->Event;
+        $from = (string)$msg->FromUserName;
+        trace("WxEvent $from $type");
         switch ($type) {
             case 'user_del_card':
                 return CardOper::del_card($msg);
@@ -196,11 +198,11 @@ class WxHanbj
             case 'TEMPLATESENDJOBFINISH':
                 $Status = (string)$msg->Status;
                 if ('success' != $Status) {
-                    trace(json_encode($msg));
+                    trace(json_encode($msg), 'error');
                 }
                 return '';
             default:
-                trace(json_encode($msg));
+                trace(json_encode($msg), 'error');
             case 'update_member_card':
             case 'subscribe':
             case 'unsubscribe':

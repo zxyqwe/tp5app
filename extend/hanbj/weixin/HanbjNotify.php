@@ -25,7 +25,7 @@ class HanbjNotify extends WxPayNotify
             ) {
                 return true;
             } else {
-                trace("orderQuery " . json_encode($result));
+                trace("orderQuery " . json_encode($result), 'error');
             }
         }
         return false;
@@ -49,7 +49,7 @@ class HanbjNotify extends WxPayNotify
                 return false;
             }
         } catch (Exception $e) {
-            trace('检查签名 ' . json_encode($e));
+            trace('检查签名 ' . json_encode($e), 'error');
         }
         //查询订单，判断订单真实性
         if (!$this->Queryorder($data["out_trade_no"])) {

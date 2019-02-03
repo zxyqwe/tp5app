@@ -101,7 +101,7 @@ class Write extends Controller
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Fee Add $e");
+            trace("Fee Add $e", 'error');
             return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok']);
@@ -154,7 +154,7 @@ class Write extends Controller
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Fame Add $e");
+            trace("Fame Add $e", 'error');
             preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
                 $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
@@ -292,7 +292,7 @@ class Write extends Controller
                     }
                 } catch (\Exception $e) {
                     $e = $e->getMessage();
-                    trace("Prom Edit $e");
+                    trace("Prom Edit $e", 'error');
                     return json(['msg' => $e], 400);
                 }
                 return json('修改成功！');
@@ -318,7 +318,7 @@ class Write extends Controller
             trace("Fame Edit $unique $pk $name $value");
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Fame Edit $e");
+            trace("Fame Edit $e", 'error');
             return json(['msg' => $e], 400);
         }
         return json('修改成功！');

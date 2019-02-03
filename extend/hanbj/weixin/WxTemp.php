@@ -27,7 +27,7 @@ class WxTemp
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("ERR $log $raw");
+            trace("ERR $log $raw", 'error');
             return $raw;
         }
         trace($log);

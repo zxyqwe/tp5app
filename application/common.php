@@ -41,7 +41,7 @@ function Curl_Post($curlPost, $url, $easy = true, $timeout = 1)
     if ($return_str === false) {
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
-        trace(['method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str]);
+        trace(['method' => 'post', 'url' => $url, 'param' => $curlPost, 'res' => $return_str], 'error');
         throw new think\exception\HttpResponseException(json(['msg' => 'Curl_Post ' . $return_str]));
     }
     curl_close($curl);
@@ -62,7 +62,7 @@ function Curl_Get($url, $timeout = 1)
         $num = curl_errno($curl);
         $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($curl);
         if (false === strpos($url, '127.0.0.1')) {
-            trace(['method' => 'get', 'url' => $url, 'res' => $return_str]);
+            trace(['method' => 'get', 'url' => $url, 'res' => $return_str], 'error');
         }
         throw new think\exception\HttpResponseException(json(['msg' => 'Curl_Get ' . $return_str]));
     }
@@ -92,7 +92,7 @@ function WX_union($access_token, $openid)
         "&lang=zh_CN");
     $data = json_decode($raw, true);
     if (!isset($data['openid'])) {
-        trace("Weixin Exception $raw");
+        trace("Weixin Exception $raw", 'error');
         return $data;
     }
     return $data['openid'];
@@ -109,7 +109,7 @@ function WX_code($code, $api, $sec)
     if (!isset($res['access_token']) || !isset($res['openid'])) {
         return $res;
     }
-    // trace("Weixin Code " . $res['openid']);
+    trace("Weixin Code " . $res['openid'], 'info');
     return $res['openid'];
 }
 
@@ -135,7 +135,7 @@ function WX_access($api, $sec, $name)
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
         return $res;
     }
-    // trace("Weixin Access " . $res['access_token']);
+    trace("Weixin Access " . $res['access_token'], 'info');
     cache($name, $res['access_token'], intval($res['expires_in']));
     return $res['access_token'];
 }

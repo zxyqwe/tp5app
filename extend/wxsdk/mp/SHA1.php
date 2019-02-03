@@ -29,7 +29,7 @@ class SHA1
             return array(ErrorCode::$OK, sha1($str));
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx SHA1 $e");
+            trace("wx SHA1 $e", 'error');
             return array(ErrorCode::$ComputeSignatureError, null);
         }
     }

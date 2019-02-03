@@ -325,7 +325,7 @@ class WxOrg
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
-            trace("Test UP $e");
+            trace("Test UP $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);

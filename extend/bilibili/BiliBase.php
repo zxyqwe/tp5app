@@ -55,7 +55,7 @@ class BiliBase
                 || false !== strpos($return_str, 'Empty reply')
             )
             ) {
-                trace("url => $url, res => $return_str");
+                trace("url => $url, res => $return_str", 'error');
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
@@ -81,7 +81,7 @@ class BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $rid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("钓鱼 $raw");
+            trace("钓鱼 $raw", 'error');
             return false;
         }
         $data = $data['data'];

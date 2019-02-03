@@ -90,7 +90,7 @@ class WxVote
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
-            trace("Test Vote $e");
+            trace("Test Vote $e", 'error');
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);

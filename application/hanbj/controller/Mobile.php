@@ -80,7 +80,7 @@ class Mobile extends Controller
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
-        trace("微信首页 {$res['unique_name']}");
+        trace("微信首页 {$res['unique_name']}", 'info');
         return view('home', [
             'user' => $res,
             'card' => CardOper::mod_ret($map),
@@ -117,7 +117,7 @@ class Mobile extends Controller
                 ->where($map)
                 ->setField('openid', session('openid'));
             if ($res !== 1) {
-                trace([$phone, session('openid')]);
+                trace([$phone, session('openid')], 'error');
                 return json(['msg' => '绑定失败'], 500);
             }
             trace("绑定 $phone " . session('openid'));
@@ -193,7 +193,7 @@ class Mobile extends Controller
         $msg = '';
         $err = $pc->decryptMsg($msg_sign, $timestap, $nonce, $post_data, $msg);
         if ($err !== 0) {
-            trace(['dec', $err]);
+            trace(['dec', $err], 'error');
             return new Response('', 404);
         }
 
@@ -205,7 +205,7 @@ class Mobile extends Controller
         $reply = '';
         $err = $pc->encryptMsg($msg, time(), getNonceStr(), $reply);
         if ($err !== 0) {
-            trace(['enc', $err]);
+            trace(['enc', $err], 'error');
             return new Response('', 404);
         }
         return $reply;
