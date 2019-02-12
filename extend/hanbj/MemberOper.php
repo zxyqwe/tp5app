@@ -28,7 +28,7 @@ class MemberOper
         "甲辰", "乙巳", "丙午", "丁未", "戊申", "己酉", "庚戌", "辛亥", "壬子", "癸丑",
         "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥",
     ];
-    const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏", "商", "周", "秦", "汉", "晋", "隋", "唐", "宋"];
+    const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏", "商", "周", "秦", "汉", "晋", "隋", "唐", "宋", "明"];
     const VERSION = 'wx_succ_2';
 
     public static function wx_login()
@@ -163,6 +163,23 @@ class MemberOper
             ->cache(600)
             ->select();
         return $res;
+    }
+
+    public static function try_junior($openid)
+    {
+        $ret = Db::table('member')
+            ->where([
+                'openid' => $openid,
+                'code' => self::TEMPUSE
+            ])
+            ->field([
+                'unique_name as u',
+            ])
+            ->find();
+        if (null === $ret) {
+            return;
+        }
+        self::Temp2Junior($ret['u']);
     }
 
     public static function daily()

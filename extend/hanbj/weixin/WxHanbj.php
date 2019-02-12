@@ -2,6 +2,7 @@
 
 namespace hanbj\weixin;
 
+use hanbj\MemberOper;
 use think\Db;
 use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
@@ -200,6 +201,7 @@ class WxHanbj
                 if ('success' != $Status) {
                     trace(json_encode($msg), 'error');
                 }
+                MemberOper::try_junior($from);
                 return '';
             default:
                 trace(json_encode($msg), 'error');
