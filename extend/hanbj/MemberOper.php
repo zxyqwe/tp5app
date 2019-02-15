@@ -182,6 +182,18 @@ class MemberOper
         self::Temp2Junior($ret['u']);
     }
 
+    public static function search_unionid($unionid) {
+        return Db::table('member')
+            ->where(['unionid' => $unionid])
+            ->cache(600)
+            ->field([
+                'unique_name',
+                'openid',
+                'code'
+            ])
+            ->find();
+    }
+
     public static function daily()
     {
         $ret = self::list_code(self::TEMPUSE, false);
