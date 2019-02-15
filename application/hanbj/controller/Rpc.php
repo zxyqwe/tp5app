@@ -3,10 +3,11 @@
 namespace app\hanbj\controller;
 
 use hanbj\ActivityOper;
+use hanbj\BonusOper;
 use hanbj\FeeOper;
+use hanbj\MemberOper;
 use hanbj\weixin\WxTemp;
 use think\Controller;
-use think\Db;
 use think\exception\HttpResponseException;
 
 class Rpc extends Controller
@@ -44,14 +45,7 @@ class Rpc extends Controller
             return json(['msg' => '无unionID']);
         }
         $unionid = strval($data['unionid']);
-        $ret = Db::table('member')
-            ->where(['unionid' => $unionid])
-            ->cache(600)
-            ->field([
-                'unique_name',
-                'code'
-            ])
-            ->find();
+        $ret = MemberOper::search_unionid($unionid);
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
@@ -76,14 +70,7 @@ class Rpc extends Controller
         }
 
         $unionid = strval($data['touser']);
-        $ret = Db::table('member')
-            ->where(['unionid' => $unionid])
-            ->cache(600)
-            ->field([
-                'unique_name',
-                'openid'
-            ])
-            ->find();
+        $ret = MemberOper::search_unionid($unionid);
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
@@ -99,30 +86,43 @@ class Rpc extends Controller
         if (!isset($data['act'])
             || !isset($data['bonus'])
             || !isset($data['unionid'])
+            || !isset($data['operid'])
         ) {
             return json(['msg' => '缺失参数']);
         }
+
         $bonus = intval($data['bonus']);
         if ($bonus < 5 || $bonus > 30) {
             return json(['msg' => 'bonus err']);
         }
+
         $act = strval($data['act']);
         if (strpos($act, date('Y')) !== 0) {
             return json(['msg' => 'act err']);
         }
+
         $unionid = strval($data['unionid']);
-        $ret = Db::table('member')
-            ->where(['unionid' => $unionid])
-            ->cache(600)
-            ->field([
-                'unique_name',
-                'openid'
-            ])
-            ->find();
-        if (null === $ret) {
+        $ret = MemberOper::search_unionid($unionid);
+        $operid = strval($data['operid']);
+        $operret = MemberOper::search_unionid($operid);
+        if (null === $ret || null === $operret) {
             return json(['msg' => "查无此人"]);
         }
-        trace("RPC 活动 {$ret['unique_name']}, $act, $bonus");
-        return ActivityOper::signAct($ret['unique_name'], $ret['openid'], $act, $bonus);
+
+        trace("RPC 活动 {$operret['unique_name']} -> {$ret['unique_name']}, $act, $bonus");
+        ActivityOper::signAct(
+            $operret['unique_name'],
+            $operret['openid'],
+            $act . '志愿者',
+            BonusOper::getVolBonus(),
+            $operret['unique_name']
+        );
+        return ActivityOper::signAct(
+            $ret['unique_name'],
+            $ret['openid'],
+            $act,
+            $bonus,
+            $operret['unique_name']
+        );
     }
 }
