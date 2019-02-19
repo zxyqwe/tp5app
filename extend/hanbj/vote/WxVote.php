@@ -16,7 +16,7 @@ class WxVote
     public static function initView()
     {
         $member_code = session('member_code');
-        if ($member_code === null || intval($member_code) !== MemberOper::NORMAL) {
+        if (!is_numeric($member_code) || intval($member_code) !== MemberOper::NORMAL) {
             return null;
         }
 
