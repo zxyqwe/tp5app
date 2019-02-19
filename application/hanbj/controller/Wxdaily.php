@@ -154,7 +154,7 @@ class Wxdaily extends Controller
     public function json_tempid()
     {
         $member_code = session('member_code');
-        if ($member_code == null || !in_array(intval($member_code), MemberOper::getMember())) {
+        if (!is_numeric($member_code) || !in_array(intval($member_code), MemberOper::getMember())) {
             return json(['msg' => '用户锁住'], 400);
         }
         $uniq = session('unique_name');
@@ -236,7 +236,7 @@ class Wxdaily extends Controller
     public function vote()
     {
         $member_code = session('member_code');
-        if ($member_code == null || intval($member_code) !== MemberOper::NORMAL) {
+        if (!is_numeric($member_code) || intval($member_code) !== MemberOper::NORMAL) {
             return json(['msg' => '用户状态不是实名'], 400);
         }
         $uniq = session('unique_name');
