@@ -2,13 +2,17 @@
 
 namespace app\hanbj\controller;
 
+use Exception;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
+use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\exception\HttpResponseException;
+use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayRefund;
 
 class Rpc extends Controller
 {
@@ -144,5 +148,33 @@ class Rpc extends Controller
             $bonus,
             $operret['unique_name']
         );
+    }
+
+    public function refund()
+    {
+        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+        if (!isset($data['transaction_id'])
+            || !isset($data['out_refund_no'])
+            || !isset($data['total_fee'])
+            || !isset($data['refund_fee'])
+        ) {
+            return json(['msg' => '缺失参数']);
+        }
+        $input = new WxPayRefund();
+        $input->SetTransaction_id($data['transaction_id']);
+        $input->SetOut_refund_no($data['out_refund_no']);
+        $input->SetTotal_fee($data['total_fee']);
+        $input->SetRefund_fee($data['refund_fee']);
+
+        $config = new HanbjPayConfig();
+        $input->SetOp_user_id($config->GetMerchantId());
+        try {
+            $ret = WxPayApi::refund($config, $input);
+            trace('RPC 退款' . json_encode($data) . json_encode($ret));
+            return json(['msg' => $ret]);
+        } catch (Exception $e) {
+            trace('RPC 退款' . json_encode($data) . $e);
+            throw new HttpResponseException(json(['msg' => "$e"]));
+        }
     }
 }

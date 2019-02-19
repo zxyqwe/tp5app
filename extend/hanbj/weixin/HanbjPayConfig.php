@@ -48,6 +48,8 @@ class HanbjPayConfig extends WxPayConfigInterface
 
     public function GetSSLCertPath(&$sslCertPath, &$sslKeyPath)
     {
+        $sslCertPath = config('hanbj_pay_cert_path');
+        $sslKeyPath = config('hanbj_pay_key_path');
     }
 
 }
