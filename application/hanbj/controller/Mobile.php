@@ -24,7 +24,7 @@ class Mobile extends Controller
 
     protected function valid_id()
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -37,7 +37,7 @@ class Mobile extends Controller
 
     public function index($obj = '')
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix, config('hanbj_api'));
         }
@@ -94,7 +94,7 @@ class Mobile extends Controller
         if (session('?tieba_id') && session('unique_name') !== HBConfig::CODER) {
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
         }
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/reg', config('hanbj_api'));
         }
         return view('reg');

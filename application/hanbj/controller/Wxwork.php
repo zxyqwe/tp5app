@@ -7,6 +7,7 @@ use hanbj\BonusOper;
 use hanbj\CardOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
+use hanbj\UserOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -19,7 +20,7 @@ class Wxwork extends Controller
 
     protected function valid_id()
     {
-        if (!MemberOper::wx_login() || !in_array(session('unique_name'), BonusOper::getWorkers())) {
+        if (!UserOper::wx_login() || !in_array(session('unique_name'), BonusOper::getWorkers())) {
             $res = json(['msg' => '非工作人员'], 400);
             throw new HttpResponseException($res);
         }

@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\CardOper;
 use hanbj\ClubOper;
 use hanbj\MemberOper;
+use hanbj\UserOper;
 use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
@@ -18,7 +19,7 @@ class Wxclub extends Controller
 
     protected function valid_id()
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
@@ -31,7 +32,7 @@ class Wxclub extends Controller
 
     public function index()
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
         }
         $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];

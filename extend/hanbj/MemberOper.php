@@ -29,28 +29,6 @@ class MemberOper
         "甲寅", "乙卯", "丙辰", "丁巳", "戊午", "己未", "庚申", "辛酉", "壬戌", "癸亥",
     ];
     const GROUP = ["乾", "坤", "坎", "离", "震", "巽", "艮", "兑", "夏", "商", "周", "秦", "汉", "晋", "隋", "唐", "宋", "明"];
-    const VERSION = 'wx_succ_2';
-
-    public static function wx_login()
-    {
-        if (self::VERSION !== session('wx_login')) {
-            session(null);
-        } else {
-            return true;
-        }
-        if (input('?get.code')) {
-            $api = config('hanbj_api');
-            $sec = config('hanbj_secret');
-            $openid = WX_code(input('get.code'), $api, $sec);
-            if (is_string($openid)) {
-                session('openid', $openid);
-                session('unique_name', $openid);
-                session('wx_login', self::VERSION);
-                return true;
-            }
-        }
-        return false;
-    }
 
     public static function getMember()
     {
