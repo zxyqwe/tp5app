@@ -51,7 +51,7 @@ class ActivityOper
     {
         return Db::table('activity')
             ->where(['name' => ['like', '%测试%']])
-            ->data(['bonus' => 0])
+            ->data(['bonus' => 0, 'up' => 1])
             ->update();
     }
 }
