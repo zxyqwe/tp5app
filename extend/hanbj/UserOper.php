@@ -8,6 +8,7 @@ use think\exception\HttpResponseException;
 class UserOper
 {
     const VERSION = 'succ_1';
+    const WX_VERSION = 'wx_succ_2';
     const time = 60;
 
     private static function limit($unique)
@@ -61,5 +62,26 @@ class UserOper
             }
             throw new HttpResponseException($res);
         }
+    }
+
+    public static function wx_login()
+    {
+        if (self::WX_VERSION !== session('wx_login')) {
+            session(null);
+        } else {
+            return true;
+        }
+        if (input('?get.code')) {
+            $api = config('hanbj_api');
+            $sec = config('hanbj_secret');
+            $openid = WX_code(input('get.code'), $api, $sec);
+            if (is_string($openid)) {
+                session('openid', $openid);
+                session('unique_name', $openid);
+                session('wx_login', self::WX_VERSION);
+                return true;
+            }
+        }
+        return false;
     }
 }

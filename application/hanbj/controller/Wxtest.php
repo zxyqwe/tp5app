@@ -2,7 +2,7 @@
 
 namespace app\hanbj\controller;
 
-use hanbj\MemberOper;
+use hanbj\UserOper;
 use hanbj\vote\WxOrg;
 use think\Controller;
 use hanbj\HBConfig;
@@ -17,7 +17,7 @@ class Wxtest extends Controller
 
     protected function valid_id()
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }

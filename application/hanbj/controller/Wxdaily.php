@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\UserOper;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayUnifiedOrder;
 use wxsdk\pay\WxPayJsApiPay;
@@ -25,7 +26,7 @@ class Wxdaily extends Controller
 
     protected function valid_id()
     {
-        if (!MemberOper::wx_login()) {
+        if (!UserOper::wx_login()) {
             $res = json(['msg' => '未登录'], 400);
             throw new HttpResponseException($res);
         }
