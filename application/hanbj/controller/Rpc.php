@@ -171,7 +171,7 @@ class Rpc extends Controller
         try {
             $ret = WxPayApi::refund($config, $input);
             trace('RPC 退款' . json_encode($data) . json_encode($ret));
-            return json(['msg' => $ret]);
+            return json(['msg' => 'ok', 'data' => $ret]);
         } catch (Exception $e) {
             trace('RPC 退款' . json_encode($data) . $e);
             throw new HttpResponseException(json(['msg' => "$e"]));
