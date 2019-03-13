@@ -22,7 +22,7 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_HEADER, false);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 1);
-        curl_setopt($this->curl, CURLOPT_TIMEOUT, 1);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($this->curl, CURLOPT_USERAGENT, $this->agent);
 
         $this->cookie = config('bili_cron_cookie');
