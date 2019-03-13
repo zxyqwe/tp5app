@@ -26,7 +26,7 @@ function cross_site()
     }
 }
 
-function Curl_Post($curlPost, $url, $easy = true, $timeout = 1)
+function Curl_Post($curlPost, $url, $easy = true, $timeout = 5)
 {
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);

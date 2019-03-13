@@ -168,7 +168,7 @@ class CardOper
                 "is_notify_custom_field2" => true
             ]
         ];
-        $raw = Curl_Post($data, $url, false);
+        $raw = Curl_Post($data, $url, false, 60);
         $res = json_decode($raw, true);
         $log = implode('; ', [$uni, $card, $msg, $add_b, $b]);
         if ($res['errcode'] !== 0) {
@@ -192,7 +192,7 @@ class CardOper
             'init_custom_field_value1' => '激活中',
             'init_custom_field_value2' => FeeOper::cache_fee($uname)
         ];
-        $raw = Curl_Post($data, $url, false);
+        $raw = Curl_Post($data, $url, false, 60);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
             trace("active $raw " . json_encode($data), 'error');
