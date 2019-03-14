@@ -227,6 +227,10 @@ class Mobile extends Controller
                 $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
                 if ($ret) {
                     session('unique_name', $unique_name);
+                    $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
+                    if ($limit > 0) {
+                        trace("未关注者：$limit", 'info');
+                    }
                     return json(['msg' => 'ok']);
                 }
                 return json(['msg' => '会员编号没抢到'], 400);
