@@ -2,7 +2,6 @@
 
 namespace hanbj;
 
-use hanbj\weixin\WxHanbj;
 use think\Db;
 use think\exception\HttpResponseException;
 
@@ -160,16 +159,22 @@ class MemberOper
         self::Temp2Junior($ret['u']);
     }
 
-    public static function search_unionid($unionid) {
-        return Db::table('member')
+    public static function search_unionid($unionid)
+    {
+        $cache_key = "search_unionid$unionid";
+        if (cache("?$cache_key")) {
+            return json_decode(cache($cache_key), true);
+        }
+        $ret = Db::table('member')
             ->where(['unionid' => $unionid])
-            ->cache(600)
             ->field([
                 'unique_name',
                 'openid',
                 'code'
             ])
             ->find();
+        cache($cache_key, json_encode($ret), 600);
+        return $ret;
     }
 
     public static function daily()
@@ -177,10 +182,6 @@ class MemberOper
         $ret = self::list_code(self::TEMPUSE, false);
         foreach ($ret as $i) {
             self::Temp2Junior($i);
-        }
-        $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
-        if ($limit > 0) {
-            trace("未关注者：$limit", 'info');
         }
 
         $name = "MemberOper::daily()";
@@ -313,6 +314,13 @@ class MemberOper
                 ->update($data);
             trace("$unique_name TEMPUSE JUNIOR $ret");
             CardOper::renew($unique_name);
+            $union_id = Db::table('member')
+                ->where(['unique_name' => $unique_name])
+                ->field([
+                    'unionid'
+                ])
+                ->find();
+            cache("search_unionid{$union_id['unionid']}", null);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
