@@ -57,8 +57,8 @@ class Index extends Controller
 
 //      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
 //      $ret = WxHanbj::addUnionID($access);
-//        $ret = MemberOper::create_unique_unused();
-        $ret = ActivityOper::revokeTest();
+        $ret = MemberOper::create_unique_unused();
+//        $ret = ActivityOper::revokeTest();
 
 //        $ret = request()->ip();
         return json(['msg' => $ret]);
