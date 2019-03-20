@@ -46,7 +46,7 @@ class System extends Controller
             case 'POST':
                 $size = input('post.limit', 20, FILTER_VALIDATE_INT);
                 $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
-                $size = min(100, max(0, $size));
+                $size = min(1000, max(0, $size));
                 $offset = max(0, $offset);
                 $tmp = Db::table('logs')
                     ->limit($offset, $size)
