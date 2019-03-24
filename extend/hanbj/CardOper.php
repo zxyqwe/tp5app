@@ -5,6 +5,7 @@ namespace hanbj;
 
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class CardOper
 {
@@ -144,7 +145,7 @@ class CardOper
                 self::update($uname, $code, "激活为：实名会员", $bonus, $bonus);
                 break;
             default:
-                trace("激活为：{$uname} {$code} {$ret['c']}");
+                trace("激活为：{$uname} {$code} {$ret['c']}", MysqlLog::ERROR);
                 self::update($uname, $code, "激活为：{$ret['c']}");
         }
     }
@@ -172,10 +173,10 @@ class CardOper
         $res = json_decode($raw, true);
         $log = implode('; ', [$uni, $card, $msg, $add_b, $b]);
         if ($res['errcode'] !== 0) {
-            trace("update $log $raw " . json_encode($data), 'error');
+            trace("update $log $raw " . json_encode($data), MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $raw], 400));
         } else {
-            trace($log);
+            trace($log, MysqlLog::INFO);
         }
     }
 
@@ -195,7 +196,7 @@ class CardOper
         $raw = Curl_Post($data, $url, false, 60);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("active $raw " . json_encode($data), 'error');
+            trace("active $raw " . json_encode($data), MysqlLog::ERROR);
             return json(['msg' => $raw], 400);
         }
         $map['status'] = 0;
@@ -205,7 +206,7 @@ class CardOper
             ->where($map)
             ->setField('status', 1);
         if ($res !== 1) {
-            trace("active " . json_encode($data), 'error');
+            trace("active " . json_encode($data), MysqlLog::ERROR);
             return json(['msg' => '更新失败'], 500);
         }
         self::renew($uname);
@@ -228,7 +229,7 @@ class CardOper
         } else {
             $data['status'] = 'del OK';
         }
-        trace(json_encode($data));
+        trace(json_encode($data), MysqlLog::INFO);
         return '';
     }
 
@@ -247,7 +248,7 @@ class CardOper
         } else {
             $data['status'] = 'get OK';
         }
-        trace(json_encode($data));
+        trace(json_encode($data), MysqlLog::INFO);
         return '';
     }
 

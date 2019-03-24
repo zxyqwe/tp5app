@@ -7,6 +7,7 @@ use hanbj\HBConfig;
 use hanbj\MemberOper;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class WxVote
 {
@@ -80,9 +81,9 @@ class WxVote
             if ($ret <= 0) {
                 Db::table('vote')
                     ->insert($data);
-                trace("选举add $uniq {$data['ans']}");
+                trace("选举add $uniq {$data['ans']}", MysqlLog::INFO);
             } else {
-                trace("选举update $uniq {$data['ans']}");
+                trace("选举update $uniq {$data['ans']}", MysqlLog::INFO);
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -90,7 +91,7 @@ class WxVote
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
-            trace("Test Vote $e", 'error');
+            trace("Test Vote $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);

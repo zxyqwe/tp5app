@@ -3,6 +3,7 @@
 namespace wxsdk\mp;
 
 use Exception;
+use util\MysqlLog;
 
 /**
  * SHA1 class
@@ -29,7 +30,7 @@ class SHA1
             return array(ErrorCode::$OK, sha1($str));
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx SHA1 $e", 'error');
+            trace("wx SHA1 $e", MysqlLog::ERROR);
             return array(ErrorCode::$ComputeSignatureError, null);
         }
     }

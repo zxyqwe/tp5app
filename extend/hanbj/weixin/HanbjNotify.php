@@ -2,6 +2,7 @@
 
 namespace hanbj\weixin;
 
+use util\MysqlLog;
 use wxsdk\pay\WxPayOrderQuery;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayNotify;
@@ -25,7 +26,7 @@ class HanbjNotify extends WxPayNotify
             ) {
                 return true;
             } else {
-                trace("orderQuery " . json_encode($result), 'error');
+                trace("orderQuery " . json_encode($result), MysqlLog::ERROR);
             }
         }
         return false;
@@ -49,7 +50,7 @@ class HanbjNotify extends WxPayNotify
                 return false;
             }
         } catch (Exception $e) {
-            trace('检查签名 ' . json_encode($e), 'error');
+            trace('检查签名 ' . json_encode($e), MysqlLog::ERROR);
         }
         //查询订单，判断订单真实性
         if (!$this->Queryorder($data["out_trade_no"])) {

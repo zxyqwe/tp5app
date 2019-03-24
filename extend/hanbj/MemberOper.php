@@ -4,6 +4,7 @@ namespace hanbj;
 
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class MemberOper
 {
@@ -111,7 +112,7 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
-        trace("可选编号 " . count($already), 'info');
+        trace("可选编号 " . count($already), MysqlLog::LOG);
         sort($already);
         return $already;
     }
@@ -128,7 +129,7 @@ class MemberOper
             $already[] = $i['u'];
         }
         if ($debug) {
-            trace("list_code $c " . count($already));
+            trace("list_code $c " . count($already), MysqlLog::INFO);
         }
         return $already;
     }
@@ -248,12 +249,12 @@ class MemberOper
             if ($ret === 1) {
                 cache($ca, $ca, 2 * 86400);
             }
-            trace("$unique_name UNUSED TEMPUSE $ret");
+            trace("$unique_name UNUSED TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Unused2Temp $unique_name $e", 'error');
+            trace("Unused2Temp $unique_name $e", MysqlLog::ERROR);
             if (false !== strpos($e, 'Duplicate')) {
                 $e = "昵称 $tieba_id 已被使用";
             }
@@ -292,7 +293,7 @@ class MemberOper
             if ($ret != 1) {
                 throw new \Exception('2 fail');
             }
-            trace("$unique_name TEMPUSE UNUSED 1");
+            trace("$unique_name TEMPUSE UNUSED 1", MysqlLog::INFO);
             FeeOper::clear($unique_name);
             ActivityOper::clear($unique_name);
             FameOper::clear($unique_name);
@@ -301,7 +302,7 @@ class MemberOper
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Temp2Unused $unique_name $e", 'error');
+            trace("Temp2Unused $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -319,7 +320,7 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name TEMPUSE JUNIOR $ret");
+            trace("$unique_name TEMPUSE JUNIOR $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             $union_id = Db::table('member')
                 ->where(['unique_name' => $unique_name])
@@ -331,7 +332,7 @@ class MemberOper
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Temp2Junior $unique_name $e", 'error');
+            trace("Temp2Junior $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -349,12 +350,12 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name JUNIOR TEMPUSE $ret");
+            trace("$unique_name JUNIOR TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Junior2Temp $unique_name $e", 'error');
+            trace("Junior2Temp $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -380,13 +381,13 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name JUNIOR NORMAL $ret");
-            trace(json_encode($data));
+            trace("$unique_name JUNIOR NORMAL $ret", MysqlLog::INFO);
+            trace(json_encode($data), MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Junior2Normal $unique_name $e", 'error');
+            trace("Junior2Normal $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -404,12 +405,12 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name NORMAL BANNED $ret");
+            trace("$unique_name NORMAL BANNED $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Normal2Banned $unique_name $e", 'error');
+            trace("Normal2Banned $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -442,12 +443,12 @@ class MemberOper
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
-            trace("$unique_name BANNED NORMAL $ret");
+            trace("$unique_name BANNED NORMAL $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Banned2Normal $unique_name $e", 'error');
+            trace("Banned2Normal $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }

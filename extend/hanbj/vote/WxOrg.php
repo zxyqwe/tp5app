@@ -9,6 +9,7 @@ use hanbj\vote\quest\WxQTop;
 use think\Db;
 use think\exception\HttpResponseException;
 use hanbj\weixin\WxHanbj;
+use util\MysqlLog;
 
 class WxOrg
 {
@@ -315,9 +316,9 @@ class WxOrg
                         'catg' => $catg
                     ])
                     ->insert();
-                trace("投票add $uname $catg $obj");
+                trace("投票add $uname $catg $obj", MysqlLog::INFO);
             } else {
-                trace("投票update $uname $catg $obj");
+                trace("投票update $uname $catg $obj", MysqlLog::INFO);
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
@@ -325,7 +326,7 @@ class WxOrg
             if (isset($token[2])) {
                 return json(['msg' => 'OK']);
             }
-            trace("Test UP $e", 'error');
+            trace("Test UP $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);

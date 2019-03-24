@@ -3,6 +3,7 @@
 namespace hanbj;
 
 use think\Db;
+use util\MysqlLog;
 
 class FameOper
 {
@@ -98,7 +99,7 @@ class FameOper
             ->where($map)
             ->update($data);
         if (intval($ret) !== 0) {
-            trace("Fame Clear $uname $ret");
+            trace("Fame Clear $uname $ret", MysqlLog::INFO);
         }
     }
 

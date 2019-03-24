@@ -2,6 +2,8 @@
 
 namespace bilibili;
 
+use util\MysqlLog;
+
 class BiliDanmu extends BiliBase
 {
     private function _unknown($real_roomid, $url, $key)
@@ -13,7 +15,7 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0 || !isset($data['data'])) {
-            trace("$url $key $raw");
+            trace("$url $key $raw", MysqlLog::ERROR);
             return json(['msg' => "1 $raw"], 400);
         }
         $data = $data['data'];
@@ -82,12 +84,12 @@ class BiliDanmu extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
         $join = json_decode($raw, true);
         if (false !== strpos($raw, '访问被拒绝') || $join['code'] == 400) {
-            trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]));
+            trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]), MysqlLog::ERROR);
             $this->lock("Bili400", $this->long_timeout());
             return;
         }
         if ($join['code'] === 0) {
-            trace(json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]));
+            trace(json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]), MysqlLog::ERROR);
             $this->lock("$key$payload", $this->long_timeout());
             $ret[] = $payload_raw;
             return;
@@ -103,7 +105,7 @@ class BiliDanmu extends BiliBase
         if (false !== strpos($raw, '不存在')) {
             return;
         }
-        trace("$key " . json_encode($item) . $raw);
+        trace("$key " . json_encode($item) . $raw, MysqlLog::ERROR);
     }
 
     private function _handle_raffle($real_roomid, $item, &$ret)
@@ -159,13 +161,13 @@ class BiliDanmu extends BiliBase
                 if ($data['gift_num'] > 0) {
                     $data_for = "$key {$data['gift_num']} 个 {$data['gift_name']}";
                     if (!in_array($data['gift_name'], ['辣条', '小红包'])) {
-                        trace($data_for);
+                        trace($data_for, MysqlLog::INFO);
                     }
                     return json(['msg' => $data_for]);
                 }
                 return json(['msg' => $raw]);
             default:
-                trace("notice_any $raw");
+                trace("notice_any $raw", MysqlLog::ERROR);
                 return json(['msg' => "1 $raw"], 400);
         }
     }

@@ -4,6 +4,7 @@ namespace hanbj;
 
 use think\Cache;
 use think\Db;
+use util\MysqlLog;
 
 class BonusOper
 {
@@ -125,12 +126,12 @@ class BonusOper
                     $bonus,
                     intval($item['bonus']) + $bonus);
             } else {
-                trace("{$item['unique_name']} 没有会员卡");
+                trace("{$item['unique_name']} 没有会员卡", MysqlLog::ERROR);
             }
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Bonus UP $e");
+            trace("Bonus UP $e", MysqlLog::ERROR);
             return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok', 'c' => 1]);

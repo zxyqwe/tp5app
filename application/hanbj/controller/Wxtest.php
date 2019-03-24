@@ -8,6 +8,7 @@ use think\Controller;
 use hanbj\HBConfig;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class Wxtest extends Controller
 {
@@ -77,7 +78,7 @@ class Wxtest extends Controller
         }
         $ans = input('post.ans/a', []);
         $uname = session('unique_name');
-        trace("问卷 $uname " . json_encode($ans));
+        trace("问卷 $uname " . json_encode($ans), MysqlLog::LOG);
         $org->checkAns($ans);
         $ans = json_encode($ans);
         if (!in_array($uname, $org->getUser())) {

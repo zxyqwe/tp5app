@@ -32,7 +32,7 @@ Hook::add('app_end', function () {
         ];
         $ret = explode_dict($ret);
         foreach ($ret as $i) {
-            trace($i);
+            trace($i, 'debug');
         }
     }
 });

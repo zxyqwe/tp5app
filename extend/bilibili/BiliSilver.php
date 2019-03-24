@@ -3,6 +3,7 @@
 namespace bilibili;
 
 use thiagoalessio\TesseractOCR\TesseractOCR;
+use util\MysqlLog;
 
 class BiliSilver extends BiliBase
 {
@@ -29,7 +30,7 @@ class BiliSilver extends BiliBase
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
-            trace("领取银瓜子：{$data['data']['silver']} (+{$data['data']['awardSilver']})");
+            trace("领取银瓜子：{$data['data']['silver']} (+{$data['data']['awardSilver']})", MysqlLog::INFO);
             $this->lock('silverTask', -1);
             $this->silverTask();
         } else {
@@ -37,12 +38,12 @@ class BiliSilver extends BiliBase
                 return;
             }
             if (-903 === $data['code'] || false !== strpos($data['msg'], '过期')) {
-                trace("领取失败：{$data['msg']}");
+                trace("领取失败：{$data['msg']}", MysqlLog::ERROR);
                 $this->lock('silverTask', -1);
                 $this->silverTask();
                 return;
             }
-            trace("领取失败：$res");
+            trace("领取失败：$res", MysqlLog::ERROR);
         }
     }
 
@@ -56,10 +57,10 @@ class BiliSilver extends BiliBase
         $data = json_decode($res, true);
         switch ($data['code']) {
             case -101:
-                trace("silverTask $res");
+                trace("silverTask $res", MysqlLog::ERROR);
                 return '';
             case -10017:
-                trace("day empty {$data['msg']}");
+                trace("day empty {$data['msg']}", MysqlLog::ERROR);
                 $this->lock('day_empty', $this->long_timeout());
                 return '';
         }
@@ -72,7 +73,7 @@ class BiliSilver extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("captcha $raw");
+            trace("captcha $raw", MysqlLog::ERROR);
             return false;
         }
         $data = $data['data']['img'];
@@ -85,7 +86,7 @@ class BiliSilver extends BiliBase
         $raw = base64_decode($raw);
         $image = imagecreatefromstring($raw);
         if ($image === false) {
-            trace("captcha image $raw");
+            trace("captcha image $raw", MysqlLog::ERROR);
             return false;
         }
         $file_path = '/tmp/bilibili_ocr.png';

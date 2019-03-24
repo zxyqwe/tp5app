@@ -4,6 +4,7 @@ namespace hanbj;
 
 
 use think\Db;
+use util\MysqlLog;
 
 class FeeOper
 {
@@ -47,7 +48,7 @@ class FeeOper
             ->where($map)
             ->update($data);
         if (intval($ret) !== 0) {
-            trace("Fee Clear $uname $ret");
+            trace("Fee Clear $uname $ret", MysqlLog::INFO);
         }
         self::uncache($uname);
     }

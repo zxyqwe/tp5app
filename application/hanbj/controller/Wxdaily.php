@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\UserOper;
+use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayUnifiedOrder;
 use wxsdk\pay\WxPayJsApiPay;
@@ -121,7 +122,7 @@ class Wxdaily extends Controller
         $order = WxPayApi::unifiedOrder($config, $input);
         if (!array_key_exists('prepay_id', $order)) {
             $msg = $order['return_msg'] . json_encode($order) . json_encode($input->ToXml());
-            trace($msg, 'error');
+            trace($msg, MysqlLog::ERROR);
             OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
@@ -178,7 +179,7 @@ class Wxdaily extends Controller
         $data['time2'] = date("H:i:s");
         $data['uniq'] = $uniq;
         $data['nick'] = session('tieba_id');
-        trace("临时身份 $tempid {$data['uniq']} {$data['nick']}", 'info');
+        trace("临时身份 $tempid {$data['uniq']} {$data['nick']}", MysqlLog::LOG);
         cache("tempnum$tempid", json_encode($data), 1800);
         return json(['msg' => 'OK', 'temp' => $tempid]);
     }
@@ -205,7 +206,7 @@ class Wxdaily extends Controller
         if ($res === 0) {
             return json(['msg' => '更新失败'], 400);
         }
-        trace(str_replace("\n", '|', "{$map['unique_name']} {$action} {$map[$action]} -> {$data[$action]}"));
+        trace(str_replace("\n", '|', "{$map['unique_name']} {$action} {$map[$action]} -> {$data[$action]}"), MysqlLog::LOG);
         return json(['msg' => 'OK']);
     }
 

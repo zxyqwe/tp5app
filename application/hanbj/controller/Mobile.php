@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use util\MysqlLog;
 use wxsdk\mp\SHA1;
 use wxsdk\mp\WXBizMsgCrypt;
 use hanbj\BonusOper;
@@ -80,7 +81,7 @@ class Mobile extends Controller
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
-        trace("微信首页 {$res['unique_name']}", 'info');
+        trace("微信首页 {$res['unique_name']}", MysqlLog::LOG);
         return view('home', [
             'user' => $res,
             'card' => CardOper::mod_ret($map),
@@ -117,10 +118,10 @@ class Mobile extends Controller
                 ->where($map)
                 ->setField('openid', session('openid'));
             if ($res !== 1) {
-                trace([$phone, session('openid')], 'error');
+                trace([$phone, session('openid')], MysqlLog::ERROR);
                 return json(['msg' => '绑定失败'], 500);
             }
-            trace("绑定 $phone " . session('openid'));
+            trace("绑定 $phone " . session('openid'), MysqlLog::INFO);
             return json(['msg' => 'OK']);
         }
         return json(['msg' => '身份证错误'], 400);
@@ -193,7 +194,7 @@ class Mobile extends Controller
         $msg = '';
         $err = $pc->decryptMsg($msg_sign, $timestap, $nonce, $post_data, $msg);
         if ($err !== 0) {
-            trace(['dec', $err], 'error');
+            trace(['dec', $err], MysqlLog::ERROR);
             return new Response('', 404);
         }
 
@@ -205,7 +206,7 @@ class Mobile extends Controller
         $reply = '';
         $err = $pc->encryptMsg($msg, time(), getNonceStr(), $reply);
         if ($err !== 0) {
-            trace(['enc', $err], 'error');
+            trace(['enc', $err], MysqlLog::ERROR);
             return new Response('', 404);
         }
         return $reply;
@@ -229,7 +230,7 @@ class Mobile extends Controller
                     session('unique_name', $unique_name);
                     $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
                     if ($limit > 0) {
-                        trace("未关注者：$limit", 'info');
+                        trace("未关注者：$limit", MysqlLog::LOG);
                     }
                     return json(['msg' => 'ok']);
                 }

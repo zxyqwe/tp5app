@@ -3,6 +3,7 @@
 namespace wxsdk\mp;
 
 use Exception;
+use util\MysqlLog;
 
 
 /**
@@ -50,7 +51,7 @@ class Prpcrypt
             return array(ErrorCode::$OK, base64_encode($encrypted));
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx Encrypt $e");
+            trace("wx Encrypt $e", MysqlLog::ERROR);
             //print $e;
             return array(ErrorCode::$EncryptAESError, null);
         }
@@ -78,7 +79,7 @@ class Prpcrypt
             mcrypt_module_close($module);
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx Decrypt $e");
+            trace("wx Decrypt $e", MysqlLog::ERROR);
             return array(ErrorCode::$DecryptAESError, null);
         }
 
@@ -97,7 +98,7 @@ class Prpcrypt
             $from_appid = substr($content, $xml_len + 4);
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx Decrypt2 $e");
+            trace("wx Decrypt2 $e", MysqlLog::ERROR);
             //print $e;
             return array(ErrorCode::$IllegalBuffer, null);
         }

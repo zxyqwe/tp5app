@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class Index extends Controller
 {
@@ -85,7 +86,7 @@ class Index extends Controller
             cache("amail$to$sub", 'a', 600);
             return json('c');
         } catch (Exception $e) {
-            trace($mail->ErrorInfo);
+            trace($mail->ErrorInfo, MysqlLog::ERROR);
             return json('b', 400);
         }
     }
