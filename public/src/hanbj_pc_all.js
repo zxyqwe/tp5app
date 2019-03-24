@@ -475,8 +475,38 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
+    var $table, t_data = {};
+    var refresh = function (tmp_data) {
+        t_data = tmp_data;
+        $table.bootstrapTable('refresh');
+    };
+    var build_vue = function () {
+        var vmain = new Vue({
+            el: '#simp_form',
+            data: {
+                level: 'debug'
+            },
+            methods: {
+                get_res: function () {
+                    return {
+                        level: this.level
+                    }
+                }
+            }
+        });
+        vmain.$watch('uname', function (nv) {
+            refresh(this.get_res());
+        });
+    };
     var init = function () {
-        var $table = $('#table');
+        build_vue();
+        w.wxParams = function (params) {
+            for (var x in t_data) {
+                params[x] = t_data[x];
+            }
+            return params;
+        };
+        $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
             'silent': true
