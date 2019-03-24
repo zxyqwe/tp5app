@@ -11,6 +11,7 @@ use hanbj\MemberOper;
 use hanbj\weixin\WxHanbj;
 use hanbj\vote\WxOrg;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class System extends Controller
 {
@@ -48,7 +49,9 @@ class System extends Controller
                 $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
                 $size = min(1000, max(0, $size));
                 $offset = max(0, $offset);
+                $level = MysqlLog::get_level(input("post.level"));
                 $tmp = Db::table('logs')
+                    ->where(['type' => ['in', $level]])
                     ->limit($offset, $size)
                     ->order('id', 'desc')
                     ->field([
@@ -64,6 +67,7 @@ class System extends Controller
                     ->select();
                 $data['rows'] = $tmp;
                 $total = Db::table('logs')
+                    ->where(['type' => ['in', $level]])
                     ->count();
                 $data['total'] = $total;
                 return json($data);

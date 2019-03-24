@@ -13,6 +13,30 @@ class MysqlLog
     const RPC = 'rpc';
 
     /**
+     * 日志级别
+     * @access public static
+     * @param str $level 级别
+     * @return array
+     */
+    public static function get_level($level = '')
+    {
+        switch ($level) {
+            case self::RPC:
+                return [self::RPC];
+            case self::ERROR:
+                return [self::ERROR];
+            case self::INFO:
+                return [self::ERROR, self::INFO];
+            case self::LOG:
+                return [self::ERROR, self::INFO, self::LOG];
+            case self::DEBUG:
+                return [self::ERROR, self::INFO, self::LOG, self::DEBUG];
+            default:
+                return [self::RPC, self::ERROR, self::INFO, self::LOG, self::DEBUG];
+        }
+    }
+
+    /**
      * 日志写入接口
      * @access public
      * @param array $log 日志信息
