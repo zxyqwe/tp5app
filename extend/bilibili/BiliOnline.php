@@ -2,6 +2,8 @@
 
 namespace bilibili;
 
+use util\MysqlLog;
+
 class BiliOnline extends BiliBase
 {
     public function online()
@@ -10,7 +12,7 @@ class BiliOnline extends BiliBase
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
-            trace("online $res");
+            trace("online $res", MysqlLog::ERROR);
         }
     }
 
@@ -27,7 +29,7 @@ class BiliOnline extends BiliBase
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
-            trace("unknown_heart $res");
+            trace("unknown_heart $res", MysqlLog::ERROR);
         }
     }
 
@@ -37,7 +39,7 @@ class BiliOnline extends BiliBase
         $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, ['csrf_token' => $this->csrf_token]);
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
-            trace("unknown_notice $res");
+            trace("unknown_notice $res", MysqlLog::ERROR);
         }
     }
 
@@ -50,25 +52,25 @@ class BiliOnline extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("heart_gift_receive $raw");
+            trace("heart_gift_receive $raw", MysqlLog::ERROR);
             return;
         }
         $data = $data['data'];
         $list = $data['gift_list'];
         if (is_array($list)) {
             foreach ($list as $item) {
-                trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}");
+                trace("{$item['gift_name']} {$item['day_num']}/{$item['day_limit']}", MysqlLog::INFO);
             }
         } else {
             switch ($data['heart_status']) {
                 case 1:
                     return;
                 case 0:
-                    trace("empty heart_gift_receive");
+                    trace("empty heart_gift_receive", MysqlLog::INFO);
                     $this->lock('heart_gift_receive', $this->long_timeout());
                     return;
                 default:
-                    trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}");
+                    trace("heart_gift_receive {$data['heart_status']} {$data['heart_time']}", MysqlLog::ERROR);
             }
         }
     }
@@ -78,7 +80,7 @@ class BiliOnline extends BiliBase
         $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        trace("心跳 {$data['msg']}");
+        trace("心跳 {$data['msg']}", MysqlLog::LOG);
     }
 
     public function freeGift()
@@ -92,15 +94,15 @@ class BiliOnline extends BiliBase
         $timeout = 590;
         if ($data['code'] === 0) {
             $gift = end($data['data']['gift']);
-            trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）");
+            trace("{$data['msg']}，礼物 {$gift['bagId']}（{$gift['num']}）", MysqlLog::INFO);
         } elseif ($data['code'] === -403 && $data['data']['heart'] === false) {
             $timeout = $this->long_timeout();
-            trace("free gift empty {$data['msg']}");
+            trace("free gift empty {$data['msg']}", MysqlLog::ERROR);
         } elseif ($data['msg'] === '非法心跳') {
             $this->heartbeat();
         } else {
             if (false === strpos($raw, 'DOCTYPE')) {
-                trace("奇怪 $raw");
+                trace("奇怪 $raw", MysqlLog::ERROR);
             }
             //$this->heartbeat();
         }

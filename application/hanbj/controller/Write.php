@@ -13,6 +13,7 @@ use hanbj\HBConfig;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 
 class Write extends Controller
@@ -93,7 +94,7 @@ class Write extends Controller
                 ->insertAll($data);
             if ($res === count($data)) {
                 Db::commit();
-                trace("Fee " . json_encode($name));
+                trace("Fee " . json_encode($name), MysqlLog::INFO);
             } else {
                 Db::rollback();
                 return json(['msg' => $res], 400);
@@ -101,7 +102,7 @@ class Write extends Controller
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Fee Add $e", 'error');
+            trace("Fee Add $e", MysqlLog::ERROR);
             return json(['msg' => $e], 400);
         }
         return json(['msg' => 'ok']);
@@ -146,7 +147,7 @@ class Write extends Controller
                 ->insertAll($data);
             if ($res === count($data)) {
                 Db::commit();
-                trace("Fame " . json_encode($name));
+                trace("Fame " . json_encode($name), MysqlLog::INFO);
             } else {
                 Db::rollback();
                 return json(['msg' => $res], 400);
@@ -154,7 +155,7 @@ class Write extends Controller
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace("Fame Add $e", 'error');
+            trace("Fame Add $e", MysqlLog::ERROR);
             preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
                 $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
@@ -237,7 +238,7 @@ class Write extends Controller
                 $key = input('post.key');
                 $value = input('post.value');
                 $unique = session('unique_name');
-                trace("$unique $key $value");
+                trace("$unique $key $value", MysqlLog::INFO);
                 switch ($key) {
                     case '_ACT_NAME':
                         cache('BonusOper::ACT_NAME', $value);
@@ -283,16 +284,16 @@ class Write extends Controller
                             ->data([$name => $value])
                             ->where(['id' => $pk])
                             ->update();
-                        trace("Prom Edit $unique $pk $name $value");
+                        trace("Prom Edit $unique $pk $name $value", MysqlLog::INFO);
                     } else {
                         Db::table('prom')
                             ->data(['name' => $name])
                             ->insert();
-                        trace("Prom Add $unique $name");
+                        trace("Prom Add $unique $name", MysqlLog::INFO);
                     }
                 } catch (\Exception $e) {
                     $e = $e->getMessage();
-                    trace("Prom Edit $e", 'error');
+                    trace("Prom Edit $e", MysqlLog::ERROR);
                     return json(['msg' => $e], 400);
                 }
                 return json('修改成功！');
@@ -315,10 +316,10 @@ class Write extends Controller
                 ->data([$name => $value])
                 ->where(['id' => $pk])
                 ->update();
-            trace("Fame Edit $unique $pk $name $value");
+            trace("Fame Edit $unique $pk $name $value", MysqlLog::INFO);
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Fame Edit $e", 'error');
+            trace("Fame Edit $e", MysqlLog::ERROR);
             return json(['msg' => $e], 400);
         }
         return json('修改成功！');

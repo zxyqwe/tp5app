@@ -3,6 +3,7 @@
 namespace bilibili;
 
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class BiliBase
 {
@@ -55,7 +56,7 @@ class BiliBase
                 || false !== strpos($return_str, 'Empty reply')
             )
             ) {
-                trace("url => $url, res => $return_str", 'error');
+                trace("url => $url, res => $return_str", MysqlLog::ERROR);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
@@ -81,12 +82,12 @@ class BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $rid);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("钓鱼 $raw", 'error');
+            trace("钓鱼 $raw", MysqlLog::ERROR);
             return false;
         }
         $data = $data['data'];
         if ($data['encrypted'] || $data['is_hidden'] || $data['is_locked']) {
-            trace("钓鱼 $raw");
+            trace("钓鱼 $raw", MysqlLog::ERROR);
             return false;
         }
 
@@ -99,7 +100,7 @@ class BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($payload));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
-            trace("历史记录 $raw");
+            trace("历史记录 $raw", MysqlLog::ERROR);
             return false;
         }
 

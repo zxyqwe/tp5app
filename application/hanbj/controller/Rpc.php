@@ -11,6 +11,7 @@ use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayRefund;
 
@@ -53,7 +54,7 @@ class Rpc extends Controller
         if (null === $ret) {
             return json(['msg' => "查无此人"]);
         }
-        trace("RPC 查询 {$ret['unique_name']} {$ret['code']}");
+        trace("查询 {$ret['unique_name']} {$ret['code']}", MysqlLog::RPC);
         return json([
             'msg' => 'ok',
             'user' => intval($ret['code']),
@@ -133,7 +134,7 @@ class Rpc extends Controller
             return json(['msg' => "查无此人"]);
         }
 
-        trace("RPC 活动 {$operret['unique_name']} -> {$ret['unique_name']}, $act, $bonus");
+        trace("活动 {$operret['unique_name']} -> {$ret['unique_name']}, $act, $bonus", MysqlLog::RPC);
         ActivityOper::signAct(
             $operret['unique_name'],
             $operret['openid'],
@@ -170,10 +171,10 @@ class Rpc extends Controller
         $input->SetOp_user_id($config->GetMerchantId());
         try {
             $ret = WxPayApi::refund($config, $input);
-            trace('RPC 退款' . json_encode($data) . json_encode($ret));
+            trace('退款 INFO' . json_encode($data) . json_encode($ret), MysqlLog::RPC);
             return json(['msg' => 'ok', 'data' => $ret]);
         } catch (Exception $e) {
-            trace('RPC 退款' . json_encode($data) . $e);
+            trace('退款 ERROR' . json_encode($data) . $e, MysqlLog::RPC);
             throw new HttpResponseException(json(['msg' => "$e"]));
         }
     }

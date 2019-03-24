@@ -4,6 +4,7 @@ namespace hanbj;
 
 
 use think\Db;
+use util\MysqlLog;
 
 class ClubOper
 {
@@ -18,13 +19,13 @@ class ClubOper
                 ->data(['code' => $value])
                 ->where(['id' => $pk, 'code' => 0])
                 ->update();
-            trace("Club Edit $unique $pk $value");
+            trace("Club Edit $unique $pk $value", MysqlLog::INFO);
             if ($ret === 1 && $value === 1) {
                 self::actClub($pk);
             }
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("grantClub $e", 'error');
+            trace("grantClub $e", MysqlLog::ERROR);
             return json(['msg' => $e], 400);
         }
         return json('修改成功！');
@@ -88,11 +89,11 @@ class ClubOper
             Db::table('club')
                 ->data($data)
                 ->insert();
-            trace("Club Apply " . json_encode($data));
+            trace("Club Apply " . json_encode($data), MysqlLog::INFO);
             return json('提交成功！');
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("applyClub $e", 'error');
+            trace("applyClub $e", MysqlLog::ERROR);
             return json(['msg' => $e], 400);
         }
     }

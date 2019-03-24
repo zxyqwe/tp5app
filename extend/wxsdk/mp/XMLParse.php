@@ -4,6 +4,7 @@ namespace wxsdk\mp;
 
 use DOMDocument;
 use Exception;
+use util\MysqlLog;
 
 /**
  * XMLParse class
@@ -30,7 +31,7 @@ class XMLParse
             return array(0, $encrypt, $tousername);
         } catch (Exception $e) {
             $e = $e->getMessage();
-            trace("wx extravt $e", 'error');
+            trace("wx extravt $e", MysqlLog::ERROR);
             //print $e . "\n";
             return array(ErrorCode::$ParseXmlError, null, null);
         }

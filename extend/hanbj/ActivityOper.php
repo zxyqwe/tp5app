@@ -5,6 +5,7 @@ namespace hanbj;
 use hanbj\weixin\WxTemp;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\MysqlLog;
 
 class ActivityOper
 {
@@ -16,7 +17,7 @@ class ActivityOper
             ->where($map)
             ->update($data);
         if (intval($ret) !== 0) {
-            trace("Act Clear $uname $ret");
+            trace("Act Clear $uname $ret", MysqlLog::INFO);
         }
     }
 
@@ -34,7 +35,7 @@ class ActivityOper
             Db::table('activity')
                 ->data($data)
                 ->insert();
-            trace("登记活动 {$data['oper']} -> {$user}, $act_name, $bonus");
+            trace("登记活动 {$data['oper']} -> {$user}, $act_name, $bonus", MysqlLog::INFO);
             WxTemp::regAct($openid, $user, $act_name);
             return json(['msg' => 'ok']);
         } catch (\Exception $e) {
@@ -42,7 +43,7 @@ class ActivityOper
             if (false != strpos('' . $e, 'Duplicate')) {
                 return json(['msg' => '重复登记活动'], 400);
             }
-            trace("signAct $e");
+            trace("signAct $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }

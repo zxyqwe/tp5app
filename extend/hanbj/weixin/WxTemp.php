@@ -3,6 +3,8 @@
 namespace hanbj\weixin;
 
 
+use util\MysqlLog;
+
 class WxTemp
 {
     const URL = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=';
@@ -27,10 +29,10 @@ class WxTemp
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("ERR $log $raw", 'error');
+            trace("ERR $log $raw", MysqlLog::ERROR);
             return $raw;
         }
-        trace($log);
+        trace($log, MysqlLog::INFO);
         return 'ok';
     }
 

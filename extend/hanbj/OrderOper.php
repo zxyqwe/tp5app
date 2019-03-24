@@ -5,6 +5,7 @@ namespace hanbj;
 use think\Db;
 use Exception;
 use hanbj\weixin\WxTemp;
+use util\MysqlLog;
 
 class OrderOper
 {
@@ -135,7 +136,7 @@ class OrderOper
                 ->update();
             if ($up === 0) {
                 Db::rollback();
-                trace('重来订单 ' . json_encode($data), 'error');
+                trace('重来订单 ' . json_encode($data), MysqlLog::ERROR);
                 return true;
             }
             if (strlen($res['unique_name']) <= 1) {
@@ -157,7 +158,7 @@ class OrderOper
         } catch (\Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
-            trace('NotifyProcess ' . $e . json_encode($data), 'error');
+            trace('NotifyProcess ' . $e . json_encode($data), MysqlLog::ERROR);
             return false;
         }
         return true;

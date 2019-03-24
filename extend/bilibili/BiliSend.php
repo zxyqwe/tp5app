@@ -2,6 +2,8 @@
 
 namespace bilibili;
 
+use util\MysqlLog;
+
 class BiliSend extends BiliBase
 {
     private function sign()
@@ -16,12 +18,12 @@ class BiliSend extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
-            trace('sendDaily ' . $raw);
+            trace('sendDaily ' . $raw, MysqlLog::ERROR);
         }
         $urlapi = $this->prefix . 'sign/GetSignInfo';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-        trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}");
+        trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}", MysqlLog::INFO);
     }
 
     private function getSendGift()
@@ -56,7 +58,7 @@ class BiliSend extends BiliBase
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
-            trace("send $raw");
+            trace("send $raw", MysqlLog::INFO);
             return;
         }
         $data = $data['data']['list'];
@@ -69,7 +71,7 @@ class BiliSend extends BiliBase
                 $period = $inter->diff(new \DateTime());
                 trace("截止时间 " . date("Y-m-d H:i:s", $end) .
                     " 间隔时间 " . $period->format("%d天%H:%I:%S") .
-                    " 跳过 {$vo['gift_num']} 个 {$vo['gift_name']}");
+                    " 跳过 {$vo['gift_num']} 个 {$vo['gift_name']}", MysqlLog::INFO);
                 continue;
             }
             $payload = [
@@ -91,9 +93,9 @@ class BiliSend extends BiliBase
             $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
             if (0 !== $res['code']) {
-                trace("投喂 {$this->csrf_token} $raw");
+                trace("投喂 {$this->csrf_token} $raw", MysqlLog::ERROR);
             } else {
-                trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}");
+                trace("成功投喂 {$vo['gift_num']} 个 {$vo['gift_name']}", MysqlLog::INFO);
             }
         }
         $this->lock('send_gift', $this->long_timeout());

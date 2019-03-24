@@ -109,7 +109,7 @@ function WX_code($code, $api, $sec)
     if (!isset($res['access_token']) || !isset($res['openid'])) {
         return $res;
     }
-    trace("Weixin Code " . $res['openid'], 'info');
+    trace("Weixin Code " . $res['openid'], 'log');
     return $res['openid'];
 }
 
@@ -135,7 +135,7 @@ function WX_access($api, $sec, $name)
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
         return $res;
     }
-    trace("Weixin Access " . $res['access_token'], 'info');
+    trace("Weixin Access " . $res['access_token'], 'log');
     cache($name, $res['access_token'], intval($res['expires_in']));
     return $res['access_token'];
 }

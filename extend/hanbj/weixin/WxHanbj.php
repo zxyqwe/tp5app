@@ -8,6 +8,7 @@ use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
 use hanbj\CardOper;
 use hanbj\UserOper;
+use util\MysqlLog;
 
 class WxHanbj
 {
@@ -35,10 +36,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("JsApi $raw", 'error');
+            trace("JsApi $raw", MysqlLog::ERROR);
             return '';
         }
-        trace("WxHanbj JsApi {$res['ticket']}", 'info');
+        trace("WxHanbj JsApi {$res['ticket']}", MysqlLog::LOG);
         cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -51,10 +52,10 @@ class WxHanbj
         $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
-            trace("TicketApi $raw", 'error');
+            trace("TicketApi $raw", MysqlLog::ERROR);
             return '';
         }
-        trace("WxHanbj TicketApi {$res['ticket']}", 'info');
+        trace("WxHanbj TicketApi {$res['ticket']}", MysqlLog::LOG);
         cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
         return $res['ticket'];
     }
@@ -84,7 +85,7 @@ class WxHanbj
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
-            trace("addUnionID $raw", 'info');
+            trace("addUnionID $raw", MysqlLog::ERROR);
             return $limit;
         }
 
@@ -102,7 +103,7 @@ class WxHanbj
                 ->data(['unionid' => $idx['unionid']])
                 ->update();
             if ($ret > 0) {
-                trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}");
+                trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}", MysqlLog::INFO);
                 $limit -= $ret;
             }
         }
@@ -120,7 +121,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg);
             default:
-                trace(json_encode($msg), 'error');
+                trace(json_encode($msg), MysqlLog::ERROR);
             case 'text':
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
@@ -172,9 +173,9 @@ class WxHanbj
     private static function auto($to, $from, $type, $debug_msg = '')
     {
         if (empty($debug_msg)) {
-            trace("TO => $to, TEXT => " . str_replace("\n", '|', $type));
+            trace("TO => $to, TEXT => " . str_replace("\n", '|', $type), MysqlLog::INFO);
         } else {
-            trace($to . ' ' . str_replace("\n", '|', $debug_msg));
+            trace($to . ' ' . str_replace("\n", '|', $debug_msg), MysqlLog::INFO);
         }
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
@@ -190,7 +191,7 @@ class WxHanbj
     {
         $type = (string)$msg->Event;
         $from = (string)$msg->FromUserName;
-        trace("WxEvent $from $type", 'info');
+        trace("WxEvent $from $type", MysqlLog::LOG);
         switch ($type) {
             case 'user_del_card':
                 return CardOper::del_card($msg);
@@ -199,12 +200,12 @@ class WxHanbj
             case 'TEMPLATESENDJOBFINISH':
                 $Status = (string)$msg->Status;
                 if ('success' != $Status) {
-                    trace(json_encode($msg), 'error');
+                    trace(json_encode($msg), MysqlLog::ERROR);
                 }
                 MemberOper::try_junior($from);
                 return '';
             default:
-                trace(json_encode($msg), 'error');
+                trace(json_encode($msg), MysqlLog::ERROR);
             case 'update_member_card':
             case 'subscribe':
             case 'unsubscribe':

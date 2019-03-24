@@ -6,6 +6,12 @@ use think\Db;
 
 class MysqlLog
 {
+    const DEBUG = 'debug';
+    const LOG = 'log';
+    const ERROR = 'error';
+    const INFO = 'info';
+    const RPC = 'rpc';
+
     /**
      * 日志写入接口
      * @access public
