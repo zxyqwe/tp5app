@@ -3,9 +3,10 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>系统日志</h1>
         <div id="body">
-            <div class="bs-example" id="simp_form">
+            <div id="simp_form">
                 <form class="form-inline">
                     <div class="form-group" style="margin-right: 1em">
+                        <span>日志级别：</span>
                         <select v-model="level" class="form-control">
                             <option value="error">ERROR</option>
                             <option value="info">INFO</option>
@@ -25,7 +26,8 @@
                    data-show-columns="true"
                    data-url="/hanbj/system/runlog"
                    data-page-list="[20, 50, 100, 500, 1000]"
-                   data-query-params="wxParams">
+                   data-query-params="wxParams"
+                   data-toolbar="#simp_form">
                 <thead>
                 <tr>
                     <th data-field="id">ID</th>

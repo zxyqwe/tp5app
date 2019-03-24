@@ -494,7 +494,7 @@ var tlog = (function ($, w, undefined) {
                 }
             }
         });
-        vmain.$watch('uname', function (nv) {
+        vmain.$watch('level', function (nv) {
             refresh(this.get_res());
         });
     };
