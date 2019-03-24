@@ -484,7 +484,7 @@ var tlog = (function ($, w, undefined) {
         var vmain = new Vue({
             el: '#simp_form',
             data: {
-                level: 'debug'
+                level: 'all'
             },
             methods: {
                 get_res: function () {
