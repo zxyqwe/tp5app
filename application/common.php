@@ -133,6 +133,7 @@ function WX_access($api, $sec, $name)
     $raw = Curl_Get($url, 5);
     $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['expires_in'])) {
+        trace("WX_access $raw", 'error');
         return $res;
     }
     trace("Weixin Access " . $res['access_token'], 'log');

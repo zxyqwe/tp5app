@@ -81,6 +81,8 @@ class UserOper
                 session('unique_name', $openid);
                 session('wx_login', self::WX_VERSION);
                 return true;
+            } else {
+                trace("wx_login " . json_encode($openid), MysqlLog::ERROR);
             }
         }
         return false;

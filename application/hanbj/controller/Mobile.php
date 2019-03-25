@@ -39,6 +39,7 @@ class Mobile extends Controller
     public function index($obj = '')
     {
         if (!UserOper::wx_login()) {
+            trace("没微信授权 index", MysqlLog::LOG);
             $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile' . $prefix, config('hanbj_api'));
         }
@@ -63,6 +64,7 @@ class Mobile extends Controller
             ])
             ->find();
         if (null === $res) {
+            trace("没注册 $openid", MysqlLog::LOG);
             return redirect('https://app.zxyqwe.com/hanbj/mobile/reg');
         }
         $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
@@ -93,9 +95,11 @@ class Mobile extends Controller
     public function reg()
     {
         if (session('?tieba_id') && session('unique_name') !== HBConfig::CODER) {
+            trace("已注册 " . session('unique_name') . ' ' . session('tieba_id'), MysqlLog::LOG);
             return redirect('https://app.zxyqwe.com/hanbj/mobile');
         }
         if (!UserOper::wx_login()) {
+            trace("没微信授权 reg", MysqlLog::LOG);
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/reg', config('hanbj_api'));
         }
         return view('reg');
