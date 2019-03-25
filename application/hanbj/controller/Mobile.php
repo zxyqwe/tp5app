@@ -65,6 +65,7 @@ class Mobile extends Controller
             ->find();
         if (null === $res) {
             trace("没注册 $openid", MysqlLog::LOG);
+            session(null);
             return redirect('https://app.zxyqwe.com/hanbj/mobile/reg');
         }
         $url = 'https://app.zxyqwe.com' . $_SERVER['REQUEST_URI'];
