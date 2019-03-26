@@ -175,7 +175,7 @@ class WxHanbj
         if (empty($debug_msg)) {
             trace("TO => $to, TEXT => " . str_replace("\n", '|', $type), MysqlLog::INFO);
         } else {
-            trace($to . ' ' . str_replace("\n", '|', $debug_msg), MysqlLog::INFO);
+            trace($to . ' ' . str_replace("\n", '|', $debug_msg), MysqlLog::LOG);
         }
         $data = '<xml>' .
             '<ToUserName><![CDATA[%s]]></ToUserName>' .
