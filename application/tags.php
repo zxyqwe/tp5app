@@ -8,34 +8,6 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-use \think\Debug;
-use \think\Hook;
-use \think\App;
-
-Hook::add('app_end', function () {
-    if (defined('TAG_TIMEOUT_EXCEPTION')) {
-        WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        return;
-    }
-    $runtime = Debug::getUseTime();
-    if ($runtime > 1.5) {
-        App::$debug = true;
-        Debug::remark('behavior_start', 'time');
-        $ret = [
-            'GET' => $_GET,
-            'POST' => $_POST,
-            'Files' => $_FILES,
-            'Cookies' => $_COOKIE,
-            'Session' => isset($_SESSION) ? $_SESSION : [],
-            'Server' => $_SERVER,
-            'Env' => $_ENV
-        ];
-        $ret = explode_dict($ret);
-        foreach ($ret as $i) {
-            trace($i, 'debug');
-        }
-    }
-});
 
 // 应用行为扩展定义文件
 return [
@@ -53,4 +25,8 @@ return [
     'log_write' => [],
     // 应用结束
     'app_end' => [],
+    // 输出结束标签位 V5.0.1+
+    'response_end' => [
+        'app\\hanbj\\behavior\\RecEnd'
+    ],
 ];
