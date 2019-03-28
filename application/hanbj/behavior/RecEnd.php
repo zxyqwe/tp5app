@@ -19,7 +19,7 @@ class RecEnd
         $runtime = Debug::getUseTime();
         if ($runtime > 1.5) {
             App::$debug = true;
-            Debug::remark('behavior_start', $runtime);
+            Debug::remark('behavior_start', THINK_START_TIME);
             $ret = [
                 'GET' => $_GET,
                 'POST' => $_POST,
