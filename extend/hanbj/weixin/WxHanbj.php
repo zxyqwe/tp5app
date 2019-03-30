@@ -217,6 +217,7 @@ class WxHanbj
             case 'user_gifting_card':
             case 'user_enter_session_from_card':
             case 'card_sku_remind':
+            case 'MASSSENDJOBFINISH':
                 return '';
         }
     }

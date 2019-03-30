@@ -22,6 +22,7 @@ var wx_Old = (function ($, w, undefined) {
                 type: "POST",
                 url: w.u13,
                 data: {
+                    _ajax: 1,
                     phone: old_phone,
                     eid: old_eid
                 },
@@ -70,6 +71,7 @@ var wx_New = (function ($, Vue, w, undefined) {
             type: "POST",
             url: w.u15,
             data: {
+                _ajax: 1,
                 uni: vmain.unique_name,
                 tie: vmain.tie
             },
@@ -93,6 +95,9 @@ var wx_New = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u15,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 un_data = w.assm_data(msg.data);
@@ -243,6 +248,7 @@ var wx_test = (function ($, Vue, w, undefined) {
                         url: w.u23,
                         dataType: "json",
                         data: {
+                            _ajax: 1,
                             ans: {
                                 sel: this.ans,
                                 sel_add: this.ans_add
