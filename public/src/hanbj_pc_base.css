@@ -195,3 +195,7 @@ p.footer {
         box-shadow: none;
     }
 }
+
+.W140 .th-inner {
+    width:140px !important;
+}
