@@ -58,6 +58,9 @@ var login = (function ($, Vue, w, undefined) {
             type: "POST",
             url: w.u11,
             dataType: "json",
+            data: {
+                _ajax: 1,
+            },
             success: function (msg) {
                 location.reload(true);
                 location.search += '&_=' + Date.now();
@@ -94,6 +97,9 @@ var vote = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: '/hanbj/pub/json_vote',
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 var zg = [], tmp, rto, i;

@@ -40,6 +40,9 @@ var wx_home = (function ($, Vue, w, undefined) {
             $.ajax({
                 type: "GET",
                 url: w.u1,
+                data: {
+                    _ajax: 1,
+                },
                 dataType: "json",
                 success: function (msg) {
                     add_card(msg)
@@ -70,7 +73,10 @@ var wx_home = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "POST",
             url: w.u2,
-            data: {code: work_card_code},
+            data: {
+                _ajax: 1,
+                code: work_card_code
+            },
             dataType: "json",
             success: function (msg) {
                 var s = build_act(msg);
@@ -101,7 +107,10 @@ var wx_home = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "POST",
             url: w.u3,
-            data: {code: work_card_code},
+            data: {
+                _ajax: 1,
+                code: work_card_code
+            },
             dataType: "json",
             success: function (msg) {
                 w.msgok();
@@ -130,6 +139,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             url: w.u4,
             dataType: "json",
             data: {
+                _ajax: 1,
                 offset: vwork_act_log.items.length,
                 own: vwork_act_log.own
             },
@@ -181,6 +191,9 @@ var wx_home = (function ($, Vue, w, undefined) {
             $.ajax({
                 type: "GET",
                 url: w.u5,
+                data: {
+                    _ajax: 1,
+                },
                 dataType: "json",
                 success: function (msg) {
                     w.location.reload(true);
@@ -200,6 +213,9 @@ var wx_home = (function ($, Vue, w, undefined) {
             $.ajax({
                 type: "GET",
                 url: w.u6,
+                data: {
+                    _ajax: 1,
+                },
                 dataType: "json",
                 success: function (msg) {
                     open_card(msg);
@@ -216,6 +232,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             url: w.u8,
             dataType: "json",
             data: {
+                _ajax: 1,
                 offset: vact.items.length
             },
             success: function (msg) {
@@ -238,6 +255,7 @@ var wx_home = (function ($, Vue, w, undefined) {
             url: w.u9,
             dataType: "json",
             data: {
+                _ajax: 1,
                 offset: vvalid.items.length
             },
             success: function (msg) {
@@ -260,6 +278,9 @@ var wx_home = (function ($, Vue, w, undefined) {
             $.ajax({
                 type: "GET",
                 url: w.u10,
+                data: {
+                    _ajax: 1,
+                },
                 dataType: "json",
                 success: function (msg) {
                     w.msgok();
@@ -308,7 +329,9 @@ var wx_home = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u11,
-            data: {},
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 $('#pick_fee').click(function () {
@@ -340,6 +363,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: w.u12,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     type: 1,
                     opt: sel_value
                 },
@@ -379,6 +403,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 url: url,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     old: name,
                     new: val
                 },
@@ -445,6 +470,9 @@ var wx_prom = (function ($, w, undefined) {
             $.ajax({
                 type: "GET",
                 url: w.u7,
+                data: {
+                    _ajax: 1,
+                },
                 dataType: "json",
                 success: function (msg) {
                     var temp = msg.temp;
@@ -460,6 +488,9 @@ var wx_prom = (function ($, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u19,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 vue_init(msg);
@@ -496,6 +527,9 @@ var wx_hist = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u17,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 vue_init();

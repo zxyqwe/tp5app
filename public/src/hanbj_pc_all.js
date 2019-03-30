@@ -70,6 +70,7 @@ var all_mem = (function ($, w, undefined) {
                 type: "POST",
                 url: w.u7,
                 data: {
+                    _ajax: 1,
                     id: id
                 },
                 dataType: "json",
@@ -153,6 +154,9 @@ var baselog = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u13,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 vmain.act = msg;
@@ -197,7 +201,10 @@ var baselog = (function ($, Vue, w, undefined) {
             $.ajax({
                 type: "POST",
                 url: w.u6,
-                data: {type: uptype},
+                data: {
+                    _ajax: 1,
+                    type: uptype
+                },
                 dataType: "json",
                 success: function (msg) {
                     if (msg.c > 0) {
@@ -349,6 +356,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                 url: w.u1,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: nv
                 },
                 success: function (msg) {
@@ -370,6 +378,7 @@ var volunteer = (function ($, Vue, w, undefined) {
                 url: w.u4,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: vmain.res
                 },
                 success: function (msg) {
@@ -414,6 +423,7 @@ var fee = (function ($, Vue, w, undefined) {
                 url: w.u1,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: nv
                 },
                 success: function (msg) {
@@ -435,6 +445,7 @@ var fee = (function ($, Vue, w, undefined) {
                 url: w.u2,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: vmain.res,
                     type: 0
                 },
@@ -454,6 +465,7 @@ var fee = (function ($, Vue, w, undefined) {
                 url: w.u2,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: vmain.res,
                     type: 1
                 },
@@ -536,6 +548,9 @@ var fame = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u9,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 vmain.fames = msg;
@@ -586,6 +601,7 @@ var fame = (function ($, Vue, w, undefined) {
                 url: w.u1,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: nv
                 },
                 success: function (msg) {
@@ -607,6 +623,7 @@ var fame = (function ($, Vue, w, undefined) {
                 url: w.u10,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: vmain.res,
                     year: vmain.year,
                     grade: vmain.grade,
@@ -845,6 +862,9 @@ var brief = (function ($, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u16,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 ret = msg;
@@ -1038,6 +1058,9 @@ var group = (function ($, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u17,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 ret = msg;
@@ -1434,6 +1457,9 @@ var birth = (function ($, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u14,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 ret = msg;
@@ -1520,6 +1546,7 @@ var create = (function ($, Vue, w, undefined) {
                         url: w.u15,
                         dataType: "json",
                         data: {
+                            _ajax: 1,
                             uni: vmain.uni,
                             tie: vmain.tie,
                             gender: vmain.gender,
@@ -1547,6 +1574,7 @@ var create = (function ($, Vue, w, undefined) {
                 url: w.u15,
                 dataType: "json",
                 data: {
+                    _ajax: 1,
                     name: nv
                 },
                 success: function (msg) {
@@ -1701,6 +1729,7 @@ var wToken = (function ($, Vue, w, undefined) {
                         type: "POST",
                         url: w.u18,
                         data: {
+                            _ajax: 1,
                             key: item.key,
                             value: item.value
                         },
@@ -1726,6 +1755,9 @@ var wToken = (function ($, Vue, w, undefined) {
         $.ajax({
             type: "GET",
             url: w.u18,
+            data: {
+                _ajax: 1,
+            },
             dataType: "json",
             success: function (msg) {
                 settingsdata = msg;
@@ -1755,6 +1787,7 @@ var wprom = (function ($, w, undefined) {
                 type: "POST",
                 url: w.u19,
                 data: {
+                    _ajax: 1,
                     name: $add_name.val()
                 },
                 dataType: "json",
