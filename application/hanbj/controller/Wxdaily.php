@@ -260,8 +260,9 @@ class Wxdaily extends Controller
         $ret = Db::table('prom')
             ->where(['show' => 0])
             ->field([
-                'name', 'img', 'desc', 'info'
+                'name', 'img', 'desc', 'info', 'master'
             ])
+            ->order('seq')
             ->select();
         return json($ret);
     }
