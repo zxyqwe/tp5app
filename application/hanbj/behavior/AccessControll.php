@@ -28,14 +28,13 @@ class AccessControll
     const ROLE_LOW = 3; // 只能看的，一般干事
     const ROLE_NON = 4; // 离职人员
 
-    public function run(&$call)
+    public function run(/* &$call */)
     {
         // $instance \think\Controller
         // $action string
-        list($instance, $action) = $call;
-        $module = strtolower($instance->request->module());
-        $controller = strtolower($instance->request->module());
-        $action = strtolower($action);
+        $module = strtolower(request()->module());
+        $controller = strtolower(request()->controller());
+        $action = strtolower(request()->action());
 
         $uniq = session('unique_name');
         if ($uniq === HBConfig::CODER) {
