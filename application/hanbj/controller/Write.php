@@ -266,8 +266,9 @@ class Write extends Controller
             case 'GET':
                 $ret = Db::table('prom')
                     ->field([
-                        'id', 'name', 'img', 'desc', 'info', 'show'
+                        'id', 'name', 'img', 'desc', 'info', 'show', 'master', 'seq'
                     ])
+                    ->order('show, seq')
                     ->select();
                 return json($ret);
             case 'POST':
