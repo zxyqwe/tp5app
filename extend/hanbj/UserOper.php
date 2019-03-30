@@ -49,7 +49,7 @@ class UserOper
         trace("$unique 登录网页", MysqlLog::INFO);
     }
 
-    public static function valid_pc($json = false)
+    public static function valid_pc($json)
     {
         $unique = session('unique_name');
         if (!self::limit($unique)) {
