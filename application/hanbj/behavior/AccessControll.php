@@ -48,7 +48,7 @@ class AccessControll
         if (!in_array($controller, self::limit_controller)) {
             return;
         }
-        if (isset(self::except[$controller])
+        if (array_key_exists($controller, self::except)
             && in_array($action, self::except[$controller])
         ) {
             return;
