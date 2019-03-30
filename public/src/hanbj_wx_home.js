@@ -460,6 +460,13 @@ var wx_prom = (function ($, w, undefined) {
             methods: {
                 imgurl: function (u) {
                     return '/static/prom/' + u;
+                },
+                toggle_rto: function (item) {
+                    if (item.rto === 2) {
+                        item.rto = 20;
+                    } else {
+                        item.rto = 2;
+                    }
                 }
             }
         });
@@ -493,6 +500,9 @@ var wx_prom = (function ($, w, undefined) {
             },
             dataType: "json",
             success: function (msg) {
+                for (var i in msg) {
+                    msg[i].rto = 2;
+                }
                 vue_init(msg);
             },
             error: w.msgto,
