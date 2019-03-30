@@ -18,7 +18,7 @@ class Daily extends Controller
 
     protected function valid_id()
     {
-        UserOper::valid_pc();
+        UserOper::valid_pc($this->request->isAjax());
     }
 
     public function _empty()

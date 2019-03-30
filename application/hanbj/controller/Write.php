@@ -24,7 +24,7 @@ class Write extends Controller
 
     protected function valid_id()
     {
-        UserOper::valid_pc(true);
+        UserOper::valid_pc($this->request->isAjax());
     }
 
     public function _empty()
