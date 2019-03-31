@@ -189,6 +189,8 @@ class MemberOper
         foreach ($ret as $i) {
             self::Temp2Junior($i);
         }
+        BonusOper::up('nfee', '会费积分更新');
+        BonusOper::up('activity', '活动积分更新');
 
         $name = "MemberOper::daily()";
         if (cache("?$name")) {
