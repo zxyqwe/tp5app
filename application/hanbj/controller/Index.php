@@ -73,7 +73,7 @@ class Index extends Controller
         $name = 'indexHanbjCron';
         if (cache("?$name"))
             return;
-        cache($name, $name, 290);
+        cache($name, $name, 60 - 10);
         MemberOper::daily();
     }
 }
