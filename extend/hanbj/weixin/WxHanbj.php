@@ -125,7 +125,10 @@ class WxHanbj
             case 'text':
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
-                if ($cont === '投票') {
+                if (in_array($cont, ['买', '推', '订'])) {
+                    trace("跳过关键词 $cont", MysqlLog::LOG);
+                    return '';
+                } elseif ($cont === '投票') {
                     $cont = "检查口令......成功\n";
                     foreach (WxOrg::vote_cart as $item) {
                         $org = new WxOrg(intval($item));
