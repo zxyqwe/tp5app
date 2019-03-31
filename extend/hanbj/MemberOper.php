@@ -117,7 +117,7 @@ class MemberOper
         return $already;
     }
 
-    public static function list_code($c, $debug = true)
+    public static function list_code($c)
     {
         $map['code'] = $c;
         $ret = Db::table('member')
@@ -128,9 +128,7 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
-        if ($debug) {
-            trace("list_code $c " . count($already), MysqlLog::LOG);
-        }
+        trace("list_code $c " . count($already), MysqlLog::LOG);
         return $already;
     }
 
@@ -187,7 +185,7 @@ class MemberOper
 
     public static function daily()
     {
-        $ret = self::list_code(self::TEMPUSE, false);
+        $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
             self::Temp2Junior($i);
         }
