@@ -129,7 +129,7 @@ class MemberOper
             $already[] = $i['u'];
         }
         if ($debug) {
-            trace("list_code $c " . count($already), MysqlLog::INFO);
+            trace("list_code $c " . count($already), MysqlLog::LOG);
         }
         return $already;
     }
@@ -196,7 +196,7 @@ class MemberOper
         if (cache("?$name")) {
             return;
         }
-        cache($name, $name, 86300);
+        cache($name, $name, 86400 / 6 - 100);
 
         $name = "MemberOper::daily()renew";
         $renew = !cache("?$name");
