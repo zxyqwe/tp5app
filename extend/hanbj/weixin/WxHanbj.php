@@ -213,7 +213,6 @@ class WxHanbj
                 return '';
             default:
                 trace($unique_name . json_encode($msg), MysqlLog::ERROR);
-                return '';
             case 'update_member_card':
             case 'subscribe':
             case 'unsubscribe':
@@ -226,7 +225,6 @@ class WxHanbj
             case 'user_enter_session_from_card':
             case 'card_sku_remind':
             case 'MASSSENDJOBFINISH':
-                trace("$unique_name $type", MysqlLog::LOG);
                 return '';
         }
     }
