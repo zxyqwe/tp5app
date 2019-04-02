@@ -248,15 +248,8 @@ class WxOrg
         return '已完成';
     }
 
-    public function listobj($from)
+    public function listobj($uname)
     {
-        $map['openid'] = $from;
-        $res = Db::table('member')
-            ->alias('m')
-            ->where($map)
-            ->field('unique_name')
-            ->find();
-        $uname = $res['unique_name'];
         $ret = "\n\n提取投票......{$this->name}";
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";

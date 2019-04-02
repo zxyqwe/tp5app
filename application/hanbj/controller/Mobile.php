@@ -109,7 +109,7 @@ class Mobile extends Controller
     public function json_old()
     {
         $phone = input('post.phone', FILTER_VALIDATE_INT);
-        $eid = input('post.eid');
+        $eid = strtolower(input('post.eid'));
         $map['phone'] = $phone;
         $map['openid'] = ['exp', Db::raw('is null')];
         $res = Db::table('member')
@@ -118,18 +118,18 @@ class Mobile extends Controller
         if (strlen($res) < 6) {
             return json(['msg' => '手机号错误'], 400);
         }
-        if (substr($res, strlen($res) - 6) === $eid) {
-            $res = Db::table('member')
-                ->where($map)
-                ->setField('openid', session('openid'));
-            if ($res !== 1) {
-                trace([$phone, session('openid')], MysqlLog::ERROR);
-                return json(['msg' => '绑定失败'], 500);
-            }
-            trace("绑定 $phone " . session('openid'), MysqlLog::INFO);
-            return json(['msg' => 'OK']);
+        if (substr($res, strlen($res) - 6) !== $eid) {
+            return json(['msg' => '身份证错误'], 400);
         }
-        return json(['msg' => '身份证错误'], 400);
+        $res = Db::table('member')
+            ->where($map)
+            ->setField('openid', session('openid'));
+        if ($res !== 1) {
+            trace([$phone, session('openid')], MysqlLog::ERROR);
+            return json(['msg' => '绑定失败'], 500);
+        }
+        trace("绑定 $phone " . session('openid'), MysqlLog::INFO);
+        return json(['msg' => 'OK']);
     }
 
     public function json_card()
