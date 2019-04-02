@@ -26,7 +26,7 @@ class Index extends Controller
         if (is_file(__DIR__ . "/../tpl/index_$action.html")) {
             throw new HttpResponseException(view($action));
         }
-        abort(404, '页面不存在', [$action]);
+        abort(404, "页面不存在$action");
     }
 
     public function index()

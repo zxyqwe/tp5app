@@ -30,7 +30,7 @@ class System extends Controller
         if (is_file(__DIR__ . "/../tpl/system_$action.html")) {
             throw new HttpResponseException(view($action));
         }
-        abort(404, '页面不存在', [$action]);
+        abort(404, "页面不存在$action");
     }
 
     public function runlog()
