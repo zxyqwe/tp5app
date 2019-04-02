@@ -116,30 +116,32 @@ class WxHanbj
         $type = (string)$msg->MsgType;
         $from = (string)$msg->FromUserName;
         $to = (string)$msg->ToUserName;
+        $unique_name = '';
+        if (cache("?chatbot$from")) {
+            $unique_name = cache("chatbot$from");
+        }
         $welcome = "欢迎关注，此服务号仅做汉北平台技术支持使用，无人值守，全程自动。如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing\n\n点击这里进入微店<a href=\"https://weidian.com/?userid=1353579309\">汉服北京的小店</a>~";
         switch ($type) {
             case 'event':
-                return self::do_event($msg);
-            default:
-                trace(json_encode($msg), MysqlLog::ERROR);
+                return self::do_event($msg, $unique_name);
             case 'text':
                 $cont = (string)$msg->Content;
                 $old_cont = $cont;
                 if (in_array($cont, ['买', '推', '订'])) {
-                    trace("跳过关键词 $cont", MysqlLog::LOG);
+                    trace("跳过关键词 $unique_name $cont", MysqlLog::LOG);
                     return '';
                 } elseif ($cont === '投票') {
                     $cont = "检查口令......成功\n";
                     foreach (WxOrg::vote_cart as $item) {
                         $org = new WxOrg(intval($item));
-                        $cont .= $org->listobj($from);
+                        $cont .= $org->listobj($unique_name);
                     }
                     return self::auto($from, $to, $cont, '投票');
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));
-                    return self::auto($from, $to, $cont, "临时身份 $old_cont");
-                } elseif (cache("?chatbot$from")) {
+                    return self::auto($from, $to, $cont, "临时身份 $unique_name $old_cont");
+                } elseif (!empty($unique_name)) {
                     try {
                         $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . rawurlencode($cont));
                         $cont = json_decode($cont, true);
@@ -148,18 +150,20 @@ class WxHanbj
                         $cont = '机器人不在线';
                         define('TAG_TIMEOUT_EXCEPTION', true);
                     }
-                    $cont = "检查口令......失败\n身份验证......成功\n\n文字信息：$old_cont\n\n$cont\n\n$welcome";
+                    $cont = "检查口令......失败\n身份验证......成功\n\n$unique_name\n文字信息：$old_cont\n\n$cont\n\n$welcome";
                     return self::auto($from, $to, $cont);
                 }
                 $cont = "检查口令......失败\n身份验证......失败\n\n文字信息：$cont\n\n$welcome";
                 return self::auto($from, $to, $cont);
+            default:
+                trace(json_encode($msg), MysqlLog::ERROR);
             case 'image':
             case 'voice':
             case 'video':
             case 'shortvideo':
             case 'location':
             case 'link':
-                return self::auto($from, $to, $type);
+                return self::auto($from, $to, "$type $unique_name");
         }
     }
 
@@ -190,11 +194,11 @@ class WxHanbj
         return sprintf($data, $to, $from, time(), "\n" . $type);
     }
 
-    private static function do_event($msg)
+    private static function do_event($msg, $unique_name)
     {
         $type = (string)$msg->Event;
         $from = (string)$msg->FromUserName;
-        trace("WxEvent $from $type", MysqlLog::LOG);
+        trace("WxEvent $unique_name $from $type", MysqlLog::LOG);
         switch ($type) {
             case 'user_del_card':
                 return CardOper::del_card($msg);
@@ -203,12 +207,13 @@ class WxHanbj
             case 'TEMPLATESENDJOBFINISH':
                 $Status = (string)$msg->Status;
                 if ('success' != $Status) {
-                    trace(json_encode($msg), MysqlLog::ERROR);
+                    trace($unique_name . json_encode($msg), MysqlLog::ERROR);
                 }
                 MemberOper::try_junior($from);
                 return '';
             default:
-                trace(json_encode($msg), MysqlLog::ERROR);
+                trace($unique_name . json_encode($msg), MysqlLog::ERROR);
+                return '';
             case 'update_member_card':
             case 'subscribe':
             case 'unsubscribe':
@@ -221,6 +226,7 @@ class WxHanbj
             case 'user_enter_session_from_card':
             case 'card_sku_remind':
             case 'MASSSENDJOBFINISH':
+                trace("$unique_name $type", MysqlLog::LOG);
                 return '';
         }
     }
