@@ -1,7 +1,9 @@
 {layout name="layout_pc" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
-    <div id="container" class="col-md-10 col-md-offset-1 column">
+    <div id="container" class="col-md-10 col-md-offset-1 column" ng-app="linuxDash" style="padding-bottom: 20px;">
+        <link href="/lib/css/afaqurk-linux-dash.css" rel="stylesheet">
         <h1>系统性能</h1>
+        <nav-bar></nav-bar>
         <div id="plugins" ng-view></div>
     </div>
 </div>
