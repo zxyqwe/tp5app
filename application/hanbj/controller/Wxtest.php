@@ -26,7 +26,7 @@ class Wxtest extends Controller
 
     public function _empty()
     {
-        abort(404, '页面不存在', []);
+        abort(404, '页面不存在');
     }
 
     public function index($obj = '')

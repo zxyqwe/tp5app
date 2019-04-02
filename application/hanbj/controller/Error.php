@@ -23,6 +23,6 @@ class Error extends Controller
         if (is_file(__DIR__ . "/../tpl/error_$action.html")) {
             throw new HttpResponseException(view($action));
         }
-        abort(404, '页面不存在', [$action]);
+        abort(404, "页面不存在$action");
     }
 }
