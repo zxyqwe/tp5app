@@ -35,7 +35,7 @@ class BiliBase
 
     public static function getCookies($set = false)
     {
-        $cache_key = 'bili_cron_cookie';
+        $cache_key = 'bili_cron_cookie_real_value';
         if ($set) {
             cache($cache_key, $set);
             return $set;
