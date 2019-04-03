@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use bilibili\BiliBase;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\ClubOper;
@@ -211,7 +212,7 @@ class Write extends Controller
     {
         switch ($this->request->method()) {
             case 'GET':
-                return json([
+                $settings = [
                     [
                         'name' => '活动预置名称',
                         'key' => '_ACT_NAME',
@@ -233,7 +234,15 @@ class Write extends Controller
                         'key' => '_FEE_BONUS',
                         'value' => BonusOper::getFeeBonus()
                     ]
-                ]);
+                ];
+                if (session('unique_name') === HBConfig::CODER) {
+                    $settings[] = [
+                        'name' => 'BiliBili Cookies',
+                        'key' => '_BILI_COOKIES',
+                        'value' => BiliBase::getCookies()
+                    ];
+                }
+                return json($settings);
             case 'POST':
                 $key = input('post.key');
                 $value = input('post.value');
@@ -251,6 +260,11 @@ class Write extends Controller
                         return json(['msg' => 'ok']);
                     case '_FEE_BONUS':
                         cache('BonusOper::FEE_BONUS', intval($value));
+                        return json(['msg' => 'ok']);
+                    case '_BILI_COOKIES':
+                        if (session('unique_name') === HBConfig::CODER) {
+                            BiliBase::getCookies($value);
+                        }
                         return json(['msg' => 'ok']);
                     default:
                         return json(['msg' => $key], 400);
