@@ -26,11 +26,25 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($this->curl, CURLOPT_USERAGENT, $this->agent);
 
-        $this->cookie = config('bili_cron_cookie');
+        $this->cookie = self::getCookies();
         preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
         $this->token = isset($token[1]) ? $token[1] : '';
         preg_match('/bili_jct=(.{32})/', $this->cookie, $token);
         $this->csrf_token = isset($token[1]) ? $token[1] : '';
+    }
+
+    public static function getCookies($set = false)
+    {
+        $cache_key = 'bili_cron_cookie';
+        if ($set) {
+            cache($cache_key, $set);
+            return $set;
+        } else {
+            if (cache("?$cache_key")) {
+                return cache($cache_key);
+            }
+            return config($cache_key);
+        }
     }
 
     protected function bili_Post($url, $cookie, $room, $data = false, $sub = true, $post = true)
