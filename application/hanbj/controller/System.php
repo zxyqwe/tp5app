@@ -220,7 +220,7 @@ class System extends Controller
                 $module = input("get.module");
                 $module = "linux-dash-cache-$module";
                 if (cache("?$module")) {
-                    return json(cache($module));
+                    return json(json_decode(cache($module), true));
                 }
                 break;
             case 'POST':
