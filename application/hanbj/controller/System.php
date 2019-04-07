@@ -227,7 +227,7 @@ class System extends Controller
                 local_cron();
                 $value = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
                 foreach ($value as $key => $v) {
-                    cache("linux-dash-cache-$key", $v);
+                    cache("linux-dash-cache-$key", json_encode($v));
                 }
                 return json(['msg' => 'ok']);
         }

@@ -667,7 +667,7 @@ dash_modules=(
   # "memcached"
   "memory_info"
   "network_connections"
-  "number_of_cpu_cores"
+  # "number_of_cpu_cores"
   "ping"
   # "pm2_stats"
   "ram_intensive_processes"
@@ -680,15 +680,25 @@ dash_modules=(
 )
 FINAL_RET='{'
 
+run_once(){
+    _start=`date +%s.%N`
+    _value=`${1}`
+    _stop=`date +%s.%N`
+    _dur=$($ECHO "$_stop - $_start"|bc)
+    $ECHO "$1 run $_dur"
+    FINAL_RET=$FINAL_RET"\"$1\":$_value,"
+}
+
 for fnCalled in "${dash_modules[@]}"
 do
   if !([ -n "$(type -t $fnCalled)" ] && [ "$(type -t $fnCalled)" = function ]); then
-    echo $fnCalled' not here'
+    $ECHO $fnCalled' not here'
     exit
   else
-    _value=`${fnCalled}`
-    FINAL_RET=$FINAL_RET"\"$fnCalled\":$_value,"
+    run_once $fnCalled
   fi
 done
 FINAL_RET=$FINAL_RET"\"msg\":\"ok\"}"
-curl -H "Content-Type:application/json" -X POST --data $FINAL_RET https://app.zxyqwe.com/system/server
+FINAL_RET=$($ECHO $FINAL_RET|$SED 's/\\"/"/g')
+$ECHO $FINAL_RET
+curl -H "Content-Type:application/json" -X POST --data "$FINAL_RET" https://app.zxyqwe.com/system/server
