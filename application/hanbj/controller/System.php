@@ -16,7 +16,7 @@ use util\MysqlLog;
 class System extends Controller
 {
     protected $beforeActionList = [
-        'valid_id'
+        'valid_id' => ['except' => 'server']
     ];
 
     protected function valid_id()
@@ -207,5 +207,33 @@ class System extends Controller
             ->count();
         $data['total'] = $total;
         return json($data);
+    }
+
+    public function server()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                UserOper::valid_pc($this->request->isAjax());
+                if (session('name') !== HBConfig::CODER) {
+                    return redirect('https://app.zxyqwe.com/hanbj/index/home');
+                }
+                $module = input("get.module");
+                $module = "linux-dash-cache-$module";
+                if (cache("?$module")) {
+                    return json(cache($module));
+                }
+                break;
+            case 'POST':
+                local_cron();
+                $value = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+                foreach ($value as $key => $v) {
+                    cache("linux-dash-cache-$key", $v);
+                }
+                return json(['msg' => 'ok']);
+        }
+        return json([
+            'success' => false,
+            'status' => "Invalid module"
+        ], 404);
     }
 }
