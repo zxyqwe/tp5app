@@ -24,6 +24,9 @@ class AccessControll
             'old',
             'cron',
         ],
+        'system' => [
+            'server'
+        ]
     ];
     const ROLE_SYS = 0; // 啥都干，基本是会长层
     const ROLE_TOP = 1; // 可信人员，基本是部长层
@@ -64,11 +67,11 @@ class AccessControll
         }
 
         trace("禁止 $uniq $controller $action", MysqlLog::INFO);
+        UserOper::valid_pc(request()->isAjax());
         if (request()->isAjax()) {
-
-            $res = json(['msg' => '未登录'], 400);
+            $res = json(['msg' => '没有权限'], 400);
         } else {
-            $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
+            $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         throw new HttpResponseException($res);
     }

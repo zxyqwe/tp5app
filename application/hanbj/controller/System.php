@@ -15,15 +15,6 @@ use util\MysqlLog;
 
 class System extends Controller
 {
-    protected $beforeActionList = [
-        'valid_id' => ['except' => 'server']
-    ];
-
-    protected function valid_id()
-    {
-        UserOper::valid_pc($this->request->isAjax());
-    }
-
     public function _empty()
     {
         $action = $this->request->action();
