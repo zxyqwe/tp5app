@@ -57,14 +57,14 @@ class AccessControll
         }
         if (!in_array($controller, self::limit_controller)) {
             if ($controller !== 'rpc') {
-                trace("非限制路径 $uniq $controller", MysqlLog::INFO);
+                trace("非限制路径 $uniq $controller", MysqlLog::LOG);
             }
             return;
         }
         if (array_key_exists($controller, self::except)
             && in_array($action, self::except[$controller])
         ) {
-            trace("非限制方法 $uniq $controller $action", MysqlLog::INFO);
+            trace("非限制方法 $uniq $controller $action", MysqlLog::LOG);
             return;
         }
 
