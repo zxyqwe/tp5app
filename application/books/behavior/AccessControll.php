@@ -7,11 +7,6 @@ use util\MysqlLog;
 
 class AccessControll
 {
-    const limit_controller = [
-    ];
-    const except = [
-    ];
-
     public function run(/* &$call */)
     {
         // $instance \think\Controller
@@ -19,6 +14,9 @@ class AccessControll
         $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());
         if (request()->ip() === config('local_mech')) {
+            return;
+        }
+        if ($controller === 'index') {
             return;
         }
 
