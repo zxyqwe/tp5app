@@ -3,11 +3,14 @@
 namespace app\hanbj\behavior;
 
 use hanbj\HBConfig;
+use think\exception\HttpResponseException;
+use hanbj\UserOper;
+use util\MysqlLog;
 
 class AccessControll
 {
     const limit_controller = [
-        'analysis',
+//        'analysis',
         'daily',
         'error',
         'index',
@@ -35,22 +38,35 @@ class AccessControll
         $module = strtolower(request()->module());
         $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());
-
-        $uniq = session('unique_name');
-        if ($uniq === HBConfig::CODER) {
-            return;
-        }
-
         if ($module !== 'hanbj') {
             return;
         }
+
+        $uniq = session('unique_name');
+        if (UserOper::grantAllRight($uniq)) {
+            if ($uniq !== HBConfig::CODER) {
+                trace("超级权限 $uniq $controller $action", MysqlLog::INFO);
+            }
+            return;
+        }
         if (!in_array($controller, self::limit_controller)) {
+            trace("非限制路径 $uniq $controller", MysqlLog::INFO);
             return;
         }
         if (array_key_exists($controller, self::except)
             && in_array($action, self::except[$controller])
         ) {
+            trace("非限制方法 $uniq $controller $action", MysqlLog::INFO);
             return;
         }
+
+        trace("禁止 $uniq $controller $action", MysqlLog::INFO);
+        if (request()->isAjax()) {
+
+            $res = json(['msg' => '未登录'], 400);
+        } else {
+            $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
+        }
+        throw new HttpResponseException($res);
     }
 }

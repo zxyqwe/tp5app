@@ -148,6 +148,15 @@ class MemberOper
         return $res;
     }
 
+    public static function pretty_tieba($res)
+    {
+        $data = [];
+        foreach ($res as $item) {
+            $data[] = $item['u'] . '~' . $item['t'];
+        }
+        return $data;
+    }
+
     public static function try_junior($openid)
     {
         $ret = Db::table('member')
