@@ -12,6 +12,7 @@ class BonusOper
     const _ACT_BONUS = 5;
     const _VOLUNTEER = 30;
     const _ACT_NAME = '小年';
+    const _rank_limit = 100;
 
     public static function getWorkers()
     {
@@ -145,7 +146,7 @@ class BonusOper
             ->cache(600)
             ->order('m.bonus', 'desc')
             ->where($map)
-            ->limit(51, 1)
+            ->limit(self::_rank_limit + 1, 1)
             ->field([
                 'm.bonus as o'
             ])
@@ -170,7 +171,7 @@ class BonusOper
         foreach ($tmp as $key => $item) {
             if ($item['o'] != $tmp_bonus) {
                 $base = $key + 1;
-                if ($base > 50) {
+                if ($base > self::_rank_limit) {
                     break;
                 }
                 $tmp_bonus = $item['o'];
@@ -183,7 +184,7 @@ class BonusOper
 
     public static function mod_ret($bonus)
     {
-        $ret = '50名之后';
+        $ret = self::_rank_limit . '名之后';
         $bonus_top = self::getTop();
         foreach ($bonus_top as $item) {
             if ($item['o'] <= $bonus) {
