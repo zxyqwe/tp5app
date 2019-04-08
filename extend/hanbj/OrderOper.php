@@ -13,8 +13,8 @@ class OrderOper
     const ACT = 2;
     const FEE_YEAR = [
         ['label' => '续费一年-原价', 'value' => 0, 'fee' => 30],
-        ['label' => '续费二年-83折', 'value' => 1, 'fee' => 50],
-        ['label' => '续费三年-66折', 'value' => 2, 'fee' => 60]
+        ['label' => '续费二年-92折', 'value' => 1, 'fee' => 55],
+        ['label' => '续费三年-83折', 'value' => 2, 'fee' => 75]
     ];
 
     public static function dropfee($outid, $year)
