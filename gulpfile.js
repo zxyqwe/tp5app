@@ -38,4 +38,11 @@ gulp.task('index_tpl', function () {
         }))
         .pipe(gulp.dest('application/index/view/'));
 });
-gulp.task('hanbj', gulpSequence(['js', 'css'], 'hanbj_tpl', 'index_tpl'));
+gulp.task('books_tpl', function () {
+    return gulp.src(['public/static/rev/**/*.json', 'application/books/tpl/*.html'])
+        .pipe(revCollector({
+            replaceReved: true
+        }))
+        .pipe(gulp.dest('application/books/view/'));
+});
+gulp.task('hanbj', gulpSequence(['js', 'css'], ['hanbj_tpl', 'index_tpl', 'books_tpl']));
