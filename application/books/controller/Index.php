@@ -82,6 +82,7 @@ class Index extends Controller
                 return $this->wx_ok($obj, $openid);
             } else {
                 trace("尝试登陆 $openid", MysqlLog::INFO);
+                return redirect("https://www.baidu.com");
             }
         }
         $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
