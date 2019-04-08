@@ -85,7 +85,7 @@ class WxTemp
         if (cache("?$limit")) {
             return 'WxTemp limit';
         }
-        cache($limit, $limit, 60);
+        cache($limit, $limit, 86400);
 
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $url = self::URL . $access;
