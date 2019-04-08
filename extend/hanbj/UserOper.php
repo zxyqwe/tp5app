@@ -26,7 +26,7 @@ class UserOper
 
     public static function pretty_toplist()
     {
-        return MemberOper::pretty_tieba(self::toplist());
+        return MemberOper::pretty_tieba(MemberOper::get_tieba(self::toplist()));
     }
 
     public static function grantAllRight($unique)
