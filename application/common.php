@@ -137,7 +137,7 @@ function WX_access($api, $sec, $name)
         return $res;
     }
     trace("Weixin Access " . $res['access_token'], 'log');
-    cache($name, $res['access_token'], intval($res['expires_in']));
+    cache($name, $res['access_token'], intval($res['expires_in']) - 10);
     return $res['access_token'];
 }
 
