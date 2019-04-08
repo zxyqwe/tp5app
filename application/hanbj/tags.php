@@ -18,7 +18,9 @@ return [
     // 模块初始化
     'module_init' => [],
     // 操作开始执行
-    'action_begin' => [],
+    'action_begin' => [
+        'app\\hanbj\\behavior\\AccessControll'
+    ],
     // 视图内容过滤
     'view_filter' => [],
     // 日志写入
@@ -26,7 +28,5 @@ return [
     // 应用结束
     'app_end' => [],
     // 输出结束标签位 V5.0.1+
-    'response_end' => [
-        'app\\hanbj\\behavior\\RecEnd'
-    ],
+    'response_end' => [],
 ];
