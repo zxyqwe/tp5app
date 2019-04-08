@@ -54,7 +54,7 @@ class UserOper
             ->field(['unique_name as u'])
             ->cache(600)
             ->select();
-        $data = [];
+        $data = [HBConfig::CODER];
         foreach ($res as $item) {
             $data[] = $item['u'];
         }
@@ -91,6 +91,9 @@ class UserOper
     {
         $unique = session('unique_name');
         if (!self::limit($unique)) {
+            if (strlen($unique) > 0) {
+                trace("$unique 尝试登录，拒绝", MysqlLog::ERROR);
+            }
             session('login', null);
         }
         if (self::VERSION !== session('login')) {
