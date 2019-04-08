@@ -3,6 +3,7 @@
 namespace hanbj;
 
 
+use think\Db;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
@@ -17,9 +18,46 @@ class UserOper
         return in_array($unique, self::reg());
     }
 
-    public static function reg()
+    private static function toplist()
     {
         $data = array_merge(FameOper::getTop(), HBConfig::FIXED);
+        return array_unique($data);
+    }
+
+    public static function pretty_toplist()
+    {
+        return MemberOper::pretty_tieba(self::toplist());
+    }
+
+    public static function grantAllRight($unique)
+    {
+        return in_array($unique, self::toplist());
+    }
+
+    public static function reg()
+    {
+        // uniq in current fame
+        $res = Db::table('fame')
+            ->where([
+                'year' => HBConfig::YEAR,
+                'grade' => ['in', [
+                    FameOper::chairman,
+                    FameOper::vice_chairman,
+                    FameOper::manager,
+                    FameOper::vice_manager,
+                    FameOper::commissioner,
+                    FameOper::secretary,
+                    FameOper::vice_secretary,
+                    FameOper::like_manager
+                ]]
+            ])
+            ->field(['unique_name as u'])
+            ->cache(600)
+            ->select();
+        $data = [];
+        foreach ($res as $item) {
+            $data[] = $item['u'];
+        }
         return array_unique($data);
     }
 
