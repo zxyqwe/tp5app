@@ -111,6 +111,7 @@ class UserOper
         if (self::WX_VERSION !== session('wx_login')) {
             session(null);
         } else {
+            self::wx_trace();
             return true;
         }
         if (input('?get.code')) {
@@ -127,5 +128,17 @@ class UserOper
             }
         }
         return false;
+    }
+
+    private static function wx_trace()
+    {
+        $controller = strtolower(request()->controller());
+        $action = strtolower(request()->action());
+        if (!($controller === 'mobile'
+            && $action === 'index')
+        ) {
+            $uniq = session('unique_name');
+            trace("微信访问 $uniq $controller $action", MysqlLog::LOG);
+        }
     }
 }
