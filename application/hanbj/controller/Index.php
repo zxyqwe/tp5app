@@ -11,15 +11,6 @@ use think\exception\HttpResponseException;
 
 class Index extends Controller
 {
-    protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,old,cron']
-    ];
-
-    protected function valid_id()
-    {
-        UserOper::valid_pc($this->request->isAjax());
-    }
-
     public function _empty()
     {
         $action = $this->request->action();
