@@ -269,6 +269,6 @@ return [
     'aws_uri' => '/onca/xml',
     'hanbj_api' => 'wx8519c9fd7817dbcb',
     'hanbj_cardid' => 'pJkBfv06_x38RSmlhoR-2X7rWsxw',
-    'hanbj_img1' => 'http://mmbiz.qpic.cn/mmbiz_jpg/PP2q8S7QAJdbFvGfSCOEia4ddWiabfVkXtblCEBKOcyBTmT7EUPQBaUE28FD8paOEYwIyFtWBzsWU8paviaEWVxYQ/0'
-
+    'hanbj_img1' => 'http://mmbiz.qpic.cn/mmbiz_jpg/PP2q8S7QAJdbFvGfSCOEia4ddWiabfVkXtblCEBKOcyBTmT7EUPQBaUE28FD8paOEYwIyFtWBzsWU8paviaEWVxYQ/0',
+    'local_mech' => '60.205.145.65'
 ];

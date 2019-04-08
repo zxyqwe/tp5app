@@ -167,7 +167,7 @@ function explode_curl($ch)
 function local_cron()
 {
     $ret = request()->ip();
-    if ($ret !== '60.205.145.65') {
+    if ($ret !== config('local_mech')) {
         throw new HttpResponseException(json(['msg' => "IP 不对 $ret"]));
     }
 }

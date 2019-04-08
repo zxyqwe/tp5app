@@ -41,6 +41,9 @@ class AccessControll
         if ($module !== 'hanbj') {
             return;
         }
+        if (request()->ip() === config('local_mech')) {
+            return;
+        }
 
         $uniq = session('unique_name');
         if (UserOper::grantAllRight($uniq)) {
