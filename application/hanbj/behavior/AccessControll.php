@@ -38,12 +38,8 @@ class AccessControll
     {
         // $instance \think\Controller
         // $action string
-        $module = strtolower(request()->module());
         $controller = strtolower(request()->controller());
         $action = strtolower(request()->action());
-        if ($module !== 'hanbj') {
-            return;
-        }
         if (request()->ip() === config('local_mech')) {
             return;
         }
