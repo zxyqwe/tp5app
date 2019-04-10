@@ -213,6 +213,7 @@ return [
         // 是否自动开启 SESSION
         'auto_start' => true,
         'secure' => true,
+        'httponly' => true,
         'name' => 'w_zxy',
         'expire' => 259200000
     ],
@@ -232,7 +233,7 @@ return [
         //  cookie 启用安全传输
         'secure' => true,
         // httponly设置
-        'httponly' => '',
+        'httponly' => '1',
         // 是否使用 setcookie
         'setcookie' => true,
     ],

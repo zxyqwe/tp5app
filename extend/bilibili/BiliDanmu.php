@@ -89,7 +89,7 @@ class BiliDanmu extends BiliBase
             return;
         }
         if ($join['code'] === 0) {
-            trace('可能有了 ' . json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]), MysqlLog::ERROR);
+            trace('可能有了 ' . json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]), MysqlLog::INFO);
             $this->lock("$key$payload", $this->long_timeout());
             $ret[] = $payload_raw;
             return;
