@@ -64,7 +64,9 @@ class AccessControll
             return;
         }
 
-        trace("禁止 $uniq $controller $action", MysqlLog::INFO);
+        if (strlen($uniq) > 0) {
+            trace("禁止 $uniq $controller $action", MysqlLog::INFO);
+        }
         UserOper::valid_pc(request()->isAjax());
         if (request()->isAjax()) {
             $res = json(['msg' => '没有权限'], 400);
