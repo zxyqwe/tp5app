@@ -36,7 +36,6 @@ class Index extends Controller
             case 'GET':
                 $nonce = getNonceStr();
                 session('nonce', $nonce);
-                cache("jump$nonce", json_encode(['event' => 'login']), self::time);
                 $qrCode = new QrCode("https://app.zxyqwe.com/books/index/wx/obj/$nonce");
                 $qrCode
                     ->setSize(200)
@@ -59,7 +58,7 @@ class Index extends Controller
                         return json();
                     }
                 }
-                return json(['msg' => $nonce], 400);
+                return json(['msg' => [$nonce, session('nonce')]], 400);
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
@@ -83,7 +82,7 @@ class Index extends Controller
                 return redirect("https://www.baidu.com");
             }
         }
-        $prefix = empty($obj) ? '' : '/wx/obj/' . $obj;
+        $prefix = empty($obj) ? '' : '/obj/' . $obj;
         return WX_redirect('https://app.zxyqwe.com/books/index/wx' . $prefix, config('hanbj_api'));
     }
 
