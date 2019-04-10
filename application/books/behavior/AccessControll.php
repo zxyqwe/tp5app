@@ -2,6 +2,7 @@
 
 namespace app\books\behavior;
 
+use books\BConfig;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
@@ -21,6 +22,9 @@ class AccessControll
         }
 
         $uniq = session('unique_name');
+        if (in_array($uniq, BConfig::valid_user)) {
+            return;
+        }
         if (strlen($uniq) > 0) {
             trace("禁止 $uniq $controller $action", MysqlLog::INFO);
         }

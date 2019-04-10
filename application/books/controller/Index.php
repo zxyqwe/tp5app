@@ -2,6 +2,7 @@
 
 namespace app\books\controller;
 
+use books\BConfig;
 use Endroid\QrCode\QrCode;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -11,9 +12,6 @@ class Index extends Controller
 {
     const VERSION = 'books_login';
     const time = 60;
-    const valid_user = [
-
-    ];
 
     public function _empty()
     {
@@ -70,7 +68,7 @@ class Index extends Controller
     public function wx($obj)
     {
         $unique = session('unique_name');
-        if (in_array($unique, self::valid_user)) {
+        if (in_array($unique, BConfig::valid_user)) {
             return $this->wx_ok($obj, $unique);
         } else if (input('?get.code')) {
             $api = config('hanbj_api');
@@ -78,15 +76,15 @@ class Index extends Controller
             $openid = WX_code(input('get.code'), $api, $sec);
             if (!is_string($openid)) {
                 trace("wx_login " . json_encode($openid), MysqlLog::ERROR);
-            } else if (in_array($openid, self::valid_user)) {
+            } else if (in_array($openid, BConfig::valid_user)) {
                 return $this->wx_ok($obj, $openid);
             } else {
                 trace("尝试登陆 $openid", MysqlLog::INFO);
                 return redirect("https://www.baidu.com");
             }
         }
-        $prefix = empty($obj) ? '' : '/index/obj/' . $obj;
-        return WX_redirect('https://app.zxyqwe.com/books/wx' . $prefix, config('hanbj_api'));
+        $prefix = empty($obj) ? '' : '/wx/obj/' . $obj;
+        return WX_redirect('https://app.zxyqwe.com/books/index/wx' . $prefix, config('hanbj_api'));
     }
 
     private function wx_ok($obj, $unique)
