@@ -39,24 +39,6 @@ class Index extends Controller
         return redirect('https://app.zxyqwe.com/hanbj/index/home');
     }
 
-    public function debug()
-    {
-        $uniq = session('unique_name');
-        if ($uniq !== HBConfig::CODER) {
-            return json(['msg' => $uniq]);
-        }
-
-//      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-//      $ret = WxHanbj::addUnionID($access);
-        $ret = MemberOper::create_unique_unused();
-//        $ret = ActivityOper::revokeTest();
-
-//        $ret = request()->ip();
-//        sleep(2);
-//        $ret = 0;
-        return json(['msg' => $ret]);
-    }
-
     public function cron()
     {
         local_cron();
