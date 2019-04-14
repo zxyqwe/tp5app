@@ -142,6 +142,32 @@ class Develop extends Controller
         ], 404);
     }
 
+    public function table()
+    {
+        switch ($this->request->method()) {
+            default:
+            case 'GET':
+                return view('table');
+            case 'POST':
+                $tables = Db::query('SHOW TABLES;');
+                $Tables_in_hanbj = [];
+                foreach ($tables as $item) {
+                    $tmp = $item['Tables_in_hanbj'];
+                    $tabledesc = Db::query("DESC `hanbj`.`$tmp`");
+                    $tablename = [];
+                    foreach ($tabledesc as $item2) {
+                        $tablename[] = $item2['Field'];
+                    }
+                    $Tables_in_hanbj[] = [
+                        'name' => $tmp,
+                        'desc' => implode(', ', $tablename),
+                        'cli' => "table/obj/$tmp"
+                    ];
+                }
+                return json($Tables_in_hanbj);
+        }
+    }
+
     public function debug()
     {
 //      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');

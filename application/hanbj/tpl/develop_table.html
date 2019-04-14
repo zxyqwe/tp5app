@@ -1,0 +1,64 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>数据表格</h1>
+        <div id="body">
+            <div id="simp_form" v-cloak>
+                <div class="list-group">
+                    <a :href="{{ item.cli }}" class="list-group-item" v-for="item in table">
+                        <h4 class="list-group-item-heading">{{ item.name }}</h4>
+                        <p class="list-group-item-text">{{ item.desc }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nav = 'nav6_4';
+
+    var owntable = (function ($, Vue, w, undefined) {
+        'use strict';
+        var build_vue = function () {
+            var vmain = new Vue({
+                el: '#simp_form',
+                data: {
+                    table: [{
+                        name: '',
+                        desc: '',
+                        cli: ''
+                    }]
+                }
+            });
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u12,
+                data: {
+                    _ajax: 1,
+                },
+                dataType: "json",
+                success: function (msg) {
+                    vmain.table = msg;
+                },
+                error: function (jqXHR, msg, ethrow) {
+                    vmain.table = [];
+                    w.msgto(jqXHR, msg, ethrow);
+                },
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        var init = function () {
+            build_vue();
+        };
+        return {
+            init: init
+        };
+    })(jQuery, Vue, window);
+
+    $(window).on("load", function () {
+        owntable.init();
+    });
+</script>
