@@ -14,6 +14,24 @@ use think\exception\HttpResponseException;
 
 class Develop extends Controller
 {
+    protected $beforeActionList = [
+        'coder',
+    ];
+
+    protected function coder()
+    {
+        UserOper::valid_pc($this->request->isAjax());
+        if (session('name') === HBConfig::CODER) {
+            return;
+        }
+        if (request()->isAjax()) {
+            $res = json(['msg' => '没有权限'], 400);
+        } else {
+            $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
+        }
+        throw new HttpResponseException($res);
+    }
+
     public function _empty()
     {
         $action = $this->request->action();
@@ -27,9 +45,6 @@ class Develop extends Controller
     {
         define('TAG_TIMEOUT_EXCEPTION', true);
         MemberOper::daily();
-        if (session('name') !== HBConfig::CODER) {
-            return redirect('https://app.zxyqwe.com/hanbj/index/home');
-        }
 
         switch ($this->request->method()) {
             case 'GET':
@@ -107,10 +122,6 @@ class Develop extends Controller
     {
         switch ($this->request->method()) {
             case 'GET':
-                UserOper::valid_pc($this->request->isAjax());
-                if (session('name') !== HBConfig::CODER) {
-                    return redirect('https://app.zxyqwe.com/hanbj/index/home');
-                }
                 $module = input("get.module");
                 $module = "linux-dash-cache-$module";
                 if (cache("?$module")) {
@@ -129,5 +140,18 @@ class Develop extends Controller
             'success' => false,
             'status' => "Invalid module"
         ], 404);
+    }
+
+    public function debug()
+    {
+//      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+//      $ret = WxHanbj::addUnionID($access);
+        $ret = MemberOper::create_unique_unused();
+//        $ret = ActivityOper::revokeTest();
+
+//        $ret = request()->ip();
+//        sleep(2);
+//        $ret = 0;
+        return json(['msg' => $ret]);
     }
 }
