@@ -5,7 +5,7 @@
         <div id="body">
             <div id="simp_form" v-cloak>
                 <div class="list-group">
-                    <a :href="{{ item.cli }}" class="list-group-item" v-for="item in table">
+                    <a :href="item.cli" class="list-group-item" v-for="item in table">
                         <h4 class="list-group-item-heading">{{ item.name }}</h4>
                         <p class="list-group-item-text">{{ item.desc }}</p>
                     </a>

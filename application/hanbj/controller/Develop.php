@@ -142,12 +142,16 @@ class Develop extends Controller
         ], 404);
     }
 
-    public function table()
+    public function table($obj = '')
     {
         switch ($this->request->method()) {
             default:
             case 'GET':
-                return view('table');
+                if (empty($obj)) {
+                    return view('table');
+                } else {
+                    return view('table_one');
+                }
             case 'POST':
                 $tables = Db::query('SHOW TABLES;');
                 $Tables_in_hanbj = [];
