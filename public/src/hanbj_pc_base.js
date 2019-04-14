@@ -59,6 +59,7 @@ var nav_active = (function ($, w, undefined) {
         var pub = 'pub/';
         var index = 'index/';
         var analysis = 'analysis/';
+        var develop = 'develop/';
         w.u9 = base + pub + 'json_fame';
         w.u11 = base + pub + 'json_login';
         w.u5 = base + daily + 'actlog';
@@ -78,6 +79,7 @@ var nav_active = (function ($, w, undefined) {
         w.u18 = base + write + 'json_token';
         w.u19 = base + write + 'edit_prom';
         w.u20 = base + write + 'edit_club';
+        w.u12 = base + develop + 'table';
     };
     var init = function () {
         dict();
