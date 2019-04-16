@@ -129,16 +129,12 @@ class Develop extends Controller
         ], 404);
     }
 
-    public function table($obj = '')
+    public function table()
     {
         switch ($this->request->method()) {
             default:
             case 'GET':
-                if (empty($obj) || !cache("?tableone_$obj")) {
-                    return view('table');
-                } else {
-                    return view('table_one', ['data' => cache("tableone_$obj")]);
-                }
+                return view('table');
             case 'POST':
                 $tables = Db::query('SHOW TABLES;');
                 $Tables_in_hanbj = [];
@@ -152,7 +148,7 @@ class Develop extends Controller
                     $Tables_in_hanbj[] = [
                         'name' => $tmp,
                         'desc' => implode(', ', $tablename),
-                        'cli' => "table/obj/$tmp"
+                        'cli' => "tableone/obj/$tmp"
                     ];
                     cache("tableone_$tmp", json_encode($tablename));
                 }
@@ -160,9 +156,18 @@ class Develop extends Controller
         }
     }
 
-    public function table_one()
+    public function tableone($obj = '')
     {
-        return json([]);
+        switch ($this->request->method()) {
+            default:
+            case 'GET':
+                if (empty($obj) || !cache("?tableone_$obj")) {
+                    return redirect('https://app.zxyqwe.com/hanbj/develop/table');
+                }
+                return view('tableone', ['data' => cache("tableone_$obj")]);
+            case 'POST':
+                return json([]);
+        }
     }
 
     public function debug()
