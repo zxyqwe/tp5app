@@ -3,10 +3,10 @@
 namespace app\index\controller;
 
 use Endroid\QrCode\QrCode;
-use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\BackupOper;
 use util\MysqlLog;
 
 class Index extends Controller
@@ -61,27 +61,12 @@ class Index extends Controller
         if (cache("?amail$to$sub")) {
             return json('d', 400);
         }
-
-        $mail = new PHPMailer(true);                              // Passing `true` enables exceptions
+        $mail = BackupOper::getMail();                              // Passing `true` enables exceptions
         try {
-            //Server settings
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-            $mail->Host = 'smtp.mxhichina.com';                   // Specify main and backup SMTP servers
-            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-            $mail->Username = 'postmaster@zxyqwe.com';                 // SMTP username
-            $mail->Password = config('amail_sk');                           // SMTP password
-            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 587;                                    // TCP port to connect to
-
-            //Recipients
-            $mail->setFrom('postmaster@zxyqwe.com', 'AutoMail');
             $mail->addAddress($to);
-
             //Content
-            $mail->isHTML(false);
             $mail->Subject = $sub;
             $mail->Body = $main;
-
             $mail->send();
             cache("amail$to$sub", 'a', 600);
             return json('c');
