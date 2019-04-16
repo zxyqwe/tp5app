@@ -80,6 +80,7 @@ var nav_active = (function ($, w, undefined) {
         w.u19 = base + write + 'edit_prom';
         w.u20 = base + write + 'edit_club';
         w.u12 = base + develop + 'table';
+        w.u21 = base + develop + 'table_one';
     };
     var init = function () {
         dict();

@@ -134,10 +134,10 @@ class Develop extends Controller
         switch ($this->request->method()) {
             default:
             case 'GET':
-                if (empty($obj)) {
+                if (empty($obj) || !cache("?tableone_$obj")) {
                     return view('table');
                 } else {
-                    return view('table_one');
+                    return view('table_one', ['data' => cache("tableone_$obj")]);
                 }
             case 'POST':
                 $tables = Db::query('SHOW TABLES;');
@@ -154,9 +154,15 @@ class Develop extends Controller
                         'desc' => implode(', ', $tablename),
                         'cli' => "table/obj/$tmp"
                     ];
+                    cache("tableone_$tmp", json_encode($tablename));
                 }
                 return json($Tables_in_hanbj);
         }
+    }
+
+    public function table_one()
+    {
+        return json([]);
     }
 
     public function debug()
