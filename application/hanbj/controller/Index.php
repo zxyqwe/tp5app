@@ -2,12 +2,11 @@
 
 namespace app\hanbj\controller;
 
-use hanbj\ActivityOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
-use hanbj\HBConfig;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\BackupOper;
 
 class Index extends Controller
 {
@@ -48,5 +47,6 @@ class Index extends Controller
             return;
         cache($name, $name, 60 - 10);
         MemberOper::daily();
+        BackupOper::run();
     }
 }

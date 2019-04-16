@@ -9,7 +9,6 @@ use hanbj\ClubOper;
 use hanbj\FameOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
-use hanbj\UserOper;
 use hanbj\HBConfig;
 use think\Controller;
 use think\Db;
