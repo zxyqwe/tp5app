@@ -87,6 +87,7 @@ class BiliSend extends BiliBase
                 'storm_beat_id' => 0,
                 'metadata' => '',
                 'token' => '',
+                'csrf' => $this->csrf_token,
                 'csrf_token' => $this->csrf_token
             ];
             $urlapi = $this->prefix . 'gift/v2/live/bag_send';

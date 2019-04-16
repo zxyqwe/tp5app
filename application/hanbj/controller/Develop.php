@@ -102,19 +102,6 @@ class Develop extends Controller
         $map['内网超级权限'] = implode('，', UserOper::pretty_toplist());
 
         $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
-        $tables = Db::query('SHOW TABLES;');
-        $Tables_in_hanbj = [];
-        foreach ($tables as $item) {
-            $tmp = $item['Tables_in_hanbj'];
-            $Tables_in_hanbj[] = $tmp;
-            $tabledesc = Db::query("DESC `hanbj`.`$tmp`");
-            $tablename = [];
-            foreach ($tabledesc as $item2) {
-                $tablename[] = $item2['Field'];
-            }
-            $map["Table $tmp"] = implode(', ', $tablename);
-        }
-        $map['Tables'] = implode(', ', $Tables_in_hanbj);
         return view('token', ['data' => $map]);
     }
 
