@@ -11,8 +11,12 @@ class BiliDanmu extends BiliBase
         if (!$this->bili_entry($real_roomid)) {
             return [];
         }
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
         $urlapi = $this->prefix . $url . $real_roomid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, http_build_query($data));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0 || !isset($data['data'])) {
             trace("$url $key $raw", MysqlLog::ERROR);

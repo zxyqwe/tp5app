@@ -36,7 +36,11 @@ class BiliOnline extends BiliBase
     public function unknown_notice()//link 动态 100 sec {"code":0,"msg":" ","message":" ","data":{"num":0}}
     {
         $urlapi = $this->prefix . 'feed_svr/v1/feed_svr/notice';
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, ['csrf_token' => $this->csrf_token]);
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
+        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
             trace("unknown_notice $res", MysqlLog::ERROR);

@@ -92,8 +92,12 @@ class BiliBase
         $urlapi = 'https://live.bilibili.com/' . $rid;
         $this->bili_Post($urlapi, $this->cookie, $rid);
 
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
         $urlapi = $this->prefix . 'room/v1/Room/room_init?id=' . $rid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $rid);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($data));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace("钓鱼 $raw", MysqlLog::ERROR);
@@ -109,6 +113,7 @@ class BiliBase
         $payload = [
             'room_id' => $rid,
             'platform' => 'pc',
+            'csrf' => $this->csrf_token,
             'csrf_token' => $this->csrf_token
         ];
         $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($payload));
