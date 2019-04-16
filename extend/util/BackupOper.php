@@ -31,6 +31,7 @@ class BackupOper
         if (cache("?BackupOper$today")) {
             return;
         }
+        cache("BackupOper$today", $today, 86400);
         $obj = [
             config('backup_dir') . DS . "hanbj.$today.sql.gz",
             config('backup_dir') . DS . "wiki.$today.sql.gz"
@@ -45,13 +46,12 @@ class BackupOper
             $body = '';
             foreach ($obj as $item) {
                 $mail->addAttachment($item);
-                $body .= "$item : " . filesize($item);
+                $body .= "$item : " . filesize($item) . "\r\n";
             }
             $mail->Body = $body;
 
             $mail->send();
             trace("备份邮件", MysqlLog::INFO);
-            cache("BackupOper$today", $today, 86400);
         } catch (Exception $e) {
             trace("备份邮件 " . $mail->ErrorInfo, MysqlLog::ERROR);
         }
