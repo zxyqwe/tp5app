@@ -51,7 +51,7 @@ class BackupOper
             $mail->Body = $body;
 
             $mail->send();
-            trace("备份邮件", MysqlLog::INFO);
+            trace("备份邮件 $today", MysqlLog::INFO);
         } catch (Exception $e) {
             trace("备份邮件 " . $mail->ErrorInfo, MysqlLog::ERROR);
         }
