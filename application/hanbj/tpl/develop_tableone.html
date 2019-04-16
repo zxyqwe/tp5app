@@ -12,11 +12,12 @@
 
     var tableone = (function ($, Vue, w, undefined) {
         'use strict';
+        var table_name = '';
         var build_vue = function () {
             var vmain = new Vue({
                 el: '#container',
                 data: {
-                    table_name: '',
+                    table_name: table_name,
                     table: []
                 }
             });
@@ -26,6 +27,7 @@
                 url: w.u21,
                 data: {
                     _ajax: 1,
+                    'name': table_name
                 },
                 dataType: "json",
                 success: function (msg) {
@@ -41,6 +43,7 @@
             });
         };
         var init = function () {
+            table_name = window.location.pathname.split('/').last();
             build_vue();
         };
         return {
