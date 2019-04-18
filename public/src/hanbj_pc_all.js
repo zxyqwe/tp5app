@@ -41,6 +41,7 @@ var all_mem = (function ($, w, undefined) {
     };
     w.wxParams = function (params) {
         params.up = vmain.up;
+        params['_ajax'] = 1;
         return params;
     };
     var build_vue = function (refresh) {
@@ -178,6 +179,7 @@ var baselog = (function ($, Vue, w, undefined) {
             for (var x in t_data) {
                 params[x] = t_data[x];
             }
+            params['_ajax'] = 1;
             return params;
         };
         w.codeFormatter = function (value, row) {
@@ -516,6 +518,7 @@ var tlog = (function ($, w, undefined) {
             for (var x in t_data) {
                 params[x] = t_data[x];
             }
+            params['_ajax'] = 1;
             return params;
         };
         $table = $('#table');
