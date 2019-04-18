@@ -166,7 +166,24 @@ class Develop extends Controller
                 }
                 return view('tableone', ['data' => cache("tableone_$obj")]);
             case 'POST':
-                return json([]);
+                if (empty($obj) || !cache("?tableone_$obj")) {
+                    return json([]);
+                }
+                $fields = json_decode(cache("tableone_$obj"), true);
+                $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+                $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+                $size = min(100, max(0, $size));
+                $offset = max(0, $offset);
+                $res = Db::table($obj)
+                    ->field($fields)
+                    ->limit($offset, $size)
+                    ->order('id')
+                    ->select();
+                $data['rows'] = $res;
+                $total = Db::table($obj)
+                    ->count();
+                $data['total'] = $total;
+                return json($data);
         }
     }
 

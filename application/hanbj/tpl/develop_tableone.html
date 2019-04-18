@@ -3,16 +3,25 @@
     <div id="container" class="col-md-10 col-md-offset-1 column" v-cloak>
         <h1>{{ table_name }}</h1>
         <div id="body">
-            {$data}
+            <table id="table"
+                   data-method="post"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-query-params="wxParams"
+                   data-page-list="[20, 50, 100, 500, 1000]">
+            </table>
         </div>
     </div>
 </div>
 <script>
     var nav = 'nav6_4';
-
+    var columns = {$data};
     var tableone = (function ($, Vue, w, undefined) {
         'use strict';
-        var table_name = '';
+        var table_name = '', $table;
         var build_vue = function () {
             var vmain = new Vue({
                 el: '#container',
@@ -22,28 +31,29 @@
                 }
             });
             w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: w.u21,
-                data: {
-                    _ajax: 1,
-                    'name': table_name
-                },
-                dataType: "json",
-                success: function (msg) {
-                    vmain.table = msg;
-                },
-                error: function (jqXHR, msg, ethrow) {
-                    vmain.table = [];
-                    w.msgto(jqXHR, msg, ethrow);
-                },
-                complete: function () {
-                    w.cancelloading();
-                }
+            w.wxParams = function (params) {
+                params['_ajax'] = 1;
+                return params;
+            };
+            var col = [];
+            for (var i in w.columns) {
+                col.push({
+                    field: w.columns[i],
+                    title: w.columns[i]
+                })
+            }
+            $table = $('#table');
+            $table.bootstrapTable({
+                'pageSize': 20,
+                'silent': true,
+                'columns': col,
+                'url': w.u21 + '/obj/' + table_name
             });
+            w.cancelloading();
         };
         var init = function () {
-            table_name = window.location.pathname.split('/').last();
+            table_name = window.location.pathname.split('/');
+            table_name = table_name[table_name.length - 1];
             build_vue();
         };
         return {
