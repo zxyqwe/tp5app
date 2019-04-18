@@ -39,7 +39,8 @@
             for (var i in w.columns) {
                 col.push({
                     field: w.columns[i],
-                    title: w.columns[i]
+                    title: w.columns[i],
+                    editable: "id" !== w.columns[i]
                 })
             }
             $table = $('#table');
@@ -47,7 +48,32 @@
                 'pageSize': 20,
                 'silent': true,
                 'columns': col,
-                'url': w.u21 + '/obj/' + table_name
+                'url': w.u21 + '/obj/' + table_name,
+                'idField': 'id',
+                'onEditableSave': function (field, row, oldValue, $el) {
+                    var pk = row.id;
+                    var newValue = row[field];
+                    w.waitloading();
+                    $.ajax({
+                        type: "POST",
+                        url: "www.baidu.com",
+                        data: {
+                            _ajax: 1,
+                            pk: pk,
+                            field: field,
+                            o: oldValue,
+                            n: newValue
+                        },
+                        dataType: 'json',
+                        success: function (msg) {
+                        },
+                        error: w.msgto,
+                        complete: function () {
+                            w.cancelloading();
+                        }
+
+                    });
+                }
             });
             w.cancelloading();
         };
