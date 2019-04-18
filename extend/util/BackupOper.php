@@ -45,6 +45,10 @@ class BackupOper
 
             $body = '';
             foreach ($obj as $item) {
+                if (!is_file($item)) {
+                    cache("BackupOper$today", null);
+                    return;
+                }
                 $mail->addAttachment($item);
                 $body .= "$item : " . filesize($item) . "\r\n";
             }
