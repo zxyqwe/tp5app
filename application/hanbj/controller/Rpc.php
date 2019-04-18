@@ -115,19 +115,19 @@ class Rpc extends Controller
         $unionid = strval($data['unionid']);
         $ret = MemberOper::search_unionid($unionid);
         if (!is_numeric($ret['code']) || !in_array(intval($ret['code']), MemberOper::getMember())) {
-            return json(['msg' => "用户1锁住"]);
+            return json(['msg' => "用户锁住"]);
         }
         if (FeeOper::owe($ret['unique_name'])) {
-            return json(['msg' => "用户1欠费"]);
+            return json(['msg' => "用户欠费"]);
         }
 
         $operid = strval($data['operid']);
         $operret = MemberOper::search_unionid($operid);
-        if (!is_numeric($operret['code']) || intval($operret['code']) !== MemberOper::NORMAL) {
-            return json(['msg' => "用户2锁住"]);
+        if (!is_numeric($operret['code']) || !in_array(intval($ret['code']), MemberOper::getMember())) {
+            return json(['msg' => "操作者锁住"]);
         }
         if (FeeOper::owe($operret['unique_name'])) {
-            return json(['msg' => "用户2欠费"]);
+            return json(['msg' => "操作者欠费"]);
         }
 
         if (null === $ret || null === $operret) {

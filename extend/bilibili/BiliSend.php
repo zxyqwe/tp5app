@@ -15,7 +15,11 @@ class BiliSend extends BiliBase
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
             trace('sendDaily ' . $raw, MysqlLog::ERROR);

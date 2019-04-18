@@ -9,7 +9,11 @@ class BiliOnline extends BiliBase
     public function online()
     {
         $urlapi = $this->prefix . 'User/userOnlineHeart';
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
+        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
             trace("online $res", MysqlLog::ERROR);
