@@ -104,7 +104,7 @@ function WX_code($code, $api, $sec)
         'appid=' . $api .
         '&secret=' . $sec .
         '&code=' . $code .
-        '&grant_type=authorization_code');
+        '&grant_type=authorization_code', 5);
     $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
         return $res;
@@ -126,19 +126,8 @@ function WX_redirect($uri, $api, $state = '')
 
 function WX_access($api, $sec, $name)
 {
-    $tmp = cache($name);
-    if (false !== $tmp)
-        return $tmp;
-    $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' . $api . '&secret=' . $sec;
-    $raw = Curl_Get($url, 5);
-    $res = json_decode($raw, true);
-    if (!isset($res['access_token']) || !isset($res['expires_in'])) {
-        trace("WX_access $raw", 'error');
-        return $res;
-    }
-    trace("Weixin Access " . $res['access_token'], 'log');
-    cache($name, $res['access_token'], intval($res['expires_in']) - 10);
-    return $res['access_token'];
+    $db = new \wxsdk\WxTokenAccess($name, $api, $sec);
+    return $db->get();
 }
 
 function explode_dict($d, $prefix = '')
