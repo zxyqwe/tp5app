@@ -37,6 +37,7 @@ abstract class TokenOper
         if (time() > $this->expire_time) {
             $this->updateValue();
         }
+        trace("Get {$this->cache_key} {$this->value}", MysqlLog::LOG);
         return $this->value;
     }
 
