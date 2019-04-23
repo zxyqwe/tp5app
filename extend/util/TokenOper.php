@@ -34,17 +34,20 @@ abstract class TokenOper
 
     public function get()
     {
-        if (time() > $this->expire_time) {
+        $duration = $this->expire_time - time();
+        if ($duration <= 0) {
             $this->updateValue();
         }
-        trace("Get {$this->cache_key} {$this->value}", MysqlLog::LOG);
+        trace("Get {$this->cache_key} $duration {$this->value}", MysqlLog::LOG);
         return $this->value;
     }
 
     public function refresh()
     {
-        if (time() + $this->action_time > $this->expire_time) {
+        $duration = $this->expire_time - time();
+        if ($duration <= $this->action_time) {
             $this->updateValue();
+            trace("Refresh {$this->cache_key} $duration {$this->value}", MysqlLog::LOG);
         }
     }
 }
