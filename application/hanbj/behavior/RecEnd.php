@@ -2,8 +2,8 @@
 
 namespace app\hanbj\behavior;
 
-use \think\Debug;
-use \think\App;
+use think\Debug;
+use think\App;
 use wxsdk\WxTokenAccess;
 
 class RecEnd
