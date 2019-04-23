@@ -25,7 +25,7 @@ abstract class TokenOper
                 $this->value = $db['value'];
             }
             if (isset($db['expire_time'])) {
-                $this->expire_time = intval($db['$expire_time']);
+                $this->expire_time = intval($db['expire_time']);
             }
         }
     }
