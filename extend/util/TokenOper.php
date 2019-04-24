@@ -37,8 +37,9 @@ abstract class TokenOper
         $duration = $this->expire_time - time();
         if ($duration <= 0) {
             $this->updateValue();
+            trace("Refresh On Get [$duration] {$this->cache_key} {$this->value}", MysqlLog::ERROR);
         }
-        trace("Get {$this->cache_key} $duration {$this->value}", MysqlLog::LOG);
+        trace("Get [$duration] {$this->cache_key} {$this->value}", MysqlLog::LOG);
         return $this->value;
     }
 
@@ -47,7 +48,7 @@ abstract class TokenOper
         $duration = $this->expire_time - time();
         if ($duration <= $this->action_time) {
             $this->updateValue();
-            trace("Refresh {$this->cache_key} $duration {$this->value}", MysqlLog::LOG);
+            trace("Refresh [$duration] {$this->cache_key} {$this->value}", MysqlLog::LOG);
         }
     }
 }
