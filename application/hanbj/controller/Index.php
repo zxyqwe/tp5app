@@ -7,6 +7,7 @@ use hanbj\MemberOper;
 use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
+use wxsdk\WxTokenAccess;
 
 class Index extends Controller
 {
@@ -46,6 +47,8 @@ class Index extends Controller
         if (cache("?$name"))
             return;
         cache($name, $name, 60 - 10);
+        $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
+        $db->refresh();
         MemberOper::daily();
         BackupOper::run();
     }
