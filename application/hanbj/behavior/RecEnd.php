@@ -4,7 +4,6 @@ namespace app\hanbj\behavior;
 
 use think\Debug;
 use think\App;
-use wxsdk\WxTokenAccess;
 
 class RecEnd
 {
@@ -14,8 +13,6 @@ class RecEnd
     public function run(&$response)
     {
         if (defined('TAG_TIMEOUT_EXCEPTION')) {
-            $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
-            $db->refresh();
             return;
         }
         $runtime = Debug::getUseTime();
