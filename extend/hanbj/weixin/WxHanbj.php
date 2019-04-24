@@ -9,6 +9,8 @@ use hanbj\vote\WxOrg;
 use hanbj\CardOper;
 use hanbj\UserOper;
 use util\MysqlLog;
+use wxsdk\WxTokenJsapi;
+use wxsdk\WxTokenTicketapi;
 
 class WxHanbj
 {
@@ -18,7 +20,7 @@ class WxHanbj
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $ss = 'jsapi_ticket=' . self::jsapi($access) .
+        $ss = 'jsapi_ticket=' . self::jsapi() .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']
             . '&url=' . $url;
@@ -28,36 +30,16 @@ class WxHanbj
         return json_encode($wx);
     }
 
-    public static function jsapi($access)
+    public static function jsapi()
     {
-        if (cache('?jsapi')) {
-            return cache('jsapi');
-        }
-        $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=jsapi');
-        $res = json_decode($raw, true);
-        if ($res['errcode'] !== 0) {
-            trace("JsApi $raw", MysqlLog::ERROR);
-            return '';
-        }
-        trace("WxHanbj JsApi {$res['ticket']}", MysqlLog::LOG);
-        cache('jsapi', $res['ticket'], $res['expires_in'] - 10);
-        return $res['ticket'];
+        $token = new WxTokenJsapi('HANBJ_JSAPI', config('hanbj_api'), config('hanbj_secret'));
+        return $token->get();
     }
 
-    public static function ticketapi($access)
+    public static function ticketapi()
     {
-        if (cache('?ticketapi')) {
-            return cache('ticketapi');
-        }
-        $raw = Curl_Get('https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=' . $access . '&type=wx_card');
-        $res = json_decode($raw, true);
-        if ($res['errcode'] !== 0) {
-            trace("TicketApi $raw", MysqlLog::ERROR);
-            return '';
-        }
-        trace("WxHanbj TicketApi {$res['ticket']}", MysqlLog::LOG);
-        cache('ticketapi', $res['ticket'], $res['expires_in'] - 10);
-        return $res['ticket'];
+        $token = new WxTokenTicketapi('HANBJ_TICKETAPI', config('hanbj_api'), config('hanbj_secret'));
+        return $token->get();
     }
 
     public static function addUnionID($access, $limit = 15)

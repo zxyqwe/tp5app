@@ -86,8 +86,8 @@ class Develop extends Controller
         $length = 10;
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $map['Access Key'] = substr($access, 0, $length);
-        $map['Js Api'] = substr(WxHanbj::jsapi($access), 0, $length);
-        $map['Ticket Api'] = substr(WxHanbj::ticketapi($access), 0, $length);
+        $map['Js Api'] = substr(WxHanbj::jsapi(), 0, $length);
+        $map['Ticket Api'] = substr(WxHanbj::ticketapi(), 0, $length);
         $map['会费增加积分'] = BonusOper::getFeeBonus();
         $map['志愿者增加积分'] = BonusOper::getVolBonus();
         $map['活动增加积分'] = BonusOper::getActBonus();
