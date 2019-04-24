@@ -8,6 +8,8 @@ use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
 use wxsdk\WxTokenAccess;
+use wxsdk\WxTokenJsapi;
+use wxsdk\WxTokenTicketapi;
 
 class Index extends Controller
 {
@@ -48,6 +50,10 @@ class Index extends Controller
             return;
         cache($name, $name, 60 - 10);
         $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
+        $db->refresh();
+        $db = new WxTokenJsapi('HANBJ_JSAPI', config('hanbj_api'), config('hanbj_secret'));
+        $db->refresh();
+        $db = new WxTokenTicketapi('HANBJ_TICKETAPI', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
         MemberOper::daily();
         BackupOper::run();

@@ -166,7 +166,7 @@ class Mobile extends Controller
         $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $ss = [$wx['nonce_str'],
             $wx['timestamp'],
-            WxHanbj::ticketapi($access),
+            WxHanbj::ticketapi(),
             $wx['card_id']];
         sort($ss);
         $ss = implode('', $ss);
