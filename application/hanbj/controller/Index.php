@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
 use think\Controller;
@@ -25,6 +26,7 @@ class Index extends Controller
     public function index()
     {
         if (UserOper::VERSION === session('login')) {
+            FameOper::cacheMyCurrentYear();
             return redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         return view('login');

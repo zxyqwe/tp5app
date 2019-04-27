@@ -144,4 +144,26 @@ class FameOper
         }
         return $data;
     }
+
+    public static function cacheMyCurrentYear()
+    {
+        $ret = Db::table('fame')
+            ->where([
+                'unique_name' => session('unique_name'),
+                'year' => HBConfig::YEAR
+            ])
+            ->field([
+                'grade',
+                'label'
+            ])
+            ->find();
+        if (null === $ret) {
+            session('fame', null);
+            return;
+        }
+        session('fame', json_encode([
+            'grade' => $ret['grade'],
+            'label' => $ret['label']
+        ]));
+    }
 }
