@@ -10,14 +10,14 @@ use util\MysqlLog;
 class AccessControll
 {
     const limit_controller = [
-//        'analysis',
+        'analysis',
         'daily',
+        'develop',
         'error',
+        'fame',
         'index',
         'system',
         'write',
-        'develop',
-//        'fame',
         //'wxwork',
     ];
     const except = [
@@ -66,15 +66,26 @@ class AccessControll
             return;
         }
 
+        UserOper::valid_pc(request()->isAjax());
+        if ($this->canView($controller)) {
+            return;
+        }
         if (strlen($uniq) > 0) {
             trace("禁止 $uniq $controller $action", MysqlLog::INFO);
         }
-        UserOper::valid_pc(request()->isAjax());
         if (request()->isAjax()) {
             $res = json(['msg' => '没有权限'], 400);
         } else {
             $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         throw new HttpResponseException($res);
+    }
+
+    private function canView($controller)
+    {
+        if (in_array($controller, ['fame', 'analysis'])) {
+            return true;
+        }
+        return false;
     }
 }
