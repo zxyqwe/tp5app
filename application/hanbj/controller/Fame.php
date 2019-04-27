@@ -101,7 +101,7 @@ class Fame extends Controller
         TableOper::generateOneTable('fame');
         TableOper::assertInField('fame', $name);
         $ret = Db::table('fame')
-            ->where(['id' => $pk])
+            ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
             ->field(['year', 'grade', 'label'])
             ->find();
         if (null === $ret) {
@@ -121,7 +121,7 @@ class Fame extends Controller
         try {
             Db::table('fame')
                 ->data([$name => $value])
-                ->where(['id' => $pk])
+                ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
                 ->update();
             trace("Fame Edit $unique $pk $name $value", MysqlLog::INFO);
         } catch (\Exception $e) {
