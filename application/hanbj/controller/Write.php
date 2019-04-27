@@ -6,7 +6,6 @@ use bilibili\BiliBase;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\ClubOper;
-use hanbj\FameOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
 use hanbj\HBConfig;
@@ -108,51 +107,6 @@ class Write extends Controller
         }
         foreach ($name as $tmp) {
             ActivityOper::signAct($tmp['u'], '', BonusOper::getActName() . '志愿者', BonusOper::getVolBonus());
-        }
-        return json(['msg' => 'ok']);
-    }
-
-    public function fame_add()
-    {
-        $name = input('post.name/a', []);
-        if (empty($name)) {
-            return json(['msg' => 'empty name'], 400);
-        }
-        $year = input('post.year', 1, FILTER_VALIDATE_INT);
-        $grade = input('post.grade', 0, FILTER_VALIDATE_INT);
-        $label = input('post.label', '');
-        if (empty($label) || $year < HBConfig::YEAR || $year > HBConfig::YEAR + 1 || $grade < 0 || $grade > FameOper::max_pos) {
-            return json(['msg' => '参数错误'], 400);
-        }
-        $data = [];
-        foreach ($name as $tmp) {
-            $data[] = [
-                'unique_name' => $tmp['u'],
-                'year' => $year,
-                'grade' => $grade,
-                'label' => $label
-            ];
-        }
-        Db::startTrans();
-        try {
-            $res = Db::table('fame')
-                ->insertAll($data);
-            if ($res === count($data)) {
-                Db::commit();
-                trace("Fame " . json_encode($name), MysqlLog::INFO);
-            } else {
-                Db::rollback();
-                return json(['msg' => $res], 400);
-            }
-        } catch (\Exception $e) {
-            Db::rollback();
-            $e = $e->getMessage();
-            trace("Fame Add $e", MysqlLog::ERROR);
-            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
-            if (isset($token[2])) {
-                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
-            }
-            return json(['msg' => '' . $e], 400);
         }
         return json(['msg' => 'ok']);
     }
@@ -308,31 +262,6 @@ class Write extends Controller
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
-    }
-
-    public function edit_fame()
-    {
-        $name = input('post.name');
-        $pk = intval(input('post.pk'));
-        $value = input('post.value');
-        $unique = session('unique_name');
-        if (strlen($name) < 1) {
-            return json(['msg' => 'name len short'], 400);
-        }
-        TableOper::generateOneTable('fame');
-        TableOper::assertInField('fame', $name);
-        try {
-            Db::table('fame')
-                ->data([$name => $value])
-                ->where(['id' => $pk])
-                ->update();
-            trace("Fame Edit $unique $pk $name $value", MysqlLog::INFO);
-        } catch (\Exception $e) {
-            $e = $e->getMessage();
-            trace("Fame Edit $e", MysqlLog::ERROR);
-            return json(['msg' => $e], 400);
-        }
-        return json('修改成功！');
     }
 
     public function edit_club()

@@ -3,7 +3,6 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
-use hanbj\FameOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -214,28 +213,6 @@ class Daily extends Controller
             ->count();
         $data['total'] = $total;
         return json($data);
-    }
-
-    public function json_fameinit()
-    {
-        $join = [
-            ['member m', 'm.unique_name=f.unique_name', 'left']
-        ];
-        $res = Db::table('fame')
-            ->alias('f')
-            ->join($join)
-            ->field([
-                'f.id',
-                'f.unique_name as u',
-                'tieba_id as t',
-                'year as y',
-                'grade',
-                'label',
-                'm.code'
-            ])
-            ->select();
-        $res = FameOper::sort($res);
-        return json($res);
     }
 
     public function json_fee()

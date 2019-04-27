@@ -17,6 +17,7 @@ class AccessControll
         'system',
         'write',
         'develop',
+        'fame',
         //'wxwork',
     ];
     const except = [
