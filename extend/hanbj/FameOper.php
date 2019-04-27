@@ -3,6 +3,7 @@
 namespace hanbj;
 
 use think\Db;
+use think\exception\HttpResponseException;
 use util\MysqlLog;
 
 class FameOper
@@ -165,5 +166,32 @@ class FameOper
             'grade' => $ret['grade'],
             'label' => $ret['label']
         ]));
+    }
+
+    public static function assertEditRight($year, $grade, $label)
+    {
+        if (UserOper::grantAllRight(session('unique_name'))) {
+            return;
+        }
+        if (intval($year) === HBConfig::YEAR) {
+            $ret = session('fame');
+            if (null !== $ret) {
+                $ret = json_decode($ret, true);
+                if ($label === $ret['label']) {
+                    $order = array_flip(self::order);
+                    if ($order[$ret['grade']] < $order[intval($grade)]) {
+                        return;
+                    }
+                }
+            }
+        }
+        $err = "fame rights error $year $grade $label";
+        trace($err, MysqlLog::ERROR);
+        if (request()->isAjax()) {
+            $res = json(['msg' => $err], 400);
+        } else {
+            $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
+        }
+        throw new HttpResponseException($res);
     }
 }

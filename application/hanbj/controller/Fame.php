@@ -57,6 +57,7 @@ class Fame extends Controller
         }
         $data = [];
         foreach ($name as $tmp) {
+            FameOper::assertEditRight($year, $grade, $label);
             $data[] = [
                 'unique_name' => $tmp['u'],
                 'year' => $year,
@@ -99,6 +100,24 @@ class Fame extends Controller
         }
         TableOper::generateOneTable('fame');
         TableOper::assertInField('fame', $name);
+        $ret = Db::table('fame')
+            ->where(['id' => $pk])
+            ->field(['year', 'grade', 'label'])
+            ->find();
+        if (null === $ret) {
+            return json(['msg' => "查无此人 $pk"], 400);
+        }
+        FameOper::assertEditRight($ret['year'], $ret['grade'], $ret['label']);
+        switch ($name) {
+            case'grade':
+                FameOper::assertEditRight($ret['year'], $value, $ret['label']);
+                break;
+            case'label':
+                FameOper::assertEditRight($ret['year'], $ret['grade'], $value);
+                break;
+            default:
+                return json(['msg' => "查无此人 $name"], 400);
+        }
         try {
             Db::table('fame')
                 ->data([$name => $value])
