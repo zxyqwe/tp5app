@@ -14,6 +14,7 @@ use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
+use util\TableOper;
 
 
 class Write extends Controller
@@ -283,6 +284,8 @@ class Write extends Controller
                 if (strlen($name) < 1) {
                     return json(['msg' => 'name len short'], 400);
                 }
+                TableOper::generateOneTable('prom');
+                TableOper::assertInField('prom', $name);
                 try {
                     if ($pk > 0) {
                         Db::table('prom')
@@ -316,6 +319,8 @@ class Write extends Controller
         if (strlen($name) < 1) {
             return json(['msg' => 'name len short'], 400);
         }
+        TableOper::generateOneTable('fame');
+        TableOper::assertInField('fame', $name);
         try {
             Db::table('fame')
                 ->data([$name => $value])

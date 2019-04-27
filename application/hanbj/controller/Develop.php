@@ -11,6 +11,7 @@ use util\MysqlLog;
 use think\Db;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\TableOper;
 
 class Develop extends Controller
 {
@@ -140,17 +141,7 @@ class Develop extends Controller
                 $Tables_in_hanbj = [];
                 foreach ($tables as $item) {
                     $tmp = $item['Tables_in_hanbj'];
-                    $tabledesc = Db::query("DESC `hanbj`.`$tmp`");
-                    $tablename = [];
-                    foreach ($tabledesc as $item2) {
-                        $tablename[] = $item2['Field'];
-                    }
-                    $Tables_in_hanbj[] = [
-                        'name' => $tmp,
-                        'desc' => implode(', ', $tablename),
-                        'cli' => "tableone/obj/$tmp"
-                    ];
-                    cache("tableone_$tmp", json_encode($tablename));
+                    TableOper::generateOneTable($tmp);
                 }
                 return json($Tables_in_hanbj);
         }
@@ -161,21 +152,20 @@ class Develop extends Controller
         switch ($this->request->method()) {
             default:
             case 'GET':
-                if (empty($obj) || !cache("?tableone_$obj")) {
+                if (empty($obj) || !TableOper::hasGenerated($obj)) {
                     return redirect('https://app.zxyqwe.com/hanbj/develop/table');
                 }
-                return view('tableone', ['data' => cache("tableone_$obj")]);
+                return view('tableone', ['data' => TableOper::getFieldsStr($obj)]);
             case 'POST':
-                if (empty($obj) || !cache("?tableone_$obj")) {
+                if (empty($obj) || !TableOper::hasGenerated($obj)) {
                     return json([]);
                 }
-                $fields = json_decode(cache("tableone_$obj"), true);
                 $size = input('post.limit', 20, FILTER_VALIDATE_INT);
                 $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
                 $size = min(100, max(0, $size));
                 $offset = max(0, $offset);
                 $res = Db::table($obj)
-                    ->field($fields)
+                    ->field(TableOper::getFieldsArray($obj))
                     ->limit($offset, $size)
                     ->order('id')
                     ->select();
