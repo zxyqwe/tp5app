@@ -27,6 +27,10 @@ class BiliSend extends BiliBase
         $urlapi = $this->prefix . 'sign/GetSignInfo';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
+if(!isset($data['data'])||!isset($data['data']['text'])||!isset($data['data']['specialText'])){
+trace("GetSignInfo $raw",MysqlLog::INFO);
+return;
+}
         trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}", MysqlLog::INFO);
     }
 
@@ -59,7 +63,11 @@ class BiliSend extends BiliBase
         $this->bili_entry($this->room_id);
         $this->getSendGift();
         $urlapi = $this->prefix . 'gift/v2/gift/bag_list';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $data = [
+            'csrf' => $this->csrf_token,
+            'csrf_token' => $this->csrf_token
+        ];
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
             trace("send $raw", MysqlLog::INFO);
