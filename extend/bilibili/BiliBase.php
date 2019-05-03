@@ -65,7 +65,7 @@ class BiliBase
         }
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
-        explode_curl($this->curl);
+        $c_info = explode_curl($this->curl);
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
@@ -89,7 +89,6 @@ class BiliBase
             $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
         }
         if (false !== strpos($return_str, 'token')) {
-            $c_info = curl_getinfo($this->curl);
             if (isset($c_info['request_header'])) {
                 trace("CSRF {$this->csrf_token} Req " . json_encode($c_info['request_header']), MysqlLog::ERROR);
             }

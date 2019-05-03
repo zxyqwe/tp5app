@@ -151,6 +151,7 @@ function explode_curl($ch)
     foreach ($ret as $i) {
         trace($i, 'debug');
     }
+    return $c_info;
 }
 
 function local_cron()
