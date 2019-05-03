@@ -13,7 +13,7 @@ class BiliOnline extends BiliBase
             'csrf' => $this->csrf_token,
             'csrf_token' => $this->csrf_token
         ];
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
+        $res = $this->bili_Post($urlapi, $this->room_id, http_build_query($data));
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
             trace("online $res", MysqlLog::ERROR);
@@ -23,14 +23,14 @@ class BiliOnline extends BiliBase
     public function getInfo()
     {
         $urlapi = $this->prefix . 'User/getUserInfo';
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $res = $this->bili_Post($urlapi, $this->room_id);
         return $res;
     }
 
     public function unknown_heart()//看起来没用 100 sec {"code":0,"msg":" ","message":" ","data":{"count":0,"open":0,"has_new":0}}
     {
         $urlapi = $this->prefix . 'feed/v1/feed/heartBeat?_=' . microtime(true);
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $res = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
             trace("unknown_heart $res", MysqlLog::ERROR);
@@ -44,7 +44,7 @@ class BiliOnline extends BiliBase
             'csrf' => $this->csrf_token,
             'csrf_token' => $this->csrf_token
         ];
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($data));
+        $res = $this->bili_Post($urlapi, $this->room_id, http_build_query($data));
         $data = json_decode($res, true);
         if (!in_array($data['code'], [0, 65531])) {
             trace("unknown_notice $res", MysqlLog::ERROR);
@@ -57,7 +57,7 @@ class BiliOnline extends BiliBase
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/heart_gift_receive?roomid=' . $this->room_id . '&area_v2_id=32';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace("heart_gift_receive $raw", MysqlLog::ERROR);
@@ -86,7 +86,7 @@ class BiliOnline extends BiliBase
     private function heartbeat()
     {
         $urlapi = $this->prefix . 'eventRoom/index?ruid=' . $this->ruid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         trace("心跳 {$data['msg']}", MysqlLog::LOG);
     }
@@ -97,7 +97,7 @@ class BiliOnline extends BiliBase
             return;
         }
         $urlapi = $this->prefix . 'eventRoom/heart?roomid=' . $this->room_id;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         $timeout = 590;
         if ($data['code'] === 0) {

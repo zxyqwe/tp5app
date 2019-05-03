@@ -16,7 +16,7 @@ class BiliDanmu extends BiliBase
             'csrf_token' => $this->csrf_token
         ];
         $urlapi = $this->prefix . $url . $real_roomid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, http_build_query($data));
+        $raw = $this->bili_Post($urlapi, $real_roomid, http_build_query($data));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0 || !isset($data['data'])) {
             trace("$url $key $raw", MysqlLog::ERROR);
@@ -85,7 +85,7 @@ class BiliDanmu extends BiliBase
         } else {
             $postdata = $payload;
         }
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid, $postdata);
+        $raw = $this->bili_Post($urlapi, $real_roomid, $postdata);
         $join = json_decode($raw, true);
         if (false !== strpos($raw, '访问被拒绝') || $join['code'] == 400) {
             trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]), MysqlLog::ERROR);
@@ -144,7 +144,7 @@ class BiliDanmu extends BiliBase
             return json(['msg' => 'ADD', 'data' => $ret]);
         }
         $urlapi = $this->prefix . $url . $payload;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $real_roomid);
+        $raw = $this->bili_Post($urlapi, $real_roomid);
         if (false !== strpos($raw, '正在抽奖中')
             || false !== strpos($raw, '尚未开奖')
         ) {
