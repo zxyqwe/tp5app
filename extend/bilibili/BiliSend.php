@@ -9,19 +9,19 @@ class BiliSend extends BiliBase
     private function sign()
     {
         $urlapi = $this->prefix . 'sign/doSign';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] == -500) {
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false, true, false);
+        $raw = $this->bili_Post($urlapi, $this->room_id, false, true, false);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
             trace('sendDaily ' . $raw, MysqlLog::ERROR);
         }
         $urlapi = $this->prefix . 'sign/GetSignInfo';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['text']) || !isset($data['data']['specialText'])) {
             trace("GetSignInfo $raw", MysqlLog::INFO);
@@ -38,7 +38,7 @@ class BiliSend extends BiliBase
         $this->sign();
         /*
         $urlapi = $this->prefix . 'giftBag/getSendGift';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
             trace("getSendGift $raw");
@@ -59,7 +59,7 @@ class BiliSend extends BiliBase
         $this->bili_entry($this->room_id);
         $this->getSendGift();
         $urlapi = $this->prefix . 'gift/v2/gift/bag_list';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
             trace("send $raw", MysqlLog::INFO);
@@ -95,7 +95,7 @@ class BiliSend extends BiliBase
                 'csrf_token' => $this->csrf_token
             ];
             $urlapi = $this->prefix . 'gift/v2/live/bag_send';
-            $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, http_build_query($payload));
+            $raw = $this->bili_Post($urlapi, $this->room_id, http_build_query($payload));
             $res = json_decode($raw, true);
             if (0 !== $res['code']) {
                 trace("投喂 {$this->csrf_token} $raw", MysqlLog::ERROR);

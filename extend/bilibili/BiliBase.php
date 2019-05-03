@@ -25,8 +25,11 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 1);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($this->curl, CURLOPT_USERAGENT, $this->agent);
+        curl_setopt($this->curl, CURLINFO_HEADER_OUT, true);
 
         $this->cookie = self::getCookies();
+        curl_setopt($this->curl, CURLOPT_COOKIE, $this->cookie);
+
         preg_match('/LIVE_LOGIN_DATA=(.{40})/', $this->cookie, $token);
         $this->token = isset($token[1]) ? $token[1] : '';
         preg_match('/bili_jct=(.{32})/', $this->cookie, $token);
@@ -47,17 +50,18 @@ class BiliBase
         }
     }
 
-    protected function bili_Post($url, $cookie, $room, $data = false, $sub = true, $post = true)
+    protected function bili_Post($url, $room, $data = false, $sub = true, $post = true)
     {
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        curl_setopt($this->curl, CURLOPT_COOKIE, $cookie);
-        curl_setopt($this->curl, CURLOPT_POST, $post);
         if ($post) {
+            curl_setopt($this->curl, CURLOPT_POST, true);
             if (false !== $data) {
                 curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
             } else {
                 curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
             }
+        } else {
+            curl_setopt($this->curl, CURLOPT_HTTPGET, true);
         }
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
@@ -85,7 +89,10 @@ class BiliBase
             $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
         }
         if (false !== strpos($return_str, 'token')) {
-            trace("CSRF {$this->csrf_token} Cookie " . self::getCookies(), MysqlLog::ERROR);
+            $c_info = curl_getinfo($this->curl);
+            if (isset($c_info['request_header'])) {
+                trace("CSRF {$this->csrf_token} Req " . json_encode($c_info['request_header']), MysqlLog::ERROR);
+            }
         }
         return $return_str;
     }
@@ -93,14 +100,14 @@ class BiliBase
     protected function bili_entry($rid)
     {
         $urlapi = 'https://live.bilibili.com/' . $rid;
-        $this->bili_Post($urlapi, $this->cookie, $rid);
+        $this->bili_Post($urlapi, $rid);
 
         $data = [
             'csrf' => $this->csrf_token,
             'csrf_token' => $this->csrf_token
         ];
         $urlapi = $this->prefix . 'room/v1/Room/room_init?id=' . $rid;
-        $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($data));
+        $raw = $this->bili_Post($urlapi, $rid, http_build_query($data));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace("钓鱼 $raw", MysqlLog::ERROR);
@@ -119,7 +126,7 @@ class BiliBase
             'csrf' => $this->csrf_token,
             'csrf_token' => $this->csrf_token
         ];
-        $raw = $this->bili_Post($urlapi, $this->cookie, $rid, http_build_query($payload));
+        $raw = $this->bili_Post($urlapi, $rid, http_build_query($payload));
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace("历史记录 $raw", MysqlLog::ERROR);

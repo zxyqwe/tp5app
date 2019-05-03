@@ -27,7 +27,7 @@ class BiliSilver extends BiliBase
             return;
         }
         $urlapi = $this->prefix . "lottery/v1/SilverBox/getAward?time_start=$start&time_end=$end&captcha=$captcha";
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $res = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($res, true);
         if ($data['code'] === 0) {
             trace("领取银瓜子：{$data['data']['silver']} (+{$data['data']['awardSilver']})", MysqlLog::INFO);
@@ -53,7 +53,7 @@ class BiliSilver extends BiliBase
             return $this->lock('silverTask', 1);
         }
         $urlapi = $this->prefix . 'lottery/v1/SilverBox/getCurrentTask';
-        $res = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $res = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($res, true);
         switch ($data['code']) {
             case -101:
@@ -70,7 +70,7 @@ class BiliSilver extends BiliBase
     private function captcha()
     {
         $urlapi = $this->prefix . 'lottery/v1/SilverBox/getCaptcha?ts=' . time();
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
+        $raw = $this->bili_Post($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] !== 0) {
             trace("captcha $raw", MysqlLog::ERROR);
