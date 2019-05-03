@@ -15,7 +15,7 @@ class BiliSend extends BiliBase
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';
-        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false,true,false);
+        $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id, false, true, false);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
             trace('sendDaily ' . $raw, MysqlLog::ERROR);
@@ -23,10 +23,10 @@ class BiliSend extends BiliBase
         $urlapi = $this->prefix . 'sign/GetSignInfo';
         $raw = $this->bili_Post($urlapi, $this->cookie, $this->room_id);
         $data = json_decode($raw, true);
-if(!isset($data['data'])||!isset($data['data']['text'])||!isset($data['data']['specialText'])){
-trace("GetSignInfo $raw",MysqlLog::INFO);
-return;
-}
+        if (!isset($data['data']) || !isset($data['data']['text']) || !isset($data['data']['specialText'])) {
+            trace("GetSignInfo $raw", MysqlLog::INFO);
+            return;
+        }
         trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}", MysqlLog::INFO);
     }
 
