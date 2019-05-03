@@ -2,6 +2,8 @@
 
 namespace bilibili;
 
+use think\Debug;
+use think\App;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
@@ -86,6 +88,8 @@ class BiliBase
         }
         if (false !== strpos($return_str, 'token')) {
             trace("CSRF {$this->csrf_token} Cookie " . self::getCookies(), MysqlLog::ERROR);
+            App::$debug = true;
+            Debug::remark('behavior_start', THINK_START_TIME);
         }
         return $return_str;
     }
