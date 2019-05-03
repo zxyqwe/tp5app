@@ -84,6 +84,9 @@ class BiliBase
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
             $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
         }
+        if(false !== strpos($return_str, 'token'){
+            trace("CSRF {$this->csrf_token} Cookie ".self::getCookies(), MysqlLog::ERROR);
+        }
         return $return_str;
     }
 
