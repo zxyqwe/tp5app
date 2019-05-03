@@ -9,7 +9,7 @@ class BiliSend extends BiliBase
     private function sign()
     {
         $urlapi = $this->prefix . 'sign/doSign';
-        $raw = $this->bili_Post($urlapi, $this->room_id);
+        $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if ($data['code'] == -500) {
             return;
@@ -21,10 +21,10 @@ class BiliSend extends BiliBase
             trace('sendDaily ' . $raw, MysqlLog::ERROR);
         }
         $urlapi = $this->prefix . 'sign/GetSignInfo';
-        $raw = $this->bili_Post($urlapi, $this->room_id);
+        $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['text']) || !isset($data['data']['specialText'])) {
-            trace("GetSignInfo $raw", MysqlLog::INFO);
+            trace("GetSignInfo $raw", MysqlLog::ERROR);
             return;
         }
         trace("签到获得 {$data['data']['text']} {$data['data']['specialText']}", MysqlLog::INFO);
@@ -62,7 +62,7 @@ class BiliSend extends BiliBase
         $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
-            trace("send $raw", MysqlLog::INFO);
+            trace("send $raw", MysqlLog::ERROR);
             return;
         }
         $data = $data['data']['list'];
