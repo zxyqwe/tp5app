@@ -23,7 +23,7 @@ class BiliOnline extends BiliBase
     public function getInfo()
     {
         $urlapi = $this->prefix . 'User/getUserInfo';
-        $res = $this->bili_Post($urlapi, $this->room_id);
+        $res = $this->bili_Get($urlapi, $this->room_id);
         return $res;
     }
 

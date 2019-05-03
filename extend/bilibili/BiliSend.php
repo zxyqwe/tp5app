@@ -15,7 +15,7 @@ class BiliSend extends BiliBase
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';
-        $raw = $this->bili_Post($urlapi, $this->room_id, false, true, false);
+        $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (0 !== $data['code']) {
             trace('sendDaily ' . $raw, MysqlLog::ERROR);
@@ -59,7 +59,7 @@ class BiliSend extends BiliBase
         $this->bili_entry($this->room_id);
         $this->getSendGift();
         $urlapi = $this->prefix . 'gift/v2/gift/bag_list';
-        $raw = $this->bili_Post($urlapi, $this->room_id);
+        $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
         if (!isset($data['data']) || !isset($data['data']['list']) || !is_array($data['data']['list'])) {
             trace("send $raw", MysqlLog::INFO);

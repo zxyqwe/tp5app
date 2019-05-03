@@ -50,19 +50,26 @@ class BiliBase
         }
     }
 
-    protected function bili_Post($url, $room, $data = false, $sub = true, $post = true)
+    protected function bili_Get($url, $room)
+    {
+        curl_setopt($this->curl, CURLOPT_HTTPGET, true);
+        return $this->bili_curl($url, $room);
+    }
+
+    protected function bili_Post($url, $room, $data = false)
+    {
+        curl_setopt($this->curl, CURLOPT_POST, true);
+        if (false !== $data) {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+        } else {
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
+        }
+        return $this->bili_curl($url, $room);
+    }
+
+    private function bili_curl($url, $room)
     {
         curl_setopt($this->curl, CURLOPT_URL, $url);
-        if ($post) {
-            curl_setopt($this->curl, CURLOPT_POST, true);
-            if (false !== $data) {
-                curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
-            } else {
-                curl_setopt($this->curl, CURLOPT_POSTFIELDS, '');
-            }
-        } else {
-            curl_setopt($this->curl, CURLOPT_HTTPGET, true);
-        }
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
         $c_info = explode_curl($this->curl);
@@ -84,7 +91,7 @@ class BiliBase
         ) {
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
-        if ($sub && is_null(json_decode($return_str))) {
+        if (true && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
             $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
         }
