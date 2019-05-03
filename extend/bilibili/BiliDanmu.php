@@ -79,13 +79,7 @@ class BiliDanmu extends BiliBase
         }
         $this->lock("debounce", 60);
         $urlapi = $this->prefix . $url;
-        if (false !== strpos($url, '?')) {
-            $urlapi .= $payload;
-            $postdata = false;
-        } else {
-            $postdata = $payload;
-        }
-        $raw = $this->bili_Post($urlapi, $real_roomid, $postdata);
+        $raw = $this->bili_Post($urlapi, $real_roomid, $payload);
         $join = json_decode($raw, true);
         if (false !== strpos($raw, '访问被拒绝') || $join['code'] == 400) {
             trace("Bili400 $raw " . json_encode([$real_roomid, $item, $key, $url]), MysqlLog::ERROR);
