@@ -2,8 +2,6 @@
 
 namespace bilibili;
 
-use think\Debug;
-use think\App;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
@@ -14,7 +12,7 @@ class BiliBase
     protected $prefix = 'https://api.live.bilibili.com/';
     protected $cookie = '';
     protected $csrf_token = '';
-    protected $room_id = 5294;
+    protected $room_id = 218;
     protected $ruid = 116683;
     protected $uid = 649681;
     private $curl;
@@ -88,8 +86,6 @@ class BiliBase
         }
         if (false !== strpos($return_str, 'token')) {
             trace("CSRF {$this->csrf_token} Cookie " . self::getCookies(), MysqlLog::ERROR);
-            App::$debug = true;
-            Debug::remark('behavior_start', THINK_START_TIME);
         }
         return $return_str;
     }
