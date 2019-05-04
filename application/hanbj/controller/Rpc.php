@@ -79,10 +79,13 @@ class Rpc extends Controller
         if (null !== $ret) {
             $data['touser'] = $ret['openid'];
         } else {
-            if (isset($data['remark'])) {
-                $data['remark'] = '（非会员）' . $data['remark'];
+            if (!isset($data['data'])) {
+                return json(['msg' => 'data错误']);
+            }
+            if (isset($data['data']['remark'])) {
+                $data['data']['remark'] = '（非会员）' . $data['data']['remark'];
             } else {
-                $data['remark'] = '（非会员）';
+                $data['data']['remark'] = '（非会员）';
             }
         }
 
