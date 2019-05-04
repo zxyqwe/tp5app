@@ -76,17 +76,16 @@ class Rpc extends Controller
 
         $unionid = strval($data['touser']);
         $ret = MemberOper::search_unionid($unionid);
-        if (null === $ret) {
-            return json(['msg' => "查无此人"]);
-        }
-        if (!is_numeric($ret['code']) || !in_array(intval($ret['code']), MemberOper::getMember())) {
-            return json(['msg' => "用户锁住"]);
-        }
-        if (FeeOper::owe($ret['unique_name'])) {
-            return json(['msg' => "用户欠费"]);
+        if (null !== $ret) {
+            $data['touser'] = $ret['openid'];
+        } else {
+            if (isset($data['remark'])) {
+                $data['remark'] = '（非会员）' . $data['remark'];
+            } else {
+                $data['remark'] = '（非会员）';
+            }
         }
 
-        $data['touser'] = $ret['openid'];
         $raw = WxTemp::rpc($data, "RPC 模板 {$ret['unique_name']} " . json_encode($data));
         return json(['msg' => $raw]);
     }
