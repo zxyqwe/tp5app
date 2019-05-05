@@ -64,20 +64,22 @@ class BiliDanmu extends BiliBase
             'visit_id' => ''
         ];
         $payload = http_build_query($payload_raw);
+        if ($this->lock("debounce")) {
+            return;
+        }
         if ($this->lock("$key$payload")) {
             return;
         }
-        if (rand(0, 1000) > 5) {
+        if (rand(0, 100) > 5) {
             $this->lock("$key$payload", $this->long_timeout());
             return;
         }
         if (!$this->bili_entry($real_roomid)) {
             return;
         }
-        if ($this->lock("debounce")) {
-            return;
-        }
-        $this->lock("debounce", 60);
+        $debounce_time = rand(60, 1000);
+        $this->lock("debounce", $debounce_time);
+        trace("Bili Debounce $debounce_time", MysqlLog::INFO);
         $urlapi = $this->prefix . $url;
         $raw = $this->bili_Post($urlapi, $real_roomid, $payload);
         $join = json_decode($raw, true);
