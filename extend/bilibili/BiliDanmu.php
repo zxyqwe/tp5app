@@ -67,14 +67,14 @@ class BiliDanmu extends BiliBase
         if ($this->lock("$key$payload")) {
             return;
         }
-        if (rand(0, 100) > 5) {
-            $this->lock("$key$payload", $this->long_timeout());
-            return;
-        }
+//        if (rand(0, 100) > 5) {
+//            $this->lock("$key$payload", $this->long_timeout());
+//            return;
+//        }
         if (!$this->bili_entry($real_roomid)) {
             return;
         }
-        $debounce_time = rand(60, 1000);
+        $debounce_time = rand(600, 3600);
         $this->lock("debounce", $debounce_time);
         trace("Bili Debounce $debounce_time", MysqlLog::INFO);
         $urlapi = $this->prefix . $url;
