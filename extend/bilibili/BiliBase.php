@@ -105,6 +105,12 @@ class BiliBase
 
     protected function bili_entry($rid)
     {
+        if ($this->lock("debounce")) {
+            return false;
+        }
+        if ($this->lock("bili_entry_$rid")) {
+            return true;
+        }
         $urlapi = 'https://live.bilibili.com/' . $rid;
         $this->bili_Post($urlapi, $rid);
 
@@ -138,7 +144,8 @@ class BiliBase
             trace("历史记录 $raw", MysqlLog::ERROR);
             return false;
         }
-
+        trace("Bili Entry $rid", MysqlLog::INFO);
+        $this->lock("bili_entry_$rid", 900);
         return true;
     }
 

@@ -64,9 +64,6 @@ class BiliDanmu extends BiliBase
             'visit_id' => ''
         ];
         $payload = http_build_query($payload_raw);
-        if ($this->lock("debounce")) {
-            return;
-        }
         if ($this->lock("$key$payload")) {
             return;
         }
