@@ -47,10 +47,11 @@ class AccessControll
         }
 
         $uniq = session('unique_name');
+        if ($uniq === HBConfig::CODER) {
+            return;
+        }
         if (UserOper::grantAllRight($uniq)) {
-            if ($uniq !== HBConfig::CODER) {
-//                trace("超级权限 $uniq $controller $action", MysqlLog::INFO);
-            }
+            trace("超级权限 $uniq $controller $action", MysqlLog::LOG);
             return;
         }
         if (!in_array($controller, self::limit_controller)) {
