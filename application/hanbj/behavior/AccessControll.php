@@ -49,7 +49,7 @@ class AccessControll
         $uniq = session('unique_name');
         if (UserOper::grantAllRight($uniq)) {
             if ($uniq !== HBConfig::CODER) {
-                trace("超级权限 $uniq $controller $action", MysqlLog::INFO);
+//                trace("超级权限 $uniq $controller $action", MysqlLog::INFO);
             }
             return;
         }

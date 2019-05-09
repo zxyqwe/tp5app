@@ -71,7 +71,7 @@ class Fame extends Controller
                 ->insertAll($data);
             if ($res === count($data)) {
                 Db::commit();
-                trace("Fame " . json_encode($name), MysqlLog::INFO);
+                trace("Fame Add " . json_encode($data), MysqlLog::INFO);
             } else {
                 Db::rollback();
                 return json(['msg' => $res], 400);
@@ -123,7 +123,7 @@ class Fame extends Controller
                 ->data([$name => $value])
                 ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
                 ->update();
-            trace("Fame Edit $unique $pk $name $value", MysqlLog::INFO);
+            trace("Fame Edit $unique $pk $name $value " . json_encode($ret), MysqlLog::INFO);
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Fame Edit $e", MysqlLog::ERROR);
