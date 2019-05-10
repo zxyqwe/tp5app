@@ -77,7 +77,7 @@ class AccessControll
         if (request()->isAjax()) {
             $res = json(['msg' => '没有权限'], 400);
         } else {
-            $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
+            $res = redirect('https://app.zxyqwe.com/hanbj/index/index');
         }
         throw new HttpResponseException($res);
     }
