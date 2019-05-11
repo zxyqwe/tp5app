@@ -71,6 +71,9 @@ class AccessControll
         if ($this->canView($controller)) {
             return;
         }
+        if ($controller === 'index' && $action === 'home') {
+            return;
+        }
         if (strlen($uniq) > 0) {
             trace("禁止 $uniq $controller $action", MysqlLog::INFO);
         }
