@@ -9,16 +9,14 @@ use util\MysqlLog;
 
 class AccessControll
 {
-    const limit_controller = [
-        'analysis',
-        'daily',
-        'develop',
-        'error',
-        'fame',
-        'index',
-        'system',
-        'write',
-        //'wxwork',
+    const except_controller = [
+        'mobile',
+        'pub',
+        'rpc',
+        'wxclub',
+        'wxdaily',
+        'wxtest',
+        'wxwork',
     ];
     const except = [
         'index' => [
@@ -30,11 +28,6 @@ class AccessControll
             'server'
         ]
     ];
-    const ROLE_SYS = 0; // 啥都干，基本是会长层
-    const ROLE_TOP = 1; // 可信人员，基本是部长层
-    const ROLE_MID = 2; // 一般工作人员，基本是副部长
-    const ROLE_LOW = 3; // 只能看的，一般干事
-    const ROLE_NON = 4; // 离职人员
 
     public function run(/* &$call */)
     {
@@ -54,10 +47,7 @@ class AccessControll
             trace("超级权限 $uniq $controller $action", MysqlLog::LOG);
             return;
         }
-        if (!in_array($controller, self::limit_controller)) {
-            if ($controller !== 'rpc') {
-                trace("非限制路径 $uniq $controller", MysqlLog::LOG);
-            }
+        if (in_array($controller, self::except_controller)) {
             return;
         }
         if (array_key_exists($controller, self::except)
@@ -68,26 +58,29 @@ class AccessControll
         }
 
         UserOper::valid_pc(request()->isAjax());
-        if ($this->canView($controller)) {
-            return;
-        }
-        if ($controller === 'index' && $action === 'home') {
+        if ($this->canView($controller, $action)) {
             return;
         }
         if (strlen($uniq) > 0) {
             trace("禁止 $uniq $controller $action", MysqlLog::INFO);
         }
         if (request()->isAjax()) {
-            $res = json(['msg' => '没有权限'], 400);
+            $res = json(['msg' => "没有权限 禁止 $uniq $controller $action"], 400);
         } else {
             $res = redirect('https://app.zxyqwe.com/hanbj/index/index');
         }
         throw new HttpResponseException($res);
     }
 
-    private function canView($controller)
+    private function canView($controller, $action)
     {
         if (in_array($controller, ['fame', 'analysis'])) {
+            return true;
+        }
+        if ($controller === 'index' && $action === 'home') {
+            return true;
+        }
+        if ($controller === 'write' && $action === 'fee_search') {
             return true;
         }
         return false;
