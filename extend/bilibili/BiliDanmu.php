@@ -67,10 +67,10 @@ class BiliDanmu extends BiliBase
         if ($this->lock("$key$payload")) {
             return;
         }
-//        if (rand(0, 100) > 5) {
-//            $this->lock("$key$payload", $this->long_timeout());
-//            return;
-//        }
+        if (rand(0, 100) > 30) {
+            $this->lock("$key$payload", $this->long_timeout());
+            return;
+        }
         if (!$this->bili_entry($real_roomid)) {
             return;
         }
