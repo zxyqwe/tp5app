@@ -112,6 +112,7 @@ class FameOper
         $res = Db::table('fame')
             ->alias('f')
             ->join($join)
+            ->where(['grade' => ['neq', self::leave]])
             ->field([
                 'f.unique_name',
                 'tieba_id',
@@ -151,7 +152,8 @@ class FameOper
         $ret = Db::table('fame')
             ->where([
                 'unique_name' => session('unique_name'),
-                'year' => HBConfig::YEAR
+                'year' => HBConfig::YEAR,
+                'grade' => ['neq', self::leave]
             ])
             ->field([
                 'grade',

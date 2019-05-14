@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\FameOper;
 use hanbj\UserOper;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
@@ -213,6 +214,7 @@ class Wxdaily extends Controller
     public function history()
     {
         $map['unique_name'] = session('unique_name');
+        $map['grade'] = ['neq', FameOper::leave];
         $ret = Db::table('fame')
             ->where($map)
             ->order('year desc')
