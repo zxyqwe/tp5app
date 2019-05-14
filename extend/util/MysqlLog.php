@@ -71,7 +71,7 @@ class MysqlLog
                 $logArr[] = $tmp;
             }
         }
-        Db::table("logs")->insertAll($logArr);
+        Db::table('logs')->insertAll($logArr);
         return true;
     }
 }

@@ -152,7 +152,6 @@ class BonusOper
             ])
             ->select();
         $map['bonus'] = ['>=', intval($tmp[0]['o'])];
-        $map['unique_name'] = ['neq', HBConfig::CODER];
         $tmp = Db::table('member')
             ->alias('m')
             ->cache(600)
