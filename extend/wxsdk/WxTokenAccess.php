@@ -16,7 +16,7 @@ class WxTokenAccess extends TokenOper
             trace("WX_access $raw", MysqlLog::ERROR);
             return;
         }
-        trace("Weixin Access " . $res['access_token'], MysqlLog::LOG);
+        trace("Weixin Access " . $res['access_token'], MysqlLog::DEBUG);
         $this->expire_time = time() + intval($res['expires_in']);
         $this->value = $res['access_token'];
         cache($this->cache_key,

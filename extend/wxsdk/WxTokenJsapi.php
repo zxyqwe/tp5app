@@ -18,7 +18,7 @@ class WxTokenJsapi extends TokenOper
             trace("JsApi $raw", MysqlLog::ERROR);
             return;
         }
-        trace("Weixin JsApi " . $res['ticket'], MysqlLog::LOG);
+        trace("Weixin JsApi " . $res['ticket'], MysqlLog::DEBUG);
         $this->expire_time = time() + intval($res['expires_in']);
         $this->value = $res['ticket'];
         cache($this->cache_key,

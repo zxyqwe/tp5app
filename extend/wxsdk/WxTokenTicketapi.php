@@ -18,7 +18,7 @@ class WxTokenTicketapi extends TokenOper
             trace("TicketApi $raw", MysqlLog::ERROR);
             return;
         }
-        trace("Weixin TicketApi " . $res['ticket'], MysqlLog::LOG);
+        trace("Weixin TicketApi " . $res['ticket'], MysqlLog::DEBUG);
         $this->expire_time = time() + intval($res['expires_in']);
         $this->value = $res['ticket'];
         cache($this->cache_key,
