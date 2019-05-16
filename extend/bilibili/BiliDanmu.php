@@ -55,6 +55,9 @@ class BiliDanmu extends BiliBase
 
     private function _handle($real_roomid, $item, $key, $url, &$ret)
     {
+        if ($this->lock("join_handle_debounce")) {
+            return;
+        }
         $payload_raw = [
             'roomid' => $real_roomid,
             'raffleId' => $item['raffleId'],
@@ -74,9 +77,6 @@ class BiliDanmu extends BiliBase
         if (!$this->bili_entry($real_roomid)) {
             return;
         }
-        $debounce_time = rand(600, 3600);
-        $this->lock("debounce", $debounce_time);
-        trace("Bili Debounce $debounce_time", MysqlLog::INFO);
         $urlapi = $this->prefix . $url;
         $raw = $this->bili_Post($urlapi, $real_roomid, $payload);
         $join = json_decode($raw, true);
@@ -89,6 +89,10 @@ class BiliDanmu extends BiliBase
             trace('可能有了 ' . json_encode([$item["time_wait"], $item["time"], $item["max_time"], $item["status"]]), MysqlLog::INFO);
             $this->lock("$key$payload", $this->long_timeout());
             $ret[] = $payload_raw;
+            $this->lock("join_handle_debounce", 30);
+            $debounce_time = rand(600, 3600);
+            $this->lock("enter_room_debounce", $debounce_time);
+            trace("Bili Enter Room Debounce $debounce_time", MysqlLog::INFO);
             return;
         }
         if ($join['code'] === 65531

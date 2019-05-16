@@ -108,7 +108,7 @@ class BiliBase
         if ($this->lock("bili_entry_$rid")) {
             return true;
         }
-        if ($this->lock("debounce")) {
+        if ($this->lock("enter_room_debounce")) {
             return false;
         }
         $urlapi = 'https://live.bilibili.com/' . $rid;
@@ -145,8 +145,8 @@ class BiliBase
             return false;
         }
         trace("Bili Entry $rid", MysqlLog::INFO);
-        $this->lock("bili_entry_$rid", 900);
-        $this->lock("debounce", 60);
+        $this->lock("bili_entry_$rid", 1800);
+        $this->lock("enter_room_debounce", 60);
         return true;
     }
 
