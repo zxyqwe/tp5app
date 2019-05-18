@@ -233,6 +233,7 @@ class Mobile extends Controller
                 $ret = MemberOper::Unused2Temp($unique_name, $tieba_id, $openid);
                 if ($ret) {
                     session('unique_name', $unique_name);
+                    session('tieba_id', $tieba_id);
                     $limit = WxHanbj::addUnionID(WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS'));
                     if ($limit > 0) {
                         trace("未关注者：$limit", MysqlLog::LOG);
