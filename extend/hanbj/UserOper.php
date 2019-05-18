@@ -138,7 +138,8 @@ class UserOper
             && $action === 'index')
         ) {
             $uniq = session('unique_name');
-            trace("微信访问 $uniq $controller $action", MysqlLog::LOG);
+            $tieba = session('tieba_id');
+            trace("微信访问 $uniq $tieba $controller $action", MysqlLog::LOG);
         }
     }
 }

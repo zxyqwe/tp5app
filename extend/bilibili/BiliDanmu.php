@@ -70,7 +70,7 @@ class BiliDanmu extends BiliBase
         if ($this->lock("$key$payload")) {
             return;
         }
-        if (rand(0, 100) > 30) {
+        if (rand(0, 100) > 10) {
             $this->lock("$key$payload", $this->long_timeout());
             return;
         }
