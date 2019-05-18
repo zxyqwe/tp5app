@@ -19,7 +19,6 @@ class WxHanbj
         $wx['api'] = config('hanbj_api');
         $wx['timestamp'] = time();
         $wx['nonce'] = getNonceStr();
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $ss = 'jsapi_ticket=' . self::jsapi() .
             '&noncestr=' . $wx['nonce'] .
             '&timestamp=' . $wx['timestamp']

@@ -163,7 +163,6 @@ class Mobile extends Controller
         $wx['card_id'] = config('hanbj_cardid');
         $wx['timestamp'] = '' . time();
         $wx['nonce_str'] = getNonceStr();
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
         $ss = [$wx['nonce_str'],
             $wx['timestamp'],
             WxHanbj::ticketapi(),
