@@ -141,7 +141,7 @@ class Develop extends Controller
                 $Tables_in_hanbj = [];
                 foreach ($tables as $item) {
                     $tmp = $item['Tables_in_hanbj'];
-                    TableOper::generateOneTable($tmp);
+                    TableOper::generateOneTable($tmp, $Tables_in_hanbj);
                 }
                 return json($Tables_in_hanbj);
         }

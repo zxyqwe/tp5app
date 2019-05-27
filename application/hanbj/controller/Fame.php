@@ -98,7 +98,8 @@ class Fame extends Controller
         if (strlen($name) < 1) {
             return json(['msg' => 'name len short'], 400);
         }
-        TableOper::generateOneTable('fame');
+        $no_use = [];
+        TableOper::generateOneTable('fame', $no_use);
         TableOper::assertInField('fame', $name);
         $ret = Db::table('fame')
             ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])

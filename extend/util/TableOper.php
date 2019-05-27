@@ -8,7 +8,7 @@ use think\exception\HttpResponseException;
 
 class TableOper
 {
-    public static function generateOneTable($tmp)
+    public static function generateOneTable($tmp, &$Tables_in_hanbj)
     {
         if (self::hasGenerated($tmp)) {
             return;
