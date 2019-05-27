@@ -277,6 +277,8 @@ class Daily extends Controller
         $ret = Db::table('activity')
             ->order('id desc')
             ->field('distinct name')
+            ->limit(10000)
+            ->cache(600)
             ->select();
         $data = [];
         foreach ($ret as $item) {
