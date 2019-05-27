@@ -238,7 +238,8 @@ class Write extends Controller
                 if (strlen($name) < 1) {
                     return json(['msg' => 'name len short'], 400);
                 }
-                TableOper::generateOneTable('prom');
+                $no_use = [];
+                TableOper::generateOneTable('prom', $no_use);
                 TableOper::assertInField('prom', $name);
                 try {
                     if ($pk > 0) {
