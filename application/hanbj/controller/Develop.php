@@ -11,6 +11,7 @@ use util\MysqlLog;
 use think\Db;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\StatOper;
 use util\TableOper;
 
 class Develop extends Controller
@@ -181,12 +182,10 @@ class Develop extends Controller
     {
 //      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
 //      $ret = WxHanbj::addUnionID($access);
-        $ret = MemberOper::create_unique_unused();
+//        $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
 
-//        $ret = request()->ip();
-//        sleep(2);
-//        $ret = 0;
+        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
         return json(['msg' => $ret]);
     }
 }
