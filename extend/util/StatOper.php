@@ -29,7 +29,19 @@ class StatOper
     public static function generateOneDay($type)
     {
         $stat = self::getRealStatOper($type);
-        return $stat->generateOneDay();
+        $ret = $stat->generateOneDay();
+        if (false === $ret) {
+            return 0;
+        }
+        $fetch_date = $ret[0];
+        $content = $ret[1];
+        return Db::table('stat')
+            ->data([
+                'type' => $type,
+                'content' => $content,
+                'time' => $fetch_date
+            ])
+            ->insert();
     }
 
     public static function OutputAll($type)
@@ -42,7 +54,7 @@ class StatOper
      * @param int $type
      * @return BaseStat
      */
-    private function getRealStatOper($type)
+    private static function getRealStatOper($type)
     {
         switch ($type) {
             case self::LOG_NUM:
