@@ -36,13 +36,18 @@ class LogStat extends BaseStat
             return false;
         }
 
+        $fetch_date = $current_new_day->format(StatOper::TIME_FORMAT);
         $ret = Db::table('logs')
             ->where([
-                'time' => ['like', $current_new_day->format(StatOper::TIME_FORMAT) . '%']
+                'time' => ['like', $fetch_date . '%']
             ])
             ->group('type')
-            ->count();
-        return [$current_new_day->format(StatOper::TIME_FORMAT), $ret];
+            ->field([
+                'count(id) as num',
+                'type'
+            ])
+            ->select();
+        return [$fetch_date, json_encode($ret)];
     }
 
     public function OutputAll()
