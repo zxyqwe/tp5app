@@ -76,13 +76,13 @@ class WxTemp
         //    {{remark.DATA}}
     ];
 
-    private static function base($data, $log)
+    private static function base($data, $log, $wx_limit = true)
     {
         if (!isset($data['touser']) || !isset($data['template_id'])) {
             return 'WxTemp data missing';
         }
         $limit = "{$data['touser']}{$data['template_id']}";
-        if (cache("?$limit")) {
+        if ($wx_limit && cache("?$limit")) {
             return 'WxTemp limit';
         }
         cache($limit, $limit, 600);
@@ -133,7 +133,7 @@ class WxTemp
             ]
         ];
         $log = implode(', ', [$openid, $uname, $fee, $cache_fee, $label]);
-        self::base($data, $log);
+        self::base($data, $log, false);
     }
 
     public static function regAct($openid, $uname, $act)
@@ -163,7 +163,7 @@ class WxTemp
             ]
         ];
         $log = implode(', ', [$openid, $uname, $act]);
-        self::base($data, $log);
+        self::base($data, $log, false);
     }
 
     public static function rpc($data, $log)
