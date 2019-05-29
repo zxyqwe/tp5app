@@ -8,6 +8,7 @@ use hanbj\MemberOper;
 use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
+use util\StatOper;
 use wxsdk\WxTokenAccess;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
@@ -59,5 +60,6 @@ class Index extends Controller
         $db->refresh();
         MemberOper::daily();
         BackupOper::run();
+        StatOper::generateOneDay(StatOper::LOG_NUM);
     }
 }

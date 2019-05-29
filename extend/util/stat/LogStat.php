@@ -5,6 +5,7 @@ namespace util\stat;
 use DateInterval;
 use DateTimeImmutable;
 use think\Db;
+use util\MysqlLog;
 use util\StatOper;
 
 class LogStat extends BaseStat
@@ -37,6 +38,7 @@ class LogStat extends BaseStat
         }
 
         $fetch_date = $current_new_day->format(StatOper::TIME_FORMAT);
+        trace("LogStat::generateOneDay $fetch_date", MysqlLog::LOG);
         $ret = Db::table('logs')
             ->where([
                 'time' => ['like', $fetch_date . '%']
