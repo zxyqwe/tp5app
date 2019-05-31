@@ -73,7 +73,10 @@ class LogStat extends BaseStat
                 $template[$k][] = $data[$k];
             }
         }
-        return [$time_range, $template];
+        return [
+            'time' => $time_range,
+            'data' => $template
+        ];
     }
 
     private function build_kv($select_ret)
