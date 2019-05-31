@@ -83,6 +83,18 @@ class Develop extends Controller
         }
     }
 
+    public function logdata()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                return view('logdata');
+            case 'POST':
+                return StatOper::OutputAll(StatOper::LOG_NUM);
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
+    }
+
     public function token()
     {
         $length = 10;

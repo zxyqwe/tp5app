@@ -1,0 +1,135 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>日志趋势</h1>
+        <div id="body">
+            <div class="row">
+                <div class="col-md-12 column" id="logdata"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nav = 'nav5_3';
+    var logdata = (function ($, w, undefined) {
+        'use strict';
+        var myChart;
+        var init = function () {
+            myChart = echarts.init(document.getElementById('logdata'));
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                legend: {
+                    data: ['error', 'info', 'log', 'debug', 'rpc']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: [0, 1, 2, 3, 4, 5, 6]
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%']
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 10
+                }, {
+                    start: 0,
+                    end: 10,
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    }
+                }],
+                series: [
+                    {
+                        name: 'error',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: [120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name: 'info',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: [220, 182, 191, 234, 290, 330, 310]
+                    },
+                    {
+                        name: 'log',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: [150, 232, 201, 154, 190, 330, 410]
+                    },
+                    {
+                        name: 'debug',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: [320, 332, 301, 334, 390, 330, 320]
+                    },
+                    {
+                        name: 'rpc',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    $(window).load(function () {
+        group.init();
+    });
+</script>
