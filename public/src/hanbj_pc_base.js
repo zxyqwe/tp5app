@@ -82,6 +82,7 @@ var nav_active = (function ($, w, undefined) {
         w.u20 = base + write + 'edit_club';
         w.u12 = base + develop + 'table';
         w.u21 = base + develop + 'tableone';
+        w.u22 = base + develop + 'logdata';
     };
     var init = function () {
         dict();

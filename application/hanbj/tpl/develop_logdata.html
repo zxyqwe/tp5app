@@ -4,7 +4,7 @@
         <h1>日志趋势</h1>
         <div id="body">
             <div class="row">
-                <div class="col-md-12 column" id="logdata"></div>
+                <div class="col-md-12 column" id="logdata" style="height: 50em"></div>
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
     var logdata = (function ($, w, undefined) {
         'use strict';
         var myChart;
-        var init = function () {
+        var build_fig = function (date_data, error_data, info_data, log_data, debug_data, rpc_data) {
             myChart = echarts.init(document.getElementById('logdata'));
             var option = {
                 tooltip: {
@@ -31,8 +31,7 @@
                         dataZoom: {
                             yAxisIndex: 'none'
                         },
-                        restore: {},
-                        saveAsImage: {}
+                        restore: {}
                     }
                 },
                 legend: {
@@ -41,13 +40,12 @@
                 grid: {
                     left: '3%',
                     right: '4%',
-                    bottom: '3%',
                     containLabel: true
                 },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: [0, 1, 2, 3, 4, 5, 6]
+                    data: date_data
                 },
                 yAxis: {
                     type: 'value',
@@ -75,61 +73,85 @@
                         name: 'error',
                         type: 'line',
                         stack: '总量',
-                        areaStyle: {},
+                        areaStyle: {normal: {}},
                         smooth: true,
                         symbol: 'none',
                         sampling: 'average',
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        data: error_data
                     },
                     {
                         name: 'info',
                         type: 'line',
                         stack: '总量',
-                        areaStyle: {},
+                        areaStyle: {normal: {}},
                         smooth: true,
                         symbol: 'none',
                         sampling: 'average',
-                        data: [220, 182, 191, 234, 290, 330, 310]
+                        data: info_data
                     },
                     {
                         name: 'log',
                         type: 'line',
                         stack: '总量',
-                        areaStyle: {},
+                        areaStyle: {normal: {}},
                         smooth: true,
                         symbol: 'none',
                         sampling: 'average',
-                        data: [150, 232, 201, 154, 190, 330, 410]
+                        data: log_data
                     },
                     {
                         name: 'debug',
                         type: 'line',
                         stack: '总量',
-                        areaStyle: {},
+                        areaStyle: {normal: {}},
                         smooth: true,
                         symbol: 'none',
                         sampling: 'average',
-                        data: [320, 332, 301, 334, 390, 330, 320]
+                        data: debug_data
                     },
                     {
                         name: 'rpc',
                         type: 'line',
                         stack: '总量',
-                        areaStyle: {},
+                        areaStyle: {normal: {}},
                         smooth: true,
                         symbol: 'none',
                         sampling: 'average',
-                        data: [820, 932, 901, 934, 1290, 1330, 1320]
+                        data: rpc_data
                     }
                 ]
             };
             myChart.setOption(option);
+        };
+        var init = function () {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u22,
+                data: {
+                    _ajax: 1,
+                },
+                dataType: "json",
+                success: function (msg) {
+                    build_fig(
+                        msg.time,
+                        msg.data.error,
+                        msg.data.info,
+                        msg.data.log,
+                        msg.data.debug,
+                        msg.data.rpc);
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
         };
         return {
             init: init
         };
     })(jQuery, window);
     $(window).load(function () {
-        group.init();
+        logdata.init();
     });
 </script>
