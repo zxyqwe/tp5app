@@ -38,7 +38,7 @@ class LogStat extends BaseStat
         }
 
         $fetch_date = $current_new_day->format(StatOper::TIME_FORMAT);
-        trace("LogStat::generateOneDay $fetch_date", MysqlLog::LOG);
+        trace("LogStat::generateOneDay $fetch_date", MysqlLog::INFO);
         $ret = Db::table('logs')
             ->where([
                 'time' => ['like', $fetch_date . '%']
