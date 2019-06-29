@@ -5,6 +5,7 @@ namespace app\hanbj\controller;
 use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
+use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
@@ -54,6 +55,7 @@ class Index extends Controller
         cache($name, $name, 60 - 10);
         $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
+        WxHanbj::addUnionID($db->get());
         $db = new WxTokenJsapi('HANBJ_JSAPI', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
         $db = new WxTokenTicketapi('HANBJ_TICKETAPI', config('hanbj_api'), config('hanbj_secret'));
