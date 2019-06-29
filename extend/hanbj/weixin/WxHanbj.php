@@ -106,10 +106,12 @@ class WxHanbj
         $from = (string)$msg->FromUserName;
         $to = (string)$msg->ToUserName;
 
-        try {
+        $idmap = Db::table('idmap')
+            ->where(['openid' => $from])
+            ->find();
+        if (null === $idmap) {
             Db::table('idmap')
                 ->insert(['openid' => $from]);
-        } catch (\Exception $e) {
         }
 
         $unique_name = '';
