@@ -14,6 +14,10 @@ use wxsdk\WxTokenTicketapi;
 
 class WxHanbj
 {
+    const Unknown = 0;
+    const Subscribe = 1;
+    const Unsubscribe = 2;
+
     public static function json_wx($url)
     {
         $wx['api'] = config('hanbj_api');
@@ -43,9 +47,8 @@ class WxHanbj
 
     public static function addUnionID($access, $limit = 15)
     {
-        $ret = Db::table('member')
+        $ret = Db::table('idmap')
             ->where([
-                'openid' => ['exp', Db::raw('is not null')],
                 'unionid' => ['exp', Db::raw('is null')]
             ])
             ->limit($limit)
@@ -76,12 +79,15 @@ class WxHanbj
                 cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
                 continue;
             }
-            $ret = Db::table('member')
+            $ret = Db::table('idmap')
                 ->where([
                     'openid' => $idx['openid'],
                     'unionid' => ['exp', Db::raw('is null')]
                 ])
-                ->data(['unionid' => $idx['unionid']])
+                ->data([
+                    'unionid' => $idx['unionid'],
+                    'status' => self::Subscribe
+                ])
                 ->update();
             if ($ret > 0) {
                 trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}", MysqlLog::INFO);
@@ -97,6 +103,13 @@ class WxHanbj
         $type = (string)$msg->MsgType;
         $from = (string)$msg->FromUserName;
         $to = (string)$msg->ToUserName;
+
+        try {
+            Db::table('idmap')
+                ->insert(['openid' => $from]);
+        } catch (\Exception $e) {
+        }
+
         $unique_name = '';
         if (cache("?chatbot$from")) {
             $unique_name = cache("chatbot$from");
@@ -196,7 +209,15 @@ class WxHanbj
                 trace($unique_name . json_encode($msg), MysqlLog::ERROR);
             case 'update_member_card':
             case 'subscribe':
+                Db::table('idmap')
+                    ->where(['openid' => $msg->FromUserName])
+                    ->update(['status' => self::Subscribe]);
+                return '';
             case 'unsubscribe':
+                Db::table('idmap')
+                    ->where(['openid' => $msg->FromUserName])
+                    ->update(['status' => self::Unsubscribe]);
+                return '';
             case 'SCAN':
             case 'LOCATION':
             case 'CLICK':

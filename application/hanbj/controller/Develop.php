@@ -192,12 +192,12 @@ class Develop extends Controller
 
     public function debug()
     {
-//      $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-//      $ret = WxHanbj::addUnionID($access);
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $ret = WxHanbj::addUnionID($access);
 //        $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
 
-        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
+//        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
         return json(['msg' => $ret]);
     }
 }
