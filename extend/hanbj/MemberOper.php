@@ -180,12 +180,17 @@ class MemberOper
         if (cache("?$cache_key")) {
             return json_decode(cache($cache_key), true);
         }
-        $ret = Db::table('member')
-            ->where(['unionid' => $unionid])
+        $ret = Db::table('idmap')
+            ->alias('f')
+            ->join([
+                ['member m', 'm.openid=f.openid', 'left']
+            ])
+            ->where(['f.unionid' => $unionid])
             ->field([
-                'unique_name',
-                'openid',
-                'code'
+                'm.unique_name',
+                'f.openid',
+                'm.code',
+                'f.status'
             ])
             ->find();
         cache($cache_key, json_encode($ret), 600);
@@ -298,7 +303,7 @@ class MemberOper
             $map['code'] = self::UNUSED;
             $ret = Db::table('member')
                 ->where($map)
-                ->update(['openid' => null, 'unionid' => null]);
+                ->update(['openid' => null]);
             if ($ret != 1) {
                 throw new \Exception('2 fail');
             }
@@ -332,9 +337,13 @@ class MemberOper
             trace("$unique_name TEMPUSE JUNIOR $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             $union_id = Db::table('member')
+                ->alias('m')
+                ->join([
+                    ['idmap f', 'm.openid=f.openid', 'left']
+                ])
                 ->where(['unique_name' => $unique_name])
                 ->field([
-                    'unionid'
+                    'f.unionid'
                 ])
                 ->find();
             cache("search_unionid{$union_id['unionid']}", null);
@@ -480,13 +489,11 @@ class MemberOper
   `code` tinyint(4) NOT NULL DEFAULT '0',
   `year_time` int(11) NOT NULL DEFAULT '2013',
   `openid` varchar(255) DEFAULT NULL,
-  `bonus` int(11) NOT NULL,
-  `unionid` varchar(255) DEFAULT NULL,
+  `bonus` int(11) NOT NULL
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
   UNIQUE KEY `t_uniq` (`tieba_id`),
-  UNIQUE KEY `openid_name` (`openid`),
-  UNIQUE KEY `unionid` (`unionid`)
+  UNIQUE KEY `openid_name` (`openid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
  CREATE TABLE `idmap` (

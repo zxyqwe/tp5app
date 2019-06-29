@@ -47,18 +47,19 @@ class Rpc extends Controller
     {
         $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
         if (!isset($data['unionid'])) {
-            return json(['msg' => '无unionID']);
+            return json(['msg' => '无unionID', 'status' => 0]);
         }
         $unionid = strval($data['unionid']);
         $ret = MemberOper::search_unionid($unionid);
-        if (null === $ret) {
-            return json(['msg' => "查无此人"]);
+        if (null === $ret || !is_numeric($ret['code'])) {
+            return json(['msg' => "查无此人", 'status' => $ret['status']]);
         }
         trace("查询 {$ret['unique_name']} {$ret['code']}", MysqlLog::RPC);
         return json([
             'msg' => 'ok',
             'user' => intval($ret['code']),
-            'fee' => FeeOper::owe($ret['unique_name'])
+            'fee' => FeeOper::owe($ret['unique_name']),
+            'status' => $ret['status']
         ]);
     }
 
@@ -79,7 +80,9 @@ class Rpc extends Controller
         $unique_name = $unionid;
         if (null !== $ret) {
             $data['touser'] = $ret['openid'];
-            $unique_name = $ret['unique_name'];
+            if (is_numeric($ret['code'])) {
+                $unique_name = $ret['unique_name'];
+            }
         } else {
 
         }
