@@ -51,13 +51,15 @@ class WxHanbj
             ->where([
                 'unionid' => ['exp', Db::raw('is null')]
             ])
-            ->limit($limit)
             ->field(['openid'])
             ->select();
         $user = [];
         foreach ($ret as $idx) {
             if (!cache("?addUnionID{$idx['openid']}")) {
                 $user[] = $idx;
+            }
+            if (count($user) >= $limit) {
+                break;
             }
         }
         if (count($user) == 0) {
