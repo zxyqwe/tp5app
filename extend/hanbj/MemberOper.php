@@ -462,3 +462,40 @@ class MemberOper
         }
     }
 }
+
+/*
+ CREATE TABLE `member` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tieba_id` varchar(45) NOT NULL,
+  `gender` varchar(4) NOT NULL,
+  `phone` varchar(45) NOT NULL,
+  `QQ` varchar(45) NOT NULL,
+  `unique_name` varchar(8) NOT NULL,
+  `master` varchar(45) NOT NULL,
+  `eid` varchar(45) NOT NULL DEFAULT '?',
+  `rn` varchar(45) NOT NULL DEFAULT '?',
+  `mail` varchar(45) NOT NULL,
+  `pref` varchar(45) NOT NULL,
+  `web_name` varchar(45) NOT NULL,
+  `code` tinyint(4) NOT NULL DEFAULT '0',
+  `year_time` int(11) NOT NULL DEFAULT '2013',
+  `openid` varchar(255) DEFAULT NULL,
+  `bonus` int(11) NOT NULL,
+  `unionid` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
+  UNIQUE KEY `t_uniq` (`tieba_id`),
+  UNIQUE KEY `openid_name` (`openid`),
+  UNIQUE KEY `unionid` (`unionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ CREATE TABLE `idmap` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `openid` varchar(255) NOT NULL,
+  `unionid` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_name_UNIQUE` (`unionid`),
+  UNIQUE KEY `openid_name` (`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
