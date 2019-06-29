@@ -5,11 +5,14 @@ namespace app\hanbj\controller;
 use Exception;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
+use hanbj\FameOper;
 use hanbj\FeeOper;
+use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
 use think\Controller;
+use think\Db;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
@@ -55,12 +58,27 @@ class Rpc extends Controller
             return json(['msg' => "查无此人", 'status' => $ret['status']]);
         }
         trace("查询 {$ret['unique_name']} {$ret['code']}", MysqlLog::RPC);
-        return json([
+        $msg = [
             'msg' => 'ok',
             'user' => intval($ret['code']),
             'fee' => FeeOper::owe($ret['unique_name']),
             'status' => $ret['status']
-        ]);
+        ];
+        $fame = Db::table('fame')
+            ->where([
+                'unique_name' => $ret['unique_name'],
+                'year' => HBConfig::YEAR,
+                'grade' => ['neq', FameOper::leave]
+            ])
+            ->field([
+                'grade',
+                'label'
+            ])
+            ->find();
+        if (null !== $fame) {
+            $msg['grade'] = $fame['grade'];
+        }
+        return json($msg);
     }
 
     public function temp()

@@ -125,6 +125,7 @@ class WxTemp
         $res = json_decode($raw, true);
         if ($res['errcode'] !== 0) {
             trace("ERR $log $raw", MysqlLog::ERROR);
+            cache($limit, $limit, 60); // 缩短到一分钟
             return $raw;
         }
         trace($log, MysqlLog::INFO);
