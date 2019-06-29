@@ -9,55 +9,12 @@ class WxTemp
 {
     const URL = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=';
     const temp_ids = [
-        "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",//会费通知
+        "2wC2skga5l5LLA_ClBl_l8F3ChQYFiOkNayX5L81shw",
         //    {{first.DATA}}
         //
-        //    {{accountType.DATA}}：{{account.DATA}}
-        //    充值金额：{{amount.DATA}}
-        //    充值状态：{{result.DATA}}
-        //    {{remark.DATA}}
-        "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",//活动登记
-        //    {{first.DATA}}
-        //    认证详情：{{keyword1.DATA}}
-        //    认证结果：{{keyword2.DATA}}
-        //    {{remark.DATA}}
-        "zz9SS28LbNafwLJW3WeWojrVH3qxfXsQsmXxlVU4JMk",
-        //    {{first.DATA}}
-        //
-        //    订单信息:{{info.DATA}}
-        //    取票密码:{{code.DATA}}
-        //    开场时间:{{time.DATA}}
-        //    卖品:{{product.DATA}}
-        //
-        //    {{remark.DATA}}
-        "gvfqTpby_YxrY37eP4j_JPhW-LgffHofr2rPyPlyUso",
-        //    {{first.DATA}}
-        //    商品名称：{{keyword1.DATA}}
-        //    交易金额：{{keyword2.DATA}}
-        //    交易时间：{{keyword3.DATA}}
-        //    商户单号：{{keyword4.DATA}}
-        //    电子码：{{keyword5.DATA}}
-        //    {{remark.DATA}}
-        "_UAmJO3kH230039TEOgYtt179_KV8LANcl_XbnQgNK0",
-        //    {{first.DATA}}
-        //    申请内容：{{keyword1.DATA}}
-        //    内容编号：{{keyword2.DATA}}
-        //    申请用户：{{keyword3.DATA}}
-        //    申请时间：{{keyword4.DATA}}
-        //    {{remark.DATA}}
-        "QF0vOzlB6BgjxmX1drxCXNVWJTNej18yLrY38XzWvfI",
-        //    {{first.DATA}}
-        //    物流公司：{{keyword1.DATA}}
-        //    快递单号：{{keyword2.DATA}}
-        //    快递费用：{{keyword3.DATA}}
-        //    提交人：{{keyword4.DATA}}
-        //    提交时间：{{keyword5.DATA}}
-        //    {{remark.DATA}}
-        "EOMnBdJ7V762zoVk0KpUmbB-oLWcAgqpfnKMvN7FrCA",
-        //    {{first.DATA}}
-        //    活动名称：{{keyword1.DATA}}
-        //    活动时间：{{keyword2.DATA}}
-        //    活动地址：{{keyword3.DATA}}
+        //    演出名称：{{showname.DATA}}
+        //    购票张数：{{ticket_qty.DATA}}
+        //    演出时间：{{showtime.DATA}}
         //    {{remark.DATA}}
         "4QVJMeYGQrwblJah93CUVEIcHWqKbcC8l81FRQc2U48",
         //    {{first.DATA}}
@@ -67,12 +24,87 @@ class WxTemp
         //    门店地址：{{keyword4.DATA}}
         //    拍摄内容：{{keyword5.DATA}}
         //    {{remark.DATA}}
-        "2wC2skga5l5LLA_ClBl_l8F3ChQYFiOkNayX5L81shw",
+        "EOMnBdJ7V762zoVk0KpUmbB-oLWcAgqpfnKMvN7FrCA",
+        //    {{first.DATA}}
+        //    活动名称：{{keyword1.DATA}}
+        //    活动时间：{{keyword2.DATA}}
+        //    活动地址：{{keyword3.DATA}}
+        //    {{remark.DATA}}
+        "GO9x4kW5Hm8gS3t8NLNrZXbKSdH7HdaNOS6aLUf-yFo",
+        //    {{first.DATA}}
+        //    活动名称：{{keyword1.DATA}}
+        //    活动日期：{{keyword2.DATA}}
+        //    预约时间：{{keyword3.DATA}}
+        //    活动地点：{{keyword4.DATA}}
+        //    参加人数：{{keyword5.DATA}}
+        //    {{remark.DATA}}
+        "QF0vOzlB6BgjxmX1drxCXNVWJTNej18yLrY38XzWvfI",
+        //    {{first.DATA}}
+        //    物流公司：{{keyword1.DATA}}
+        //    快递单号：{{keyword2.DATA}}
+        //    快递费用：{{keyword3.DATA}}
+        //    提交人：{{keyword4.DATA}}
+        //    提交时间：{{keyword5.DATA}}
+        //    {{remark.DATA}}
+        "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",//会费通知
         //    {{first.DATA}}
         //
-        //    演出名称：{{showname.DATA}}
-        //    购票张数：{{ticket_qty.DATA}}
-        //    演出时间：{{showtime.DATA}}
+        //    {{accountType.DATA}}：{{account.DATA}}
+        //    充值金额：{{amount.DATA}}
+        //    充值状态：{{result.DATA}}
+        //    {{remark.DATA}}
+        "ZztiVmh-pB6jtAewRkugjGbpi-o043eho-Tuz440K5E",
+        //    {{first.DATA}}
+        //    手机号码：{{keyword1.DATA}}
+        //    功能类型：{{keyword2.DATA}}
+        //    时间：{{keyword3.DATA}}
+        //    {{remark.DATA}}
+        "_UAmJO3kH230039TEOgYtt179_KV8LANcl_XbnQgNK0",
+        //    {{first.DATA}}
+        //    申请内容：{{keyword1.DATA}}
+        //    内容编号：{{keyword2.DATA}}
+        //    申请用户：{{keyword3.DATA}}
+        //    申请时间：{{keyword4.DATA}}
+        //    {{remark.DATA}}
+        "gvfqTpby_YxrY37eP4j_JPhW-LgffHofr2rPyPlyUso",
+        //    {{first.DATA}}
+        //    商品名称：{{keyword1.DATA}}
+        //    交易金额：{{keyword2.DATA}}
+        //    交易时间：{{keyword3.DATA}}
+        //    商户单号：{{keyword4.DATA}}
+        //    电子码：{{keyword5.DATA}}
+        //    {{remark.DATA}}
+        "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",//活动登记
+        //    {{first.DATA}}
+        //    认证详情：{{keyword1.DATA}}
+        //    认证结果：{{keyword2.DATA}}
+        //    {{remark.DATA}}
+        "rH5w5wCf_Y0CphLuXBSrYpgYnck8-W6dJXFcqDMjv20",
+        //    {{first.DATA}}
+        //    预约内容：{{keyword1.DATA}}
+        //    开始时间：{{keyword2.DATA}}
+        //    {{remark.DATA}}
+        "sWZRlzL0qD9gpxqAIoriGXWNvSgu5m3kuc5aeRqsJhk",
+        //    {{first.DATA}}
+        //    手机号码：{{keyword1.DATA}}
+        //    功能类型：{{keyword2.DATA}}
+        //    时间：{{keyword3.DATA}}
+        //    {{remark.DATA}}
+        "vKlOm8phKGMC74ndwnk9LPQTOguurnCCa9R3Wb_KReY",
+        //    {{first.DATA}}
+        //    项目：{{keyword1.DATA}}
+        //    时间：{{keyword2.DATA}}
+        //    门店：{{keyword3.DATA}}
+        //    地址：{{keyword4.DATA}}
+        //    {{remark.DATA}}
+        "zz9SS28LbNafwLJW3WeWojrVH3qxfXsQsmXxlVU4JMk",
+        //    {{first.DATA}}
+        //
+        //    订单信息:{{info.DATA}}
+        //    取票密码:{{code.DATA}}
+        //    开场时间:{{time.DATA}}
+        //    卖品:{{product.DATA}}
+        //
         //    {{remark.DATA}}
     ];
 
