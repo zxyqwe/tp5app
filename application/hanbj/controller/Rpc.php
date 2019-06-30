@@ -70,6 +70,7 @@ class Rpc extends Controller
                 'year' => HBConfig::YEAR,
                 'grade' => ['neq', FameOper::leave]
             ])
+            ->cache(600)
             ->field([
                 'grade',
                 'label'
@@ -102,7 +103,10 @@ class Rpc extends Controller
                 $unique_name = $ret['unique_name'];
             }
         } else {
-
+            return json([
+                "errcode" => 43004,
+                "errmsg" => "require subscribe hint: [$unionid]"
+            ]);
         }
 
         $raw = WxTemp::rpc($data, "RPC 模板 $unique_name " . json_encode($data));
