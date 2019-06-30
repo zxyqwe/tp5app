@@ -315,4 +315,15 @@ class WxPayTransfer extends WxPayDataBase
     {
         return array_key_exists('spbill_create_ip', $this->values);
     }
+
+    /**
+     * 设置签名，详见签名生成算法
+     * @param string $value
+     **/
+    public function SetSign($config)
+    {
+        $sign = $this->MakeSign($config, false);
+        $this->values['sign'] = $sign;
+        return $sign;
+    }
 }
