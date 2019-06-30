@@ -172,6 +172,49 @@ class WxPayApi
 
     /**
      *
+     * 支付出去，WxPayTransfer中partner_trade_no
+     * partner_trade_no、openid、check_name、amount、desc、re_user_name为必填参数
+     * appid、mchid、spbill_create_ip、nonce_str不需要填入
+     * @param WxPayConfigInterface $config 配置对象
+     * @param WxPayTransfer $inputObj
+     * @param int $timeOut
+     * @throws WxPayException
+     * @return array 成功时返回，其他抛异常
+     */
+    public static function payOut($config, $inputObj, $timeOut = 6)
+    {
+        $url = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
+        //检测必填参数
+        if (!$inputObj->IsOut_trade_noSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数partner_trade_no！");
+        } else if (!$inputObj->IsOpen_idSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数openid！");
+        } else if (!$inputObj->IsCheck_nameSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数check_name！");
+        } else if (!$inputObj->IsTotal_feeSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数amount！");
+        } else if (!$inputObj->IsDescSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数desc！");
+        } else if (!$inputObj->IsUser_nameSet()) {
+            throw new WxPayException("退款申请接口中，缺少必填参数re_user_name！");
+        }
+        $inputObj->SetAppid($config->GetAppId());//公众账号ID
+        $inputObj->SetMch_id($config->GetMerchantId());//商户号
+        $inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip
+        $inputObj->SetNonce_str(self::getNonceStr());//随机字符串
+
+        $inputObj->SetSign($config);//签名
+        $xml = $inputObj->ToXml();
+        $startTimeStamp = self::getMillisecond();//请求开始时间
+        $response = self::postXmlCurl($config, $xml, $url, true, $timeOut);
+        $result = WxPayResults::Init($config, $response);
+        self::reportCostTime($config, $url, $startTimeStamp, $result);//上报请求花费时间
+
+        return $result;
+    }
+
+    /**
+     *
      * 查询退款
      * 提交退款申请后，通过调用该接口查询退款状态。退款有一定延时，
      * 用零钱支付的退款20分钟内到账，银行卡支付的退款3个工作日后重新查询退款状态。
@@ -245,7 +288,7 @@ class WxPayApi
      * 由商户收银台或者商户后台调用该接口发起支付。
      * WxPayMicroPay中body、out_trade_no、total_fee、auth_code参数必填
      * appid、mchid、spbill_create_ip、nonce_str不需要填入
-     * @param WxPayConfigInterface $config  配置对象
+     * @param WxPayConfigInterface $config 配置对象
      * @param WxPayMicroPay $inputObj
      * @param int $timeOut
      */
@@ -253,13 +296,13 @@ class WxPayApi
     {
         $url = "https://api.mch.weixin.qq.com/pay/micropay";
         //检测必填参数
-        if(!$inputObj->IsBodySet()) {
+        if (!$inputObj->IsBodySet()) {
             throw new WxPayException("提交被扫支付API接口中，缺少必填参数body！");
-        } else if(!$inputObj->IsOut_trade_noSet()) {
+        } else if (!$inputObj->IsOut_trade_noSet()) {
             throw new WxPayException("提交被扫支付API接口中，缺少必填参数out_trade_no！");
-        } else if(!$inputObj->IsTotal_feeSet()) {
+        } else if (!$inputObj->IsTotal_feeSet()) {
             throw new WxPayException("提交被扫支付API接口中，缺少必填参数total_fee！");
-        } else if(!$inputObj->IsAuth_codeSet()) {
+        } else if (!$inputObj->IsAuth_codeSet()) {
             throw new WxPayException("提交被扫支付API接口中，缺少必填参数auth_code！");
         }
 
