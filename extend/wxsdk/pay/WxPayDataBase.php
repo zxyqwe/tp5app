@@ -139,6 +139,7 @@ class WxPayDataBase
 
     /**
      * 获取设置的值
+     * @return array
      */
     public function GetValues()
     {

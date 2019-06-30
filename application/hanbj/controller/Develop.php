@@ -6,6 +6,7 @@ use hanbj\UserOper;
 use hanbj\BonusOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxHanbj;
 use util\MysqlLog;
 use think\Db;
@@ -13,6 +14,8 @@ use think\Controller;
 use think\exception\HttpResponseException;
 use util\StatOper;
 use util\TableOper;
+use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayTransfer;
 
 class Develop extends Controller
 {
@@ -192,12 +195,35 @@ class Develop extends Controller
 
     public function debug()
     {
-        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
-        $ret = WxHanbj::addUnionID($access);
+//        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+//        $ret = WxHanbj::addUnionID($access);
 //        $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
-
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
+
+        $ret = Db::table('member')
+            ->where(['unique_name' => HBConfig::CODER])
+            ->field(['openid'])
+            ->find();
+        $ret = $ret['openid'];
+        $input = new WxPayTransfer();
+        $input->SetOut_trade_no(time());
+        $input->SetOpen_id($ret);
+        $input->SetCheck_name('NO_CHECK'); // FORCE_CHECK
+        $input->SetUser_name('');
+        $input->SetTotal_fee(1);
+        $input->SetDesc('开发测试');
+        $ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
+        if (array_key_exists("return_code", $ret)
+            && array_key_exists("result_code", $ret)
+            && $ret["return_code"] == "SUCCESS"
+            && $ret["result_code"] == "SUCCESS"
+        ) {
+            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($ret), MysqlLog::INFO);
+        } else {
+            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($ret), MysqlLog::ERROR);
+        }
+
         return json(['msg' => $ret]);
     }
 }
