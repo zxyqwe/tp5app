@@ -636,9 +636,10 @@ class WxPayApi
             curl_close($ch);
             return $data;
         } else {
-            $error = curl_errno($ch);
+            $num = curl_errno($ch);
+            $return_str = $num . ':' . curl_strerror($num) . ':' . curl_error($ch);
             curl_close($ch);
-            throw new WxPayException("curl出错，错误码:$error");
+            throw new WxPayException("curl出错，错误码:$return_str");
         }
     }
 
