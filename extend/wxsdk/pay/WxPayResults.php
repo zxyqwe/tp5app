@@ -43,7 +43,7 @@ class WxPayResults extends WxPayDataBase
     public function CheckSign($config)
     {
         if (!$this->IsSignSet()) {
-            throw new WxPayException("签名错误！" . json_encode($this->GetValues()));
+            throw new WxPayException("签名设置错误！" . json_encode($this->GetValues()));
         }
 
         $sign = $this->MakeSign($config, false);
