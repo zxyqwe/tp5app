@@ -210,8 +210,8 @@ class Develop extends Controller
         $input->SetOut_trade_no(time());
         $input->SetOpen_id($ret);
         $input->SetCheck_name('NO_CHECK'); // FORCE_CHECK
-        $input->SetUser_name('');
-        $input->SetTotal_fee(1);
+        $input->SetUser_name('NO_USE');
+        $input->SetTotal_fee(30);
         $input->SetDesc('开发测试');
         $ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
         if (array_key_exists("return_code", $ret)
