@@ -128,7 +128,7 @@ class MemberOper
         foreach ($ret as $i) {
             $already[] = $i['u'];
         }
-//        trace("list_code $c " . count($already), MysqlLog::LOG);
+        //        trace("list_code $c " . count($already), MysqlLog::LOG);
         return $already;
     }
 
@@ -185,7 +185,10 @@ class MemberOper
             ->join([
                 ['member m', 'm.openid=f.openid', 'left']
             ])
-            ->where(['f.unionid' => $unionid])
+            ->where([
+                'f.unionid' => $unionid,
+                'f.status' => ['neq', SubscibeOper::Unsubscribe]
+            ])
             ->field([
                 'm.unique_name',
                 'f.openid',

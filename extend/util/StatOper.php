@@ -76,6 +76,7 @@ CREATE TABLE `stat` (
   `type` int(11) NOT NULL,
   `content` varchar(2048) NOT NULL,
 `time` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `time_type` (`time`,`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 */
