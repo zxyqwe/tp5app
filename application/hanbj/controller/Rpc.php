@@ -17,6 +17,7 @@ use think\exception\HttpResponseException;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayRefund;
+use hanbj\SubscibeOper;
 
 class Rpc extends Controller
 {
@@ -88,7 +89,8 @@ class Rpc extends Controller
         if (!isset($data['touser'])) {
             return json(['msg' => '无unionID']);
         }
-        if (!isset($data['template_id'])
+        if (
+            !isset($data['template_id'])
             || !in_array($data["template_id"], WxTemp::temp_ids)
         ) {
             return json(['msg' => 'template_id错误']);
@@ -110,13 +112,17 @@ class Rpc extends Controller
         }
 
         $raw = WxTemp::rpc($data, "RPC 模板 $unique_name " . json_encode($data));
+        if (strpos($raw, 'subscribe') !== FALSE) {
+            SubscibeOper::mayUnsubscribe($data['touser']);
+        }
         return json(['msg' => $raw]);
     }
 
     public function act()
     {
         $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (!isset($data['act'])
+        if (
+            !isset($data['act'])
             || !isset($data['bonus'])
             || !isset($data['unionid'])
             || !isset($data['operid'])
@@ -176,7 +182,8 @@ class Rpc extends Controller
     public function refund()
     {
         $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (!isset($data['transaction_id'])
+        if (
+            !isset($data['transaction_id'])
             || !isset($data['out_refund_no'])
             || !isset($data['total_fee'])
             || !isset($data['refund_fee'])

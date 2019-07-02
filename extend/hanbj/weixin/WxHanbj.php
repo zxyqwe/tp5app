@@ -11,13 +11,10 @@ use hanbj\UserOper;
 use util\MysqlLog;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
+use hanbj\SubscibeOper;
 
 class WxHanbj
 {
-    const Unknown = 0;
-    const Subscribe = 1;
-    const Unsubscribe = 2;
-
     public static function json_wx($url)
     {
         $wx['api'] = config('hanbj_api');
@@ -47,12 +44,7 @@ class WxHanbj
 
     public static function addUnionID($access, $limit = 15)
     {
-        $ret = Db::table('idmap')
-            ->where([
-                'unionid' => ['exp', Db::raw('is null')]
-            ])
-            ->field(['openid'])
-            ->select();
+        $ret = SubscibeOper::getNoUnionId();
         $user = [];
         foreach ($ret as $idx) {
             if (!cache("?addUnionID{$idx['openid']}")) {
@@ -81,18 +73,8 @@ class WxHanbj
                 cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
                 continue;
             }
-            $ret = Db::table('idmap')
-                ->where([
-                    'openid' => $idx['openid'],
-                    'unionid' => ['exp', Db::raw('is null')]
-                ])
-                ->data([
-                    'unionid' => $idx['unionid'],
-                    'status' => self::Subscribe
-                ])
-                ->update();
+            $ret = SubscibeOper::setUnionidOnOpenid($idx['openid'], $idx['unionid']);
             if ($ret > 0) {
-                trace("addUnionID $ret {$idx['openid']} -- {$idx['unionid']}", MysqlLog::INFO);
                 $limit -= $ret;
             }
         }
@@ -102,17 +84,11 @@ class WxHanbj
     public static function handle_msg($msg)
     {
         $msg = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $type = (string)$msg->MsgType;
-        $from = (string)$msg->FromUserName;
-        $to = (string)$msg->ToUserName;
+        $type = (string) $msg->MsgType;
+        $from = (string) $msg->FromUserName;
+        $to = (string) $msg->ToUserName;
 
-        $idmap = Db::table('idmap')
-            ->where(['openid' => $from])
-            ->find();
-        if (null === $idmap) {
-            Db::table('idmap')
-                ->insert(['openid' => $from]);
-        }
+        SubscibeOper::mayAddNewOpenid($from);
 
         $unique_name = '';
         if (cache("?chatbot$from")) {
@@ -123,7 +99,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg, $unique_name);
             case 'text':
-                $cont = (string)$msg->Content;
+                $cont = (string) $msg->Content;
                 $old_cont = $cont;
                 if (in_array($cont, ['买', '推', '订'])) {
                     trace("跳过关键词 $unique_name $cont", MysqlLog::LOG);
@@ -194,8 +170,8 @@ class WxHanbj
 
     private static function do_event($msg, $unique_name)
     {
-        $type = (string)$msg->Event;
-        $from = (string)$msg->FromUserName;
+        $type = (string) $msg->Event;
+        $from = (string) $msg->FromUserName;
         trace("WxEvent $unique_name $from $type", MysqlLog::LOG);
         switch ($type) {
             case 'user_del_card':
@@ -203,7 +179,7 @@ class WxHanbj
             case 'user_get_card':
                 return CardOper::get_card($msg);
             case 'TEMPLATESENDJOBFINISH':
-                $Status = (string)$msg->Status;
+                $Status = (string) $msg->Status;
                 if ('success' != $Status) {
                     trace($unique_name . json_encode($msg), MysqlLog::ERROR);
                 }
@@ -213,14 +189,10 @@ class WxHanbj
                 trace($unique_name . json_encode($msg), MysqlLog::ERROR);
             case 'update_member_card':
             case 'subscribe':
-                Db::table('idmap')
-                    ->where(['openid' => $msg->FromUserName])
-                    ->update(['status' => self::Subscribe]);
+                SubscibeOper::maySubscribe($msg->FromUserName);
                 return '';
             case 'unsubscribe':
-                Db::table('idmap')
-                    ->where(['openid' => $msg->FromUserName])
-                    ->update(['status' => self::Unsubscribe]);
+                SubscibeOper::mayUnsubscribe($msg->FromUserName);
                 return '';
             case 'SCAN':
             case 'LOCATION':
