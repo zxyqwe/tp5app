@@ -231,4 +231,51 @@ class WxHanbj
         }
         return view('jump');
     }
+
+    public static function setMenu()
+    {
+        $menu = [
+            "button" => [
+                [
+                    "name" => "我的",
+                    "sub_button" => [
+                        [
+                            "type" => "view",
+                            "name" => "个人中心",
+                            "url" => "https://app.zxyqwe.com/hanbj/mobile"
+                        ],
+                        [
+                            "type" => "view",
+                            "name" => "帮助说明",
+                            "url" => "https://app.zxyqwe.com/hanbj/mobile/help"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => "公告栏",
+                    "sub_button" => [
+                        [
+                            "type" => "view",
+                            "name" => "名人堂",
+                            "url" => "https://app.zxyqwe.com/hanbj/pub/fame"
+                        ],
+                        [
+                            "type" => "view",
+                            "name" => "积分排行",
+                            "url" => "https://app.zxyqwe.com/hanbj/pub/bonus"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => "微店",
+                    "type" => "view",
+                    "url" => "https://weidian.com/?userid=1353579309"
+                ]
+            ]
+        ];
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token=' . $access;
+        $raw = Curl_Post($menu, $url, false);
+        trace("update Menu $raw", MysqlLog::INFO);
+    }
 }
