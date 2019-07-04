@@ -187,7 +187,7 @@ class MemberOper
             ])
             ->where([
                 'f.unionid' => $unionid,
-                'f.status' => ['neq', SubscibeOper::Unsubscribe]
+                'f.status' => ['neq', SubscribeOper::Unsubscribe]
             ])
             ->field([
                 'm.unique_name',

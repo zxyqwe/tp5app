@@ -5,7 +5,7 @@ namespace hanbj;
 use think\Db;
 use util\MysqlLog;
 
-class SubscibeOper
+class SubscribeOper
 {
     const Unknown = 0;
     const Subscribe = 1;
