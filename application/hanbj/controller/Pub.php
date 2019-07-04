@@ -61,6 +61,7 @@ class Pub extends Controller
 
     public function json_bulletin()
     {
+        return json(['msg' => 'limited']);
         $size = input('post.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
@@ -111,7 +112,7 @@ class Pub extends Controller
 
     public function json_vote()
     {
-        $ans = '';//WxVote::getResult();
+        $ans = ''; //WxVote::getResult();
         return json($ans);
     }
 }
