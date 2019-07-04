@@ -17,7 +17,7 @@ use think\exception\HttpResponseException;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayRefund;
-use hanbj\SubscibeOper;
+use hanbj\SubscribeOper;
 
 class Rpc extends Controller
 {
@@ -113,7 +113,7 @@ class Rpc extends Controller
 
         $raw = WxTemp::rpc($data, "RPC 模板 $unique_name " . json_encode($data));
         if (strpos($raw, 'subscribe') !== FALSE) {
-            SubscibeOper::mayUnsubscribe($data['touser']);
+            SubscribeOper::mayUnsubscribe($data['touser']);
         }
         return json(['msg' => $raw]);
     }

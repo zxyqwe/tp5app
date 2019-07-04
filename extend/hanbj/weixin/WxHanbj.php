@@ -3,7 +3,6 @@
 namespace hanbj\weixin;
 
 use hanbj\MemberOper;
-use think\Db;
 use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
 use hanbj\CardOper;
@@ -11,7 +10,7 @@ use hanbj\UserOper;
 use util\MysqlLog;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
-use hanbj\SubscibeOper;
+use hanbj\SubscribeOper;
 
 class WxHanbj
 {
@@ -44,7 +43,7 @@ class WxHanbj
 
     public static function addUnionID($access, $limit = 15)
     {
-        $ret = SubscibeOper::getNoUnionId();
+        $ret = SubscribeOper::getNoUnionId();
         $user = [];
         foreach ($ret as $idx) {
             if (!cache("?addUnionID{$idx['openid']}")) {
@@ -73,7 +72,7 @@ class WxHanbj
                 cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
                 continue;
             }
-            $ret = SubscibeOper::setUnionidOnOpenid($idx['openid'], $idx['unionid']);
+            $ret = SubscribeOper::setUnionidOnOpenid($idx['openid'], $idx['unionid']);
             if ($ret > 0) {
                 $limit -= $ret;
             }
@@ -88,7 +87,7 @@ class WxHanbj
         $from = (string) $msg->FromUserName;
         $to = (string) $msg->ToUserName;
 
-        SubscibeOper::mayAddNewOpenid($from);
+        SubscribeOper::mayAddNewOpenid($from);
 
         $unique_name = '';
         if (cache("?chatbot$from")) {
@@ -189,10 +188,10 @@ class WxHanbj
                 trace($unique_name . json_encode($msg), MysqlLog::ERROR);
             case 'update_member_card':
             case 'subscribe':
-                SubscibeOper::maySubscribe($msg->FromUserName);
+                SubscribeOper::maySubscribe($msg->FromUserName);
                 return '';
             case 'unsubscribe':
-                SubscibeOper::mayUnsubscribe($msg->FromUserName);
+                SubscribeOper::mayUnsubscribe($msg->FromUserName);
                 return '';
             case 'SCAN':
             case 'LOCATION':
