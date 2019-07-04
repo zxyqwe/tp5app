@@ -45,26 +45,35 @@ class SubscibeOper
             ->where(['openid' => $openid])
             ->find();
         if (null === $idmap) {
-            Db::table('idmap')
+            $ret = Db::table('idmap')
                 ->insert(['openid' => $openid]);
+            if ($ret > 0) {
+                trace("addOpenID $ret $openid", MysqlLog::LOG);
+            }
         }
     }
 
     public static function maySubscribe($openid)
     {
-        Db::table('idmap')
+        $ret = Db::table('idmap')
             ->where(['openid' => $openid])
             ->update(['status' => self::Subscribe]);
+        if ($ret > 0) {
+            trace("maySubscribe $ret $openid", MysqlLog::LOG);
+        }
         cache("addUnionID$openid", null);
     }
 
     public static function mayUnsubscribe($openid)
     {
-        Db::table('idmap')
+        $ret = Db::table('idmap')
             ->where(['openid' => $openid])
             ->update([
                 'status' => self::Unsubscribe,
                 'unionid' => null
             ]);
+        if ($ret > 0) {
+            trace("mayUnsubscribe $ret $openid", MysqlLog::LOG);
+        }
     }
 }

@@ -46,7 +46,7 @@ class WxTemp
         //    提交人：{{keyword4.DATA}}
         //    提交时间：{{keyword5.DATA}}
         //    {{remark.DATA}}
-        "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw",//会费通知
+        "WBIYdFZfjU7nE5QkL9wjYF6XUkUlQXKQblN5pvegtMw", //会费通知
         //    {{first.DATA}}
         //
         //    {{accountType.DATA}}：{{account.DATA}}
@@ -74,7 +74,7 @@ class WxTemp
         //    商户单号：{{keyword4.DATA}}
         //    电子码：{{keyword5.DATA}}
         //    {{remark.DATA}}
-        "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A",//活动登记
+        "pAg9VfUQYxgGfVmceEpw_AXiLPEXb7Ug4pamcG45d-A", //活动登记
         //    {{first.DATA}}
         //    认证详情：{{keyword1.DATA}}
         //    认证结果：{{keyword2.DATA}}
@@ -128,7 +128,7 @@ class WxTemp
             cache($limit, $limit, 60); // 缩短到一分钟
             return $raw;
         }
-        trace($log, MysqlLog::INFO);
+        trace($log, MysqlLog::LOG);
         return 'ok';
     }
 
