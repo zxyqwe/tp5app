@@ -172,7 +172,8 @@ class FameOper
 
     public static function assertEditRight($year, $grade, $label)
     {
-        if (UserOper::grantAllRight(session('unique_name'))) {
+        $unique_name = session('unique_name');
+        if (UserOper::grantAllRight($unique_name)) {
             return;
         }
         if (intval($year) === HBConfig::YEAR) {
@@ -187,7 +188,7 @@ class FameOper
                 }
             }
         }
-        $err = "fame rights error $year $grade $label";
+        $err = "编辑名人堂信息， $unique_name 没有权限编辑第 $year 届 $label 部门 $grade 级别的信息";
         trace($err, MysqlLog::ERROR);
         if (request()->isAjax()) {
             $res = json(['msg' => $err], 400);
