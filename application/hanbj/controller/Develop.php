@@ -201,7 +201,7 @@ class Develop extends Controller
 //        $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
-        WxHanbj::setMenu();
+//        WxHanbj::setMenu();
 
 //        $ret = Db::table('member')
 //            ->where(['unique_name' => HBConfig::CODER])
