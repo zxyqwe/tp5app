@@ -53,6 +53,11 @@ class WxTemp
         //    充值金额：{{amount.DATA}}
         //    充值状态：{{result.DATA}}
         //    {{remark.DATA}}
+        "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY", // 待办提醒
+        // {{first.DATA}}
+        // 业务名称：{{keyword1.DATA}}
+        // 业务内容：{{keyword2.DATA}}
+        // {{remark.DATA}}
         "ZztiVmh-pB6jtAewRkugjGbpi-o043eho-Tuz440K5E",
         //    {{first.DATA}}
         //    手机号码：{{keyword1.DATA}}
