@@ -12,7 +12,10 @@ class PayoutOper
     const URL = "https://active.qunliaoweishi.com/manage/api/rpc/v1/external_pay_callback.php";
 
     const WAIT = 0;
-    const DONE = 1;
+    const TODO = 1;
+    const AUTH = 2;
+    const DONE = 3;
+    const FAIL = 4;
 
     const MIN_FEE = 30;
     const MAX_FEE = 500000;
@@ -48,12 +51,120 @@ class PayoutOper
 
     public static function generateAnyTodo()
     {
-
+        $ret = Db::table('payout')
+            ->where([
+                'status' => self::WAIT,
+                'payment_no' => '',
+                'payment_time' => ''
+            ])
+            ->field([
+                'id',
+                'realname',
+                'fee',
+                'desc'
+            ])
+            ->select();
+        $ids = [];
+        foreach ($ret as $item) {
+            $insert_todo = TodoOper::RecvTodoFromOtherOper(
+                TodoOper::PAT_OUT,
+                $item['id'],
+                json_encode($item),
+                self::AUTHOR
+            );
+            if ($insert_todo) {
+                $ids[] = $item['id'];
+            }
+        }
+        $ret = Db::table('payout')
+            ->where([
+                'id' => ['in', $ids],
+                'status' => self::WAIT,
+                'payment_no' => '',
+                'payment_time' => ''
+            ])
+            ->data([
+                'status' => self::TODO
+            ])
+            ->update();
+        return $ret;
     }
 
-    public static function handleOneTodo()
+    public static function handleOneTodo($key)
     {
+        $unique_name = session("unique_name");
+        if ($unique_name !== self::AUTHOR) {
+            return;
+        }
+        $ret = Db::table('payout')
+            ->where([
+                'id' => $key,
+                'status' => self::TODO,
+                'payment_no' => '',
+                'payment_time' => ''
+            ])
+            ->data([
+                'status' => self::AUTH
+            ])
+            ->update();
+        return $ret;
+    }
 
+    public static function handleOneAuth()
+    {
+        $ret = Db::table('payout')
+            ->where([
+                'status' => self::AUTH,
+                'payment_no' => '',
+                'payment_time' => ''
+            ])
+            ->field([
+                'tradeid',
+                'openid',
+                'realname',
+                'fee',
+                'desc'
+            ])
+            ->find();
+        if (null === $ret) {
+            return;
+        }
+
+        $input = new WxPayTransfer();
+        $input->SetOut_trade_no($ret['tradeid']);
+        $input->SetOpen_id($ret['openid']);
+        if ($ret['realname'] === 'NO_USE') {
+            $input->SetCheck_name('NO_CHECK');
+            $input->SetUser_name('NO_USE');
+        } else {
+            $input->SetCheck_name('FORCE_CHECK');
+            $input->SetUser_name($ret['realname']);
+        }
+        $input->SetTotal_fee(intval($ret['fee']));
+        $input->SetDesc($ret['desc']);
+        $wx_ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
+        if (
+            array_key_exists("return_code", $wx_ret)
+            && array_key_exists("result_code", $wx_ret)
+            && $wx_ret["return_code"] == "SUCCESS"
+            && $wx_ret["result_code"] == "SUCCESS"
+        ) {
+            self::setPayoutDone($ret['tradeid'], $wx_ret['payment_no'], $wx_ret['payment_time']);
+            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::LOG);
+        } else {
+            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
+            Db::table('payout')
+                ->where([
+                    'tradeid' => $ret['tradeid'],
+                    'status' => self::AUTH,
+                    'payment_no' => '',
+                    'payment_time' => ''
+                ])
+                ->data([
+                    'status' => self::FAIL
+                ])
+                ->update();
+        }
     }
 
     public static function setPayoutDone($tradeid, $tran_no, $tran_time)
@@ -61,7 +172,7 @@ class PayoutOper
         $ret = Db::table('payout')
             ->where([
                 'tradeid' => $tradeid,
-                'status' => self::WAIT,
+                'status' => self::AUTH,
                 'payment_no' => '',
                 'payment_time' => ''
             ])
