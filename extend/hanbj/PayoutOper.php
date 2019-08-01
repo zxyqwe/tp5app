@@ -28,8 +28,9 @@ class PayoutOper
     public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
         $fee = intval($fee);
-        $fee = max($fee, self::MIN_FEE);
-        $fee = min($fee, self::MAX_FEE);
+        if ($fee > self::MAX_FEE || $fee < self::MIN_FEE) {
+            return false;
+        }
         try {
             $ret = Db::table('payout')
                 ->data([
