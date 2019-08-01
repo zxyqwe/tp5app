@@ -83,13 +83,15 @@ class TodoOper
     }
   }
 
-  public static function showTodoByName($unique_name)
+  public static function showTodo()
   {
+    $unique_name = session("unique_name");
+    $map['status'] = self::UNDO;
+    if (HBConfig::CODER !== $unique_name) {
+      $map['unique_name'] = $unique_name;
+    }
     return Db::table('todo')
-      ->where([
-        'status' => self::UNDO,
-        'unique_name' => $unique_name
-      ])
+      ->where($map)
       ->order('time desc')
       ->field([
         'content'
