@@ -51,6 +51,17 @@ class PayoutOper
 
     public static function generateAnyTodo()
     {
+        Db::startTrans();
+        $ret = self::generateAnyTodo_inner();
+        if ($ret) {
+            Db::commit();
+        } else {
+            Db::rollback();
+        }
+    }
+
+    private static function generateAnyTodo_inner()
+    {
         $ret = Db::table('payout')
             ->where([
                 'status' => self::WAIT,
@@ -158,27 +169,24 @@ class PayoutOper
             && $wx_ret["return_code"] == "SUCCESS"
             && $wx_ret["result_code"] == "SUCCESS"
         ) {
-            self::setPayoutDone($ret['tradeid'], $wx_ret['payment_no'], $wx_ret['payment_time']);
+            self::setPayoutResult($ret['tradeid'], $wx_ret['payment_no'], $wx_ret['payment_time'], self::DONE);
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::LOG);
         } else {
+            self::setPayoutResult($ret['tradeid'], "", "", self::FAIL);
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
-            Db::table('payout')
-                ->where([
-                    'tradeid' => $ret['tradeid'],
-                    'status' => self::AUTH,
-                    'payment_no' => '',
-                    'payment_time' => ''
-                ])
-                ->data([
-                    'status' => self::FAIL
-                ])
-                ->update();
-            self::notify_original($ret['tradeid'], 0);
         }
     }
 
-    public static function setPayoutDone($tradeid, $tran_no, $tran_time)
+    public static function setPayoutResult($tradeid, $tran_no, $tran_time, $result)
     {
+        if ($result === self::DONE) {
+            self::notify_original($tradeid, 1);
+        } elseif ($result === self::FAIL) {
+            self::notify_original($tradeid, 0);
+        } else {
+            trace("setPayoutResult no-update $tradeid, $tran_no, $tran_time $result", MysqlLog::ERROR);
+            return;
+        }
         $ret = Db::table('payout')
             ->where([
                 'tradeid' => $tradeid,
@@ -189,10 +197,9 @@ class PayoutOper
             ->data([
                 'payment_no' => $tran_no,
                 'payment_time' => $tran_time,
-                'status' => self::DONE
+                'status' => $result
             ])
             ->update();
-        self::notify_original($tradeid, 1);
         if ($ret != 1) {
             trace("setPayoutDone $tradeid, $tran_no, $tran_time", MysqlLog::ERROR);
         }
