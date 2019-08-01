@@ -18,6 +18,7 @@ use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayRefund;
 use hanbj\SubscribeOper;
+use hanbj\PayoutOper;
 
 class Rpc extends Controller
 {
@@ -205,6 +206,35 @@ class Rpc extends Controller
         } catch (Exception $e) {
             trace('退款 ERROR' . json_encode($data) . $e, MysqlLog::RPC);
             throw new HttpResponseException(json(['msg' => "$e"]));
+        }
+    }
+
+    public function payout()
+    {
+        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+        if (
+            !isset($data['payId'])
+            || !isset($data['unionid'])
+            || !isset($data['nickName'])
+            || !isset($data['orgName'])
+            || !isset($data['activeName'])
+            || !isset($data['payNum'])
+        ) {
+            return json(['msg' => '缺失参数']);
+        }
+        $payId = intval($data['payId']);
+        $openid = MemberOper::search_unionid(strval($data['unionid']));
+        $nick = strval($data['nickName']);
+        $org = strval($data['orgName']);
+        $act = strval($data['activeName']);
+        $fee = intval($data['payNum']);
+        $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
+        $desc = "付款请求：因|$act|活动需要，向|$org|组织的|{$openid['unique_name']} $nick|付款人民币|$fee_desc|元";
+        $ret = PayoutOper::recordNewPayout($openid['openid'], $payId, "", $fee, $desc);
+        if ($ret) {
+            return json(["msg" => "ok"]);
+        } else {
+            return json(["msg" => "err"]);
         }
     }
 }
