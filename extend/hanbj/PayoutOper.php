@@ -3,9 +3,12 @@
 namespace hanbj;
 
 
+use hanbj\weixin\HanbjPayConfig;
 use think\Db;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
+use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayTransfer;
 
 class PayoutOper
 {
@@ -22,7 +25,7 @@ class PayoutOper
 
     const AUTHOR = "乾乙丑";
 
-    public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc)
+    public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
         $fee = intval($fee);
         $fee = max($fee, self::MIN_FEE);
@@ -38,7 +41,10 @@ class PayoutOper
                     'gene_time' => date("Y-m-d H:i:s"),
                     'payment_no' => '',
                     'payment_time' => '',
-                    'status' => self::WAIT
+                    'status' => self::WAIT,
+                    'nickname' => $nick,
+                    'orgname' => $org,
+                    'actname' => $act
                 ])
                 ->insert();
             return $ret === 1;
@@ -76,7 +82,7 @@ class PayoutOper
             ])
             ->select();
         if (null === $ret) {
-            return;
+            return false;
         }
         $ids = [];
         foreach ($ret as $item) {
@@ -111,7 +117,7 @@ class PayoutOper
     {
         $unique_name = session("unique_name");
         if ($unique_name !== self::AUTHOR) {
-            return;
+            return false;
         }
         $ret = Db::table('payout')
             ->where([
@@ -207,7 +213,7 @@ class PayoutOper
 
     public static function notify_original($payid, $status)
     {
-        $data['status'] = intavel($status);
+        $data['status'] = intval($status);
         $data['payId'] = $payid;
         $raw = Curl_Post($data, self::URL, true, 60);
         $ret = json_decode($raw, true);
@@ -236,6 +242,9 @@ CREATE TABLE `payout` (
   `payment_no` varchar(255) NOT NULL,
   `payment_time` varchar(255) NOT NULL,
   `status` tinyint(4) NOT NULL,
+  `nickname` varchar(255) NOT NULL,
+  `orgname` varchar(255) NOT NULL,
+  `actname` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `tradeid` (`tradeid`),
   UNIQUE KEY `payment_no` (`payment_no`)
