@@ -50,10 +50,8 @@ class Rpc extends Controller
 
     public function user()
     {
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (!isset($data['unionid'])) {
-            return json(['msg' => '无unionID', 'status' => 0]);
-        }
+        $data = self::check_params(['unionid']);
+
         $unionid = strval($data['unionid']);
         $ret = MemberOper::search_unionid($unionid);
         if (null === $ret || !is_numeric($ret['code'])) {
@@ -86,10 +84,8 @@ class Rpc extends Controller
 
     public function temp()
     {
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (!isset($data['touser'])) {
-            return json(['msg' => '无unionID']);
-        }
+        $data = self::check_params(['touser']);
+
         if (
             !isset($data['template_id'])
             || !in_array($data["template_id"], WxTemp::temp_ids)
@@ -121,15 +117,7 @@ class Rpc extends Controller
 
     public function act()
     {
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (
-            !isset($data['act'])
-            || !isset($data['bonus'])
-            || !isset($data['unionid'])
-            || !isset($data['operid'])
-        ) {
-            return json(['msg' => '缺失参数']);
-        }
+        $data = self::check_params(['act', 'bonus', 'unionid', 'operid']);
 
         $bonus = intval($data['bonus']);
         if ($bonus < 5 || $bonus > 30) {
@@ -182,15 +170,7 @@ class Rpc extends Controller
 
     public function refund()
     {
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (
-            !isset($data['transaction_id'])
-            || !isset($data['out_refund_no'])
-            || !isset($data['total_fee'])
-            || !isset($data['refund_fee'])
-        ) {
-            return json(['msg' => '缺失参数']);
-        }
+        $data = self::check_params(['transaction_id', 'out_refund_no', 'total_fee', 'refund_fee']);
         $input = new WxPayRefund();
         $input->SetTransaction_id($data['transaction_id']);
         $input->SetOut_refund_no($data['out_refund_no']);
@@ -211,18 +191,7 @@ class Rpc extends Controller
 
     public function payout()
     {
-        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
-        if (
-            !isset($data['payId'])
-            || !isset($data['unionid'])
-            || !isset($data['nickName'])
-            || !isset($data['realName'])
-            || !isset($data['orgName'])
-            || !isset($data['activeName'])
-            || !isset($data['payNum'])
-        ) {
-            return json(['msg' => '缺失参数']);
-        }
+        $data = self::check_params(['payId', 'unionid', 'nickName', 'realName', 'orgName', 'activeName', 'payNum']);
 
         $openid = MemberOper::search_unionid(strval($data['unionid']));
         if (null === $openid) {
@@ -251,5 +220,16 @@ class Rpc extends Controller
         } else {
             return json(["msg" => "err"]);
         }
+    }
+
+    private function check_params($items)
+    {
+        $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+        foreach ($items as $idx) {
+            if (!isset($data[$idx])) {
+                throw new HttpResponseException(json(['msg' => "缺失参数 $idx"]));
+            }
+        }
+        return $data;
     }
 }
