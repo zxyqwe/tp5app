@@ -216,21 +216,36 @@ class Rpc extends Controller
             !isset($data['payId'])
             || !isset($data['unionid'])
             || !isset($data['nickName'])
+            || !isset($data['realName'])
             || !isset($data['orgName'])
             || !isset($data['activeName'])
             || !isset($data['payNum'])
         ) {
             return json(['msg' => '缺失参数']);
         }
-        $payId = intval($data['payId']);
+
         $openid = MemberOper::search_unionid(strval($data['unionid']));
+        if (null === $openid) {
+            return json(['msg' => "查无此人", 'status' => $openid['status']]);
+        }
+        if (null === $openid['unique_name']) {
+            $openid['unique_name'] = "";
+        }
+
+        $realname = strval($data['realName']);
+        $real_desc = $realname;
+        if ($realname === "NO_USE") {
+            $real_desc = "";
+        }
+
+        $payId = intval($data['payId']);
         $nick = strval($data['nickName']);
         $org = strval($data['orgName']);
         $act = strval($data['activeName']);
         $fee = intval($data['payNum']);
         $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
-        $desc = "付款请求：因|$act|活动需要，向|$org|组织的|{$openid['unique_name']} $nick|付款人民币|$fee_desc|元";
-        $ret = PayoutOper::recordNewPayout($openid['openid'], $payId, "", $fee, $desc);
+        $desc = "付款请求：因|$act|活动需要，向|$org|组织的|" . strval($openid['unique_name']) . " $nick $real_desc|付款人民币|$fee_desc|元";
+        $ret = PayoutOper::recordNewPayout($openid['openid'], $payId, $realname, $fee, $desc);
         if ($ret) {
             return json(["msg" => "ok"]);
         } else {
