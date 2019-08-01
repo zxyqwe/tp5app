@@ -141,7 +141,8 @@ class MemberOper
             ->where(['unique_name' => ['in', $list]])
             ->field([
                 'tieba_id as t',
-                'unique_name as u'
+                'unique_name as u',
+                'openid as o'
             ])
             ->cache(600)
             ->select();

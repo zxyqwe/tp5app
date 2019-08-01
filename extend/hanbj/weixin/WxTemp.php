@@ -208,4 +208,34 @@ class WxTemp
     {
         return self::base($data, $log);
     }
+
+    public static function notifyTodo($openid, $uname, $num)
+    {
+        if (strlen($openid) <= 10) {
+            return;
+        }
+        $data = [
+            "touser" => $openid,
+            "template_id" => "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "待办提醒"
+                ],
+                "keyword1" => [
+                    "value" => "$uname 的待办提醒"
+                ],
+                'keyword2' => [
+                    'value' => "当前 $num 未处理",
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => '请尽快处理'
+                ]
+            ]
+        ];
+        $log = "待办提醒 " . implode(', ', [$openid, $uname, $num]);
+        self::base($data, $log, false);
+    }
 }

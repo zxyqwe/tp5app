@@ -40,26 +40,44 @@ class TodoOper
     }
   }
 
-  public static function noticeAny(){
-$ret=Db::table('todo')
-->where([
-  'status' => self::UNDO
-])
-->field([
-  'unique_name'
-])
-->select();
-$notice=[];
-foreach($ret as $item){
-  if(isset($notice[$item['unique_name']])){
-    $notice[$item['unique_name']]+=1;
-  }else{
-    $notice[$item['unique_name']]=1;
-  }
-}
-foreach($notice as $k=>$v){
-  WxTemp
-}
+  public static function noticeAny()
+  {
+    $ret = Db::table('todo')
+      ->where([
+        'status' => self::UNDO
+      ])
+      ->field([
+        'unique_name'
+      ])
+      ->select();
+    $notice = [];
+    foreach ($ret as $item) {
+      if (isset($notice[$item['unique_name']])) {
+        $notice[$item['unique_name']] += 1;
+      } else {
+        $notice[$item['unique_name']] = 1;
+      }
+    }
+
+    $unique_name = array_keys($notice);
+    $ret = MemberOper::get_tieba($unique_name);
+    $openid = [];
+    foreach ($ret as $item) {
+      $openid[$ret['u']] = $ret['o'];
+    }
+
+    foreach ($notice as $k => $v) {
+      $cache_key = "TodonoticeAny$k";
+      if (cache("?$cache_key")) {
+        continue;
+      }
+      if (!isset($openid[$k])) {
+        trace("Todo noticeAny $k no openid", MysqlLog::ERROR);
+        continue;
+      }
+      cache($cache_key, $cache_key, 86400);
+      WxTemp::notifyTodo($openid[$k], $k, $v);
+    }
   }
 
   public static function showTodoByName($unique_name)

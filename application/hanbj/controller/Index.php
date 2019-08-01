@@ -13,6 +13,8 @@ use util\StatOper;
 use wxsdk\WxTokenAccess;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
+use hanbj\PayoutOper;
+use hanbj\TodoOper;
 
 class Index extends Controller
 {
@@ -34,7 +36,7 @@ class Index extends Controller
         return view('login');
     }
 
-    public function old()//需要这个，不然route就会屏蔽入口
+    public function old() //需要这个，不然route就会屏蔽入口
     {
         return redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
     }
@@ -63,5 +65,9 @@ class Index extends Controller
         MemberOper::daily();
         BackupOper::run();
         StatOper::generateOneDay(StatOper::LOG_NUM);
+
+        PayoutOper::generateAnyTodo();
+        PayoutOper::handleOneAuth();
+        TodoOper::noticeAny();
     }
 }

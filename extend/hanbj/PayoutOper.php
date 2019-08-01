@@ -41,10 +41,10 @@ class PayoutOper
                     'status' => self::WAIT
                 ])
                 ->insert();
-            return $ret;
+            return $ret == 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
-            trace("Unused2Temp $e", MysqlLog::ERROR);
+            trace("recordNewPayout $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
@@ -87,7 +87,10 @@ class PayoutOper
                 'status' => self::TODO
             ])
             ->update();
-        return $ret;
+        if ($ret != count($ids)) {
+            trace("generateAnyTodo payout $ret " . count($ids), MysqlLog::ERROR);
+        }
+        return $ret == count($ids);
     }
 
     public static function handleOneTodo($key)
@@ -107,7 +110,10 @@ class PayoutOper
                 'status' => self::AUTH
             ])
             ->update();
-        return $ret;
+        if ($ret != 1) {
+            trace("handleOneTodo payout $key", MysqlLog::ERROR);
+        }
+        return $ret == 1;
     }
 
     public static function handleOneAuth()
@@ -164,6 +170,7 @@ class PayoutOper
                     'status' => self::FAIL
                 ])
                 ->update();
+            self::notify_original($ret['tradeid'], 0);
         }
     }
 
@@ -182,7 +189,23 @@ class PayoutOper
                 'status' => self::DONE
             ])
             ->update();
-        return $ret == 1;
+        self::notify_original($tradeid, 1);
+        if ($ret != 1) {
+            trace("setPayoutDone $tradeid, $tran_no, $tran_time", MysqlLog::ERROR);
+        }
+    }
+
+    public static function notify_original($payid, $status)
+    {
+        $data['status'] = intavel($status);
+        $data['payId'] = $payid;
+        $raw = Curl_Post($data, self::URL, true, 60);
+        $ret = json_decode($raw, true);
+        if (!isset($ret['code']) || $ret['code'] != 0) {
+            trace("notify payout $payid $status $raw", MysqlLog::ERROR);
+        } else {
+            trace("notify payout $payid $status", MysqlLog::LOG);
+        }
     }
 }
 
