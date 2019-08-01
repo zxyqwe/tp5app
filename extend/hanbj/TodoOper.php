@@ -63,7 +63,7 @@ class TodoOper
         }
 
         $unique_name = array_keys($notice);
-        $ret = MemberOper::get_tieba([$unique_name]);
+        $ret = MemberOper::get_tieba($unique_name);
         $openid = [];
         foreach ($ret as $item) {
             $openid[$item['u']] = $item['o'];

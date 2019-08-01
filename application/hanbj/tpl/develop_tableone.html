@@ -35,11 +35,15 @@
                 params['_ajax'] = 1;
                 return params;
             };
+            w.codeFormatter = function (value, row) {
+                return encodeURI(value);
+            };
             var col = [];
             for (var i in w.columns) {
                 col.push({
                     field: w.columns[i],
                     title: w.columns[i],
+                    formatter: w.codeFormatter,
                     editable: "id" !== w.columns[i]
                 })
             }
