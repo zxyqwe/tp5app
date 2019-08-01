@@ -83,9 +83,9 @@ class WxHanbj
     public static function handle_msg($msg)
     {
         $msg = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
-        $type = (string) $msg->MsgType;
-        $from = (string) $msg->FromUserName;
-        $to = (string) $msg->ToUserName;
+        $type = (string)$msg->MsgType;
+        $from = (string)$msg->FromUserName;
+        $to = (string)$msg->ToUserName;
 
         SubscribeOper::mayAddNewOpenid($from);
 
@@ -98,7 +98,7 @@ class WxHanbj
             case 'event':
                 return self::do_event($msg, $unique_name);
             case 'text':
-                $cont = (string) $msg->Content;
+                $cont = (string)$msg->Content;
                 $old_cont = $cont;
                 if (in_array($cont, ['买', '推', '订'])) {
                     trace("跳过关键词 $unique_name $cont", MysqlLog::LOG);
@@ -169,8 +169,8 @@ class WxHanbj
 
     private static function do_event($msg, $unique_name)
     {
-        $type = (string) $msg->Event;
-        $from = (string) $msg->FromUserName;
+        $type = (string)$msg->Event;
+        $from = (string)$msg->FromUserName;
         trace("WxEvent $unique_name $from $type", MysqlLog::LOG);
         switch ($type) {
             case 'user_del_card':
@@ -178,7 +178,7 @@ class WxHanbj
             case 'user_get_card':
                 return CardOper::get_card($msg);
             case 'TEMPLATESENDJOBFINISH':
-                $Status = (string) $msg->Status;
+                $Status = (string)$msg->Status;
                 if ('success' != $Status) {
                     trace($unique_name . json_encode($msg), MysqlLog::ERROR);
                 }
