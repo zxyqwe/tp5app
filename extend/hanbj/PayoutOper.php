@@ -64,6 +64,9 @@ class PayoutOper
                 'desc'
             ])
             ->select();
+        if (null === $ret) {
+            return;
+        }
         $ids = [];
         foreach ($ret as $item) {
             $insert_todo = TodoOper::RecvTodoFromOtherOper(
