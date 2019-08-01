@@ -47,7 +47,7 @@ class WxPayResults extends WxPayDataBase
         }
 
         $sign = $this->MakeSign($config, false);
-        if ($this->GetSign() == $sign) {
+        if ($this->GetSign() === $sign) {
             //签名正确
             return true;
         }
@@ -74,7 +74,7 @@ class WxPayResults extends WxPayDataBase
     {
         $obj = new self();
         $obj->FromArray($array);
-        if ($noCheckSign == false) {
+        if ($noCheckSign === false) {
             $obj->CheckSign($config);
         }
         return $obj;

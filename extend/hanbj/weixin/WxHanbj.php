@@ -53,7 +53,7 @@ class WxHanbj
                 break;
             }
         }
-        if (count($user) == 0) {
+        if (count($user) === 0) {
             return 0;
         }
 

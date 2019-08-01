@@ -37,10 +37,10 @@ class WxPayApi
         }
 
         //关联参数
-        if ($inputObj->GetTrade_type() == "JSAPI" && !$inputObj->IsOpenidSet()) {
+        if ($inputObj->GetTrade_type() === "JSAPI" && !$inputObj->IsOpenidSet()) {
             throw new WxPayException("统一支付接口中，缺少必填参数openid！trade_type为JSAPI时，openid为必填参数！");
         }
-        if ($inputObj->GetTrade_type() == "NATIVE" && !$inputObj->IsProduct_idSet()) {
+        if ($inputObj->GetTrade_type() === "NATIVE" && !$inputObj->IsProduct_idSet()) {
             throw new WxPayException("统一支付接口中，缺少必填参数product_id！trade_type为JSAPI时，product_id为必填参数！");
         }
 
@@ -278,7 +278,7 @@ class WxPayApi
         $xml = $inputObj->ToXml();
 
         $response = self::postXmlCurl($config, $xml, $url, false, $timeOut);
-        if (substr($response, 0, 5) == "<xml>") {
+        if (substr($response, 0, 5) === "<xml>") {
             return "";
         }
         return $response;
@@ -525,15 +525,15 @@ class WxPayApi
     {
         //如果不需要上报数据
         $reportLevenl = $config->GetReportLevenl();
-        if ($reportLevenl == 0) {
+        if ($reportLevenl === 0) {
             return;
         }
         //如果仅失败上报
-        if ($reportLevenl == 1 &&
+        if ($reportLevenl === 1 &&
             array_key_exists("return_code", $data) &&
-            $data["return_code"] == "SUCCESS" &&
+            $data["return_code"] === "SUCCESS" &&
             array_key_exists("result_code", $data) &&
-            $data["result_code"] == "SUCCESS"
+            $data["result_code"] === "SUCCESS"
         ) {
             return;
         }
@@ -616,7 +616,7 @@ class WxPayApi
         //要求结果为字符串且输出到屏幕上
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
-        if ($useCert == true) {
+        if ($useCert === true) {
             //设置证书
             //使用证书：cert 与 key 分别属于两个.pem文件
             //证书文件请放入服务器的非web目录下

@@ -52,7 +52,7 @@ class WXBizMsgCrypt
             return $ret;
         }
 
-        if ($timeStamp == null) {
+        if ($timeStamp === null) {
             $timeStamp = time();
         }
         $encrypt = $array[1];
@@ -106,7 +106,7 @@ class WXBizMsgCrypt
             return $ret;
         }
 
-        if ($timestamp == null) {
+        if ($timestamp === null) {
             $timestamp = time();
         }
 
