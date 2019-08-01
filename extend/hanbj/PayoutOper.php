@@ -41,7 +41,7 @@ class PayoutOper
                     'status' => self::WAIT
                 ])
                 ->insert();
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("recordNewPayout $e", MysqlLog::ERROR);
@@ -104,7 +104,7 @@ class PayoutOper
         if ($ret != count($ids)) {
             trace("generateAnyTodo payout $ret " . count($ids), MysqlLog::ERROR);
         }
-        return $ret == count($ids);
+        return $ret === count($ids);
     }
 
     public static function handleOneTodo($key)
@@ -127,7 +127,7 @@ class PayoutOper
         if ($ret != 1) {
             trace("handleOneTodo payout $key", MysqlLog::ERROR);
         }
-        return $ret == 1;
+        return $ret === 1;
     }
 
     public static function handleOneAuth()
@@ -166,8 +166,8 @@ class PayoutOper
         if (
             array_key_exists("return_code", $wx_ret)
             && array_key_exists("result_code", $wx_ret)
-            && $wx_ret["return_code"] == "SUCCESS"
-            && $wx_ret["result_code"] == "SUCCESS"
+            && $wx_ret["return_code"] === "SUCCESS"
+            && $wx_ret["result_code"] === "SUCCESS"
         ) {
             self::setPayoutResult($ret['tradeid'], $wx_ret['payment_no'], $wx_ret['payment_time'], self::DONE);
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::LOG);

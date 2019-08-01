@@ -124,9 +124,9 @@ class WxPayDataBase
         //签名步骤二：在string后加入KEY
         $string = $string . "&key=" . $config->GetKey();
         //签名步骤三：MD5加密或者HMAC-SHA256
-        if ($config->GetSignType() == "MD5") {
+        if ($config->GetSignType() === "MD5") {
             $string = md5($string);
-        } else if ($config->GetSignType() == "HMAC-SHA256") {
+        } else if ($config->GetSignType() === "HMAC-SHA256") {
             $string = hash_hmac("sha256", $string, $config->GetKey());
         } else {
             throw new WxPayException("签名类型不支持！");

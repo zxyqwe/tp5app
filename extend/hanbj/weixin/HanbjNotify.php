@@ -18,11 +18,11 @@ class HanbjNotify extends WxPayNotify
         $result = WxPayApi::orderQuery(new HanbjPayConfig(), $input);
         if (array_key_exists("return_code", $result)
             && array_key_exists("result_code", $result)
-            && $result["return_code"] == "SUCCESS"
-            && $result["result_code"] == "SUCCESS"
+            && $result["return_code"] === "SUCCESS"
+            && $result["result_code"] === "SUCCESS"
         ) {
             if (array_key_exists("trade_state", $result)
-                && $result['trade_state'] == "SUCCESS"
+                && $result['trade_state'] === "SUCCESS"
             ) {
                 return true;
             } else {
@@ -46,7 +46,7 @@ class HanbjNotify extends WxPayNotify
         }
         try {
             $checkResult = $objData->CheckSign($config);
-            if ($checkResult == false) {
+            if ($checkResult === false) {
                 return false;
             }
         } catch (Exception $e) {

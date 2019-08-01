@@ -203,29 +203,6 @@ class Develop extends Controller
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
 //        WxHanbj::setMenu();
 
-//        $ret = Db::table('member')
-//            ->where(['unique_name' => HBConfig::CODER])
-//            ->field(['openid'])
-//            ->find();
-//        $ret = $ret['openid'];
-//        $input = new WxPayTransfer();
-//        $input->SetOut_trade_no(time());
-//        $input->SetOpen_id($ret);
-//        $input->SetCheck_name('NO_CHECK'); // FORCE_CHECK
-//        $input->SetUser_name('NO_USE');
-//        $input->SetTotal_fee(30);
-//        $input->SetDesc('开发测试');
-//        $ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
-//        if (array_key_exists("return_code", $ret)
-//            && array_key_exists("result_code", $ret)
-//            && $ret["return_code"] == "SUCCESS"
-//            && $ret["result_code"] == "SUCCESS"
-//        ) {
-//            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($ret), MysqlLog::INFO);
-//        } else {
-//            trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($ret), MysqlLog::ERROR);
-//        }
-
         return json(['msg' => $ret]);
     }
 }

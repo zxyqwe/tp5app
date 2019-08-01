@@ -11,7 +11,7 @@ class BiliSend extends BiliBase
         $urlapi = $this->prefix . 'sign/doSign';
         $raw = $this->bili_Get($urlapi, $this->room_id);
         $data = json_decode($raw, true);
-        if ($data['code'] == -500) {
+        if ($data['code'] === -500) {
             return;
         }
         $urlapi = $this->prefix . 'gift/v2/live/receive_daily_bag';

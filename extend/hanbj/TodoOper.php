@@ -32,7 +32,7 @@ class TodoOper
           'time' => date("Y-m-d H:i:s"),
           'status' => self::UNDO
         ])
-        ->insert() == 1;
+        ->insert() === 1;
     } catch (\Exception $e) {
       $e = $e->getMessage();
       trace("RecvTodoFromOtherOper $e $type, $key, $content, $unique_name", MysqlLog::ERROR);

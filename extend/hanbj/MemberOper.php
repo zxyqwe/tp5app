@@ -75,7 +75,7 @@ class MemberOper
                 $unique[] = "$x$y";
             }
         }
-        if (count($unique) == 0) {
+        if (count($unique) === 0) {
             return ['g' => [], 'r' => 0, 'l' => 0];
         }
         $ret = self::get_tieba($unique);
@@ -84,7 +84,7 @@ class MemberOper
             $already[] = $i['u'];
         }
         $unique = array_diff($unique, $already);
-        if (count($unique) == 0) {
+        if (count($unique) === 0) {
             return ['g' => [], 'r' => 0, 'l' => 0];
         }
         $data = [];
@@ -134,7 +134,7 @@ class MemberOper
 
     public static function get_tieba($list)
     {
-        if (count($list) == 0) {
+        if (count($list) === 0) {
             return [];
         }
         $res = Db::table('member')
@@ -269,7 +269,7 @@ class MemberOper
             }
             trace("$unique_name UNUSED TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Unused2Temp $unique_name $e", MysqlLog::ERROR);
@@ -351,7 +351,7 @@ class MemberOper
                 ])
                 ->find();
             cache("search_unionid{$union_id['unionid']}", null);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Temp2Junior $unique_name $e", MysqlLog::ERROR);
@@ -374,7 +374,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name JUNIOR TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Junior2Temp $unique_name $e", MysqlLog::ERROR);
@@ -406,7 +406,7 @@ class MemberOper
             trace("$unique_name JUNIOR NORMAL $ret", MysqlLog::INFO);
             trace(json_encode($data), MysqlLog::INFO);
             CardOper::renew($unique_name);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Junior2Normal $unique_name $e", MysqlLog::ERROR);
@@ -429,7 +429,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name NORMAL BANNED $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Normal2Banned $unique_name $e", MysqlLog::ERROR);
@@ -467,7 +467,7 @@ class MemberOper
                 ->update($data);
             trace("$unique_name BANNED NORMAL $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
-            return $ret == 1;
+            return $ret === 1;
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("Banned2Normal $unique_name $e", MysqlLog::ERROR);

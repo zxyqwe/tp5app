@@ -65,7 +65,7 @@ class Write extends Controller
             return json(['msg' => 'empty name'], 400);
         }
         $type = input('post.type', FeeOper::ADD, FILTER_VALIDATE_INT);
-        $type = $type == FeeOper::ADD ? 1 : -1;
+        $type = $type === FeeOper::ADD ? 1 : -1;
         $data = [];
         $oper = session('name');
         $d = date("Y-m-d H:i:s");
