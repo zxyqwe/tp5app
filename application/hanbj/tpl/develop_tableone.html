@@ -36,7 +36,7 @@
                 return params;
             };
             w.codeFormatter = function (value, row) {
-                return encodeURI(value);
+                return " " + value.replace(/"/g, "'");
             };
             var col = [];
             for (var i in w.columns) {

@@ -40,8 +40,6 @@ class PayoutOper
                     'fee' => $fee,
                     'desc' => $desc,
                     'gene_time' => date("Y-m-d H:i:s"),
-                    'payment_no' => '',
-                    'payment_time' => '',
                     'status' => self::WAIT,
                     'nickname' => $nick,
                     'orgname' => $org,
@@ -72,7 +70,7 @@ class PayoutOper
         $ret = Db::table('payout')
             ->where([
                 'status' => self::WAIT,
-                'payment_no' => '',
+                'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => ''
             ])
             ->field([
@@ -101,7 +99,7 @@ class PayoutOper
             ->where([
                 'id' => ['in', $ids],
                 'status' => self::WAIT,
-                'payment_no' => '',
+                'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => ''
             ])
             ->data([
@@ -124,7 +122,7 @@ class PayoutOper
             ->where([
                 'id' => $key,
                 'status' => self::TODO,
-                'payment_no' => '',
+                'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => ''
             ])
             ->data([
@@ -142,7 +140,7 @@ class PayoutOper
         $ret = Db::table('payout')
             ->where([
                 'status' => self::AUTH,
-                'payment_no' => '',
+                'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => ''
             ])
             ->field([
@@ -198,7 +196,7 @@ class PayoutOper
             ->where([
                 'tradeid' => $tradeid,
                 'status' => self::AUTH,
-                'payment_no' => '',
+                'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => ''
             ])
             ->data([
@@ -240,7 +238,7 @@ CREATE TABLE `payout` (
   `fee` int(11) NOT NULL,
   `desc` varchar(1024) NOT NULL,
   `gene_time` varchar(255) NOT NULL,
-  `payment_no` varchar(255) NOT NULL,
+  `payment_no` varchar(255) DEFAULT NULL,
   `payment_time` varchar(255) NOT NULL,
   `status` tinyint(4) NOT NULL,
   `nickname` varchar(255) NOT NULL,
