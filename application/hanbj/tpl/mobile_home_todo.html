@@ -32,6 +32,30 @@
     var wx_todo = (function ($, w, undefined) {
         'use strict';
         var vmain;
+        var payout = function (desc, key) {
+            var str = '<p class="temp-text">' + desc + '</p>';
+            return weui.confirm(str, {
+                title: '确认支付',
+                buttons: [{
+                    label: '先不管',
+                    type: 'default',
+                    onClick: function () {
+                    }
+                }, {
+                    label: '支付',
+                    type: 'primary',
+                    onClick: function () {
+                        console.log('支付')
+                    }
+                }, {
+                    label: '拒绝',
+                    type: 'primary',
+                    onClick: function () {
+                        console.log('拒绝')
+                    }
+                }]
+            });
+        };
         var vue_init = function (todos) {
             vmain = new Vue({
                 el: '#vmain',
@@ -43,17 +67,26 @@
                         fee = parseInt(fee);
                         return '' + parseInt(fee / 100) + '.' + parseInt(fee % 100);
                     },
+                    title_fee: function (item) {
+                        return "支付给【 " + item.content.realname + " 】共计【 " + this.trans_fee(item.content.fee) + " 】元";
+                    },
                     title_todo: function (item) {
                         switch (item.type) {
                             case "1":
-                                return "支付给【 " + item.content.realname + " 】共计【 " + this.trans_fee(item.content.fee) + " 】元";
+                                return this.title_fee(item);
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));
                                 return "???";
                         }
                     },
                     handle_todo: function (item) {
-                        console.log("handle_todo:" + JSON.stringify(item));
+                        switch (item.type) {
+                            case "1":
+                                payout(this.title_fee(item), item.key);
+                                break;
+                            default:
+                                w.msgto2(JSON.stringify(item));
+                        }
                     }
                 }
             });
