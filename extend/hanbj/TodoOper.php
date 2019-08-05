@@ -94,6 +94,8 @@ class TodoOper
             ->where($map)
             ->order('time desc')
             ->field([
+                'key',
+                'type',
                 'content'
             ])
             ->select();

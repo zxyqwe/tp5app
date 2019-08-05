@@ -59,12 +59,13 @@
             w.waitloading();
             $.ajax({
                 type: "GET",
-                url: w.u19,
+                url: w.u24,
                 data: {
                     _ajax: 1,
                 },
                 dataType: "json",
                 success: function (msg) {
+                    msg = msg.msg;
                     for (var i in msg) {
                         msg[i]['content'] = JSON.parse(msg[i]['content']);
                     }

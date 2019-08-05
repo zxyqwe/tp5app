@@ -7,6 +7,7 @@ use hanbj\BonusOper;
 use hanbj\CardOper;
 use hanbj\FeeOper;
 use hanbj\MemberOper;
+use hanbj\TodoOper;
 use hanbj\UserOper;
 use think\Controller;
 use think\Db;
@@ -66,7 +67,7 @@ class Wxwork extends Controller
         if (!is_numeric($code)) {
             $code = 0;
         }
-        $res=CardOper::Card2U($code);
+        $res = CardOper::Card2U($code);
         return ActivityOper::signAct($res['unique_name'], $res['openid'], BonusOper::getActName(), BonusOper::getActBonus());
     }
 
@@ -98,5 +99,11 @@ class Wxwork extends Controller
             ])
             ->select();
         return json(['list' => $card, 'name' => $act, 'size' => $size]);
+    }
+
+    public function todo()
+    {
+        $ret = TodoOper::showTodo();
+        return json(['msg' => $ret]);
     }
 }
