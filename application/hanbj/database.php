@@ -15,4 +15,6 @@ return [
     'username'        => 'hanbj',
     // 密码
     'password'        => '1',
+    // 数据库调试模式
+    'debug'           => true,
 ];
