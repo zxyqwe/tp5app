@@ -213,7 +213,7 @@ class Rpc extends Controller
         $act = strval($data['activeName']);
         $fee = intval($data['payNum']);
         $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
-        $desc = "付款请求：因|$act|活动需要，向|$org|组织的|" . strval($openid['unique_name']) . " $nick $real_desc|付款人民币|$fee_desc|元";
+        $desc = "付款请求：应【 $act 】活动的需求，向【 $org 】组织的【 " . strval($openid['unique_name']) . " $nick $real_desc 】付款人民币【 $fee_desc 】元";
         $ret = PayoutOper::recordNewPayout($openid['openid'], $payId, $realname, $fee, $desc, $nick, $org, $act);
         if ($ret) {
             return json(["msg" => "ok"]);

@@ -5,16 +5,18 @@
     <div class="page__bd page__bd_spacing">
         <div class="weui-panel weui-panel_access" id="vmain">
             <div class="weui-panel__bd">
-                <template v-for="item in todos">
+                <template v-for="item in hist">
                     <template v-if="item.type==1">
                         <div class="weui-media-box weui-media-box_text" v-on:click="handle_todo(item)">
-                            <h4 class="weui-media-box__title">{{ title_todo(item) }}</h4>
+                            <h4 class="weui-media-box__title">
+                                {{ title_todo(item) }}
+                            </h4>
                             <p class="weui-media-box__desc">
                                 {{ item.content.desc }}
                             </p>
                             <ul class="weui-media-box__info">
                                 <li class="weui-media-box__info__meta">
-                                    订单号：{{ item.key }}
+                                    订单号：{{ item.key }} | 共计{{ trans_fee(item.content.fee) }}元
                                 </li>
                             </ul>
                         </div>
@@ -43,10 +45,11 @@
                     },
                     title_todo: function (item) {
                         switch (item.type) {
-                            case 1:
-                                return "支付给" + item.content.realname + "共计" + trans_fee(item.content.fee) + "元";
+                            case "1":
+                                return "支付给【 " + item.content.realname + " 】共计【 " + this.trans_fee(item.content.fee) + " 】元";
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));
+                                return "???";
                         }
                     },
                     handle_todo: function (item) {
