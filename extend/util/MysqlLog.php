@@ -24,6 +24,8 @@ class MysqlLog
         switch ($level) {
             case self::RPC:
                 return [self::RPC];
+            case self::SQL:
+                return [self::SQL];
             case self::ERROR:
                 return [self::ERROR];
             case self::INFO:
@@ -32,8 +34,6 @@ class MysqlLog
                 return [self::ERROR, self::INFO, self::LOG];
             case self::DEBUG:
                 return [self::ERROR, self::INFO, self::LOG, self::DEBUG];
-            case self::SQL:
-                return [self::ERROR, self::INFO, self::LOG, self::DEBUG, self::SQL];
             default:
                 return [self::RPC, self::ERROR, self::INFO, self::LOG, self::DEBUG, self::SQL];
         }
