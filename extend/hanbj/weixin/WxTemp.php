@@ -133,7 +133,7 @@ class WxTemp
             cache($limit, $limit, 60); // 缩短到一分钟
             return $raw;
         }
-        trace($log, MysqlLog::LOG);
+        trace($log, MysqlLog::INFO);
         return 'ok';
     }
 
@@ -236,6 +236,6 @@ class WxTemp
             ]
         ];
         $log = "待办提醒 " . implode(', ', [$openid, $uname, $num]);
-        self::base($data, $log, false);
+        self::base($data, $log, true);
     }
 }
