@@ -11,6 +11,7 @@ class MysqlLog
     const ERROR = 'error';
     const INFO = 'info';
     const RPC = 'rpc';
+    const SQL = 'sql';
 
     /**
      * 日志级别
@@ -31,8 +32,10 @@ class MysqlLog
                 return [self::ERROR, self::INFO, self::LOG];
             case self::DEBUG:
                 return [self::ERROR, self::INFO, self::LOG, self::DEBUG];
+            case self::SQL:
+                return [self::ERROR, self::INFO, self::LOG, self::DEBUG, self::SQL];
             default:
-                return [self::RPC, self::ERROR, self::INFO, self::LOG, self::DEBUG];
+                return [self::RPC, self::ERROR, self::INFO, self::LOG, self::DEBUG, self::SQL];
         }
     }
 
