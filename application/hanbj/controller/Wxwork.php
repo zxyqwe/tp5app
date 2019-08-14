@@ -103,7 +103,23 @@ class Wxwork extends Controller
 
     public function todo()
     {
-        $ret = TodoOper::showTodo();
-        return json(['msg' => $ret]);
+        switch ($this->request->method()) {
+            case 'GET':
+                $ret = TodoOper::showTodo();
+                return json(['msg' => $ret]);
+                break;
+            case 'POST':
+                $type = input('post.type', 0, FILTER_VALIDATE_INT);
+                $key = input('post.key', 0, FILTER_VALIDATE_INT);
+                $res = input('post.res', 0, FILTER_VALIDATE_INT);
+
+                TodoOper::handleTodo($type, $key, $res);
+
+                $ret = TodoOper::showTodo();
+                return json(['msg' => $ret]);
+                break;
+            default:
+                return json(['msg' => '错误 ' . $this->request->method()]);
+        }
     }
 }
