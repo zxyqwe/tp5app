@@ -68,6 +68,7 @@ class Index extends Controller
 
         PayoutOper::generateAnyTodo();
         PayoutOper::handleOneAuth();
+        PayoutOper::notify_original();
         TodoOper::noticeAny();
     }
 }

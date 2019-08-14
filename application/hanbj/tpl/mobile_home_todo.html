@@ -32,6 +32,32 @@
     var wx_todo = (function ($, w, undefined) {
         'use strict';
         var vmain;
+        var PAT_OUT = 1;
+        var DONE = 1;
+        var FAIL_FOREVER = 2;
+        var handle_post = function (type, key, res) {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u25,
+                data: {
+                    _ajax: 1,
+                    type: type,
+                    key: key,
+                    res: res
+                },
+                dataType: "json",
+                success: function (msg) {
+                    msg = process_todos(msg);
+                    vmain.hist = msg;
+                    w.msgok();
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
         var payout = function (desc, key) {
             var str = '<p class="temp-text">' + desc + '</p>';
             return weui.confirm(str, {
@@ -45,13 +71,13 @@
                     label: '支付',
                     type: 'primary',
                     onClick: function () {
-                        console.log('支付')
+                        handle_post(PAT_OUT, key, DONE);
                     }
                 }, {
                     label: '拒绝',
-                    type: 'primary',
+                    type: 'alert',
                     onClick: function () {
-                        console.log('拒绝')
+                        handle_post(PAT_OUT, key, FAIL_FOREVER);
                     }
                 }]
             });
@@ -72,7 +98,7 @@
                     },
                     title_todo: function (item) {
                         switch (item.type) {
-                            case "1":
+                            case "" + PAT_OUT:
                                 return this.title_fee(item);
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));
@@ -81,7 +107,7 @@
                     },
                     handle_todo: function (item) {
                         switch (item.type) {
-                            case "1":
+                            case "" + PAT_OUT:
                                 payout(this.title_fee(item), item.key);
                                 break;
                             default:
@@ -90,6 +116,13 @@
                     }
                 }
             });
+        };
+        var process_todos = function (msg) {
+            msg = msg.msg;
+            for (var i in msg) {
+                msg[i]['content'] = JSON.parse(msg[i]['content']);
+            }
+            return msg;
         };
         var init = function () {
             w.waitloading();
@@ -101,10 +134,7 @@
                 },
                 dataType: "json",
                 success: function (msg) {
-                    msg = msg.msg;
-                    for (var i in msg) {
-                        msg[i]['content'] = JSON.parse(msg[i]['content']);
-                    }
+                    msg = process_todos(msg);
                     vue_init(msg);
                 },
                 error: w.msgto,

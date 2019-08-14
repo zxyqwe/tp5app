@@ -19,6 +19,8 @@ class PayoutOper
     const AUTH = 2;
     const DONE = 3;
     const FAIL = 4;
+    const DONE_NOTICE = 5;
+    const FAIL_NOTICE = 6;
 
     const MIN_FEE = 30;
     const MAX_FEE = 500000;
@@ -112,11 +114,21 @@ class PayoutOper
         return $ret === count($ids);
     }
 
-    public static function handleOneTodo($key)
+    public static function cancelOneTodo($key)
+    {
+        self::handleOneTodo($key, self::FAIL);
+    }
+
+    public static function authOneTodo($key)
+    {
+        self::handleOneTodo($key, self::AUTH);
+    }
+
+    private static function handleOneTodo($key, $event)
     {
         $unique_name = session("unique_name");
-        if ($unique_name !== self::AUTHOR) {
-            return false;
+        if ($unique_name !== self::AUTHOR || $unique_name !== HBConfig::CODER) {
+            return;
         }
         $ret = Db::table('payout')
             ->where([
@@ -126,13 +138,14 @@ class PayoutOper
                 'payment_time' => ''
             ])
             ->data([
-                'status' => self::AUTH
+                'status' => $event
             ])
             ->update();
         if ($ret != 1) {
-            trace("handleOneTodo payout $key", MysqlLog::ERROR);
+            trace("handleOneTodo payout $key $event", MysqlLog::ERROR);
+            Db::rollback();
+            throw new HttpResponseException(json(['msg' => "handleOneTodo($key, $event)"]));
         }
-        return $ret === 1;
     }
 
     public static function handleOneAuth()
@@ -174,52 +187,65 @@ class PayoutOper
             && $wx_ret["return_code"] === "SUCCESS"
             && $wx_ret["result_code"] === "SUCCESS"
         ) {
-            self::setPayoutResult($ret['tradeid'], $wx_ret['payment_no'], $wx_ret['payment_time'], self::DONE);
+            $ret = Db::table('payout')
+                ->where([
+                    'tradeid' => $ret['tradeid'],
+                    'status' => self::AUTH,
+                    'payment_no' => ['exp', Db::raw('is null')],
+                    'payment_time' => ''
+                ])
+                ->data([
+                    'payment_no' => $wx_ret['payment_no'],
+                    'payment_time' => $wx_ret['payment_time'],
+                    'status' => self::DONE
+                ])
+                ->update();
+            if ($ret != 1) {
+                trace("setPayoutDone {$ret['tradeid']}, {$wx_ret['payment_no']}, {$wx_ret['payment_time']}", MysqlLog::ERROR);
+            }
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::LOG);
         } else {
-            self::setPayoutResult($ret['tradeid'], "", "", self::FAIL);
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
         }
     }
 
-    public static function setPayoutResult($tradeid, $tran_no, $tran_time, $result)
+    public static function notify_original()//1 done, 0 fail
     {
-        if ($result === self::DONE) {
-            self::notify_original($tradeid, 1);
-        } elseif ($result === self::FAIL) {
-            self::notify_original($tradeid, 0);
-        } else {
-            trace("setPayoutResult no-update $tradeid, $tran_no, $tran_time $result", MysqlLog::ERROR);
+        $ret = Db::table("payout")
+            ->where([
+                'status' => ['in', [self::DONE, self::FAIL]]
+            ])
+            ->field([
+                'tradeid',
+                'status'
+            ])
+            ->find();
+        if (null === $ret) {
             return;
         }
-        $ret = Db::table('payout')
-            ->where([
-                'tradeid' => $tradeid,
-                'status' => self::AUTH,
-                'payment_no' => ['exp', Db::raw('is null')],
-                'payment_time' => ''
-            ])
-            ->data([
-                'payment_no' => $tran_no,
-                'payment_time' => $tran_time,
-                'status' => $result
-            ])
-            ->update();
-        if ($ret != 1) {
-            trace("setPayoutDone $tradeid, $tran_no, $tran_time", MysqlLog::ERROR);
+        $ret['status'] = intval($ret['status']);
+        if ($ret['status'] === "" . self::DONE) {
+            $data['status'] = 1;
+        } else {
+            $data['status'] = 0;
         }
-    }
-
-    public static function notify_original($payid, $status)
-    {
-        $data['status'] = intval($status);
-        $data['payId'] = $payid;
+        $data['payId'] = $ret['tradeid'];
         $raw = Curl_Post($data, self::URL, true, 60);
         $ret = json_decode($raw, true);
         if (!isset($ret['code']) || $ret['code'] != 0) {
-            trace("notify payout $payid $status $raw", MysqlLog::ERROR);
+            trace("notify payout {$data['payId']} {$data['status']} $raw", MysqlLog::ERROR);
         } else {
-            trace("notify payout $payid $status", MysqlLog::LOG);
+            trace("notify payout {$data['payId']} {$data['status']}", MysqlLog::LOG);
+            $ret = Db::table("payout")
+                ->where([
+                    'tradeid' => $data['payId'],
+                    'status' => ['in', [self::DONE, self::FAIL]]
+                ])
+                ->data(['status' => 'status+2'])
+                ->update();
+            if (1 !== $ret) {
+                trace("update after notify err {$data['payId']} {$data['status']}", MysqlLog::ERROR);
+            }
         }
     }
 }
