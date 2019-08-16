@@ -27,6 +27,29 @@ class PayoutOper
 
     const AUTHOR = "乾乙丑";
 
+    private static function Speak($type)
+    {
+        $type = intval($type);
+        switch ($type) {
+            case self::WAIT:
+                return "WAIT";
+            case self::TODO:
+                return "TODO";
+            case self::AUTH:
+                return "AUTH";
+            case self::DONE:
+                return "DONE";
+            case self::FAIL:
+                return "FAIL";
+            case self::DONE_NOTICE:
+                return "DONE_NOTICE";
+            case self::FAIL_NOTICE :
+                return "FAIL_NOTICE";
+            default:
+                return "Unknown";
+        }
+    }
+
     public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
         $fee = intval($fee);
@@ -127,7 +150,7 @@ class PayoutOper
     private static function handleOneTodo($key, $event)
     {
         $unique_name = session("unique_name");
-        if ($unique_name !== self::AUTHOR || $unique_name !== HBConfig::CODER) {
+        if ($unique_name !== self::AUTHOR && $unique_name !== HBConfig::CODER) {
             return;
         }
         $ret = Db::table('payout')
@@ -142,9 +165,11 @@ class PayoutOper
             ])
             ->update();
         if ($ret != 1) {
-            trace("handleOneTodo payout $key $event", MysqlLog::ERROR);
+            trace("handleOneTodo payout ID $key Status " . self::Speak($event), MysqlLog::ERROR);
             Db::rollback();
             throw new HttpResponseException(json(['msg' => "handleOneTodo($key, $event)"]));
+        } else {
+            trace("handleOneTodo payout ID $key Status " . self::Speak($event), MysqlLog::INFO);
         }
     }
 
@@ -161,7 +186,7 @@ class PayoutOper
                 'openid',
                 'realname',
                 'fee',
-                'desc'
+                'actname'
             ])
             ->find();
         if (null === $ret) {
@@ -179,7 +204,7 @@ class PayoutOper
             $input->SetUser_name($ret['realname']);
         }
         $input->SetTotal_fee(intval($ret['fee']));
-        $input->SetDesc($ret['desc']);
+        $input->SetDesc($ret['actname']);
         $wx_ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
         if (
             array_key_exists("return_code", $wx_ret)
@@ -211,7 +236,7 @@ class PayoutOper
 
     public static function notify_original()//1 done, 0 fail
     {
-        $ret = Db::table("payout")
+        $payout = Db::table("payout")
             ->where([
                 'status' => ['in', [self::DONE, self::FAIL]]
             ])
@@ -220,31 +245,40 @@ class PayoutOper
                 'status'
             ])
             ->find();
-        if (null === $ret) {
+        if (null === $payout) {
             return;
         }
-        $ret['status'] = intval($ret['status']);
-        if ($ret['status'] === "" . self::DONE) {
-            $data['status'] = 1;
-        } else {
-            $data['status'] = 0;
+        $payout['status'] = intval($payout['status']);
+        switch ($payout['status']) {
+            case self::DONE:
+                $data['status'] = 1;
+                $final_status = 5;
+                break;
+            case self::FAIL:
+                $data['status'] = 0;
+                $final_status = 6;
+                break;
+            default:
+                trace("notify_original select " . json_encode($payout), MysqlLog::ERROR);
+                return;
         }
-        $data['payId'] = $ret['tradeid'];
+        $data['payId'] = $payout['tradeid'];
         $raw = Curl_Post($data, self::URL, true, 60);
         $ret = json_decode($raw, true);
+        $output_str = "payId {$data['payId']} status {$data['status']} $raw " . self::Speak($payout['status']) . " -> " . self::Speak($final_status);
         if (!isset($ret['code']) || $ret['code'] != 0) {
-            trace("notify payout {$data['payId']} {$data['status']} $raw", MysqlLog::ERROR);
+            trace("notify payout $output_str $raw", MysqlLog::ERROR);
         } else {
-            trace("notify payout {$data['payId']} {$data['status']}", MysqlLog::LOG);
+            trace("notify payout $output_str", MysqlLog::LOG);
             $ret = Db::table("payout")
                 ->where([
                     'tradeid' => $data['payId'],
-                    'status' => ['in', [self::DONE, self::FAIL]]
+                    'status' => $payout['status']
                 ])
-                ->data(['status' => 'status+2'])
+                ->data(['status' => $final_status])
                 ->update();
             if (1 !== $ret) {
-                trace("update after notify err {$data['payId']} {$data['status']}", MysqlLog::ERROR);
+                trace("update after notify err $output_str", MysqlLog::ERROR);
             }
         }
     }

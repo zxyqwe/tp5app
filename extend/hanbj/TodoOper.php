@@ -18,6 +18,21 @@ class TodoOper
     const VALID_TYPE = [self::PAT_OUT];
     const VALID_RESULT = [self::DONE, self::FAIL_FOREVER];
 
+    private static function Speak($type)
+    {
+        $type = intval($type);
+        switch ($type) {
+            case self::UNDO:
+                return "UNDO";
+            case self::DONE:
+                return "DONE";
+            case self::FAIL_FOREVER:
+                return "FAIL_FOREVER";
+            default:
+                return "Unknown";
+        }
+    }
+
     /**
      * @param int $type
      * @param array $content
@@ -96,7 +111,7 @@ class TodoOper
         }
         return Db::table('todo')
             ->where($map)
-            ->order('time desc')
+            ->order('time desc, id desc')
             ->field([
                 'key',
                 'type',
@@ -134,6 +149,7 @@ class TodoOper
         }
         self::handleDetail($type, $key, $result);
         Db::commit();
+        trace("handleTodo(type $type, ID $key, ret $result) " . self::Speak($result), MysqlLog::INFO);
     }
 
     private static function handleDetail($type, $key, $result)
