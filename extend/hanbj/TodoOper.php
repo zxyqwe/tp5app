@@ -89,15 +89,10 @@ class TodoOper
         }
 
         foreach ($notice as $k => $v) {
-            $cache_key = "TodonoticeAny$k";
-            if (cache("?$cache_key")) {
-                continue;
-            }
             if (!isset($openid[$k])) {
                 trace("Todo noticeAny $k no openid", MysqlLog::ERROR);
                 continue;
             }
-            cache($cache_key, $cache_key, 86400);
             WxTemp::notifyTodo($openid[$k], $k, $v);
         }
     }

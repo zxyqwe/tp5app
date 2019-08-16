@@ -3,6 +3,7 @@
 namespace util;
 
 
+use hanbj\weixin\WxTemp;
 use think\Db;
 use think\exception\HttpResponseException;
 use util\stat\BaseStat;
@@ -35,13 +36,18 @@ class StatOper
         }
         $fetch_date = $ret[0];
         $content = $ret[1];
-        return Db::table('stat')
+        $desc = $ret[2];
+        $update_num = Db::table('stat')
             ->data([
                 'type' => $type,
                 'content' => $content,
                 'time' => $fetch_date
             ])
             ->insert();
+        if ($update_num) {
+            WxTemp::notifyStat(strval($desc));
+        }
+        return $update_num === 1;
     }
 
     public static function OutputAll($type)

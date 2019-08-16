@@ -49,7 +49,11 @@ class LogStat extends BaseStat
                 'type'
             ])
             ->select();
-        return [$fetch_date, json_encode($ret)];
+        $desc = '';
+        foreach ($ret as $item) {
+            $desc .= "{$item['type']}类型{$item['num']};";
+        }
+        return [$fetch_date, json_encode($ret), $desc];
     }
 
     public function OutputAll()

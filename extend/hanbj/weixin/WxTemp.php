@@ -3,6 +3,8 @@
 namespace hanbj\weixin;
 
 
+use hanbj\HBConfig;
+use think\Db;
 use util\MysqlLog;
 
 class WxTemp
@@ -209,9 +211,48 @@ class WxTemp
         return self::base($data, $log);
     }
 
+    public static function notifyStat($data)
+    {
+        $openid = Db::table("member")
+            ->where(['unique_name' => HBConfig::CODER])
+            ->field(['openid'])
+            ->find();
+        $openid = $openid['openid'];
+        $data = [
+            "touser" => $openid,
+            "template_id" => "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "统计信息提醒"
+                ],
+                "keyword1" => [
+                    "value" => HBConfig::CODER . " 的统计信息提醒"
+                ],
+                'keyword2' => [
+                    'value' => strval($data),
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => '请尽快处理'
+                ]
+            ]
+        ];
+        self::base($data, "统计信息提醒");
+    }
+
     public static function notifyTodo($openid, $uname, $num)
     {
         if (strlen($openid) <= 10) {
+            return;
+        }
+        $hour_now = date('H');
+        if ($hour_now < 10 || $hour_now > 18) {
+            return;
+        }
+        $cache_key = "TodonoticeAny$openid";
+        if (cache("?$cache_key")) {
             return;
         }
         $data = [
@@ -236,6 +277,7 @@ class WxTemp
             ]
         ];
         $log = "待办提醒 " . implode(', ', [$openid, $uname, $num]);
-        self::base($data, $log, true);
+        self::base($data, $log);
+        cache($cache_key, $cache_key, 86400);
     }
 }
