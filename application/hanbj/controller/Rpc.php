@@ -181,10 +181,10 @@ class Rpc extends Controller
         $input->SetOp_user_id($config->GetMerchantId());
         try {
             $ret = WxPayApi::refund($config, $input);
-            trace('退款 INFO' . json_encode($data) . json_encode($ret), MysqlLog::RPC);
+            trace('退款 INFO ' . json_encode($data) . json_encode($ret), MysqlLog::RPC);
             return json(['msg' => 'ok', 'data' => $ret]);
         } catch (Exception $e) {
-            trace('退款 ERROR' . json_encode($data) . $e, MysqlLog::RPC);
+            trace('退款 ERROR ' . json_encode($data) . $e, MysqlLog::RPC);
             throw new HttpResponseException(json(['msg' => "$e"]));
         }
     }
@@ -213,9 +213,10 @@ class Rpc extends Controller
         $act = strval($data['activeName']);
         $fee = intval($data['payNum']);
         $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
-        $desc = "付款请求：应【 $act 】活动的需求，向【 $org 】组织的【 " . strval($openid['unique_name']) . " $nick $real_desc 】付款人民币【 $fee_desc 】元";
+        $desc = "付款：应【 $act 】的需求，向【 $org 】组织的【 " . strval($openid['unique_name']) . " $nick $real_desc 】付款人民币【 $fee_desc 】元";
         $ret = PayoutOper::recordNewPayout($openid['openid'], $payId, $realname, $fee, $desc, $nick, $org, $act);
         if ($ret) {
+            trace('付款 INFO ' . $payId, MysqlLog::INFO);
             return json(["msg" => "ok"]);
         } else {
             return json(["msg" => "err"]);

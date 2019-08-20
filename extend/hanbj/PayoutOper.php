@@ -43,7 +43,7 @@ class PayoutOper
                 return "FAIL";
             case self::DONE_NOTICE:
                 return "DONE_NOTICE";
-            case self::FAIL_NOTICE :
+            case self::FAIL_NOTICE:
                 return "FAIL_NOTICE";
             default:
                 return "Unknown";
@@ -56,20 +56,27 @@ class PayoutOper
         if ($fee > self::MAX_FEE || $fee < self::MIN_FEE) {
             return false;
         }
+        $order = [
+            'openid' => $to,
+            'tradeid' => $tradeid,
+            'realname' => $realname,
+            'fee' => $fee,
+            'desc' => $desc,
+            'nickname' => $nick,
+            'orgname' => $org,
+            'actname' => $act
+        ];
+        $ret = Db::table('payout')
+            ->where($order)
+            ->find();
+        if (null !== $ret) {
+            return true;
+        }
+        $order['status'] = self::WAIT;
+        $order['gene_time'] = date("Y-m-d H:i:s");
         try {
             $ret = Db::table('payout')
-                ->data([
-                    'openid' => $to,
-                    'tradeid' => $tradeid,
-                    'realname' => $realname,
-                    'fee' => $fee,
-                    'desc' => $desc,
-                    'gene_time' => date("Y-m-d H:i:s"),
-                    'status' => self::WAIT,
-                    'nickname' => $nick,
-                    'orgname' => $org,
-                    'actname' => $act
-                ])
+                ->data($order)
                 ->insert();
             return $ret === 1;
         } catch (\Exception $e) {
@@ -165,11 +172,11 @@ class PayoutOper
             ])
             ->update();
         if ($ret != 1) {
-            trace("handleOneTodo payout ID $key Status " . self::Speak($event), MysqlLog::ERROR);
+            trace("付款待办 ID $key Status " . self::Speak($event), MysqlLog::ERROR);
             Db::rollback();
             throw new HttpResponseException(json(['msg' => "handleOneTodo($key, $event)"]));
         } else {
-            trace("handleOneTodo payout ID $key Status " . self::Speak($event), MysqlLog::INFO);
+            trace("付款待办 ID $key Status " . self::Speak($event), MysqlLog::INFO);
         }
     }
 
@@ -234,7 +241,7 @@ class PayoutOper
         }
     }
 
-    public static function notify_original()//1 done, 0 fail
+    public static function notify_original() //1 done, 0 fail
     {
         $payout = Db::table("payout")
             ->where([
@@ -265,7 +272,7 @@ class PayoutOper
         $data['payId'] = $payout['tradeid'];
         $raw = Curl_Post($data, self::URL, true, 60);
         $ret = json_decode($raw, true);
-        $output_str = "payId {$data['payId']} status {$data['status']} $raw " . self::Speak($payout['status']) . " -> " . self::Speak($final_status);
+        $output_str = "payId {$data['payId']} status {$data['status']} " . self::Speak($payout['status']) . " -> " . self::Speak($final_status);
         if (!isset($ret['code']) || $ret['code'] != 0) {
             trace("notify payout $output_str $raw", MysqlLog::ERROR);
         } else {
