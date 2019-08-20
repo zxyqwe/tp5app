@@ -11,7 +11,7 @@ abstract class TokenOper
     protected $api = '';
     protected $sk = '';
 
-    private $action_time = 120; // seconds
+    private $action_time = 305; // seconds
 
     function __construct($cache_key, $api, $sk)
     {
