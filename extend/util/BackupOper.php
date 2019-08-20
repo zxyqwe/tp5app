@@ -57,7 +57,6 @@ class BackupOper
 
             $mail->send();
             trace("备份邮件 $today", MysqlLog::INFO);
-            WxTemp::notifyStat(strval($body));
         } catch (Exception $e) {
             trace("备份邮件 " . $mail->ErrorInfo, MysqlLog::ERROR);
         }
