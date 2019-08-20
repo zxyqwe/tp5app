@@ -50,6 +50,51 @@ class PayoutOper
         }
     }
 
+    public static function recordNameVerifyPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
+    {
+        $order = [
+            'openid' => $to,
+            'actname' => $act
+        ];
+        $ret = Db::table('payout')
+            ->where($order)
+            ->find();
+        if (null !== $ret) {
+            trace("重复实名认证 $to $act", MysqlLog::ERROR);
+            return false;
+        }
+
+        Db::startTrans();
+        try {
+            $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act);
+            if (!ret) {
+                return false;
+            }
+            $order = [
+                'openid' => $to,
+                'tradeid' => $tradeid,
+                'realname' => $realname,
+                'fee' => $fee,
+                'desc' => $desc,
+                'nickname' => $nick,
+                'orgname' => $org,
+                'actname' => $act
+            ];
+            $ret = Db::table('payout')
+                ->where($order)
+                ->data(['status' => self::AUTH])
+                ->update();
+            if ($ret === 1) {
+                Db::commit();
+            } else {
+                throw new HttpResponseException(json(['msg' => '穿透二次审核失败'], 400));
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
     public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
         $fee = intval($fee);
