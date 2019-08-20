@@ -144,7 +144,7 @@ class TodoOper
         }
         self::handleDetail($type, $key, $result);
         Db::commit();
-        trace("handleTodo(type $type, ID $key, ret $result) " . self::Speak($result), MysqlLog::INFO);
+        trace("处理一个待办 (type $type, ID $key, ret $result) " . self::Speak($result), MysqlLog::INFO);
     }
 
     private static function handleDetail($type, $key, $result)
