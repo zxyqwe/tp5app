@@ -172,6 +172,9 @@ class PayoutOper
                 $ids[] = $item['id'];
             }
         }
+        if (count($ids) === 0) {
+            return false;
+        }
         $ret = Db::table('payout')
             ->where([
                 'id' => ['in', $ids],
