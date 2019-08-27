@@ -67,7 +67,7 @@ class PayoutOper
         Db::startTrans();
         try {
             $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act);
-            if (!ret) {
+            if (!$ret) {
                 return false;
             }
             $order = [
@@ -86,6 +86,7 @@ class PayoutOper
                 ->update();
             if ($ret === 1) {
                 Db::commit();
+                return true;
             } else {
                 throw new HttpResponseException(json(['msg' => '穿透二次审核失败'], 400));
             }
