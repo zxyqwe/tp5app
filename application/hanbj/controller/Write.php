@@ -106,7 +106,7 @@ class Write extends Controller
             return json(['msg' => 'empty name'], 400);
         }
         foreach ($name as $tmp) {
-            ActivityOper::signAct($tmp['u'], '', BonusOper::getActName() . '志愿者', BonusOper::getVolBonus());
+            ActivityOper::signAct($tmp['u'], '', BonusOper::getActName(), BonusOper::getVolBonus(), null, true);
         }
         return json(['msg' => 'ok']);
     }

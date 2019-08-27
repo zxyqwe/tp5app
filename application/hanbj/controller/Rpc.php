@@ -155,9 +155,10 @@ class Rpc extends Controller
         ActivityOper::signAct(
             $operret['unique_name'],
             $operret['openid'],
-            $act . '志愿者',
+            $act,
             BonusOper::getVolBonus(),
-            $operret['unique_name']
+            $operret['unique_name'],
+            true
         );
         return ActivityOper::signAct(
             $ret['unique_name'],
