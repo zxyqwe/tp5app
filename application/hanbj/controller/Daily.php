@@ -57,7 +57,8 @@ class Daily extends Controller
                 'm.tieba_id as t',
                 'f.up',
                 'f.bonus',
-                'm.code'
+                'm.code',
+                'f.type'
             ])
             ->select();
         $data['rows'] = $tmp;
