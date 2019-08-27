@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\ActivityOper;
 use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
@@ -65,6 +66,7 @@ class Index extends Controller
         MemberOper::daily();
         BackupOper::run();
         StatOper::generateOneDay(StatOper::LOG_NUM);
+        ActivityOper::revokeTest();
 
         PayoutOper::generateAnyTodo();
         PayoutOper::handleOneAuth();

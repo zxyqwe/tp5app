@@ -55,7 +55,8 @@ class Wxdaily extends Controller
                 'name',
                 'act_time',
                 'bonus',
-                'up'
+                'up',
+                'type'
             ])
             ->select();
         return json(['list' => $card, 'size' => $size]);

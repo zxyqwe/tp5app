@@ -50,9 +50,31 @@ class ActivityOper
 
     public static function revokeTest()
     {
-        return Db::table('activity')
+        $cache_key = 'revokeTest';
+        if (cache("?$cache_key")) {
+            return;
+        }
+        cache($cache_key, $cache_key, 86400);
+        $ret = Db::table('activity')
             ->where(['name' => ['like', '%测试%']])
             ->data(['bonus' => 0, 'up' => 1])
             ->update();
+        trace("revokeTest $ret", MysqlLog::INFO);
+        return;
     }
 }
+
+/*
+CREATE TABLE `activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `unique_name` varchar(45) NOT NULL,
+  `oper` varchar(45) NOT NULL,
+  `act_time` varchar(45) NOT NULL,
+  `type` int(11) NOT NULL,
+  `up` tinyint(4) NOT NULL,
+  `bonus` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `act_uniq` (`name`,`unique_name`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
