@@ -2,7 +2,6 @@
 
 namespace util;
 
-use hanbj\weixin\WxTemp;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
