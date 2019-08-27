@@ -21,7 +21,7 @@ class ActivityOper
         }
     }
 
-    public static function signAct($user, $openid, $act_name, $bonus, $oper = null)
+    public static function signAct($user, $openid, $act_name, $bonus, $oper = null, $is_vol = false)
     {
         if (strlen($user) <= 1) {
             return json(['msg' => '用户错误'], 400);
@@ -31,6 +31,7 @@ class ActivityOper
         $data['act_time'] = date("Y-m-d H:i:s");
         $data['name'] = $act_name;
         $data['bonus'] = $bonus;
+        $data['type'] = $is_vol ? 1 : 0;
         try {
             Db::table('activity')
                 ->data($data)
