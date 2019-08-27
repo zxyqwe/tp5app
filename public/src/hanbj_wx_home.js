@@ -237,6 +237,13 @@ var wx_home = (function ($, Vue, w, undefined) {
             },
             success: function (msg) {
                 var da = msg.list;
+                for (var i in da) {
+                    if (da[i].type === 1) {
+                        da[i].type = "志愿者";
+                    } else {
+                        da[i].type = "";
+                    }
+                }
                 if (da.length < msg.size) {
                     $activity_button.addClass('sr-only');
                 }
