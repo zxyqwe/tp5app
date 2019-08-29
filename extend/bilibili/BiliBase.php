@@ -144,7 +144,7 @@ class BiliBase
             trace("历史记录 $raw", MysqlLog::ERROR);
             return false;
         }
-        trace("Bili Entry $rid", MysqlLog::INFO);
+        trace("Bili Entry $rid", MysqlLog::LOG);
         $this->lock("bili_entry_$rid", 1800);
         $this->lock("enter_room_debounce", 60);
         return true;
