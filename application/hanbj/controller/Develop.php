@@ -198,7 +198,7 @@ class Develop extends Controller
         $ret = '';
 //        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
 //        $ret = WxHanbj::addUnionID($access);
-//        $ret = MemberOper::create_unique_unused();
+       $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
 //        WxHanbj::setMenu();
