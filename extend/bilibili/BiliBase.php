@@ -78,14 +78,13 @@ class BiliBase
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
             if (!(false !== strpos($return_str, 'Timeout')
                 || false !== strpos($return_str, 'SSL connect error')
-                || false !== strpos($return_str, 'Empty reply')
-            )
-            ) {
+                || false !== strpos($return_str, 'Empty reply'))) {
                 trace("url => $url, res => $return_str", MysqlLog::ERROR);
             }
             throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
         }
-        if (false !== strpos($return_str, 'timeout')
+        if (
+            false !== strpos($return_str, 'timeout')
             || false !== strpos($return_str, 'time-out')
             || false !== strpos($return_str, '系统繁忙')
         ) {
@@ -99,6 +98,9 @@ class BiliBase
             if (isset($c_info['request_header'])) {
                 trace("CSRF {$this->csrf_token} Req " . json_encode($c_info['request_header']), MysqlLog::ERROR);
             }
+        }
+        if (false !== strpos($return_str, '先登录')) {
+            cache("bilibilineedlogin", "bilibilineedlogin", 86400);
         }
         return $return_str;
     }

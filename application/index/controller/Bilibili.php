@@ -40,6 +40,9 @@ class Bilibili
 
     public function cron()
     {
+        if(cache("?bilibilineedlogin")){
+            return;
+        }
         local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
         $time = date("Y-m-d H:i:s");

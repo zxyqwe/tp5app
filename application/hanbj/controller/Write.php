@@ -209,6 +209,7 @@ class Write extends Controller
                     case '_BILI_COOKIES':
                         if (session('unique_name') === HBConfig::CODER) {
                             BiliBase::getCookies($value);
+                            cache("bilibilineedlogin",null);
                         }
                         return json(['msg' => 'ok']);
                     default:
