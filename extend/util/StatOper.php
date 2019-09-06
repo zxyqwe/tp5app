@@ -48,7 +48,7 @@ class StatOper
             ])
             ->insert();
         if ($update_num) {
-            WxTemp::notifyStat(strval($desc));
+            WxTemp::notifyStat($type, strval($desc));
         }
         return $update_num === 1;
     }

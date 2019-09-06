@@ -211,8 +211,13 @@ class WxTemp
         return self::base($data, $log);
     }
 
-    public static function notifyStat($data)
+    public static function notifyStat($type, $data)
     {
+        $cache_key = "notifyStat$type";
+        if (cache("?$cache_key")) {
+            return;
+        }
+        cache($cache_key, $cache_key, 43200);
         $openid = Db::table("member")
             ->where(['unique_name' => HBConfig::CODER])
             ->field(['openid'])
