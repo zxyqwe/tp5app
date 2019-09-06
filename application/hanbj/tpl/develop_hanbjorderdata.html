@@ -1,0 +1,115 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>汉北付款趋势</h1>
+        <div id="body">
+            <div class="row">
+                <div class="col-md-12 column" id="hanbjorderdata" style="height: 50em"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nav = 'nav6_6';
+    var hanbjorderdata = (function ($, w, undefined) {
+        'use strict';
+        var myChart;
+        var build_fig = function (date_data, fee_data) {
+            myChart = echarts.init(document.getElementById('hanbjorderdata'));
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {}
+                    }
+                },
+                legend: {
+                    data: ['会费']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: date_data
+                },
+                yAxis: {
+                    type: 'value',
+                    boundaryGap: [0, '100%']
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 90,
+                    end: 100
+                }, {
+                    handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    }
+                }],
+                series: [
+                    {
+                        name: '会费',
+                        type: 'line',
+                        stack: '总量',
+                        areaStyle: {normal: {}},
+                        smooth: true,
+                        symbol: 'none',
+                        sampling: 'average',
+                        data: fee_data
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        };
+        var init = function () {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u23,
+                data: {
+                    _ajax: 1,
+                },
+                dataType: "json",
+                success: function (msg) {
+                    var fee_data = msg.data['1'];
+                    for (var i in fee_data) {
+                        fee_data[i] = parseInt(fee_data[i]) / 100.0;
+                    }
+                    build_fig(
+                        msg.time,
+                        fee_data);
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    $(window).load(function () {
+        hanbjorderdata.init();
+    });
+</script>

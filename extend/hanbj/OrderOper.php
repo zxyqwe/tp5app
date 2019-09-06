@@ -17,6 +17,11 @@ class OrderOper
         ['label' => '续费三年-83折', 'value' => 2, 'fee' => 75]
     ];
 
+    public static function get_level()
+    {
+        return [self::FEE];
+    }
+
     public static function dropfee($outid, $year)
     {
         $openid = session('openid');

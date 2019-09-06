@@ -83,6 +83,7 @@ var nav_active = (function ($, w, undefined) {
         w.u12 = base + develop + 'table';
         w.u21 = base + develop + 'tableone';
         w.u22 = base + develop + 'logdata';
+        w.u23 = base + develop + 'hanbjorderdata';
     };
     var init = function () {
         dict();

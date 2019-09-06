@@ -7,6 +7,7 @@ use hanbj\weixin\WxTemp;
 use think\Db;
 use think\exception\HttpResponseException;
 use util\stat\BaseStat;
+use util\stat\HanbjOrderStat;
 use util\stat\LogStat;
 
 class StatOper
@@ -14,6 +15,7 @@ class StatOper
     const TIME_FORMAT = "Y-m-d";
 
     const LOG_NUM = 0;
+    const HANBJ_ORDER_NUM = 1;
 
     /**
      * @param int $type
@@ -65,6 +67,8 @@ class StatOper
         switch ($type) {
             case self::LOG_NUM:
                 return new LogStat();
+            case self::HANBJ_ORDER_NUM:
+                return new HanbjOrderStat();
             default:
                 if (request()->isAjax()) {
                     $res = json(['msg' => "stat type error $type"], 400);
