@@ -67,7 +67,7 @@ class LogStat extends BaseStat
         $content = StatOper::getQuery(StatOper::LOG_NUM)
             ->order('time asc')
             ->field(['time', 'content'])
-            ->cache(3600)
+            ->cache("StatOper" . StatOper::LOG_NUM, 3600)
             ->select();
         foreach ($content as $item) {
             $time_range[] = $item['time'];

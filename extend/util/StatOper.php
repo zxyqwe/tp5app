@@ -40,6 +40,7 @@ class StatOper
         $content = $ret[1];
         $desc = $ret[2];
         $update_num = Db::table('stat')
+            ->cache("StatOper" . $type)
             ->data([
                 'type' => $type,
                 'content' => $content,

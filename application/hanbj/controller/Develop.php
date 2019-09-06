@@ -195,7 +195,7 @@ class Develop extends Controller
                 $res = Db::table($obj)
                     ->field(TableOper::getFieldsArray($obj))
                     ->limit($offset, $size)
-                    ->order('id')
+                    ->order('id desc')
                     ->select();
                 $data['rows'] = $res;
                 $total = Db::table($obj)
