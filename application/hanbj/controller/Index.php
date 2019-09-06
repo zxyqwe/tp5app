@@ -66,6 +66,7 @@ class Index extends Controller
         MemberOper::daily();
         BackupOper::run();
         StatOper::generateOneDay(StatOper::LOG_NUM);
+        StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
         ActivityOper::revokeTest();
 
         PayoutOper::generateAnyTodo();

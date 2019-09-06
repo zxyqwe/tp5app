@@ -4,11 +4,12 @@ namespace util\stat;
 
 use DateInterval;
 use DateTimeImmutable;
+use hanbj\OrderOper;
 use think\Db;
 use util\MysqlLog;
 use util\StatOper;
 
-class LogStat extends BaseStat
+class HanbjOrderStat extends BaseStat
 {
     private $today;
     private $first_day;
@@ -17,13 +18,13 @@ class LogStat extends BaseStat
     function __construct()
     {
         $this->today = new DateTimeImmutable();
-        $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-29");
+        $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2017-08-09");
         $this->time_interval = new DateInterval("P1D");
     }
 
     public function generateOneDay()
     {
-        $current_new_day = StatOper::getQuery(StatOper::LOG_NUM)
+        $current_new_day = StatOper::getQuery(StatOper::HANBJ_ORDER_NUM)
             ->order('time desc')
             ->field('time as t')
             ->find();
@@ -38,33 +39,33 @@ class LogStat extends BaseStat
         }
 
         $fetch_date = $current_new_day->format(StatOper::TIME_FORMAT);
-        trace("LogStat::generateOneDay $fetch_date", MysqlLog::INFO);
-        $ret = Db::table('logs')
+        trace("HanbjOrderStat::generateOneDay $fetch_date", MysqlLog::INFO);
+        $ret = Db::table('order')
             ->where([
                 'time' => ['like', $fetch_date . '%']
             ])
             ->group('type')
             ->field([
-                'count(id) as num',
+                'sum(fee) as fee',
                 'type'
             ])
             ->select();
         $desc = "$fetch_date;";
         foreach ($ret as $item) {
-            $desc .= "{$item['type']}类型{$item['num']};";
+            $desc .= "{$item['type']}类型{$item['fee']};";
         }
         return [$fetch_date, json_encode($ret), $desc];
     }
 
     public function OutputAll()
     {
-        $all_catg = MysqlLog::get_level();
+        $all_catg = OrderOper::get_level();
         $template = [];
         foreach ($all_catg as $item) {
             $template[$item] = [];
         }
         $time_range = [];
-        $content = StatOper::getQuery(StatOper::LOG_NUM)
+        $content = StatOper::getQuery(StatOper::HANBJ_ORDER_NUM)
             ->order('time asc')
             ->field(['time', 'content'])
             ->cache(3600)
@@ -85,10 +86,10 @@ class LogStat extends BaseStat
 
     private function build_kv($select_ret)
     {
-        $all_catg = MysqlLog::get_level();
+        $all_catg = OrderOper::get_level();
         $data = [];
         foreach ($select_ret as $item) {
-            $data[$item['type']] = $item['num'];
+            $data[$item['type']] = $item['fee'];
         }
         foreach ($all_catg as $item) {
             if (!isset($data[$item])) {

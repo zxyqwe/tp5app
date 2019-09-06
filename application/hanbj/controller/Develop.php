@@ -98,6 +98,18 @@ class Develop extends Controller
         }
     }
 
+    public function hanbjorderdata()
+    {
+        switch ($this->request->method()) {
+            case 'GET':
+                return view('hanbjorderdata');
+            case 'POST':
+                return StatOper::OutputAll(StatOper::HANBJ_ORDER_NUM);
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
+    }
+
     public function token()
     {
         $length = 10;
@@ -198,7 +210,7 @@ class Develop extends Controller
         $ret = '';
 //        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
 //        $ret = WxHanbj::addUnionID($access);
-       $ret = MemberOper::create_unique_unused();
+        $ret = MemberOper::create_unique_unused();
 //        $ret = ActivityOper::revokeTest();
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
 //        WxHanbj::setMenu();
