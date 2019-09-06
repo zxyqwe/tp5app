@@ -68,7 +68,7 @@ class HanbjOrderStat extends BaseStat
         $content = StatOper::getQuery(StatOper::HANBJ_ORDER_NUM)
             ->order('time asc')
             ->field(['time', 'content'])
-            ->cache(3600)
+            ->cache("StatOper" . StatOper::HANBJ_ORDER_NUM, 3600)
             ->select();
         foreach ($content as $item) {
             $time_range[] = $item['time'];
