@@ -79,7 +79,7 @@ function getNonceStr($length = 32, $chars = "abcdefghijklmnopqrstuvwxyz012345678
     return $str;
 }
 
-function WX_union($access_token, $openid)
+function WX_union($access_token, $openid, &$user_info)
 {
     /*
     * {"errcode":42001,"errmsg":"access_token expired, hints: [ req_id: rabp.A0077ns41 ]"}
@@ -93,9 +93,10 @@ function WX_union($access_token, $openid)
     $data = json_decode($raw, true);
     if (!isset($data['openid'])) {
         trace("Weixin Exception $raw", 'error');
-        return $data;
+        return false;
     }
-    return $data['openid'];
+    $user_info = $data;
+    return true;
 }
 
 function WX_code($code, $api, $sec)
@@ -107,19 +108,22 @@ function WX_code($code, $api, $sec)
         '&grant_type=authorization_code', 5);
     $res = json_decode($raw, true);
     if (!isset($res['access_token']) || !isset($res['openid'])) {
-        return $res;
+        trace("wx_login " . json_encode($res), 'error');
+        return false;
     }
     trace("Weixin Code " . $res['openid'], 'log');
-    return $res['openid'];
+    session('openid', $res['openid']);
+    session('access_token', $res['access_token']);
+    return true;
 }
 
-function WX_redirect($uri, $api, $state = '')
+function WX_redirect($uri, $api, $state = '', $scope = 'snsapi_base')
 {
     return redirect('https://open.weixin.qq.com/connect/oauth2/authorize?' .
         'appid=' . $api .
         '&redirect_uri=' . urlencode($uri) .
         '&response_type=code' .
-        '&scope=snsapi_base' .
+        '&scope=' . $scope .
         '&state=' . $state .
         '#wechat_redirect');
 }

@@ -20,7 +20,7 @@ use think\Response;
 class Mobile extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,reg,event,help'],
+        'valid_id' => ['except' => 'index,reg,event,help,rpcauth'],
     ];
 
     protected function valid_id()
@@ -104,6 +104,20 @@ class Mobile extends Controller
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/reg', config('hanbj_api'));
         }
         return view('reg');
+    }
+
+    public function rpcauth()
+    {
+        if (!UserOper::wx_login()) {
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/rpcauth', config('hanbj_api'), '', 'snsapi_userinfo');
+        }
+        $user_info = [];
+        $userinfo_auth = WX_union(session('access_token'), session('openid'), $user_info);
+        if ($userinfo_auth) {
+            trace('rpcauth ' . json_encode($user_info), MysqlLog::INFO);
+            Curl_Post($user_info, 'https:', false);
+        }
+        return redirect('https:');
     }
 
     public function json_old()
