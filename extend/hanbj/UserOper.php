@@ -117,14 +117,11 @@ class UserOper
         if (input('?get.code')) {
             $api = config('hanbj_api');
             $sec = config('hanbj_secret');
-            $openid = WX_code(input('get.code'), $api, $sec);
-            if (is_string($openid)) {
-                session('openid', $openid);
-                session('unique_name', $openid);
+            $code_auth = WX_code(input('get.code'), $api, $sec);
+            if ($code_auth) {
+                session('unique_name', session('openid'));
                 session('wx_login', self::WX_VERSION);
                 return true;
-            } else {
-                trace("wx_login " . json_encode($openid), MysqlLog::ERROR);
             }
         }
         return false;

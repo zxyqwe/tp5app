@@ -72,14 +72,15 @@ class Index extends Controller
         } else if (input('?get.code')) {
             $api = config('hanbj_api');
             $sec = config('hanbj_secret');
-            $openid = WX_code(input('get.code'), $api, $sec);
-            if (!is_string($openid)) {
-                trace("wx_login " . json_encode($openid), MysqlLog::ERROR);
-            } else if (in_array($openid, BConfig::valid_user)) {
-                return $this->wx_ok($obj, $openid);
-            } else {
-                trace("尝试登陆 $openid", MysqlLog::INFO);
-                return redirect("https://www.baidu.com");
+            $code_auth = WX_code(input('get.code'), $api, $sec);
+            if ($code_auth) {
+                $openid = session('openid');
+                if (in_array($openid, BConfig::valid_user)) {
+                    return $this->wx_ok($obj, $openid);
+                } else {
+                    trace("尝试登陆 $openid", MysqlLog::INFO);
+                    return redirect("https://www.baidu.com");
+                }
             }
         }
         $prefix = empty($obj) ? '' : '/obj/' . $obj;
