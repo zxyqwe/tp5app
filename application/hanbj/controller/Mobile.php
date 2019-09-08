@@ -113,11 +113,25 @@ class Mobile extends Controller
         }
         $user_info = [];
         $userinfo_auth = WX_union(session('access_token'), session('openid'), $user_info);
+        $redirect_data = [];
         if ($userinfo_auth) {
-            trace('rpcauth ' . json_encode($user_info), MysqlLog::INFO);
-            Curl_Post($user_info, 'https:', false);
+            trace('RpcAuth ' . json_encode($user_info), MysqlLog::INFO);
+            unset($user_info['privilege']);
+            $raw = Curl_Post($user_info, 'https://active.qunliaoweishi.com/manage/api/mini/v10/register4web.php');
+            $data = json_decode($raw, true);
+            if (!isset($data['code']) ||
+                $data['code'] !== 0 ||
+                !isset($data['data']) ||
+                !isset($data['data']['token']) ||
+                !isset($data['data']['openId']) ||
+                !isset($data['data']['unionId'])
+            ) {
+                trace("RpcAuth $raw", MysqlLog::ERROR);
+            } else {
+                $redirect_data = $data['data'];
+            }
         }
-        return redirect('https:');
+        return redirect('https://active.qunliaoweishi.com/manage/guess/guess.php?' . http_build_query($redirect_data));
     }
 
     public function json_old()
