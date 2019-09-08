@@ -114,12 +114,20 @@ class Mobile extends Controller
         if (!UserOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/rpcauth', config('hanbj_api'), '', 'snsapi_userinfo');
         }
+
         $user_info = [];
-        $userinfo_auth = WX_union(session('access_token'), session('openid'), $user_info);
+        if (!session('?user_info')) {
+            $userinfo_auth = WX_union(session('access_token'), session('openid'), $user_info);
+            if ($userinfo_auth) {
+                trace('RpcAuth ' . json_encode($user_info), MysqlLog::INFO);
+            }
+        } else {
+            $user_info = json_decode(session('user_info'), true);
+        }
+        unset($user_info['privilege']);
+
         $redirect_data = [];
-        if ($userinfo_auth) {
-            trace('RpcAuth ' . json_encode($user_info), MysqlLog::INFO);
-            unset($user_info['privilege']);
+        if (count($user_info) > 0) {
             $raw = Curl_Post($user_info, 'https://active.qunliaoweishi.com/manage/api/mini/v10/register4web.php');
             $data = json_decode($raw, true);
             if (!isset($data['code']) ||
