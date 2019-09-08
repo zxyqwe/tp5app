@@ -108,6 +108,9 @@ class Mobile extends Controller
 
     public function rpcauth()
     {
+        if (!session('?user_info')) {
+            session(null);
+        }
         if (!UserOper::wx_login()) {
             return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/rpcauth', config('hanbj_api'), '', 'snsapi_userinfo');
         }
