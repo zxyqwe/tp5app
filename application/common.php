@@ -95,6 +95,7 @@ function WX_union($access_token, $openid, &$user_info)
         trace("Weixin Exception $raw", 'error');
         return false;
     }
+    session('user_info', $raw);
     $user_info = $data;
     return true;
 }
