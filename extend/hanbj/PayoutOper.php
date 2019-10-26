@@ -6,6 +6,7 @@ namespace hanbj;
 use hanbj\weixin\HanbjPayConfig;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\GeneralRet;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayTransfer;
@@ -52,23 +53,44 @@ class PayoutOper
 
     public static function recordNameVerifyPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
+        if ($fee !== 30) {
+            return GeneralRet::NAME_VARIFY_FEE();
+        }
+        if ($realname === "NO_USE") {
+            return GeneralRet::NAME_VARIFY_NAME();
+        }
         $order = [
             'openid' => $to,
             'actname' => $act
         ];
         $ret = Db::table('payout')
             ->where($order)
+            ->order('id desc')
+            ->field(['status'])
             ->find();
         if (null !== $ret) {
-            trace("重复实名认证 $to $act", MysqlLog::ERROR);
+            $last_status = intval($ret['status']);
+            switch ($last_status) {
+                case self::WAIT:
+                case self::AUTH:
+                    return GeneralRet::NAME_VARIFY_RUNNING();
+                case self::DONE:
+                case self::DONE_NOTICE:
+                    trace("重复实名认证 $to $act", MysqlLog::ERROR);
+                    return GeneralRet::NAME_VARIFY_DUPLICATE();
+                case self::FAIL:
+                case self::FAIL_NOTICE:
+                case self::TODO:
+                    break;
+            }
             return false;
         }
 
         Db::startTrans();
         try {
             $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act);
-            if (!$ret) {
-                return false;
+            if ($ret['msg'] !== 'ok') {
+                return $ret;
             }
             $order = [
                 'openid' => $to,
@@ -86,9 +108,11 @@ class PayoutOper
                 ->update();
             if ($ret === 1) {
                 Db::commit();
-                return true;
+                return GeneralRet::SUCCESS();
             } else {
-                throw new HttpResponseException(json(['msg' => '穿透二次审核失败'], 400));
+                $gen_ret = GeneralRet::NAME_VARIFY_AUTO_AUTH();
+                $gen_ret['status'] = '穿透二次审核失败';
+                throw new HttpResponseException(json($gen_ret, 400));
             }
         } catch (\Exception $e) {
             Db::rollback();
@@ -100,7 +124,7 @@ class PayoutOper
     {
         $fee = intval($fee);
         if ($fee > self::MAX_FEE || $fee < self::MIN_FEE) {
-            return false;
+            return GeneralRet::PAY_FEE_INVALID();
         }
         $order = [
             'openid' => $to,
@@ -116,7 +140,7 @@ class PayoutOper
             ->where($order)
             ->find();
         if (null !== $ret) {
-            return true;
+            return GeneralRet::DUPLICATE_PAY();
         }
         $order['status'] = self::WAIT;
         $order['gene_time'] = date("Y-m-d H:i:s");
@@ -124,11 +148,18 @@ class PayoutOper
             $ret = Db::table('payout')
                 ->data($order)
                 ->insert();
-            return $ret === 1;
+            if ($ret === 1) {
+                trace("付款 INFO $to, $tradeid, $realname, $fee, $desc, $nick, $org, $act", MysqlLog::INFO);
+                return GeneralRet::SUCCESS();
+            } else {
+                return GeneralRet::PAY_RECORD();
+            }
         } catch (\Exception $e) {
             $e = $e->getMessage();
             trace("recordNewPayout $e", MysqlLog::ERROR);
-            throw new HttpResponseException(json(['msg' => $e], 400));
+            $gen_ret = GeneralRet::UNKNOWN();
+            $gen_ret['status'] = $e;
+            throw new HttpResponseException(json($gen_ret, 400));
         }
     }
 
@@ -268,25 +299,27 @@ class PayoutOper
             && $wx_ret["return_code"] === "SUCCESS"
             && $wx_ret["result_code"] === "SUCCESS"
         ) {
-            $ret = Db::table('payout')
-                ->where([
-                    'tradeid' => $ret['tradeid'],
-                    'status' => self::AUTH,
-                    'payment_no' => ['exp', Db::raw('is null')],
-                    'payment_time' => ''
-                ])
-                ->data([
-                    'payment_no' => $wx_ret['payment_no'],
-                    'payment_time' => $wx_ret['payment_time'],
-                    'status' => self::DONE
-                ])
-                ->update();
-            if ($ret != 1) {
-                trace("setPayoutDone {$ret['tradeid']}, {$wx_ret['payment_no']}, {$wx_ret['payment_time']}", MysqlLog::ERROR);
-            }
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::LOG);
+            $next_stage = [
+                'payment_no' => $wx_ret['payment_no'],
+                'payment_time' => $wx_ret['payment_time'],
+                'status' => self::DONE
+            ];
         } else {
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
+            $next_stage = ['status' => self::FAIL];
+        }
+        $ret = Db::table('payout')
+            ->where([
+                'tradeid' => $ret['tradeid'],
+                'status' => self::AUTH,
+                'payment_no' => ['exp', Db::raw('is null')],
+                'payment_time' => ''
+            ])
+            ->data($next_stage)
+            ->update();
+        if ($ret != 1) {
+            trace("setPayout Next {$ret['tradeid']}, " . json_encode($next_stage), MysqlLog::ERROR);
         }
     }
 
