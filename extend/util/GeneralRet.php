@@ -40,10 +40,10 @@ class GeneralRet
     public static function __callStatic($name, $arguments)
     {
         $data_ = ['desc' => $name];
-        if (in_array($name, self::OK_ARRAY)) {
+        if (array_key_exists($name, self::OK_ARRAY)) {
             $data_['msg'] = 'ok';
             $data_['code'] = intval(self::OK_ARRAY[$name]);
-        } else if (in_array($name, self::ERR_ARRAY)) {
+        } else if (array_key_exists($name, self::ERR_ARRAY)) {
             $data_['msg'] = 'err';
             $data_['code'] = intval(self::ERR_ARRAY[$name]);
         } else {
