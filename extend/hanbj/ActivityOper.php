@@ -5,6 +5,7 @@ namespace hanbj;
 use hanbj\weixin\WxTemp;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\GeneralRet;
 use util\MysqlLog;
 
 class ActivityOper
@@ -24,7 +25,7 @@ class ActivityOper
     public static function signAct($user, $openid, $act_name, $bonus, $oper = null, $is_vol = false)
     {
         if (strlen($user) <= 1) {
-            return json(['msg' => '用户错误'], 400);
+            return json(GeneralRet::UNIQUE_NAME_INVALID(), 400);
         }
         $data['unique_name'] = $user;
         $data['oper'] = $oper === null ? session('unique_name') : $oper;
@@ -38,14 +39,16 @@ class ActivityOper
                 ->insert();
             trace("登记活动 {$data['oper']} -> {$user}, $act_name, $bonus", MysqlLog::INFO);
             WxTemp::regAct($openid, $user, $act_name);
-            return json(['msg' => 'ok']);
+            return json(GeneralRet::SUCCESS());
         } catch (\Exception $e) {
             $e = $e->getMessage();
             if (false != strpos('' . $e, 'Duplicate')) {
-                return json(['msg' => '重复登记活动'], 400);
+                return json(GeneralRet::DUPLICATE_ACTIVITY(), 400);
             }
             trace("signAct $e", MysqlLog::ERROR);
-            throw new HttpResponseException(json(['msg' => $e], 400));
+            $gen_ret = GeneralRet::UNKNOWN();
+            $gen_ret['status'] = $e;
+            throw new HttpResponseException(json($gen_ret, 400));
         }
     }
 
