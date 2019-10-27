@@ -13,6 +13,7 @@ class AccessControll
         'mobile',
         'pub',
         'rpc',
+        'rpcv2',
         'wxclub',
         'wxdaily',
         'wxtest',
