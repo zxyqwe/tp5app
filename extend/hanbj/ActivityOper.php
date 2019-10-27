@@ -43,7 +43,7 @@ class ActivityOper
         } catch (\Exception $e) {
             $e = $e->getMessage();
             if (false != strpos('' . $e, 'Duplicate')) {
-                return json(GeneralRet::DUPLICATE_ACTIVITY(), 400);
+                return json(GeneralRet::DUPLICATE_ACTIVITY());
             }
             trace("signAct $e", MysqlLog::ERROR);
             $gen_ret = GeneralRet::UNKNOWN();
