@@ -56,8 +56,7 @@ class Rpcv2 extends Controller
         $unionid = strval($data['unionid']);
         $ret = MemberOper::search_unionid($unionid);
         if (null === $ret || !is_numeric($ret['code'])) {
-            $union_ret = GeneralRet::PEOPLE_NOT_FOUND();
-            return json($union_ret);
+            return json(GeneralRet::PEOPLE_NOT_FOUND());
         }
         trace("查询 {$ret['unique_name']} {$ret['code']}", MysqlLog::RPC);
         $msg = GeneralRet::SUCCESS();
@@ -203,8 +202,7 @@ class Rpcv2 extends Controller
 
         $openid = MemberOper::search_unionid(strval($data['unionid']));
         if (null === $openid) {
-            $gen_ret = GeneralRet::PEOPLE_NOT_FOUND();
-            return json($gen_ret);
+            return json(GeneralRet::PEOPLE_NOT_FOUND());
         }
         if (intval($openid['status']) !== SubscribeOper::Subscribe) {
             return GeneralRet::REQUIRE_SUBSCRIBE();
