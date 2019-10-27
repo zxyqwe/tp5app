@@ -151,7 +151,7 @@ class PayoutOper
                 'status' => self::WAIT,
                 'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => '',
-                'actname' => ['not', '实名认证']
+                'actname' => ['neq', '实名认证']
             ])
             ->field([
                 'id',
@@ -217,7 +217,7 @@ class PayoutOper
                 'status' => self::TODO,
                 'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => '',
-                'actname' => ['not', '实名认证']
+                'actname' => ['neq', '实名认证']
             ])
             ->data([
                 'status' => $event
@@ -239,7 +239,7 @@ class PayoutOper
                 'status' => self::AUTH,
                 'payment_no' => ['exp', Db::raw('is null')],
                 'payment_time' => '',
-                'actname' => ['not', '实名认证']
+                'actname' => ['neq', '实名认证']
             ])
             ->field([
                 'tradeid',
@@ -309,7 +309,7 @@ class PayoutOper
         $payout = Db::table("payout")
             ->where([
                 'status' => ['in', [self::DONE, self::FAIL]],
-                'actname' => ['not', '实名认证']
+                'actname' => ['neq', '实名认证']
             ])
             ->field([
                 'tradeid',
