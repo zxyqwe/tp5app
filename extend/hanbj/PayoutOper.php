@@ -84,11 +84,7 @@ class PayoutOper
                 'fee' => $fee,
                 'actname' => $act
             ];
-            $ret_now = self::payWX($order);
-            if (self::FAIL === $ret_now) {
-                return GeneralRet::NAME_VARIFY_WX_FAIL();
-            }
-            return GeneralRet::SUCCESS();
+            return self::payWX($order);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -286,9 +282,12 @@ class PayoutOper
                 'payment_time' => $wx_ret['payment_time'],
                 'status' => self::DONE
             ];
+            $gen_ret = GeneralRet::SUCCESS();
         } else {
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
             $next_stage = ['status' => self::FAIL];
+            $gen_ret = GeneralRet::NAME_VARIFY_WX_FAIL();
+            $gen_ret['wx'] = $wx_ret;
         }
         $ret = Db::table('payout')
             ->where([
@@ -302,7 +301,7 @@ class PayoutOper
         if ($ret != 1) {
             trace("setPayout Next {$ret['tradeid']}, " . json_encode($next_stage), MysqlLog::ERROR);
         }
-        return $next_stage['status'];
+        return $gen_ret;
     }
 
     public static function notify_original() //1 done, 0 fail
