@@ -61,7 +61,8 @@ class PayoutOper
         }
         $order = [
             'openid' => $to,
-            'actname' => $act
+            'actname' => $act,
+            'status' => ['in', [self::DONE, self::DONE_NOTICE]]
         ];
         $ret = Db::table('payout')
             ->where($order)
@@ -69,26 +70,10 @@ class PayoutOper
             ->field(['status'])
             ->find();
         if (null !== $ret) {
-            $last_status = intval($ret['status']);
-            switch ($last_status) {
-                case self::WAIT:
-                case self::AUTH:
-                    return GeneralRet::NAME_VARIFY_RUNNING();
-                case self::DONE:
-                case self::DONE_NOTICE:
-                    trace("重复实名认证 $to $act", MysqlLog::ERROR);
-                    return GeneralRet::NAME_VARIFY_DUPLICATE();
-                case self::FAIL:
-                case self::FAIL_NOTICE:
-                case self::TODO:
-                    break;
-            }
-            return false;
+            return GeneralRet::NAME_VARIFY_DONE_BEFORE();
         }
-
-        Db::startTrans();
         try {
-            $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act);
+            $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act, self::AUTH);
             if ($ret['msg'] !== 'ok') {
                 return $ret;
             }
@@ -97,30 +82,19 @@ class PayoutOper
                 'tradeid' => $tradeid,
                 'realname' => $realname,
                 'fee' => $fee,
-                'desc' => $desc,
-                'nickname' => $nick,
-                'orgname' => $org,
                 'actname' => $act
             ];
-            $ret = Db::table('payout')
-                ->where($order)
-                ->data(['status' => self::AUTH])
-                ->update();
-            if ($ret === 1) {
-                Db::commit();
-                return GeneralRet::SUCCESS();
-            } else {
-                $gen_ret = GeneralRet::NAME_VARIFY_AUTO_AUTH();
-                $gen_ret['status'] = '穿透二次审核失败';
-                throw new HttpResponseException(json($gen_ret, 400));
+            $ret_now = self::payWX($order);
+            if (self::FAIL === $ret_now) {
+                return GeneralRet::NAME_VARIFY_WX_FAIL();
             }
+            return GeneralRet::SUCCESS();
         } catch (\Exception $e) {
-            Db::rollback();
             throw $e;
         }
     }
 
-    public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
+    public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act, $first_step = self::WAIT)
     {
         $fee = intval($fee);
         if ($fee > self::MAX_FEE || $fee < self::MIN_FEE) {
@@ -142,7 +116,7 @@ class PayoutOper
         if (null !== $ret) {
             return GeneralRet::DUPLICATE_PAY();
         }
-        $order['status'] = self::WAIT;
+        $order['status'] = $first_step;
         $order['gene_time'] = date("Y-m-d H:i:s");
         try {
             $ret = Db::table('payout')
@@ -180,7 +154,8 @@ class PayoutOper
             ->where([
                 'status' => self::WAIT,
                 'payment_no' => ['exp', Db::raw('is null')],
-                'payment_time' => ''
+                'payment_time' => '',
+                'actname' => ['not', '实名认证']
             ])
             ->field([
                 'id',
@@ -245,7 +220,8 @@ class PayoutOper
                 'id' => $key,
                 'status' => self::TODO,
                 'payment_no' => ['exp', Db::raw('is null')],
-                'payment_time' => ''
+                'payment_time' => '',
+                'actname' => ['not', '实名认证']
             ])
             ->data([
                 'status' => $event
@@ -266,7 +242,8 @@ class PayoutOper
             ->where([
                 'status' => self::AUTH,
                 'payment_no' => ['exp', Db::raw('is null')],
-                'payment_time' => ''
+                'payment_time' => '',
+                'actname' => ['not', '实名认证']
             ])
             ->field([
                 'tradeid',
@@ -279,7 +256,11 @@ class PayoutOper
         if (null === $ret) {
             return;
         }
+        self::payWX($ret);
+    }
 
+    private static function payWX($ret)
+    {
         $input = new WxPayTransfer();
         $input->SetOut_trade_no($ret['tradeid']);
         $input->SetOpen_id($ret['openid']);
@@ -321,13 +302,15 @@ class PayoutOper
         if ($ret != 1) {
             trace("setPayout Next {$ret['tradeid']}, " . json_encode($next_stage), MysqlLog::ERROR);
         }
+        return $next_stage['status'];
     }
 
     public static function notify_original() //1 done, 0 fail
     {
         $payout = Db::table("payout")
             ->where([
-                'status' => ['in', [self::DONE, self::FAIL]]
+                'status' => ['in', [self::DONE, self::FAIL]],
+                'actname' => ['not', '实名认证']
             ])
             ->field([
                 'tradeid',

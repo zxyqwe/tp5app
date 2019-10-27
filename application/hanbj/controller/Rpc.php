@@ -14,6 +14,7 @@ use hanbj\weixin\WxTemp;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
+use util\GeneralRet;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
 use wxsdk\pay\WxPayRefund;
@@ -211,7 +212,10 @@ class Rpc extends Controller
             $real_desc = "";
         }
 
-        $payId = intval($data['payId']);
+        $payId = strval($data['payId']);
+        if (!preg_match("/^[A-Za-z0-9]+$/u", $payId)) {
+            return GeneralRet::PAY_ID_INVALID();
+        }
         $nick = strval($data['nickName']);
         $org = strval($data['orgName']);
         $act = strval($data['activeName']);
