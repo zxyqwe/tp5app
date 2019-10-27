@@ -7,9 +7,9 @@ class GeneralRet
 {
 
     const ERR_ARRAY = [
-        'NAME_VARIFY_AUTO_AUTH' => 9976,
-        'NAME_VARIFY_DUPLICATE' => 9977,
-        'NAME_VARIFY_RUNNING' => 9978,
+        'PAY_ID_INVALID' => 9976,
+        'NAME_VARIFY_WX_FAIL' => 9977,
+        'NAME_VARIFY_DONE_BEFORE' => 9978,
         'NAME_VARIFY_NAME' => 9979,
         'NAME_VARIFY_FEE' => 9980,
         'PAY_RECORD' => 9981,
