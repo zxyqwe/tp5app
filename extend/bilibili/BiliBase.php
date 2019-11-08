@@ -92,7 +92,8 @@ class BiliBase
         }
         if (true && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = 'bili_Post 失败 ' . urlencode(substr($return_str, 0, 100));
+            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
+            trace("$url $return_str", MysqlLog::ERROR);
         }
         if (false !== strpos($return_str, 'token')) {
             if (isset($c_info['request_header'])) {
@@ -114,7 +115,7 @@ class BiliBase
             return false;
         }
         $urlapi = 'https://live.bilibili.com/' . $rid;
-        $this->bili_Post($urlapi, $rid);
+        $this->bili_Get($urlapi, $rid);
 
         $data = [
             'csrf' => $this->csrf_token,
