@@ -93,7 +93,9 @@ class BiliBase
         if (true && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
             $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
-            trace("$url $return_str", MysqlLog::ERROR);
+            if($url !== 'https://live.bilibili.com/' . $room){
+                trace("$url $return_str", MysqlLog::ERROR);
+            }
         }
         if (false !== strpos($return_str, 'token')) {
             if (isset($c_info['request_header'])) {
