@@ -78,22 +78,27 @@ class BiliBase
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
             if (!(false !== strpos($return_str, 'Timeout')
                 || false !== strpos($return_str, 'SSL connect error')
-                || false !== strpos($return_str, 'Empty reply'))) {
+                || false !== strpos($return_str, 'Empty reply'))
+            ) {
                 trace("url => $url, res => $return_str", MysqlLog::ERROR);
             }
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
+            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
+            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
+            throw new HttpResponseException(json(['msg' => $return_str], 400));
         }
         if (
             false !== strpos($return_str, 'timeout')
             || false !== strpos($return_str, 'time-out')
             || false !== strpos($return_str, '系统繁忙')
         ) {
-            throw new HttpResponseException(json(['msg' => 'bili_Post ' . $return_str], 400));
+            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
+            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
+            throw new HttpResponseException(json(['msg' => $return_str], 400));
         }
         if (true && is_null(json_decode($return_str))) {
             $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
             $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
-            if($url !== 'https://live.bilibili.com/' . $room){
+            if ($url !== 'https://live.bilibili.com/' . $room) {
                 trace("$url $return_str", MysqlLog::ERROR);
             }
         }
@@ -116,8 +121,8 @@ class BiliBase
         if ($this->lock("enter_room_debounce")) {
             return false;
         }
-        $urlapi = 'https://live.bilibili.com/' . $rid;
-        $this->bili_Get($urlapi, $rid);
+//        $urlapi = 'https://live.bilibili.com/' . $rid;
+//        $this->bili_Get($urlapi, $rid);
 
         $data = [
             'csrf' => $this->csrf_token,
