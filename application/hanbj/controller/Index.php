@@ -64,14 +64,19 @@ class Index extends Controller
         $db = new WxTokenTicketapi('HANBJ_TICKETAPI', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
         MemberOper::daily();
-        BackupOper::run();
-        StatOper::generateOneDay(StatOper::LOG_NUM);
-        StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
-        ActivityOper::revokeTest();
 
         PayoutOper::generateAnyTodo();
         PayoutOper::handleOneAuth();
         PayoutOper::notify_original();
+
+
+        // 2点以后
+        StatOper::generateOneDay(StatOper::LOG_NUM);
+        StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
+        ActivityOper::revokeTest();
+
+        // 白天
+        BackupOper::run();
         TodoOper::noticeAny();
     }
 }

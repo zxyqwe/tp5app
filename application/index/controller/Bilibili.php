@@ -40,13 +40,16 @@ class Bilibili
 
     public function cron()
     {
-        if(cache("?bilibilineedlogin")){
-            return;
+        $time = date("Y-m-d H:i:s");
+
+        if (cache("?bilibilineedlogin")) {
+            return json(['msg' => 'need login', 'time' => $time]);
         }
         local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
-        $time = date("Y-m-d H:i:s");
+
         $bili = new BiliOnline();
+
         if ($bili->lock("Bili400")) {
             return json(['msg' => 'Bili400']);
         }
@@ -54,9 +57,11 @@ class Bilibili
             return json(['msg' => 'too fast', 'time' => $time]);
         }
         $bili->lock('cookie', 290);
+
         $bili->online();
         $bili->unknown_notice();
         $bili->unknown_heart();
+
         cache('bili_cron_user_past', cache('bili_cron_user'));
         $res = $bili->getInfo();
         cache('bili_cron_user', $res);
