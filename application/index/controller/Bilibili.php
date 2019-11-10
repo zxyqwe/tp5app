@@ -6,6 +6,7 @@ namespace app\index\controller;
 use bilibili\BiliDanmu;
 use bilibili\BiliOnline;
 use bilibili\BiliSend;
+use util\ValidateTimeOper;
 
 class Bilibili
 {
@@ -58,17 +59,20 @@ class Bilibili
         }
         $bili->lock('cookie', 290);
 
-        $bili->online();
-        $bili->unknown_notice();
-        $bili->unknown_heart();
+        if (ValidateTimeOper::IsDayUp()) {
+            $bili->online();
+            $bili->unknown_notice();
+            $bili->unknown_heart();
 
-        cache('bili_cron_user_past', cache('bili_cron_user'));
-        $res = $bili->getInfo();
-        cache('bili_cron_user', $res);
-        cache('bili_cron_time', $time);
+            cache('bili_cron_user_past', cache('bili_cron_user'));
+            $res = $bili->getInfo();
+            cache('bili_cron_user', $res);
+            cache('bili_cron_time', $time);
 
-        $bili = new BiliSend();
-        $bili->send();
+            $bili = new BiliSend();
+            $bili->send();
+        }
+
         return json(['msg' => 'ok', 'time' => $time]);
     }
 
