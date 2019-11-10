@@ -11,6 +11,7 @@ use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
 use util\StatOper;
+use util\ValidateTimeOper;
 use wxsdk\WxTokenAccess;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
@@ -71,12 +72,16 @@ class Index extends Controller
 
 
         // 2点以后
-        StatOper::generateOneDay(StatOper::LOG_NUM);
-        StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
-        ActivityOper::revokeTest();
+        if (ValidateTimeOper::GoodForBackup()) {
+            StatOper::generateOneDay(StatOper::LOG_NUM);
+            StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
+            ActivityOper::revokeTest();
+        }
 
         // 白天
-        BackupOper::run();
-        TodoOper::noticeAny();
+        if (ValidateTimeOper::IsDayUp()) {
+            BackupOper::run();
+            TodoOper::noticeAny();
+        }
     }
 }
