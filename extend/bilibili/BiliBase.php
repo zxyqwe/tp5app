@@ -72,7 +72,13 @@ class BiliBase
         curl_setopt($this->curl, CURLOPT_URL, $url);
         curl_setopt($this->curl, CURLOPT_REFERER, 'https://live.bilibili.com/' . $room);
         $return_str = curl_exec($this->curl);
+
         $c_info = explode_curl($this->curl);
+
+        $err_info = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
+        $err_info = urlencode(substr($err_info, 0, 100));
+        $err_info = "bili_curl 失败 $url $err_info";
+
         if ($return_str === false) {
             $num = curl_errno($this->curl);
             $return_str .= $num . ':' . curl_strerror($num) . ':' . curl_error($this->curl);
@@ -82,24 +88,20 @@ class BiliBase
             ) {
                 trace("url => $url, res => $return_str", MysqlLog::ERROR);
             }
-            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
-            throw new HttpResponseException(json(['msg' => $return_str], 400));
+            throw new HttpResponseException(json(['msg' => "$err_info $return_str"], 400));
         }
         if (
             false !== strpos($return_str, 'timeout')
             || false !== strpos($return_str, 'time-out')
             || false !== strpos($return_str, '系统繁忙')
         ) {
-            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
-            throw new HttpResponseException(json(['msg' => $return_str], 400));
+            cache("bilibilineedlogin", "bilibilineedlogin", 86400);
+            trace($err_info, MysqlLog::ERROR);
+            throw new HttpResponseException(json(['msg' => $err_info], 400));
         }
         if (true && is_null(json_decode($return_str))) {
-            $return_str = str_replace(["\r", "\n", "\t", "\f"], '', $return_str);
-            $return_str = 'bili_curl 失败 ' . urlencode(substr($return_str, 0, 100));
             if ($url !== 'https://live.bilibili.com/' . $room) {
-                trace("$url $return_str", MysqlLog::ERROR);
+                trace($err_info, MysqlLog::ERROR);
             }
         }
         if (false !== strpos($return_str, 'token')) {
