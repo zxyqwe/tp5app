@@ -72,6 +72,7 @@ class BiliDanmu extends BiliBase
         }
         if (rand(0, 100) > 5) {
             $this->lock("$key$payload", $this->long_timeout());
+            trace("随机退出 $key $real_roomid " . json_encode($item), MysqlLog::LOG);
             return;
         }
         if (!$this->bili_entry($real_roomid)) {
