@@ -49,6 +49,11 @@ class Rpcv2 extends Controller
         throw new HttpResponseException(json(GeneralRet::PAGE_NOT_EXISTS()));
     }
 
+    public function heart()
+    {
+        return json(GeneralRet::SUCCESS());
+    }
+
     public function user()
     {
         $data = self::check_params(['unionid']);
