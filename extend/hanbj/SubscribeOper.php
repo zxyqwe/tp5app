@@ -35,6 +35,7 @@ class SubscribeOper
             ->update();
         if ($ret > 0) {
             trace("addUnionID $ret $openid -- $unionid", MysqlLog::INFO);
+            cache("search_unionid$unionid", null);
         }
         return $ret;
     }
