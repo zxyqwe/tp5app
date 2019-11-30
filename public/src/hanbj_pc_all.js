@@ -46,7 +46,7 @@ var all_mem = (function ($, w, undefined) {
     };
     var build_vue = function (refresh) {
         var le = [], u = [];
-        for (var i in Array.from(Array(5).keys())) {
+        for (var i in Array.from(Array(w.max_mem_code + 1).keys())) {
             le.push({v: i, n: w.mem_code(i)});
             u.push(i)
         }
@@ -586,7 +586,8 @@ var fame = (function ($, Vue, w, undefined) {
                 labelname: '中枢',
                 candy: [],
                 res: [],
-                labellist: w.department
+                labellist: w.department,
+                max_gras: w.max_gras + 1
             },
             methods: {
                 sel_candy: function (item) {
@@ -644,7 +645,7 @@ var fame = (function ($, Vue, w, undefined) {
     };
     var fameori = function () {
         var le = [], de = [];
-        for (var i in Array.from(Array(12).keys())) {
+        for (var i in Array.from(Array(w.max_gras + 1).keys())) {
             le.push({value: i, text: w.grade(i)});
         }
         for (var i in w.department) {

@@ -20,10 +20,12 @@ class FameOper
     const fame_chair = 9;//名誉会长
     const like_manager = 10;//代理部长
     const leave = 11;//离职
-    const max_pos = 11;
+    const fixed_vice_chairman = 12;//专职副会长
+    const max_pos = 12;
     const order = [
         self::chairman,
         self::fame_chair,
+        self::fixed_vice_chairman,
         self::vice_chairman,
         self::secretary,
         self::manager,
@@ -41,6 +43,7 @@ class FameOper
         return self::get([
             self::chairman,
             self::vice_chairman,
+            self::fixed_vice_chairman,
             self::secretary,
             self::manager
         ]);
@@ -50,7 +53,8 @@ class FameOper
     {
         return self::get([
             self::chairman,
-            self::vice_chairman
+            self::vice_chairman,
+            self::fixed_vice_chairman
         ]);
     }
 
