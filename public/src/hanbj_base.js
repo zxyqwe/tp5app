@@ -1,3 +1,4 @@
+window.max_mem_code=4;
 window.mem_code = function (value) {
     switch (value) {
         case '-1':
@@ -25,6 +26,7 @@ window.wx_mem_code = function (value) {
             return '<p class="temp-text">状态：' + window.mem_code(value);
     }
 };
+window.max_gras = 12;
 window.grade = function (n) {
     switch (n) {
         case '0':
@@ -51,6 +53,8 @@ window.grade = function (n) {
             return '代理部长';
         case '11':
             return '离职';
+        case '12':
+            return '专职副会长';
     }
 };
 window.fame_img = function (n) {
@@ -78,6 +82,8 @@ window.fame_img = function (n) {
         case '10':
             return '/static/arrow-up.png';
         case '11':
+            return '/static/arrow-up.png';
+        case '12':
             return '/static/arrow-up.png';
     }
 };

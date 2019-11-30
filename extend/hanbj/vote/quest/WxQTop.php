@@ -12,7 +12,10 @@ class WxQTop
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::commissioner, FameOper::vice_secretary]);
         $this->obj = [];
-        $ret = MemberOper::get_tieba(FameOper::getTop());
+        $ret = MemberOper::get_tieba(FameOper::get([
+            FameOper::chairman,
+            FameOper::vice_chairman
+        ]));
         foreach ($ret as $item) {
             $this->obj[] = "{$item['u']}~{$item['t']}";
         }

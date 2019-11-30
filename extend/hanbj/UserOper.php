@@ -43,6 +43,7 @@ class UserOper
                 'grade' => ['in', [
                     FameOper::chairman,
                     FameOper::vice_chairman,
+                    FameOper::fixed_vice_chairman,
                     FameOper::manager,
                     FameOper::vice_manager,
                     FameOper::commissioner,
