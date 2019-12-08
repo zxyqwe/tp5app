@@ -1,4 +1,4 @@
-window.max_mem_code=4;
+window.max_mem_code = 4;
 window.mem_code = function (value) {
     switch (value) {
         case '-1':
@@ -104,4 +104,4 @@ window.repeat_icon = function (target, n) {
 };
 window.department = ['中枢', '会员部', '会员中心', '外联部', '外事中心', '外事部', '宣传部', '宣传中心',
     '活动部', '活动中心', '人力部', '人力资源与会员事务部', '秘书处', '办公室', '产业中心', '社推部',
-    '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会'].sort();
+    '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会', '第一项目组', '第二项目组', '第三项目组'].sort();

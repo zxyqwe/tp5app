@@ -21,6 +21,11 @@ class Fame extends Controller
         abort(404, "页面不存在$action");
     }
 
+    public function log()
+    {
+        return view('log', ['fixed_year' => HBConfig::YEAR]);
+    }
+
     public function json_init()
     {
         $join = [
