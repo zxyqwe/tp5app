@@ -573,7 +573,7 @@ var fame = (function ($, Vue, w, undefined) {
             }
         });
     };
-    var initlog = function () {
+    var initlog = function (fixed_year) {
         Vue.filter('grade_code', function (n) {
             return w.grade('' + n);
         });
@@ -581,7 +581,7 @@ var fame = (function ($, Vue, w, undefined) {
             el: '#body',
             data: {
                 uname: '',
-                year: 0,
+                year: fixed_year,
                 grade: 0,
                 labelname: '中枢',
                 candy: [],
