@@ -1,11 +1,156 @@
 {layout name="layout_pc" /}
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
-        <h1>欢迎来到 汉服北京会员部管理系统 beta!</h1>
+        <h1>
+            欢迎来到 汉服北京会员部管理系统 beta!
+        </h1>
         <div id="body">
-            <code>{$Think.session.name}</code>
-            <p><a href="/hanbj/daily/all/">全体成员</a></p>
+            <code>
+                当前登录用户为： {$Think.session.name}
+            </code>
         </div>
+    </div>
+    <div class="col-md-10 col-md-offset-1 column fame-container">
+        <h1>
+            会员部内部信息管理平台开放说明
+        </h1>
+        <h2 class="bg-primary">
+            背景
+        </h2>
+        <p>
+            会员部内部信息管理平台上线几年，由于权限控制严格，功能繁多，所以利用率较低，计划对吧务组人员开放，引入更多的工作人员。开放原则是
+            <mark>
+                分批次，逐步放开，不同功能有不同权限的管制
+            </mark>
+            。
+        </p>
+        <h2 class="bg-success">
+            现状
+        </h2>
+        <h3>
+            人员
+        </h3>
+        <p>
+            现在仅允许少数人使用，但这部分人员具有
+            <mark>无限</mark>
+            权限。
+            <del>详情隐藏</del>
+        </p>
+        <h3>
+            功能
+        </h3>
+        <p>
+            会员部内部信息管理平台功能比较复杂，分类难以准确，但大概有几类情况
+        </p>
+        <code>
+            <ul>
+                <li>
+                    人畜无害的信息观看，有一些可以看的信息，估计没什么保密的要求
+                    <ul>
+                        <li>会员分析下面的几类情况，整体概况、字组分析之类的</li>
+                        <li>年终投票的实时结果</li>
+                        <li>微信会员卡编号大全</li>
+                        <li>名人堂数据名单</li>
+                    </ul>
+                </li>
+                <li>也许有隐私问题的观看
+                    <ul>
+                        <li>会费缴纳、活动登记记录</li>
+                        <li>会员的个人信息
+                        </li>
+                    </ul>
+                </li>
+                <li>应该不能看的信息观看
+                    <ul>
+                        <li>微信订单流水记录</li>
+                    </ul>
+                </li>
+                <li>不太有问题的录入信息
+                    <ul>
+                        <li>活动志愿者积分登记</li>
+                        <li>活动签到信息（名称、积分之类的）</li>
+                        <li>商家优惠列表</li>
+                    </ul>
+                </li>
+                <li>比较重要的录入信息
+                    <ul>
+                        <li>名人堂信息登记、修改</li>
+                        <li>见微知萌小活动一期的审批功能</li>
+                    </ul>
+                </li>
+                <li>核心保密的录入信息
+                    <ul>
+                        <li>会费赠与</li>
+                        <li>实名晋升</li>
+                    </ul>
+                </li>
+            </ul>
+        </code>
+        <h2 class="bg-info">计划</h2>
+        <h3>第一批次</h3>
+        <p>
+            第一批开放两部分内容
+        </p>
+        <code>
+            <ul>
+                <li>
+                    开放会员部内部信息管理平台的登录功能，但是不给任何信息增删改查的权限
+                    <ul>
+                        <li>
+                            含有本届吧务组
+                            <mark>会长、副会长、部长、副部长、专员、秘书长、副秘书长、代理部长</mark>
+                        </li>
+                        <li>
+                            不含有
+                            <mark>干事、助理、名誉会长、离职</mark>
+                        </li>
+                    </ul>
+                </li>
+                <li>功能权限控制
+                    <ul>
+                        <li>
+                            会员分析下面的各统计信息开放给
+                            <mark>任何可以登录的人员</mark>
+                        </li>
+                        <li>
+                            其余功能仍然限制为原本的
+                            <mark>超级用户</mark>
+                            可用
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </code>
+        <h3>第二批次</h3>
+        <p>
+            计划开放名人堂的信息录入功能，权限控制如下
+        </p>
+        <code>
+            <ul>
+                <li>
+                    <mark>会长、副会长、原本的超级用户</mark>
+                    可以做任意编辑
+                </li>
+                <li>部长、副部长、秘书长、副秘书长可以编辑
+                    <mark>本部门、级别更低</mark>
+                    的人员信息，例如
+                    <ul>
+                        <li>部长可以更改副部长，但副部长
+                            <mark>不</mark>
+                            可以更改部长
+                        </li>
+                        <li>会员部的部长可以更改会员部的人员，但
+                            <mark>不</mark>
+                            能更改外联部的信息
+                        </li>
+                        <li>部门名称有严格检查，“会员部”的部长
+                            <mark>不</mark>
+                            可以更改“会员中心”的人员信息
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </code>
     </div>
 </div>
 <script>
