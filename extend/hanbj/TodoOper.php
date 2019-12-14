@@ -83,7 +83,7 @@ class TodoOper
             ])
             ->field(['id'])
             ->find();
-        return false === $ret;
+        return null === $ret;
     }
 
     /**
