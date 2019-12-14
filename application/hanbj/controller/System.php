@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\MemberOper;
 use think\Controller;
 use think\Db;
 use hanbj\vote\WxOrg;
@@ -33,7 +34,7 @@ class System extends Controller
                 'obj' => $org->obj,
                 'mis' => $miss,
                 'rto' => $ratio,
-                'all' => implode(', ', $org->getAll()),
+                'all' => implode(', ', MemberOper::pretty_tieba(MemberOper::get_tieba($org->getAll()))),
                 'name' => $org->name
             ];
         }
