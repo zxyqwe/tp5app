@@ -81,7 +81,7 @@ class TodoOper
                 'type' => $type,
                 'key' => $key,
             ])
-            ->find(['id'])
+            ->field(['id'])
             ->find();
         return false === $ret;
     }
