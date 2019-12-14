@@ -358,7 +358,7 @@ class WxOrg
                 trace("投票update $uname {$this->catg} $obj", MysqlLog::INFO);
             }
             $id_key = $this->calc_int($obj, $uname);
-            if (TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
+            if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
                 TodoOper::handleTodo(TodoOper::VOTE_ORG, $id_key, TodoOper::DONE);
             }
         } catch (Exception $e) {
