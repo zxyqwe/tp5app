@@ -22,14 +22,15 @@
                         </div>
                     </template>
                     <template v-if="item.type==2">
-                        <div class="weui-media-box weui-media-box_text" v-on:click="location='www.baidu.com'">
+                        <a class="weui-media-box weui-media-box_text"
+                           href="https://app.zxyqwe.com/hanbj/mobile/simplevote">
                             <h4 class="weui-media-box__title">
                                 {{ title_todo(item) }}
                             </h4>
                             <p class="weui-media-box__desc wx-many-line">
                                 {{ item.content.name }} {{ item.content.target }}
                             </p>
-                        </div>
+                        </a>
                     </template>
                 </template>
             </div>
