@@ -41,6 +41,9 @@ class System extends Controller
         return view('test', ['data' => json_encode($ret)]);
     }
 
+    /**
+     * @throws
+     */
     public function json_order()
     {
         $size = input('post.limit', 20, FILTER_VALIDATE_INT);
@@ -77,6 +80,9 @@ class System extends Controller
         return json($data);
     }
 
+    /**
+     * @throws
+     */
     public function json_club()
     {
         $size = input('post.limit', 20, FILTER_VALIDATE_INT);

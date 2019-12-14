@@ -6,6 +6,7 @@ use hanbj\ActivityOper;
 use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
+use hanbj\vote\WxOrg;
 use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -49,6 +50,9 @@ class Index extends Controller
         return redirect('https://app.zxyqwe.com/hanbj/index/home');
     }
 
+    /**
+     * @throws
+     */
     public function cron()
     {
         local_cron();
@@ -82,6 +86,11 @@ class Index extends Controller
         if (ValidateTimeOper::IsDayUp()) {
             BackupOper::run();
             TodoOper::noticeAny();
+        }
+
+        foreach (WxOrg::vote_cart as $item) {
+            $org = new WxOrg(intval($item));
+            $org->try_add_todo();
         }
     }
 }

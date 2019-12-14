@@ -6,6 +6,7 @@ namespace hanbj\weixin;
 use hanbj\HBConfig;
 use think\Db;
 use util\MysqlLog;
+use util\ValidateTimeOper;
 
 class WxTemp
 {
@@ -253,7 +254,7 @@ class WxTemp
             return;
         }
         $hour_now = date('H');
-        if ($hour_now < 10 || $hour_now > 18) {
+        if (!ValidateTimeOper::IsDayUp()) {
             return;
         }
         $cache_key = "TodonoticeAny$openid";

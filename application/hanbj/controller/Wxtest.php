@@ -7,7 +7,12 @@ use hanbj\vote\WxOrg;
 use think\Controller;
 use hanbj\HBConfig;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
+use think\response\View;
 use util\MysqlLog;
 
 class Wxtest extends Controller
@@ -29,6 +34,13 @@ class Wxtest extends Controller
         abort(404, '页面不存在');
     }
 
+    /**
+     * @param string $obj
+     * @return Json|View
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function index($obj = '')
     {
         $obj = cache('jump' . $obj);

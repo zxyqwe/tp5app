@@ -3,6 +3,9 @@
 namespace hanbj\weixin;
 
 use hanbj\MemberOper;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
 use hanbj\CardOper;
@@ -80,6 +83,13 @@ class WxHanbj
         return $limit;
     }
 
+    /**
+     * @param $msg
+     * @return string
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function handle_msg($msg)
     {
         $msg = simplexml_load_string($msg, 'SimpleXMLElement', LIBXML_NOCDATA);
