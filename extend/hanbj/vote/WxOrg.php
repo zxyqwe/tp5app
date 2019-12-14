@@ -331,7 +331,7 @@ class WxOrg
         return $ret . $sep . $unfinish . $sep . $finish . $sep;
     }
 
-    public static function addAns($uname, $obj, $catg, $ans)
+    public function addAns($uname, $obj, $ans)
     {
         try {
             $ret = Db::table('score')
@@ -339,7 +339,7 @@ class WxOrg
                     'unique_name' => $uname,
                     'name' => $obj,
                     'year' => HBConfig::YEAR,
-                    'catg' => $catg
+                    'catg' => $this->catg
                 ])
                 ->data(['ans' => $ans])
                 ->update();
@@ -350,12 +350,16 @@ class WxOrg
                         'unique_name' => $uname,
                         'name' => $obj,
                         'year' => HBConfig::YEAR,
-                        'catg' => $catg
+                        'catg' => $this->catg
                     ])
                     ->insert();
-                trace("投票add $uname $catg $obj", MysqlLog::INFO);
+                trace("投票add $uname {$this->catg} $obj", MysqlLog::INFO);
             } else {
-                trace("投票update $uname $catg $obj", MysqlLog::INFO);
+                trace("投票update $uname {$this->catg} $obj", MysqlLog::INFO);
+            }
+            $id_key = $this->calc_int($obj, $uname);
+            if (TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
+                TodoOper::handleTodo(TodoOper::VOTE_ORG, $id_key, TodoOper::DONE);
             }
         } catch (Exception $e) {
             $e = $e->getMessage();

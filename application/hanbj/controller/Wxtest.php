@@ -96,6 +96,7 @@ class Wxtest extends Controller
         if (!in_array($uname, $org->getUser())) {
             return json(['msg' => '没有投票权'], 400);
         }
-        return WxOrg::addAns($uname, $obj, $catg, $ans);
+        $org = new WxOrg($catg);
+        return $org->addAns($uname, $obj, $ans);
     }
 }
