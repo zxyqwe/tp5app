@@ -4,6 +4,7 @@ namespace hanbj\vote;
 
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\TodoOper;
 use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
@@ -86,6 +87,7 @@ class WxOrg
             }
         }
         $miss = array_unique($miss);
+        cache($this->name . 'getAns.miss_real', implode(',', $miss));
         if (count($miss) * 3 > count($user)) {
             $miss = ['秘密'];
         } else {
@@ -323,5 +325,24 @@ class WxOrg
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
         return json(['msg' => 'OK']);
+    }
+
+    public function try_add_todo()
+    {
+        $todo_uname = "" . cache($this->name . 'getAns.miss_real');
+        $todo_uname = explode(",", $todo_uname);
+        if (count($todo_uname) == 0) {
+            return;
+        }
+        foreach ($todo_uname as $item) {
+            if ($item !== HBConfig::CODER) {
+                continue;
+            }
+            TodoOper::RecvTodoFromOtherOper(
+                TodoOper::VOTE_ORG,
+                $this->name . "." . $item,
+                json_encode(["name" => $this->name]),
+                $item);
+        }
     }
 }

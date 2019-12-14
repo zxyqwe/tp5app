@@ -310,7 +310,7 @@ var wx_init = (function ($, w, undefined) {
         w.u21 = hanbj + club + 'add_club_act';
         w.u22 = hanbj + wx + 'getvote';
         w.u23 = hanbj + test + 'up';
-        w.u24 = hanbj + work + 'todo';
+        w.u24 = hanbj + mobile + 'todo';
     };
     var init = function (jssign) {
         dict();

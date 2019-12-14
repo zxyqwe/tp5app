@@ -263,7 +263,7 @@ class WxTemp
         $data = [
             "touser" => $openid,
             "template_id" => "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY",
-            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile/#todo",
             "topcolor" => "#FF0000",
             "data" => [
                 "first" => [
@@ -277,7 +277,7 @@ class WxTemp
                     "color" => "#173177"
                 ],
                 'remark' => [
-                    'value' => '请尽快处理'
+                    'value' => '请尽快处理，点击本消息跳转'
                 ]
             ]
         ];

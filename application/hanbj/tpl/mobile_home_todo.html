@@ -21,6 +21,16 @@
                             </ul>
                         </div>
                     </template>
+                    <template v-if="item.type==2">
+                        <div class="weui-media-box weui-media-box_text" v-on:click="location='www.baidu.com'">
+                            <h4 class="weui-media-box__title">
+                                {{ title_todo(item) }}
+                            </h4>
+                            <p class="weui-media-box__desc wx-many-line">
+                                {{ item.content.name }}
+                            </p>
+                        </div>
+                    </template>
                 </template>
             </div>
         </div>
@@ -33,6 +43,7 @@
         'use strict';
         var vmain;
         var PAT_OUT = 1;
+        var VOTE_ORG = 2;
         var DONE = 1;
         var FAIL_FOREVER = 2;
         var handle_post = function (type, key, res) {
@@ -100,6 +111,8 @@
                         switch (item.type) {
                             case "" + PAT_OUT:
                                 return this.title_fee(item);
+                            case "" + VOTE_ORG:
+                                return "投票";
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));
                                 return "???";
