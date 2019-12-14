@@ -21,7 +21,9 @@
     "endroid/qr-code": "~1.9",
     "topthink/think-captcha": "^1.0",
     "phpmailer/phpmailer": "~6.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-simplexml": "*",
+    "ext-libxml": "*"
   },
   "extra": {
     "think-path": "thinkphp"

@@ -2,8 +2,13 @@
 
 namespace hanbj;
 
+use Exception;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\exception\PDOException;
 use util\MysqlLog;
 use hanbj\weixin\WxTemp;
 
@@ -36,7 +41,7 @@ class TodoOper
 
     /**
      * @param int $type
-     * @param string key
+     * @param int $key
      * @param string $content
      * @param string $unique_name
      * @return bool
@@ -54,13 +59,36 @@ class TodoOper
                         'status' => self::UNDO
                     ])
                     ->insert() === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("RecvTodoFromOtherOper $e $type, $key, $content, $unique_name", MysqlLog::ERROR);
             return false;
         }
     }
 
+    /**
+     * @param int $type
+     * @param int $key
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
+    public static function TestTypeKeyValid($type, $key)
+    {
+        $ret = Db::table('todo')
+            ->where([
+                'type' => $type,
+                'key' => $key,
+            ])
+            ->find(['id'])
+            ->find();
+        return false === $ret;
+    }
+
+    /**
+     * @throws
+     */
     public static function noticeAny()
     {
         $ret = Db::table('todo')
@@ -99,6 +127,9 @@ class TodoOper
         }
     }
 
+    /**
+     * @throws
+     */
     public static function showTodo()
     {
         $unique_name = session("unique_name");
@@ -117,6 +148,13 @@ class TodoOper
             ->select();
     }
 
+    /**
+     * @param int $type
+     * @param int $key
+     * @param int $result
+     * @throws \think\Exception
+     * @throws PDOException
+     */
     public static function handleTodo($type, $key, $result)
     {
         $result = intval($result);

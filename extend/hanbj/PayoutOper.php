@@ -167,7 +167,7 @@ class PayoutOper
         foreach ($ret as $item) {
             $insert_todo = TodoOper::RecvTodoFromOtherOper(
                 TodoOper::PAT_OUT,
-                $item['id'],
+                intval($item['id']),
                 json_encode($item),
                 self::AUTHOR
             );

@@ -2,12 +2,16 @@
 
 namespace hanbj\vote;
 
+use Exception;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\TodoOper;
 use hanbj\vote\quest\WxQDep;
 use hanbj\vote\quest\WxQTop;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
 use hanbj\weixin\WxHanbj;
 use util\MysqlLog;
@@ -15,6 +19,31 @@ use util\MysqlLog;
 class WxOrg
 {
     const vote_cart = [1, 2];
+    /**
+     * @var int
+     */
+    private $max_score;
+    /**
+     * @var array
+     */
+    public $test;
+    /**
+     * @var string
+     */
+    public $name;
+    /**
+     * @var array
+     */
+    public $obj;
+    /**
+     * @var array
+     */
+    private $lower;
+    /**
+     * @var array
+     */
+    private $upper;
+    private $catg;
 
     function __construct($catg)
     {
@@ -49,6 +78,9 @@ class WxOrg
         return array_merge($this->getAll(), [HBConfig::CODER]);
     }
 
+    /**
+     * @throws
+     */
     public function getAns()
     {
         $user = $this->getAll();
@@ -181,6 +213,9 @@ class WxOrg
         return $ret;
     }
 
+    /**
+     * @throws
+     */
     private function progress()
     {
         $all = $this->getAll();
@@ -250,6 +285,13 @@ class WxOrg
         return '已完成';
     }
 
+    /**
+     * @param $uname
+     * @return string
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function listobj($uname)
     {
         $ret = "\n\n提取投票......{$this->name}";
@@ -315,7 +357,7 @@ class WxOrg
             } else {
                 trace("投票update $uname $catg $obj", MysqlLog::INFO);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
@@ -327,22 +369,64 @@ class WxOrg
         return json(['msg' => 'OK']);
     }
 
+    /**
+     * @param string $target
+     * @param string $uname
+     * @return int
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    private function calc_int($target, $uname)
+    {
+        $id_ret = Db::table("member")
+            ->where(["unique_name" => $uname])
+            ->field(['id'])
+            ->cache(86400 * 30)
+            ->find();
+        if (false === $id_ret) {
+            throw new HttpResponseException(json(['msg' => "calc_int $target, $uname"], 400));
+        }
+        $id_ret = intval($id_ret['id']);
+        $id_target = intval(array_search($target, $this->obj, true));
+        $id_catg = intval($this->catg);
+        return $id_target + $id_catg * 100 + $id_ret * 10000;
+    }
+
+    /**
+     * @throws
+     */
     public function try_add_todo()
     {
+        $cache_key = $this->name . "try_add_todo";
+        if (cache("?$cache_key")) {
+            return;
+        }
+        cache($cache_key, $cache_key, 3600);
+
         $todo_uname = "" . cache($this->name . 'getAns.miss_real');
         $todo_uname = explode(",", $todo_uname);
         if (count($todo_uname) == 0) {
             return;
         }
-        foreach ($todo_uname as $item) {
-            if ($item !== HBConfig::CODER) {
+        foreach ($todo_uname as $uname) {
+            if ($uname !== HBConfig::CODER) {
                 continue;
             }
-            TodoOper::RecvTodoFromOtherOper(
-                TodoOper::VOTE_ORG,
-                $this->name . "." . $item,
-                json_encode(["name" => $this->name]),
-                $item);
+            foreach ($this->obj as $target) {
+                $key = $this->calc_int($target, $uname);
+                if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $key)) {
+                    continue;
+                }
+                TodoOper::RecvTodoFromOtherOper(
+                    TodoOper::VOTE_ORG,
+                    $key,
+                    json_encode([
+                        "name" => $this->name,
+                        "target" => $target
+                    ]),
+                    $uname);
+            }
         }
     }
 }
