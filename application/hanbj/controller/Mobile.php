@@ -3,6 +3,11 @@
 namespace app\hanbj\controller;
 
 use hanbj\TodoOper;
+use hanbj\vote\WxOrg;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
+use think\response\Redirect;
 use util\MysqlLog;
 use wxsdk\mp\SHA1;
 use wxsdk\mp\WXBizMsgCrypt;
@@ -310,5 +315,26 @@ class Mobile extends Controller
             default:
                 return json(['msg' => '错误 ' . $this->request->method()]);
         }
+    }
+
+    /**
+     * @return Redirect
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
+    public function simplevote()
+    {
+        if (!UserOper::wx_login()) {
+            trace("没微信授权 simplevote", MysqlLog::ERROR);
+            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
+        }
+        $cont = "";
+        $unique_name = session('unique_name');
+        foreach (WxOrg::vote_cart as $item) {
+            $org = new WxOrg(intval($item));
+            $cont .= $org->listobj($unique_name);
+        }
+        echo $cont;
     }
 }
