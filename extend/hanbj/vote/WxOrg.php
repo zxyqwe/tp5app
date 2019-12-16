@@ -310,13 +310,14 @@ class WxOrg
         } elseif ($this->now < $this->start_time) {
             return '投票未开始';
         }
+        $ret = "$ret\n身份验证......成功";
 
         $rest_time = $this->deadline->diff($this->now);
-        $rest_time = $rest_time->format("d 天 H 时 i 分 s 秒");
-        $ret = "$ret\n投票倒计时......$rest_time\n";
+        $rest_time = $rest_time->format("%a 天 %H 时 %i 分 %s 秒");
+        $ret = "$ret\n投票倒计时......$rest_time";
 
         $prog = $this->progress();
-        $ret = "$ret\n身份验证......成功\n链接有效期......一小时（过时重新取号）\n$prog";
+        $ret = "$ret\n链接有效期......一小时（过时重新取号）\n$prog";
         $finish = '';
         $unfinish = '';
         $sep = "---------------\n";
