@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use DateTimeImmutable;
 use Exception;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
@@ -44,6 +45,18 @@ class WxOrg
      */
     private $upper;
     private $catg;
+    /**
+     * @var DateTimeImmutable|false
+     */
+    private $deadline;
+    /**
+     * @var DateTimeImmutable
+     */
+    private $now;
+    /**
+     * @var DateTimeImmutable|false
+     */
+    private $start_time;
 
     function __construct($catg)
     {
@@ -66,6 +79,9 @@ class WxOrg
         $this->name = $quest->name;
         $this->test = $quest->test;
         $this->max_score = $quest->max_score;
+        $this->start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-10-20 20:00:00");
+        $this->deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
+        $this->now = new DateTimeImmutable();
     }
 
     public function getAll()
@@ -231,12 +247,8 @@ class WxOrg
             ->where($map)
             ->count('id');
 
-        if ($acc !== $len) {
-            $res = $acc * 100.0 / $len;
-            return "投票数量...... $acc / $len\n总进度...... " . round($res, 2) . "%\n";
-        } else {
-            return false;
-        }
+        $res = $acc * 100.0 / $len;
+        return "投票数量...... $acc / $len\n总进度...... " . round($res, 2) . "%\n";
     }
 
     public function checkAns(&$ans)
@@ -280,11 +292,6 @@ class WxOrg
         }
     }
 
-    private function all_done()
-    {
-        return '已完成';
-    }
-
     /**
      * @param $uname
      * @return string
@@ -298,10 +305,17 @@ class WxOrg
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";
         }
-        $prog = $this->progress();
-        if (false === $prog) {
-            return $this->all_done();
+        if ($this->now > $this->deadline) {
+            return '投票已关闭';
+        } elseif ($this->now < $this->start_time) {
+            return '投票未开始';
         }
+
+        $rest_time = $this->deadline - $this->now;
+        $rest_time = $rest_time->format("d 天 H 时 i 分 s 秒");
+        $ret = "$ret\n投票倒计时......$rest_time\n";
+
+        $prog = $this->progress();
         $ret = "$ret\n身份验证......成功\n链接有效期......一小时（过时重新取号）\n$prog";
         $finish = '';
         $unfinish = '';
