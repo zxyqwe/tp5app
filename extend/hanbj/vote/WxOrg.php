@@ -414,9 +414,6 @@ class WxOrg
             return;
         }
         foreach ($todo_uname as $uname) {
-            if ($uname !== HBConfig::CODER) {
-                continue;
-            }
             foreach ($this->obj as $target) {
                 $key = $this->calc_int($target, $uname);
                 if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $key)) {

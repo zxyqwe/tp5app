@@ -88,9 +88,11 @@ class Index extends Controller
             TodoOper::noticeAny();
         }
 
-        foreach (WxOrg::vote_cart as $item) {
-            $org = new WxOrg(intval($item));
-            $org->try_add_todo();
+        if (ValidateTimeOper::IsYearEnd()) {
+            foreach (WxOrg::vote_cart as $item) {
+                $org = new WxOrg(intval($item));
+                $org->try_add_todo();
+            }
         }
     }
 }

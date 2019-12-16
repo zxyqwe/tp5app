@@ -26,7 +26,7 @@ use think\Response;
 class Mobile extends Controller
 {
     protected $beforeActionList = [
-        'valid_id' => ['except' => 'index,reg,event,help,rpcauth'],
+        'valid_id' => ['except' => 'index,reg,event,help,rpcauth,simplevote'],
     ];
 
     protected function valid_id()
@@ -335,6 +335,6 @@ class Mobile extends Controller
             $org = new WxOrg(intval($item));
             $cont .= $org->listobj($unique_name);
         }
-        echo $cont;
+        echo str_replace("\n", "<br />", $cont);
     }
 }
