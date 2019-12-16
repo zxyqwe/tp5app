@@ -253,7 +253,6 @@ class WxTemp
         if (strlen($openid) <= 10) {
             return;
         }
-        $hour_now = date('H');
         if (!ValidateTimeOper::IsDayUp()) {
             return;
         }
