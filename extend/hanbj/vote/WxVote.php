@@ -2,18 +2,29 @@
 
 namespace hanbj\vote;
 
+use Exception;
 use hanbj\FameOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use PDOStatement;
+use think\Collection;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
 class WxVote
 {
-    const end_time = 1545458400; // mktime(14, 00, 00, 12, 22, 2018);
+    const end_time = 1577021400; // mktime(13, 30, 00, 12, 22, 2019);
 
-
+    /**
+     * @return array|null
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function initView()
     {
         $member_code = session('member_code');
@@ -85,7 +96,7 @@ class WxVote
             } else {
                 trace("选举update $uniq {$data['ans']}", MysqlLog::INFO);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
@@ -97,6 +108,12 @@ class WxVote
         return json(['msg' => 'OK']);
     }
 
+    /**
+     * @return array|false|mixed|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function getResult()
     {
         $cache_name = 'WxVote::getResult';

@@ -23,7 +23,8 @@
     "phpmailer/phpmailer": "~6.0",
     "ext-json": "*",
     "ext-simplexml": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-pdo": "*"
   },
   "extra": {
     "think-path": "thinkphp"
