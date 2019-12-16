@@ -104,6 +104,9 @@ class TodoOper
         }
         $notice = [];
         foreach ($ret as $item) {
+            if (cache("?todoopernoticeAny{$item['unique_name']}")) {
+                continue;
+            }
             if (isset($notice[$item['unique_name']])) {
                 $notice[$item['unique_name']] += 1;
             } else {
@@ -119,6 +122,7 @@ class TodoOper
         }
 
         foreach ($notice as $k => $v) {
+            cache("todoopernoticeAny$k", "todoopernoticeAny", 86400);
             if (!isset($openid[$k])) {
                 trace("Todo noticeAny $k no openid", MysqlLog::ERROR);
                 continue;
