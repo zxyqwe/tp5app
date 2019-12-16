@@ -6,10 +6,15 @@ use hanbj\BonusOper;
 use hanbj\FameOper;
 use hanbj\MemberOper;
 use hanbj\UserOper;
+use hanbj\vote\WxVote;
 use think\Controller;
 use think\Db;
 use Endroid\QrCode\QrCode;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 
 
 class Pub extends Controller
@@ -110,9 +115,15 @@ class Pub extends Controller
         return json($tmp);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function json_vote()
     {
-        $ans = ''; //WxVote::getResult();
+        $ans = WxVote::getResult();
         return json($ans);
     }
 }

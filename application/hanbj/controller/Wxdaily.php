@@ -241,11 +241,11 @@ class Wxdaily extends Controller
     {
         $member_code = session('member_code');
         if (!is_numeric($member_code) || intval($member_code) !== MemberOper::NORMAL) {
-            return json(['msg' => '用户状态不是实名'], 400);
+            return json(['msg' => '只接受实名投票'], 400);
         }
         $uniq = session('unique_name');
         if (FeeOper::owe($uniq)) {
-            return json(['msg' => '欠费'], 400);
+            return json(['msg' => '只接受非欠费投票'], 400);
         }
         if (time() >= WxVote::end_time) {
             return json(['msg' => 'OK']);
