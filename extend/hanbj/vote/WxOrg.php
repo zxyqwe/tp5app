@@ -311,7 +311,7 @@ class WxOrg
             return '投票未开始';
         }
 
-        $rest_time = $this->deadline - $this->now;
+        $rest_time = $this->deadline->diff($this->now);
         $rest_time = $rest_time->format("d 天 H 时 i 分 s 秒");
         $ret = "$ret\n投票倒计时......$rest_time\n";
 
