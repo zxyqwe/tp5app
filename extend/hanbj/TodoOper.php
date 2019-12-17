@@ -122,8 +122,8 @@ class TodoOper
         }
 
         foreach ($notice as $k => $v) {
-            cache("todoopernoticeAny$k", "todoopernoticeAny", 86400);
             if (!isset($openid[$k])) {
+                cache("todoopernoticeAny$k", "todoopernoticeAny", 86400);
                 trace("Todo noticeAny $k no openid", MysqlLog::ERROR);
                 continue;
             }
