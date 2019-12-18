@@ -134,7 +134,7 @@ class Wxdaily extends Controller
             OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
-        trace($msg, MysqlLog::DEBUG);
+        trace($msg, MysqlLog::LOG);
         $jsapi = new WxPayJsApiPay();
         $jsapi->SetAppid($order["appid"]);
         $jsapi->SetTimeStamp('' . time());
