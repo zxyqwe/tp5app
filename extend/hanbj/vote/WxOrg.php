@@ -136,7 +136,7 @@ class WxOrg
         }
         $miss = array_unique($miss);
         cache($this->name . 'getAns.miss_real', implode(',', $miss));
-        if (count($miss) * 3 > count($user)) {
+        if (session("unique_name") != HBConfig::CODER && count($miss) * 3 > count($user)) {
             $miss = ['秘密（' . count($miss) . '/' . count($user) . '）'];
         } else {
             $ret = MemberOper::get_tieba($miss);

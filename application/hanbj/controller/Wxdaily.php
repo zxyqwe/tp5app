@@ -4,8 +4,10 @@ namespace app\hanbj\controller;
 
 use hanbj\FameOper;
 use hanbj\UserOper;
+use think\response\Json;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayException;
 use wxsdk\pay\WxPayUnifiedOrder;
 use wxsdk\pay\WxPayJsApiPay;
 use hanbj\BonusOper;
@@ -101,6 +103,10 @@ class Wxdaily extends Controller
         return json(OrderOper::FEE_YEAR);
     }
 
+    /**
+     * @return Json
+     * @throws WxPayException
+     */
     public function order()
     {
         if (!session('?card')) {
@@ -122,12 +128,13 @@ class Wxdaily extends Controller
         }
         $config = new HanbjPayConfig();
         $order = WxPayApi::unifiedOrder($config, $input);
+        $msg = json_encode($order) . json_encode($input->ToXml());
         if (!array_key_exists('prepay_id', $order)) {
-            $msg = $order['return_msg'] . json_encode($order) . json_encode($input->ToXml());
             trace($msg, MysqlLog::ERROR);
             OrderOper::dropfee($input->GetOut_trade_no(), $opt);
             return json(['msg' => $msg], 400);
         }
+        trace($msg, MysqlLog::DEBUG);
         $jsapi = new WxPayJsApiPay();
         $jsapi->SetAppid($order["appid"]);
         $jsapi->SetTimeStamp('' . time());
