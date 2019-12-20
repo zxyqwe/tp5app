@@ -201,6 +201,7 @@ class TodoOper
                 PayoutOper::cancelOneTodo($key);
             }
         } elseif ($type === self::VOTE_ORG) {
+        } elseif ($type === self::VOTE_TOP) {
         } else {
             Db::rollback();
             throw new HttpResponseException(json(['msg' => "handleDetail($type, $key, $result) type err"]));
