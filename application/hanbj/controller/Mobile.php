@@ -307,7 +307,10 @@ class Mobile extends Controller
                 $key = input('post.key', 0, FILTER_VALIDATE_INT);
                 $res = input('post.res', 0, FILTER_VALIDATE_INT);
 
-                TodoOper::handleTodo($type, $key, $res);
+                $done = TodoOper::handleTodo($type, $key, $res);
+                if (!$done) {
+                    throw new HttpResponseException(json(['msg' => "handleTodo($type, $key, $res) no update"]));
+                }
 
                 $ret = TodoOper::showTodo();
                 return json(['msg' => $ret]);

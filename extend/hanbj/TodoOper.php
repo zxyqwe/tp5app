@@ -157,6 +157,7 @@ class TodoOper
      * @param int $type
      * @param int $key
      * @param int $result
+     * @return bool
      * @throws \think\Exception
      * @throws PDOException
      */
@@ -185,11 +186,12 @@ class TodoOper
             ->update();
         if ($ret !== 1) {
             Db::rollback();
-            throw new HttpResponseException(json(['msg' => "handleTodo($type, $key, $result) no update"]));
+            return false;
         }
         self::handleDetail($type, $key, $result);
         Db::commit();
         trace("处理一个待办 (type $type, ID $key, ret $result) " . self::Speak($result), MysqlLog::INFO);
+        return true;
     }
 
     private static function handleDetail($type, $key, $result)
