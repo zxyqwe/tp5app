@@ -46,18 +46,6 @@ class WxOrg
      */
     private $upper;
     private $catg;
-    /**
-     * @var DateTimeImmutable|false
-     */
-    private $deadline;
-    /**
-     * @var DateTimeImmutable
-     */
-    private $now;
-    /**
-     * @var DateTimeImmutable|false
-     */
-    private $start_time;
 
     function __construct($catg)
     {
@@ -80,9 +68,27 @@ class WxOrg
         $this->name = $quest->name;
         $this->test = $quest->test;
         $this->max_score = $quest->max_score;
-        $this->start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-10-20 20:00:00");
-        $this->deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
-        $this->now = new DateTimeImmutable();
+    }
+
+    public static function IsExpired()
+    {
+        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
+        $now = new DateTimeImmutable();
+        return $now > $deadline;
+    }
+
+    public static function GetRestTime()
+    {
+        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
+        $now = new DateTimeImmutable();
+        return $deadline->diff($now);
+    }
+
+    public static function IsUnstart()
+    {
+        $start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-10-20 20:00:00");
+        $now = new DateTimeImmutable();
+        return $now < $start_time;
     }
 
     public function getAll()
@@ -306,14 +312,14 @@ class WxOrg
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";
         }
-        if ($this->now > $this->deadline) {
+        if (self::IsExpired()) {
             return '投票已关闭';
-        } elseif ($this->now < $this->start_time) {
+        } elseif (self::IsUnstart()) {
             return '投票未开始';
         }
         $ret = "$ret\n身份验证......成功";
 
-        $rest_time = $this->deadline->diff($this->now);
+        $rest_time = self::GetRestTime();
         $rest_time = $rest_time->format("%a 天 %H 时 %i 分 %s 秒");
         $ret = "$ret\n投票倒计时......$rest_time";
 
@@ -453,6 +459,9 @@ class WxOrg
      */
     public static function cancel_all_todo()
     {
+        if (!self::IsExpired()) {
+            return;
+        }
         $ret = Db::table('vote')
             ->where([
                 'type' => TodoOper::VOTE_ORG,

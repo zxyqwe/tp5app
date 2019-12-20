@@ -4,6 +4,11 @@ namespace app\hanbj\controller;
 
 use hanbj\FameOper;
 use hanbj\UserOper;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
+use think\exception\PDOException;
 use think\response\Json;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
@@ -41,6 +46,12 @@ class Wxdaily extends Controller
         return json([], 404);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function json_activity()
     {
         $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
@@ -64,6 +75,12 @@ class Wxdaily extends Controller
         return json(['list' => $card, 'size' => $size]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_valid()
     {
         $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
@@ -193,6 +210,11 @@ class Wxdaily extends Controller
         return json(['msg' => 'OK', 'temp' => $tempid]);
     }
 
+    /**
+     * @return Json
+     * @throws Exception
+     * @throws PDOException
+     */
     public function change()
     {
         $action = input('get.action');
@@ -219,6 +241,12 @@ class Wxdaily extends Controller
         return json(['msg' => 'OK']);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function history()
     {
         $map['unique_name'] = session('unique_name');
@@ -235,6 +263,12 @@ class Wxdaily extends Controller
         return json(['hist' => $ret]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function getvote()
     {
         $ret = WxVote::initView();
@@ -254,7 +288,7 @@ class Wxdaily extends Controller
         if (FeeOper::owe($uniq)) {
             return json(['msg' => '只接受非欠费投票'], 400);
         }
-        if (time() >= WxVote::end_time) {
+        if (WxVote::IsExpired()) {
             return json(['msg' => 'OK']);
         }
         $ans = input('post.ans');
@@ -265,6 +299,12 @@ class Wxdaily extends Controller
         return WxVote::addAns($uniq, $ans);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function prom()
     {
         $ret = Db::table('prom')

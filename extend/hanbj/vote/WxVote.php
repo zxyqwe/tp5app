@@ -2,6 +2,7 @@
 
 namespace hanbj\vote;
 
+use DateTimeImmutable;
 use Exception;
 use hanbj\FameOper;
 use hanbj\HBConfig;
@@ -19,7 +20,19 @@ use util\MysqlLog;
 
 class WxVote
 {
-    const end_time = 1576992600; // mktime(13, 30, 00, 12, 22, 2019);
+    public static function IsExpired()
+    {
+        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+        $now = new DateTimeImmutable();
+        return $now > $deadline;
+    }
+
+    public static function GetRestTime()
+    {
+        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+        $now = new DateTimeImmutable();
+        return $deadline->diff($now);
+    }
 
     /**
      * @return array|null
@@ -150,14 +163,8 @@ class WxVote
                 'f.grade as g'
             ])
             ->select();
-        $last = self::end_time - time();
-        if ($last < 0) {
-            $last = ' 00 秒';
-        } elseif ($last < 86400) {
-            $last = date("H 小时 i 分钟 s 秒", $last - 8 * 3600 - 86400);
-        } else {
-            $last = date("d 天 H 小时 i 分钟 s 秒", $last - 8 * 3600 - 86400);
-        }
+        $last = self::GetRestTime();
+        $last = $last->format("%a 天 %H 时 %i 分 %s 秒");
         $ans = [
             'zg' => self::test_ZG($ans),
             'pw' => self::test_PW($ans),
@@ -292,6 +299,9 @@ class WxVote
      */
     public static function cancel_all_todo()
     {
+        if (!self::IsExpired()) {
+            return;
+        }
         $ret = Db::table('vote')
             ->where([
                 'type' => TodoOper::VOTE_TOP,
