@@ -32,6 +32,17 @@
                             </p>
                         </a>
                     </template>
+                    <template v-if="item.type==3">
+                        <a class="weui-media-box weui-media-box_text"
+                           href="#vote">
+                            <h4 class="weui-media-box__title">
+                                {{ title_todo(item) }}
+                            </h4>
+                            <p class="weui-media-box__desc wx-many-line">
+                                {{ item.content.name }}
+                            </p>
+                        </a>
+                    </template>
                 </template>
             </div>
         </div>
@@ -45,6 +56,7 @@
         var vmain;
         var PAT_OUT = 1;
         var VOTE_ORG = 2;
+        var VOTE_TOP = 3;
         var DONE = 1;
         var FAIL_FOREVER = 2;
         var handle_post = function (type, key, res) {
@@ -113,6 +125,7 @@
                             case "" + PAT_OUT:
                                 return this.title_fee(item);
                             case "" + VOTE_ORG:
+                            case "" + VOTE_TOP:
                                 return "投票";
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));

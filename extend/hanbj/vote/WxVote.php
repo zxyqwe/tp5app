@@ -6,6 +6,7 @@ use Exception;
 use hanbj\FameOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\TodoOper;
 use PDOStatement;
 use think\Collection;
 use think\Db;
@@ -95,6 +96,14 @@ class WxVote
                 trace("选举add $uniq {$data['ans']}", MysqlLog::INFO);
             } else {
                 trace("选举update $uniq {$data['ans']}", MysqlLog::INFO);
+            }
+            $ret = Db::table('member')
+                ->where(['unniaue_name' => $uniq])
+                ->field(['id'])
+                ->find();
+            $key = intval($ret['id']) * 1000 + HBConfig::YEAR;
+            if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
+                TodoOper::handleTodo(TodoOper::VOTE_TOP, $key, TodoOper::DONE);
             }
         } catch (Exception $e) {
             $e = $e->getMessage();
@@ -217,5 +226,63 @@ class WxVote
             }
         }
         return ['tot' => $total, 'detail' => $candidate];
+    }
+
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function try_add_todo()
+    {
+        $cache_key = "WxVote.phptry_add_todo";
+        if (cache("?$cache_key")) {
+            return;
+        }
+        cache($cache_key, $cache_key, 3600);
+
+        $real_ret = Db::table("member")
+            ->where([
+                'code' => ['in', MemberOper::getAllReal()],
+                'openid' => ['exp', Db::raw('is not null')]
+            ])
+            ->field(['unique_name', 'id'])
+            ->select();
+        $todo_uname = [];
+        $uname_id_map = [];
+        foreach ($real_ret as $u) {
+            $todo_uname[] = $u['unique_name'];
+            $uname_id_map[$u['unique_name']] = $u['id'];
+        }
+        $vote_ret = Db::table("vote")
+            ->where(['year' => HBConfig::YEAR])
+            ->field(['unique_name'])
+            ->select();
+        $done_uname = [];
+        foreach ($vote_ret as $u) {
+            $done_uname[] = $u['unique_name'];
+        }
+        $todo_uname = array_diff($todo_uname, $done_uname);
+        if (count($todo_uname) == 0) {
+            return;
+        }
+
+        $vote_name = "第" . (HBConfig::YEAR + 1) . "届会长层";
+        foreach ($todo_uname as $uname) {
+            if ($uname !== HBConfig::CODER) {
+                continue;
+            }
+            $key = intval($uname_id_map[$uname]) * 1000 + HBConfig::YEAR;
+            if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
+                continue;
+            }
+            TodoOper::RecvTodoFromOtherOper(
+                TodoOper::VOTE_TOP,
+                $key,
+                json_encode([
+                    "name" => $vote_name,
+                ]),
+                $uname);
+        }
     }
 }

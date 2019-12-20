@@ -7,6 +7,7 @@ use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\MemberOper;
 use hanbj\vote\WxOrg;
+use hanbj\vote\WxVote;
 use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\exception\HttpResponseException;
@@ -89,6 +90,7 @@ class Index extends Controller
         }
 
         if (ValidateTimeOper::IsYearEnd()) {
+            WxVote::try_add_todo();
             foreach (WxOrg::vote_cart as $item) {
                 $org = new WxOrg(intval($item));
                 $org->try_add_todo();
