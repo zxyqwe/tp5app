@@ -313,9 +313,9 @@ class WxOrg
             return "$ret\n身份验证......失败\n";
         }
         if (self::IsExpired()) {
-            return '投票已关闭';
+            return "投票已关闭\n\n";
         } elseif (self::IsUnstart()) {
-            return '投票未开始';
+            return "投票未开始\n\n";
         }
         $ret = "$ret\n身份验证......成功";
 
@@ -462,7 +462,7 @@ class WxOrg
         if (!self::IsExpired()) {
             return;
         }
-        $ret = Db::table('vote')
+        $ret = Db::table('todo')
             ->where([
                 'type' => TodoOper::VOTE_ORG,
                 'status' => TodoOper::UNDO

@@ -302,7 +302,7 @@ class WxVote
         if (!self::IsExpired()) {
             return;
         }
-        $ret = Db::table('vote')
+        $ret = Db::table('todo')
             ->where([
                 'type' => TodoOper::VOTE_TOP,
                 'status' => TodoOper::UNDO
