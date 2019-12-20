@@ -98,7 +98,7 @@ class WxVote
                 trace("选举update $uniq {$data['ans']}", MysqlLog::INFO);
             }
             $ret = Db::table('member')
-                ->where(['unniaue_name' => $uniq])
+                ->where(['unique_name' => $uniq])
                 ->field(['id'])
                 ->find();
             $key = intval($ret['id']) * 1000 + HBConfig::YEAR;
@@ -267,7 +267,7 @@ class WxVote
             return;
         }
 
-        $vote_name = "第" . (HBConfig::YEAR + 1) . "届会长层";
+        $vote_name = "第" . (HBConfig::YEAR + 1) . "届会长层换届选举";
         foreach ($todo_uname as $uname) {
             if ($uname !== HBConfig::CODER) {
                 continue;
