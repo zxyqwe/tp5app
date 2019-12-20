@@ -1,10 +1,14 @@
 <div class="page" id="votemain">
     <div class="page__hd">
         <h1 class="page__title">吧务组 - 换届选举</h1>
-        <p class="page__desc"><a href="https://app.zxyqwe.com/hanbj/pub/vote">【结果公示】</a></p>
+        <p class="page__desc"><a href="https://app.zxyqwe.com/hanbj/pub/vote">【选举结果实时公示】</a></p>
     </div>
     <div class="page__bd page__bd_spacing">
         <article class="weui-article">
+            <h1>公示材料</h1>
+            <section>
+                <h2 class="title"><a href="https://mp.weixin.qq.com/s/237JqOVh3AwAHJMdfmzgGg">候选人名单</a></h2>
+            </section>
             <h1>本次选举共两轮投票</h1>
             <section>
                 <h2 class="title">一、资格赛</h2>
@@ -25,7 +29,8 @@
                 <section>
                     <div class="weui-cells__title">请选择：</div>
                     <div class="weui-grids">
-                        <div class="weui-grid" v-for="ca in candi" :class="[ca.sel ? 'candi_sel' : 'candi']" v-on:click="sel(ca)">
+                        <div class="weui-grid" v-for="ca in candi" :class="[ca.sel ? 'candi_sel' : 'candi']"
+                             v-on:click="sel(ca)">
                             <p class="weui-grid__label">{{ ca.u }}<br>{{ ca.t }}</p>
                         </div>
                     </div>
