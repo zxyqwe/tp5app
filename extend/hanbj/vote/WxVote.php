@@ -14,6 +14,7 @@ use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\exception\PDOException;
 use util\MysqlLog;
 
 class WxVote
@@ -271,9 +272,6 @@ class WxVote
 
         $vote_name = "第" . (HBConfig::YEAR + 1) . "届会长层换届选举";
         foreach ($todo_uname as $uname) {
-            if ($uname !== HBConfig::CODER) {
-                continue;
-            }
             $key = intval($uname_id_map[$uname]) * 1000 + HBConfig::YEAR;
             if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
                 continue;
@@ -286,5 +284,21 @@ class WxVote
                 ]),
                 $uname);
         }
+    }
+
+    /**
+     * @throws \think\Exception
+     * @throws PDOException
+     */
+    public static function cancel_all_todo()
+    {
+        $ret = Db::table('vote')
+            ->where([
+                'type' => TodoOper::VOTE_TOP,
+                'status' => TodoOper::UNDO
+            ])
+            ->data(['status' => TodoOper::FAIL_FOREVER])
+            ->update();
+        trace("Cancel VOTE_TOP todo $ret", MysqlLog::INFO);
     }
 }

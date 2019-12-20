@@ -15,6 +15,7 @@ use think\db\exception\ModelNotFoundException;
 use think\exception\DbException;
 use think\exception\HttpResponseException;
 use hanbj\weixin\WxHanbj;
+use think\exception\PDOException;
 use util\MysqlLog;
 
 class WxOrg
@@ -403,7 +404,7 @@ class WxOrg
             ->field(['id'])
             ->cache(86400 * 30)
             ->find();
-        if (false === $id_ret) {
+        if (null === $id_ret) {
             throw new HttpResponseException(json(['msg' => "calc_int $target, $uname"], 400));
         }
         $id_ret = intval($id_ret['id']);
@@ -444,5 +445,21 @@ class WxOrg
                     $uname);
             }
         }
+    }
+
+    /**
+     * @throws \think\Exception
+     * @throws PDOException
+     */
+    public static function cancel_all_todo()
+    {
+        $ret = Db::table('vote')
+            ->where([
+                'type' => TodoOper::VOTE_ORG,
+                'status' => TodoOper::UNDO
+            ])
+            ->data(['status' => TodoOper::FAIL_FOREVER])
+            ->update();
+        trace("Cancel VOTE_ORG todo $ret", MysqlLog::INFO);
     }
 }
