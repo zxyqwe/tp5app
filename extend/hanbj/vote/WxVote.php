@@ -19,7 +19,7 @@ use util\MysqlLog;
 
 class WxVote
 {
-    const end_time = 1577021400; // mktime(13, 30, 00, 12, 22, 2019);
+    const end_time = 1576992600; // mktime(13, 30, 00, 12, 22, 2019);
 
     /**
      * @return array|null
