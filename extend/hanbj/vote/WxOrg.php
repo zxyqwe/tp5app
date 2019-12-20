@@ -312,12 +312,12 @@ class WxOrg
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";
         }
-        if (self::IsExpired()) {
-            return "投票已关闭\n\n";
-        } elseif (self::IsUnstart()) {
-            return "投票未开始\n\n";
-        }
         $ret = "$ret\n身份验证......成功";
+        if (self::IsExpired()) {
+            return "$ret\n投票......已关闭\n\n";
+        } elseif (self::IsUnstart()) {
+            return "$ret\n投票......未开始\n\n";
+        }
 
         $rest_time = self::GetRestTime();
         $rest_time = $rest_time->format("%a 天 %H 时 %i 分 %s 秒");
@@ -469,6 +469,8 @@ class WxOrg
             ])
             ->data(['status' => TodoOper::FAIL_FOREVER])
             ->update();
-        trace("Cancel VOTE_ORG todo $ret", MysqlLog::INFO);
+        if ($ret !== 0) {
+            trace("Cancel VOTE_ORG todo $ret", MysqlLog::INFO);
+        }
     }
 }
