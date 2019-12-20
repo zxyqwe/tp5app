@@ -16,12 +16,13 @@ class TodoOper
 {
     const PAT_OUT = 1;
     const VOTE_ORG = 2;
+    const VOTE_TOP = 3;
 
     const UNDO = 0;
     const DONE = 1;
     const FAIL_FOREVER = 2;
 
-    const VALID_TYPE = [self::PAT_OUT, self::VOTE_ORG];
+    const VALID_TYPE = [self::PAT_OUT, self::VOTE_ORG, self::VOTE_TOP];
     const VALID_RESULT = [self::DONE, self::FAIL_FOREVER];
 
     private static function Speak($type)
