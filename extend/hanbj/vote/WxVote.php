@@ -101,9 +101,11 @@ class WxVote
                 ->where(['unique_name' => $uniq])
                 ->field(['id'])
                 ->find();
-            $key = intval($ret['id']) * 1000 + HBConfig::YEAR;
-            if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
-                TodoOper::handleTodo(TodoOper::VOTE_TOP, $key, TodoOper::DONE);
+            if (null !== $ret) {
+                $key = intval($ret['id']) * 1000 + HBConfig::YEAR;
+                if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
+                    TodoOper::handleTodo(TodoOper::VOTE_TOP, $key, TodoOper::DONE);
+                }
             }
         } catch (Exception $e) {
             $e = $e->getMessage();
