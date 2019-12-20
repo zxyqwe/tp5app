@@ -309,6 +309,8 @@ class WxVote
             ])
             ->data(['status' => TodoOper::FAIL_FOREVER])
             ->update();
-        trace("Cancel VOTE_TOP todo $ret", MysqlLog::INFO);
+        if ($ret !== 0) {
+            trace("Cancel VOTE_TOP todo $ret", MysqlLog::INFO);
+        }
     }
 }
