@@ -186,7 +186,11 @@ class WxOrg
             $tmp = ['q' => $test['q']];
             foreach ($this->obj as $o) {
                 if (isset($ans[$o])) {
-                    $ans[$o][$i] /= $cnt[$o];
+                    if ($cnt[$o] === 0) {
+                        $ans[$o][$i] = 0;
+                    } else {
+                        $ans[$o][$i] /= $cnt[$o];
+                    }
                     $ans[$o][$i] = number_format($ans[$o][$i], 2, '.', '');
                     $tmp[$o] = $ans[$o][$i];
                 }
