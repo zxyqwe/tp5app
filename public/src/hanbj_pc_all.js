@@ -521,6 +521,9 @@ var tlog = (function ($, w, undefined) {
             params['_ajax'] = 1;
             return params;
         };
+        w.escapeFormatter = function (value, row) {
+            return w.escapeHtml(value);
+        };
         $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
