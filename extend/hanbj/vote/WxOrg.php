@@ -70,25 +70,24 @@ class WxOrg
         $this->max_score = $quest->max_score;
     }
 
-    public static function IsExpired()
+    private static function GetDeadline()
     {
-        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
-        $now = new DateTimeImmutable();
-        return $now > $deadline;
+        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
     }
 
-    public static function GetRestTime()
-    {
-        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
-        $now = new DateTimeImmutable();
-        return $deadline->diff($now);
-    }
-
-    public static function IsUnstart()
+    private static function IsExpired()
     {
         $start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-10-20 20:00:00");
+        $deadline = self::GetDeadline();
         $now = new DateTimeImmutable();
-        return $now < $start_time;
+        return $now < $start_time || $now > $deadline;
+    }
+
+    private static function GetRestTime()
+    {
+        $deadline = self::GetDeadline();
+        $now = new DateTimeImmutable();
+        return $deadline->diff($now);
     }
 
     public function getAll()
@@ -315,8 +314,6 @@ class WxOrg
         $ret = "$ret\n身份验证......成功";
         if (self::IsExpired()) {
             return "$ret\n投票......已关闭\n\n";
-        } elseif (self::IsUnstart()) {
-            return "$ret\n投票......未开始\n\n";
         }
 
         $rest_time = self::GetRestTime();
@@ -424,6 +421,9 @@ class WxOrg
      */
     public function try_add_todo()
     {
+        if (self::IsExpired()) {
+            return;
+        }
         $cache_key = $this->name . "try_add_todo";
         if (cache("?$cache_key")) {
             return;

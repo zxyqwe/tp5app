@@ -20,16 +20,21 @@ use util\MysqlLog;
 
 class WxVote
 {
+    private static function GetDeadline()
+    {
+        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+    }
+
     public static function IsExpired()
     {
-        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+        $deadline = self::GetDeadline();
         $now = new DateTimeImmutable();
         return $now > $deadline;
     }
 
-    public static function GetRestTime()
+    private static function GetRestTime()
     {
-        $deadline = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+        $deadline = self::GetDeadline();
         $now = new DateTimeImmutable();
         return $deadline->diff($now);
     }
@@ -163,8 +168,12 @@ class WxVote
                 'f.grade as g'
             ])
             ->select();
-        $last = self::GetRestTime();
-        $last = $last->format("%a 天 %H 时 %i 分 %s 秒");
+        if (self::IsExpired()) {
+            $last = "0 天 0 时 0 分 0 秒";
+        } else {
+            $last = self::GetRestTime();
+            $last = $last->format("%a 天 %H 时 %i 分 %s 秒");
+        }
         $ans = [
             'zg' => self::test_ZG($ans),
             'pw' => self::test_PW($ans),
@@ -245,6 +254,9 @@ class WxVote
      */
     public static function try_add_todo()
     {
+        if (self::IsExpired()) {
+            return;
+        }
         $cache_key = "WxVote.phptry_add_todo";
         if (cache("?$cache_key")) {
             return;

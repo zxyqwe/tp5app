@@ -289,7 +289,7 @@ class Wxdaily extends Controller
             return json(['msg' => '只接受非欠费投票'], 400);
         }
         if (WxVote::IsExpired()) {
-            return json(['msg' => 'OK']);
+            return json(['msg' => '非投票时间']);
         }
         $ans = input('post.ans');
         $ans = explode(',', $ans);//a1,a2,a3
