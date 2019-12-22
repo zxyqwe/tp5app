@@ -116,6 +116,11 @@ class WxTemp
         //    {{remark.DATA}}
     ];
 
+    private static function useOtherFuncToLogTempDetail($data)
+    {
+        return false;
+    }
+
     private static function base($data, $log, $wx_limit = true)
     {
         if (!isset($data['touser']) || !isset($data['template_id'])) {
@@ -136,7 +141,9 @@ class WxTemp
             cache($limit, $limit, 60); // 缩短到一分钟
             return $raw;
         }
-        trace($log, MysqlLog::INFO);
+        if (!self::useOtherFuncToLogTempDetail($data)) {
+            trace($log, MysqlLog::INFO);
+        }
         return 'ok';
     }
 
