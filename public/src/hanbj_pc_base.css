@@ -197,5 +197,10 @@ p.footer {
 }
 
 .W140 .th-inner {
-    width:140px !important;
+    width: 140px !important;
+}
+
+[v-cloak] {
+    display: none;
+    background: red;
 }
