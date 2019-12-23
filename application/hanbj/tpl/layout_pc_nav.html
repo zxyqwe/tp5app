@@ -90,5 +90,6 @@
 <script>
     $(window).on("load", function () {
         nav_active.init();
+        watermark.init({watermark_txt: "{$Think.session.watermark}", watermark_fontsize: '8px', watermark_alpha: 0.1});
     });
 </script>
