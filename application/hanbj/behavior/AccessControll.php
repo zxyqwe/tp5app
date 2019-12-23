@@ -41,7 +41,7 @@ class AccessControll
         }
 
         $uniq = session('unique_name');
-        session('watermark', "汉服北京 $uniq " . date("Y-m-d H:i:s"));
+        session('watermark', "汉服北京 内部信息 请勿外传 $uniq " . date("Y-m-d H:i:s"));
         if ($uniq === HBConfig::CODER) {
             return;
         }
