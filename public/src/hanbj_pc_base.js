@@ -12,8 +12,7 @@ var home = (function ($, w, undefined) {
                     return;
                 }
                 $("#back-to-top").fadeIn(700);
-            }
-            else {
+            } else {
                 $("#back-to-top").fadeOut(700);
             }
         });
@@ -84,6 +83,7 @@ var nav_active = (function ($, w, undefined) {
         w.u21 = base + develop + 'tableone';
         w.u22 = base + develop + 'logdata';
         w.u23 = base + develop + 'hanbjorderdata';
+        w.u24 = base + pub + 'json_vote';
     };
     var init = function () {
         dict();
