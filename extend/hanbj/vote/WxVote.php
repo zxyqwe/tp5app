@@ -193,7 +193,7 @@ class WxVote
             'pw' => self::test_PW($ans, $target_year),
             'ref' => date("Y-m-d H:i:s"),
             'last' => $last,
-            'year' => $target_year
+            'year' => $target_year + 1
         ];
         cache($cache_name, json_encode($ans), 600);
         return $ans;
