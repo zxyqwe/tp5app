@@ -2,8 +2,11 @@
 
 namespace app\hanbj\controller;
 
+use Endroid\QrCode\Exceptions\ImageFunctionFailedException;
+use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
 use hanbj\BonusOper;
 use hanbj\FameOper;
+use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\UserOper;
 use hanbj\vote\WxVote;
@@ -12,8 +15,10 @@ use think\Db;
 use Endroid\QrCode\QrCode;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
+use think\Exception;
 use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\Response;
 use think\response\Json;
 
 
@@ -28,6 +33,11 @@ class Pub extends Controller
         abort(404, "页面不存在$action");
     }
 
+    /**
+     * @return Response|Json
+     * @throws ImageFunctionFailedException
+     * @throws ImageFunctionUnknownException
+     */
     public function json_login()
     {
         switch ($this->request->method()) {
@@ -64,6 +74,13 @@ class Pub extends Controller
         }
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws Exception
+     */
     public function json_bulletin()
     {
         return json(['msg' => 'limited']);
@@ -116,14 +133,16 @@ class Pub extends Controller
     }
 
     /**
+     * @param int $year
      * @return Json
      * @throws DataNotFoundException
-     * @throws ModelNotFoundException
      * @throws DbException
+     * @throws ModelNotFoundException
      */
-    public function json_vote()
+    public function json_vote($year = HBConfig::YEAR)
     {
-        $ans = WxVote::getResult();
+        $year = intval($year);
+        $ans = WxVote::getResult($year);
         return json($ans);
     }
 }

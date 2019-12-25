@@ -20,6 +20,15 @@ use util\MysqlLog;
 
 class WxVote
 {
+    const HISTORY = [
+        // 紫菀灯芯  采娈  鸿胪寺少卿  夜娘_魁児
+        13 => ['离庚寅', '艮甲辰', '乾甲申', '乾壬申'],
+        // 夜娘·魁児  荼蘼未开  颜真真  未名
+        14 => ['乾壬申', '兑甲戌', '夏庚子', '商丙子'],
+        // 夜娘·魁児  荼蘼未开  颜真真  未名
+        15 => ['乾壬申', '兑甲戌', '夏庚子', '商丙子']
+    ];
+
     private static function GetDeadline()
     {
         return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
@@ -84,7 +93,7 @@ class WxVote
 
     private static function getMap()
     {
-        $res = MemberOper::get_tieba(HBConfig::NEXT);
+        $res = MemberOper::get_tieba(self::HISTORY[HBConfig::YEAR]);
         $map = [];
         foreach ($res as $item) {
             $map[$item['u']] = $item;
@@ -139,25 +148,27 @@ class WxVote
     }
 
     /**
+     * @param int $target_year
      * @return array|false|mixed|PDOStatement|string|Collection
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public static function getResult()
+    public static function getResult($target_year)
     {
-        $cache_name = 'WxVote::getResult';
+        $target_year = intval($target_year);
+        $cache_name = "WxVote::getResult$target_year";
         if (cache("?$cache_name")) {
             return json_decode(cache($cache_name), true);
         }
 
         $join = [
             ['member m', 'm.unique_name=v.unique_name', 'left'],
-            ['fame f', 'f.unique_name=v.unique_name and f.year=' . HBConfig::YEAR, 'left']
+            ['fame f', 'f.unique_name=v.unique_name and f.year=' . $target_year, 'left']
         ];
         $map = [
             'm.code' => MemberOper::NORMAL,
-            'v.year' => HBConfig::YEAR
+            'v.year' => $target_year
         ];
         $ans = Db::table('vote')
             ->alias('v')
@@ -175,8 +186,8 @@ class WxVote
             $last = $last->format("%a 天 %H 时 %i 分 %s 秒");
         }
         $ans = [
-            'zg' => self::test_ZG($ans),
-            'pw' => self::test_PW($ans),
+            'zg' => self::test_ZG($ans, $target_year),
+            'pw' => self::test_PW($ans, $target_year),
             'ref' => date("Y-m-d H:i:s"),
             'last' => $last
         ];
@@ -184,12 +195,12 @@ class WxVote
         return $ans;
     }
 
-    private static function test_ZG($ans)
+    private static function test_ZG($ans, $target_year)
     {
         $total = 0;
         $candidate = [];
         $map = self::getMap();
-        foreach (HBConfig::NEXT as $item) {
+        foreach (self::HISTORY[$target_year] as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
@@ -224,19 +235,19 @@ class WxVote
         return ['tot' => $total, 'detail' => $candidate];
     }
 
-    private static function test_PW($ans)
+    private static function test_PW($ans, $target_year)
     {
         $total = 0;
         $candidate = [];
         $map = self::getMap();
-        foreach (HBConfig::NEXT as $item) {
+        foreach (self::HISTORY[$target_year] as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
         foreach ($ans as $item) {
             if ($item['g'] === null) {
                 continue;
             }
-            $weight = count(HBConfig::NEXT);
+            $weight = count(self::HISTORY[$target_year]);
             $total += $weight;
             $tmp = explode(',', $item['a']);
             foreach ($tmp as $idx) {
