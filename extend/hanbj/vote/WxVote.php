@@ -61,7 +61,7 @@ class WxVote
             return null;
         }
 
-        $map = self::getMap();
+        $map = self::getMap(HBConfig::YEAR);
         $ret = Db::table('vote')
             ->where([
                 'unique_name' => session('unique_name'),
@@ -91,9 +91,9 @@ class WxVote
         return $front;
     }
 
-    private static function getMap()
+    private static function getMap($target_year)
     {
-        $res = MemberOper::get_tieba(self::HISTORY[HBConfig::YEAR]);
+        $res = MemberOper::get_tieba(self::HISTORY[$target_year]);
         $map = [];
         foreach ($res as $item) {
             $map[$item['u']] = $item;
@@ -203,7 +203,7 @@ class WxVote
     {
         $total = 0;
         $candidate = [];
-        $map = self::getMap();
+        $map = self::getMap($target_year);
         foreach (self::HISTORY[$target_year] as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
@@ -243,7 +243,7 @@ class WxVote
     {
         $total = 0;
         $candidate = [];
-        $map = self::getMap();
+        $map = self::getMap($target_year);
         foreach (self::HISTORY[$target_year] as $item) {
             $candidate[$map[$item]['s']] = 0;
         }
