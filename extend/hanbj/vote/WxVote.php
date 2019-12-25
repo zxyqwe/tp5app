@@ -157,6 +157,9 @@ class WxVote
     public static function getResult($target_year)
     {
         $target_year = intval($target_year);
+        if (!array_key_exists($target_year, self::HISTORY)) {
+            $target_year = HBConfig::YEAR;
+        }
         $cache_name = "WxVote::getResult$target_year";
         if (cache("?$cache_name")) {
             return json_decode(cache($cache_name), true);
@@ -189,7 +192,8 @@ class WxVote
             'zg' => self::test_ZG($ans, $target_year),
             'pw' => self::test_PW($ans, $target_year),
             'ref' => date("Y-m-d H:i:s"),
-            'last' => $last
+            'last' => $last,
+            'year' => $target_year
         ];
         cache($cache_name, json_encode($ans), 600);
         return $ans;

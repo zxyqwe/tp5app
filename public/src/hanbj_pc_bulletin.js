@@ -92,11 +92,11 @@ var login = (function ($, Vue, w, undefined) {
 var vote = (function ($, Vue, w, undefined) {
     'use strict';
     var vmain;
-    var refresh = function () {
+    var refresh = function (target_year) {
         w.waitloading();
         $.ajax({
             type: "GET",
-            url: '/hanbj/pub/json_vote',
+            url: w.u24 + '/year/' + target_year,
             data: {
                 _ajax: 1,
             },
@@ -120,6 +120,7 @@ var vote = (function ($, Vue, w, undefined) {
                 vmain.ans = {zg: zg, pw: pw, zg_tot: msg.zg.tot, pw_tot: msg.pw.tot};
                 vmain.refresh = msg.ref;
                 vmain.last = msg.last;
+                vmain.year = msg.year;
             },
             error: function (jqXHR, msg, ethrow) {
                 w.msgto(jqXHR, msg, ethrow);
@@ -130,7 +131,7 @@ var vote = (function ($, Vue, w, undefined) {
         });
         setTimeout(refresh, 600000);
     };
-    var init = function () {
+    var init = function (target_year) {
         vmain = new Vue({
             el: '#body',
             data: {
@@ -139,11 +140,12 @@ var vote = (function ($, Vue, w, undefined) {
                     pw: []
                 },
                 refresh: '',
-                last: ''
+                last: '',
+                year: 0
             },
             methods: {},
             ready: function () {
-                refresh();
+                refresh(target_year);
             }
         });
     };
