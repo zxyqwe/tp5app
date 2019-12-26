@@ -701,4 +701,4 @@ done
 FINAL_RET=$FINAL_RET"\"msg\":\"ok\"}"
 FINAL_RET=$($ECHO $FINAL_RET|$SED 's/\\"/"/g')
 $ECHO $FINAL_RET
-curl -H "Content-Type:application/json" -X POST --data "$FINAL_RET" https://app.zxyqwe.com/hanbj/system/server
+curl -H "Content-Type:application/json" -X POST --data "$FINAL_RET" https://app.zxyqwe.com/hanbj/develop/server
