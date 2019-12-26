@@ -2,7 +2,11 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\BonusOper;
+use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\UserOper;
+use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
 use hanbj\vote\WxOrg;
@@ -91,5 +95,29 @@ class System extends Controller
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
+    }
+
+    public function token()
+    {
+        $length = 10;
+        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+        $map['Access Key'] = substr($access, 0, $length);
+        $map['Js Api'] = substr(WxHanbj::jsapi(), 0, $length);
+        $map['Ticket Api'] = substr(WxHanbj::ticketapi(), 0, $length);
+        $map['会费增加积分'] = BonusOper::getFeeBonus();
+        $map['志愿者增加积分'] = BonusOper::getVolBonus();
+        $map['活动增加积分'] = BonusOper::getActBonus();
+        $map['活动预置名称'] = BonusOper::getActName();
+
+        $res = MemberOper::get_tieba(BonusOper::getWorkers());
+        $map['当前微信工作人员'] = implode('，', MemberOper::pretty_tieba($res));
+
+        $res = MemberOper::get_tieba(UserOper::reg());
+        $map['内网登录权限'] = implode('，', MemberOper::pretty_tieba($res));
+
+        $map['内网超级权限'] = implode('，', UserOper::pretty_toplist());
+
+        $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
+        return view('token', ['data' => $map]);
     }
 }
