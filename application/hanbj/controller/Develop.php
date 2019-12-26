@@ -29,6 +29,9 @@ class Develop extends Controller
 
     protected function coder()
     {
+        if (request()->ip() === config('local_mech')) {
+            return;
+        }
         UserOper::valid_pc($this->request->isAjax());
         if (session('name') === HBConfig::CODER) {
             return;
@@ -150,10 +153,12 @@ class Develop extends Controller
             case 'POST':
                 local_cron();
                 $value = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);
+                $report_module = [];
                 foreach ($value as $key => $v) {
+                    $report_module[] = $key;
                     cache("linux-dash-cache-$key", json_encode($v));
                 }
-                return json(['msg' => 'ok']);
+                return json(['msg' => 'ok', 'data' => $report_module]);
         }
         return json([
             'success' => false,
