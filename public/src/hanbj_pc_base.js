@@ -60,6 +60,7 @@ var nav_active = (function ($, w, undefined) {
         var analysis = 'analysis/';
         var develop = 'develop/';
         var fame = 'fame/';
+        var system = 'system/';
         w.u9 = base + pub + 'json_fame';
         w.u11 = base + pub + 'json_login';
         w.u5 = base + daily + 'actlog';
@@ -82,7 +83,7 @@ var nav_active = (function ($, w, undefined) {
         w.u12 = base + develop + 'table';
         w.u21 = base + develop + 'tableone';
         w.u22 = base + develop + 'logdata';
-        w.u23 = base + develop + 'hanbjorderdata';
+        w.u23 = base + system + 'hanbjorderdata';
         w.u24 = base + pub + 'json_vote';
     };
     var init = function () {

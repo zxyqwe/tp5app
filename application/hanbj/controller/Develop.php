@@ -6,16 +6,20 @@ use hanbj\UserOper;
 use hanbj\BonusOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
-use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxHanbj;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
+use think\response\Json;
+use think\response\Redirect;
+use think\response\View;
 use util\MysqlLog;
 use think\Db;
 use think\Controller;
 use think\exception\HttpResponseException;
 use util\StatOper;
 use util\TableOper;
-use wxsdk\pay\WxPayApi;
-use wxsdk\pay\WxPayTransfer;
 
 class Develop extends Controller
 {
@@ -46,6 +50,13 @@ class Develop extends Controller
         abort(404, "页面不存在$action");
     }
 
+    /**
+     * @return Json|View
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     */
     public function runlog()
     {
         define('TAG_TIMEOUT_EXCEPTION', true);
@@ -98,18 +109,6 @@ class Develop extends Controller
         }
     }
 
-    public function hanbjorderdata()
-    {
-        switch ($this->request->method()) {
-            case 'GET':
-                return view('hanbjorderdata');
-            case 'POST':
-                return StatOper::OutputAll(StatOper::HANBJ_ORDER_NUM);
-            default:
-                return json(['msg' => $this->request->method()], 400);
-        }
-    }
-
     public function token()
     {
         $length = 10;
@@ -134,6 +133,10 @@ class Develop extends Controller
         return view('token', ['data' => $map]);
     }
 
+    /**
+     * @return Json
+     * @throws \HttpResponseException
+     */
     public function server()
     {
         switch ($this->request->method()) {
@@ -175,6 +178,14 @@ class Develop extends Controller
         }
     }
 
+    /**
+     * @param string $obj
+     * @return Json|Redirect|View
+     * @throws Exception
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function tableone($obj = '')
     {
         switch ($this->request->method()) {
@@ -207,7 +218,7 @@ class Develop extends Controller
 
     public function debug()
     {
-        $ret = '';
+//        $ret = '';
 //        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
 //        $ret = WxHanbj::addUnionID($access);
         $ret = MemberOper::create_unique_unused();

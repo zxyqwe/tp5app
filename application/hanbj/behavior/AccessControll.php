@@ -25,7 +25,7 @@ class AccessControll
             'old',
             'cron',
         ],
-        'system' => [
+        'develop' => [
             'server'
         ]
     ];

@@ -7,6 +7,7 @@ use think\Controller;
 use think\Db;
 use hanbj\vote\WxOrg;
 use think\exception\HttpResponseException;
+use util\StatOper;
 
 class System extends Controller
 {
@@ -80,41 +81,15 @@ class System extends Controller
         return json($data);
     }
 
-    /**
-     * @throws
-     */
-    public function json_club()
+    public function hanbjorderdata()
     {
-        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
-        $size = min(100, max(0, $size));
-        $offset = max(0, $offset);
-        $join = [
-            ['member m', 'm.unique_name=f.owner', 'left'],
-            ['member n', 'n.unique_name=f.worker', 'left']
-        ];
-        $res = Db::table('club')
-            ->alias('f')
-            ->join($join)
-            ->order('f.id', 'desc')
-            ->limit($offset, $size)
-            ->field([
-                'f.id',
-                'f.owner',
-                'm.tieba_id as m',
-                'n.tieba_id as n',
-                'f.worker',
-                'f.start_time',
-                'f.name',
-                'f.stop_time',
-                'f.code'
-            ])
-            ->select();
-        $data['rows'] = $res;
-        $total = Db::table('club')
-            ->alias('f')
-            ->count();
-        $data['total'] = $total;
-        return json($data);
+        switch ($this->request->method()) {
+            case 'GET':
+                return view('hanbjorderdata');
+            case 'POST':
+                return StatOper::OutputAll(StatOper::HANBJ_ORDER_NUM);
+            default:
+                return json(['msg' => $this->request->method()], 400);
+        }
     }
 }

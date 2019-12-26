@@ -24,7 +24,8 @@
     "ext-json": "*",
     "ext-simplexml": "*",
     "ext-libxml": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-http": "*"
   },
   "extra": {
     "think-path": "thinkphp"
