@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use bilibili\BiliBase;
+use Exception;
 use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\ClubOper;
@@ -11,7 +12,11 @@ use hanbj\MemberOper;
 use hanbj\HBConfig;
 use think\Controller;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 use util\MysqlLog;
 use util\TableOper;
 
@@ -35,6 +40,12 @@ class Write extends Controller
         return view('volunteer', ['data' => $data]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function fee_search()
     {
         $name = input('post.name');
@@ -90,7 +101,7 @@ class Write extends Controller
                 Db::rollback();
                 return json(['msg' => $res], 400);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
             trace("Fee Add $e", MysqlLog::ERROR);
@@ -111,6 +122,12 @@ class Write extends Controller
         return json(['msg' => 'ok']);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_create()
     {
         switch ($this->request->method()) {
@@ -209,7 +226,7 @@ class Write extends Controller
                     case '_BILI_COOKIES':
                         if (session('unique_name') === HBConfig::CODER) {
                             BiliBase::getCookies($value);
-                            cache("bilibilineedlogin",null);
+                            cache("bilibilineedlogin", null);
                         }
                         return json(['msg' => 'ok']);
                     default:
@@ -220,6 +237,12 @@ class Write extends Controller
         }
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function edit_prom()
     {
         switch ($this->request->method()) {
@@ -254,7 +277,7 @@ class Write extends Controller
                             ->insert();
                         trace("Prom Add $unique $name", MysqlLog::INFO);
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $e = $e->getMessage();
                     trace("Prom Edit $e", MysqlLog::ERROR);
                     return json(['msg' => $e], 400);
@@ -271,4 +294,43 @@ class Write extends Controller
         $value = intval(input('post.value'));
         return ClubOper::grantClub($pk, $value);
     }
+
+    /**
+     * @throws
+     */
+    public function json_club()
+    {
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.unique_name=f.owner', 'left'],
+            ['member n', 'n.unique_name=f.worker', 'left']
+        ];
+        $res = Db::table('club')
+            ->alias('f')
+            ->join($join)
+            ->order('f.id', 'desc')
+            ->limit($offset, $size)
+            ->field([
+                'f.id',
+                'f.owner',
+                'm.tieba_id as m',
+                'n.tieba_id as n',
+                'f.worker',
+                'f.start_time',
+                'f.name',
+                'f.stop_time',
+                'f.code'
+            ])
+            ->select();
+        $data['rows'] = $res;
+        $total = Db::table('club')
+            ->alias('f')
+            ->count();
+        $data['total'] = $total;
+        return json($data);
+    }
+
 }
