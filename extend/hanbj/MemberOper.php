@@ -2,8 +2,15 @@
 
 namespace hanbj;
 
+use Exception;
+use PDOStatement;
+use think\Collection;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\Model;
 use util\MysqlLog;
 
 class MemberOper
@@ -20,6 +27,7 @@ class MemberOper
     const FREEZE = 2;
     const TEMPUSE = 3;
     const JUNIOR = 4;
+    const DELETED_HISTORY = 5;
     const CYCLE = [
         "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
         "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
@@ -67,6 +75,12 @@ class MemberOper
         }
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function create_unique_unused()
     {
         $unique = [];
@@ -100,6 +114,12 @@ class MemberOper
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function get_open()
     {
         $map['code'] = self::UNUSED;
@@ -117,6 +137,13 @@ class MemberOper
         return $already;
     }
 
+    /**
+     * @param $c
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function list_code($c)
     {
         $map['code'] = $c;
@@ -132,6 +159,13 @@ class MemberOper
         return $already;
     }
 
+    /**
+     * @param $list
+     * @return array|false|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function get_tieba($list)
     {
         if (count($list) === 0) {
@@ -158,6 +192,12 @@ class MemberOper
         return $data;
     }
 
+    /**
+     * @param $openid
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function try_junior($openid)
     {
         $ret = Db::table('member')
@@ -175,6 +215,13 @@ class MemberOper
         self::Temp2Junior($ret['u']);
     }
 
+    /**
+     * @param $unionid
+     * @return array|false|mixed|PDOStatement|string|Model
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function search_unionid($unionid)
     {
         $cache_key = "search_unionid$unionid";
@@ -201,6 +248,11 @@ class MemberOper
         return $ret;
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function daily()
     {
         $ret = self::list_code(self::TEMPUSE);
@@ -224,8 +276,9 @@ class MemberOper
 
         $ret = self::list_code(self::TEMPUSE);
         foreach ($ret as $i) {
-            self::Temp2Unused($i);
+            self::Temp2Deleted($i);
         }
+        self::create_unique_unused();
 
         $ret = self::list_code(self::JUNIOR);
         foreach ($ret as $i) {
@@ -270,7 +323,7 @@ class MemberOper
             trace("$unique_name UNUSED TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Unused2Temp $unique_name $e", MysqlLog::ERROR);
             if (false !== strpos($e, 'Duplicate')) {
@@ -280,7 +333,14 @@ class MemberOper
         }
     }
 
-    private static function Temp2Unused($unique_name)
+    /**
+     * @param $unique_name
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    private static function Temp2Deleted($unique_name)
     {
         $ca = "?Unused2Temp$unique_name";
         if (cache($ca)) {
@@ -291,33 +351,37 @@ class MemberOper
         }
         $map['code'] = self::TEMPUSE;
         $map['unique_name'] = $unique_name;
-        $data['code'] = self::UNUSED;
-        $data['tieba_id'] = $unique_name;
-        $data['year_time'] = -1;
-        $data['bonus'] = 0;
+        $person = Db::table('member')
+            ->where($map)
+            ->field(['openid', 'tieba_id'])
+            ->find();
+        if (false === $person) {
+            trace("TEMPUSE DELETED $unique_name not exists", MysqlLog::ERROR);
+            return false;
+        }
+        $openid = $person['openid'];
+        $tieba_id = $person['tieba_id'];
+        $cur_time = date("Y-m-d H:i:s");
+        $data['code'] = self::DELETED_HISTORY;
+        $data['unique_name'] = $unique_name . $cur_time;
+        $data['tieba_id'] = $tieba_id . $unique_name;
+        $data['openid'] = $openid . $unique_name;
         Db::startTrans();
         try {
             $ret = Db::table('member')
                 ->where($map)
                 ->update($data);
             if ($ret != 1) {
-                throw new \Exception('1 fail');
+                throw new Exception('1 fail');
             }
-            CardOper::renew($unique_name);
-            $map['code'] = self::UNUSED;
-            $ret = Db::table('member')
-                ->where($map)
-                ->update(['openid' => null]);
-            if ($ret != 1) {
-                throw new \Exception('2 fail');
-            }
-            trace("$unique_name TEMPUSE UNUSED 1", MysqlLog::INFO);
+            CardOper::renew($data['unique_name']);
+            trace("$unique_name TEMPUSE DELETED 1 $unique_name $tieba_id", MysqlLog::INFO);
             FeeOper::clear($unique_name);
             ActivityOper::clear($unique_name);
             FameOper::clear($unique_name);
             Db::commit();
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
             trace("Temp2Unused $unique_name $e", MysqlLog::ERROR);
@@ -352,7 +416,7 @@ class MemberOper
                 ->find();
             cache("search_unionid{$union_id['unionid']}", null);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Temp2Junior $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -364,6 +428,7 @@ class MemberOper
         if (!FeeOper::owe($unique_name, -1)) {
             return false;
         }
+        cache("Unused2Temp$unique_name", "Unused2Temp$unique_name", 86400 * 10);
         $map['code'] = self::JUNIOR;
         $map['unique_name'] = $unique_name;
         $data['code'] = self::TEMPUSE;
@@ -375,7 +440,7 @@ class MemberOper
             trace("$unique_name JUNIOR TEMPUSE $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Junior2Temp $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -407,7 +472,7 @@ class MemberOper
             trace(json_encode($data), MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Junior2Normal $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
@@ -430,13 +495,19 @@ class MemberOper
             trace("$unique_name NORMAL BANNED $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Normal2Banned $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
 
+    /**
+     * @return false|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function fixBanned()
     {
         $map['code'] = self::BANNED;
@@ -468,7 +539,7 @@ class MemberOper
             trace("$unique_name BANNED NORMAL $ret", MysqlLog::INFO);
             CardOper::renew($unique_name);
             return $ret === 1;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Banned2Normal $unique_name $e", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $e], 400));
