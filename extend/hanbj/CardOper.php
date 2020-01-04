@@ -131,6 +131,7 @@ class CardOper
                 self::update('停机', $code, '停机');
                 break;
             case MemberOper::UNUSED:
+            case MemberOper::DELETED_HISTORY:
                 self::update('未选择', $code, '未选择');
                 break;
             case MemberOper::TEMPUSE:

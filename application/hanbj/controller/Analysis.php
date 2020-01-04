@@ -108,7 +108,7 @@ class Analysis extends Controller
     public function json_tree()
     {
         $map['f.master'] = ['neq', ''];
-        $map['f.code'] = ['not in', [MemberOper::UNUSED, MemberOper::JUNIOR, MemberOper::TEMPUSE]];
+        $map['f.code'] = ['in', [MemberOper::NORMAL, MemberOper::BANNED, MemberOper::FREEZE]];
         $tmp = Db::table('member')
             ->alias('f')
             ->where($map)
