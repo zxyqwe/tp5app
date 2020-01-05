@@ -3,8 +3,16 @@
 namespace hanbj;
 
 
+use PDOStatement;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\exception\PDOException;
+use think\Model;
+use think\response\Json;
 use util\MysqlLog;
 
 class CardOper
@@ -73,6 +81,14 @@ class CardOper
 
 }
     */
+
+    /**
+     * @param $uname
+     * @return array|false|PDOStatement|string|Model|null
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     private static function U2Card($uname)
     {
         $map['m.unique_name'] = $uname;
@@ -91,6 +107,32 @@ class CardOper
         return $ret;
     }
 
+    /**
+     * @param $openid
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function clear($openid)
+    {
+        $res = Db::table('card')
+            ->where(['openid' => $openid])
+            ->field(['code'])
+            ->find();
+        if (null === $res) {
+            trace("card clear openid $openid", MysqlLog::ERROR);
+            return;
+        }
+        self::update('未选择', $res['code'], '未选择');
+    }
+
+    /**
+     * @param $code
+     * @return array|false|PDOStatement|string|Model
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function Card2U($code)
     {
         $map['f.code'] = $code;
@@ -113,6 +155,12 @@ class CardOper
         return $res;
     }
 
+    /**
+     * @param $uname
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function renew($uname)
     {
         $ret = self::U2Card($uname);
@@ -181,6 +229,13 @@ class CardOper
         }
     }
 
+    /**
+     * @param $code
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function active($code)
     {
         $uname = session('unique_name');
@@ -214,6 +269,12 @@ class CardOper
         return json(['msg' => 'OK']);
     }
 
+    /**
+     * @param $msg
+     * @return string
+     * @throws Exception
+     * @throws PDOException
+     */
     public static function del_card($msg)
     {
         $cardid = (string)$msg->UserCardCode;
@@ -253,6 +314,13 @@ class CardOper
         return '';
     }
 
+    /**
+     * @param $map
+     * @return int|mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function mod_ret($map)
     {
         $card = Db::table('card')

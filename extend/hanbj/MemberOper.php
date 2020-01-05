@@ -355,7 +355,7 @@ class MemberOper
             ->where($map)
             ->field(['openid', 'tieba_id'])
             ->find();
-        if (false === $person) {
+        if (null === $person) {
             trace("TEMPUSE DELETED $unique_name not exists", MysqlLog::ERROR);
             return false;
         }
@@ -374,7 +374,7 @@ class MemberOper
             if ($ret != 1) {
                 throw new Exception('1 fail');
             }
-            CardOper::renew($data['unique_name']);
+            CardOper::clear($openid);
             trace("$unique_name TEMPUSE DELETED 1 $unique_name $tieba_id", MysqlLog::INFO);
             FeeOper::clear($unique_name);
             ActivityOper::clear($unique_name);
