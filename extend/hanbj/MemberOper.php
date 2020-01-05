@@ -364,8 +364,8 @@ class MemberOper
         $cur_time = date("Y-m-d H:i:s");
         $data['code'] = self::DELETED_HISTORY;
         $data['unique_name'] = $unique_name . $cur_time;
-        $data['tieba_id'] = $tieba_id . $unique_name;
-        $data['openid'] = $openid . $unique_name;
+        $data['tieba_id'] = $tieba_id . $cur_time;
+        $data['openid'] = $openid . $cur_time;
         Db::startTrans();
         try {
             $ret = Db::table('member')
@@ -554,14 +554,14 @@ class MemberOper
   `gender` varchar(4) NOT NULL,
   `phone` varchar(45) NOT NULL,
   `QQ` varchar(45) NOT NULL,
-  `unique_name` varchar(8) NOT NULL,
+  `unique_name` varchar(45) NOT NULL,
   `master` varchar(45) NOT NULL,
   `eid` varchar(45) NOT NULL DEFAULT '?',
   `rn` varchar(45) NOT NULL DEFAULT '?',
   `mail` varchar(45) NOT NULL,
   `pref` varchar(45) NOT NULL,
   `web_name` varchar(45) NOT NULL,
-  `code` tinyint(4) NOT NULL DEFAULT '0',
+  `code` int(11) NOT NULL DEFAULT '0',
   `year_time` int(11) NOT NULL DEFAULT '2013',
   `openid` varchar(255) DEFAULT NULL,
   `bonus` int(11) NOT NULL
