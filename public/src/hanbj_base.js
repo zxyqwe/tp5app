@@ -13,6 +13,8 @@ window.mem_code = function (value) {
             return '临时抢号';
         case '4':
             return '会员';
+        case '5':
+            return '删号记录';
         default:
             return value;
     }
