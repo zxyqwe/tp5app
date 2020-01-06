@@ -28,6 +28,7 @@ class MemberOper
     const TEMPUSE = 3;
     const JUNIOR = 4;
     const DELETED_HISTORY = 5;
+    const max_pos = 5;
     const CYCLE = [
         "甲子", "乙丑", "丙寅", "丁卯", "戊辰", "己巳", "庚午", "辛未", "壬申", "癸酉",
         "甲戌", "乙亥", "丙子", "丁丑", "戊寅", "己卯", "庚辰", "辛巳", "壬午", "癸未",
