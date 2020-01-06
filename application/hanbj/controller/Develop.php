@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use hanbj\CardOper;
 use hanbj\UserOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
@@ -197,14 +198,130 @@ class Develop extends Controller
 
     public function debug()
     {
-//        $ret = '';
 //        $access = WX_access(config('hanbj_api'), config('hanbj_secret'), 'HANBJ_ACCESS');
+
 //        $ret = WxHanbj::addUnionID($access);
-        $ret = MemberOper::create_unique_unused();
+
+//        $ret = MemberOper::create_unique_unused();
+
 //        $ret = ActivityOper::revokeTest();
+
 //        $ret = StatOper::generateOneDay(StatOper::LOG_NUM);
+
 //        WxHanbj::setMenu();
 
-        return json(['msg' => $ret]);
+//        $msg = Db::table('logs')
+//            ->where([
+//                'msg' => ['like', '%TEMPUSE UNUSED%'],
+//                'time' => ['like', '2020-01-01 07:55%']
+//            ])
+//            ->field(['msg'])
+//            ->select();
+//        $sret = [];
+//        foreach ($msg as $item) {
+//            $sret[] = explode(' ', $item['msg'])[0];
+//        }
+
+//        CardOper::clear('oJkBfv_5BczVnTviPkdbYXWcqCoA');
+//
+//        $person = Db::table('member')
+//            ->where([
+//                'code' => ['eq', MemberOper::TEMPUSE],
+//                'start_time' => ''
+//            ])
+//            ->field(['unique_name'])
+//            ->select();
+//        $u_list = [];
+//        foreach ($person as $item) {
+//            $u_list[] = $item['unique_name'];
+//        }
+//
+//        $log = Db::table('logs')
+//            ->where([
+//                'msg' => ['like', "%UNUSED TEMPUSE%"]
+//            ])
+//            ->order('id desc')
+//            ->field(['time', 'msg'])
+//            ->select();
+//        $log_map = [];
+//        foreach ($log as $line) {
+//            $u = explode(' ', $line['msg'])[0];
+//            if (!in_array($u, $u_list)) {
+//                continue;
+//            }
+//            if (in_array($u, $log_map)) {
+//                if ($line['time'] >= $log_map[$u][0]) {
+//                    return json([$line['time'], $log_map[$u][0]]);
+//                }
+//                continue;
+//            } else {
+//                $log_map[$u] = [$line['time']];
+////                echo "$u<br />";
+//            }
+//        }
+//
+//        foreach ($u_list as $u) {
+//            if (!array_key_exists($u, $log_map)) {
+////                echo "$u\n";
+//                continue;
+//            }
+//            if (count($log_map[$u]) !== 1) {
+//                echo "$u<br />";
+//                continue;
+//            }
+//            $start_time = $log_map[$u][0];
+//            $ret = Db::table('member')
+//                ->where([
+//                    'unique_name' => $u,
+//                    'code' => MemberOper::TEMPUSE,
+//                    'start_time' => ''
+//                ])
+//                ->data([
+//                    'start_time' => $start_time
+//                ])
+//                ->update();
+//            echo "$u $start_time $ret<br />";
+//        }
+//
+//        $al_ret = Db::table('member')
+//            ->where(['start_time' => ['neq', '']])
+//            ->field(['unique_name', 'start_time', 'code'])
+//            ->select();
+
+//        $ret = Db::table('member')
+//            ->where([
+//                'code' => ['in', [MemberOper::JUNIOR]],
+//                'start_time' => '',
+//                'year_time' => 2019
+//            ])
+//            ->data(['start_time' => '2019-01-01 00:00:01'])
+//            ->update();
+
+//        $first = Db::table('logs')
+//            ->where(['msg' => ['like', "%UNUSED TEMPUSE%"]])
+//            ->order('id')
+//            ->find();
+
+        $ret = Db::table('member')
+            ->where([
+                'code' => ['not in', [MemberOper::UNUSED, MemberOper::DELETED_HISTORY]],
+                'start_time' => ''
+            ])
+            ->field([
+                'unique_name', 'year_time', 'code'
+            ])
+            ->select();
+
+//        $u_log = Db::table('logs')
+//            ->where(['msg' => ['like', '%磬癸亥%']])
+//            ->field('msg')
+//            ->select();
+
+        return json([
+            'msg' => $ret,
+//            'first' => $first,
+//            'al_ret' => $al_ret,
+//            'u_log' => $u_log
+        ]);
     }
 }

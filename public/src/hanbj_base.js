@@ -1,4 +1,4 @@
-window.max_mem_code = 4;
+window.max_mem_code = 5;
 window.mem_code = function (value) {
     switch (value) {
         case '-1':

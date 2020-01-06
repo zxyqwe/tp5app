@@ -105,6 +105,7 @@ class Daily extends Controller
                 'f.pref as e',
                 'f.web_name as w',
                 'f.year_time as y',
+                'f.start_time as ys',
                 'f.bonus as b',
                 'f.code',
                 'f.openid',
