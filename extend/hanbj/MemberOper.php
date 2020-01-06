@@ -111,6 +111,7 @@ class MemberOper
         }
         $ret = Db::table('member')
             ->insertAll($data);
+        trace("Create Member $ret " . json_encode($unique), MysqlLog::INFO);
         return ['g' => $unique, 'r' => $ret, 'l' => count($unique)];
     }
 
@@ -313,6 +314,7 @@ class MemberOper
         $data['year_time'] = date('Y');
         $data['openid'] = $openid;
         $data['bonus'] = 0;
+        $data['start_time'] = date("Y-m-d H:i:s");
         try {
             $ret = Db::table('member')
                 ->where($map)
@@ -563,6 +565,7 @@ class MemberOper
   `web_name` varchar(45) NOT NULL,
   `code` int(11) NOT NULL DEFAULT '0',
   `year_time` int(11) NOT NULL DEFAULT '2013',
+  `start_time` varchar(45) NOT NULL,
   `openid` varchar(255) DEFAULT NULL,
   `bonus` int(11) NOT NULL
   PRIMARY KEY (`id`),
