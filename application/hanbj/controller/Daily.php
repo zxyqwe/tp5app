@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
+use hanbj\MemberOper;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
@@ -79,7 +80,7 @@ class Daily extends Controller
         $offset = max(0, $offset);
         $search = input('post.search');
         $level = input('post.up/a', []);
-        $level = array_intersect($level, range(0, 4));
+        $level = array_intersect($level, range(0, MemberOper::max_pos));
         if (count($level) < 1) {
             return json(['rows' => [], 'total' => 0]);
         }
