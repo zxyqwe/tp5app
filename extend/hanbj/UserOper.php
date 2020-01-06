@@ -55,7 +55,7 @@ class UserOper
             ->field(['unique_name as u'])
             ->cache(600)
             ->select();
-        $data = [HBConfig::CODER];
+        $data = HBConfig::FIXED;
         foreach ($res as $item) {
             $data[] = $item['u'];
         }
