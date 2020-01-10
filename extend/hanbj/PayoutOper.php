@@ -289,7 +289,7 @@ class PayoutOper
             $gen_ret = GeneralRet::NAME_VARIFY_WX_FAIL();
             $gen_ret['wx'] = $wx_ret;
         }
-        $ret = Db::table('payout')
+        $update_ret = Db::table('payout')
             ->where([
                 'tradeid' => $ret['tradeid'],
                 'status' => self::AUTH,
@@ -298,7 +298,7 @@ class PayoutOper
             ])
             ->data($next_stage)
             ->update();
-        if ($ret != 1) {
+        if ($update_ret != 1) {
             trace("setPayout Next {$ret['tradeid']}, " . json_encode($next_stage), MysqlLog::ERROR);
         }
         return $gen_ret;
