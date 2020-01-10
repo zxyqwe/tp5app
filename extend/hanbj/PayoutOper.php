@@ -24,7 +24,7 @@ class PayoutOper
     const FAIL_NOTICE = 6;
 
     const MIN_FEE = 30;
-    const MAX_FEE = 500000;
+    const MAX_FEE = 2500000;
 
     const AUTHOR = "乾乙丑";
 
