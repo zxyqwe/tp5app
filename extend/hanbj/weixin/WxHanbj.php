@@ -2,14 +2,18 @@
 
 namespace hanbj\weixin;
 
+use hanbj\HBConfig;
 use hanbj\MemberOper;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
+use think\Exception;
 use think\exception\DbException;
-use think\exception\HttpResponseException;
 use hanbj\vote\WxOrg;
 use hanbj\CardOper;
 use hanbj\UserOper;
+use think\exception\PDOException;
+use think\response\Redirect;
+use think\response\View;
 use util\MysqlLog;
 use wxsdk\WxTokenJsapi;
 use wxsdk\WxTokenTicketapi;
@@ -89,6 +93,7 @@ class WxHanbj
      * @throws DataNotFoundException
      * @throws ModelNotFoundException
      * @throws DbException
+     * @throws Exception
      */
     public static function handle_msg($msg)
     {
@@ -120,20 +125,19 @@ class WxHanbj
                         $cont .= $org->listobj($unique_name);
                     }
                     return self::auto($from, $to, $cont, '投票');
+                } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "调试")) {
+                    $parse_cont = explode(' ', $cont);
+                    if (count($parse_cont) === 2) {
+                        return self::auto($from, $to, UserOper::set_fake_wx_id($parse_cont[1]));
+                    }
+                    return self::auto($from, $to, UserOper::clear_login_session());
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));
                     return self::auto($from, $to, $cont, "临时身份 $unique_name $old_cont");
                 } elseif (!empty($unique_name)) {
-                    try {
-                        $cont = Curl_Get('http://127.0.0.1:9999/bbb?aaa=' . rawurlencode($cont));
-                        $cont = json_decode($cont, true);
-                        $cont = $cont['msg'];
-                    } catch (HttpResponseException $e) {
-                        $cont = '机器人不在线';
-                        define('TAG_TIMEOUT_EXCEPTION', true);
-                    }
-                    $cont = "检查口令......失败\n身份验证......成功\n\n$unique_name\n文字信息：$old_cont\n\n$cont\n\n$welcome";
+                    define('TAG_TIMEOUT_EXCEPTION', true);
+                    $cont = "检查口令......失败\n身份验证......成功\n\n$unique_name\n文字信息：$old_cont\n\n$welcome";
                     return self::auto($from, $to, $cont);
                 }
                 $cont = "检查口令......失败\n身份验证......失败\n\n文字信息：$cont\n\n$welcome";
@@ -177,6 +181,16 @@ class WxHanbj
         return sprintf($data, $to, $from, time(), "\n" . $type);
     }
 
+    /**
+     * @param $msg
+     * @param $unique_name
+     * @return string
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws Exception
+     * @throws PDOException
+     */
     private static function do_event($msg, $unique_name)
     {
         $type = (string)$msg->Event;
@@ -226,6 +240,13 @@ class WxHanbj
         return $nonce;
     }
 
+    /**
+     * @param $nonce
+     * @return Redirect|View
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function jump($nonce)
     {
         $obj = cache('jump' . $nonce);
