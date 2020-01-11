@@ -273,6 +273,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 vvalid.items.push.apply(vvalid.items, da);
                 vvalid.real_year = msg.real_year;
                 vvalid.real_year_str = msg.real_year_str;
+                vvalid.fee_status = msg.fee_status;
             },
             error: w.msgto,
             complete: function () {
@@ -321,7 +322,8 @@ var wx_home = (function ($, Vue, w, undefined) {
                 items: [],
                 cur_year: new Date().getFullYear(),
                 real_year: 0,
-                real_year_str: ""
+                real_year_str: "",
+                fee_status: false
             },
             ready: function () {
             }
