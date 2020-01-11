@@ -36,7 +36,11 @@ class FeeOper
 
         $start_year = Db::table('member')
             ->where($map)
-            ->value('start_time');
+            ->field('start_time')
+            ->find();
+        if (null === $start_year) {
+            return (new DateTimeImmutable())->sub(new DateInterval("P1D"));
+        }
         $start_year = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $start_year);
 
         $fee_year = Db::table('nfee')
@@ -47,7 +51,7 @@ class FeeOper
             ])
             ->find();
         if (null === $fee_year) {
-            return new DateTimeImmutable();
+            return (new DateTimeImmutable())->sub(new DateInterval("P1D"));
         }
         $fee_year = intval($fee_year['n']);
         $fee_interval = new DateInterval("P" . abs($fee_year) . "Y");
