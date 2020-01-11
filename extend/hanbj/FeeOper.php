@@ -79,7 +79,6 @@ class FeeOper
         } elseif ($ignore_years < 0) {
             $fee_year = $fee_year->add($ignore_interval);
         }
-        $fee_year = $fee_year->add(new DateInterval("P3D"));
         return $fee_year < new DateTimeImmutable();
     }
 
