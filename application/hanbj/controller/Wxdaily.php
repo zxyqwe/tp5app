@@ -100,7 +100,13 @@ class Wxdaily extends Controller
                 'up'
             ])
             ->select();
-        return json(['list' => $card, 'size' => $size, 'real_year' => FeeOper::cache_fee($uname)]);
+        $fee_year = FeeOper::cache_fee($uname);
+        return json([
+            'list' => $card,
+            'size' => $size,
+            'real_year' => $fee_year->format('Y'),
+            'real_year_str' => $fee_year->format('Y-m-d H:i:s')
+        ]);
     }
 
     public function json_renew()

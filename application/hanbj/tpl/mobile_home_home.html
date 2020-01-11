@@ -93,11 +93,17 @@
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    <p>最近缴费</p>
+                    <p>会龄</p>
+                </div>
+                <div class="weui-cell__ft">{$user.duration} 天</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>缴费到期</p>
                 </div>
                 <div class="weui-cell__ft">
                     <i class="{$status? 'weui-icon-success' : 'weui-icon-warn'}"></i>
-                    {$user.fee_code}
+                    {$user.fee_str}
                 </div>
             </div>
             <a class="weui-cell weui-cell_access" href="#bonus">
@@ -164,7 +170,7 @@
                     <!--</a>-->
 
                     <!--<a href="#vote" class="weui-grid">-->
-                        <!--<p class="weui-btn weui-btn_mini weui-btn_primary">换届选举</p>-->
+                    <!--<p class="weui-btn weui-btn_mini weui-btn_primary">换届选举</p>-->
                     <!--</a>-->
                 </div>
             </div>

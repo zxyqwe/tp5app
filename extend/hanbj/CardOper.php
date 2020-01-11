@@ -211,7 +211,7 @@ class CardOper
             'bonus' => $b,
             'add_bonus' => $add_b,
             'custom_field_value1' => $uni,
-            'custom_field_value2' => FeeOper::cache_fee($uni),
+            'custom_field_value2' => FeeOper::cache_fee($uni)->format('Y'),
             "notify_optional" => [
                 "is_notify_bonus" => false,
                 "is_notify_custom_field1" => true,
@@ -247,7 +247,7 @@ class CardOper
             "card_id" => config('hanbj_cardid'),
             'init_bonus' => 1,
             'init_custom_field_value1' => '激活中',
-            'init_custom_field_value2' => FeeOper::cache_fee($uname)
+            'init_custom_field_value2' => FeeOper::cache_fee($uname)->format('Y')
         ];
         $raw = Curl_Post($data, $url, false, 60);
         $res = json_decode($raw, true);
