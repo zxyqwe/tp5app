@@ -207,10 +207,4 @@ class UserOper
         }
         return $ret;
     }
-
-    public static function clear_login_session()
-    {
-        session(null);
-        return "清除";
-    }
 }
