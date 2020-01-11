@@ -2,6 +2,7 @@
 
 namespace app\hanbj\controller;
 
+use DateTimeImmutable;
 use hanbj\FameOper;
 use hanbj\UserOper;
 use think\db\exception\DataNotFoundException;
@@ -105,7 +106,8 @@ class Wxdaily extends Controller
             'list' => $card,
             'size' => $size,
             'real_year' => $fee_year->format('Y'),
-            'real_year_str' => $fee_year->format('Y-m-d H:i:s')
+            'real_year_str' => $fee_year->format('Y-m-d H:i:s'),
+            'fee_status' => new DateTimeImmutable() > $fee_year
         ]);
     }
 
@@ -128,6 +130,11 @@ class Wxdaily extends Controller
 
     /**
      * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     * @throws PDOException
      * @throws WxPayException
      */
     public function order()

@@ -20,7 +20,7 @@
         <div class="weui-panel weui-panel_access">
             <div class="weui-panel__hd">
                 <a href="#valid_fee" class="weui-cell weui-cell_access" style="padding: 0">
-                    <i v-if="cur_year > real_year" class="weui-icon-warn"></i>
+                    <i v-if="fee_status" class="weui-icon-warn"></i>
                     <i v-else class="weui-icon-success-no-circle"></i>
                     应缴年份：{{ cur_year }}
                     <div class="weui-cell__bd">
