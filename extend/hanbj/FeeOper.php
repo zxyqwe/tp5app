@@ -16,6 +16,7 @@ use util\MysqlLog;
 class FeeOper
 {
     const ADD = 0;
+    const CACHE_NAME = "cache_fee_v2";
 
     /**
      * @param $uname
@@ -27,7 +28,7 @@ class FeeOper
      */
     public static function cache_fee($uname)
     {
-        $cache_name = "cache_fee_v2$uname";
+        $cache_name = self::CACHE_NAME . $uname;
         if (cache("?$cache_name")) {
             return cache($cache_name);
         }
@@ -101,6 +102,6 @@ class FeeOper
 
     public static function uncache($uname)
     {
-        cache("cache_fee$uname", null);
+        cache(self::CACHE_NAME . $uname, null);
     }
 }
