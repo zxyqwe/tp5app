@@ -50,6 +50,7 @@ class Mobile extends Controller
     public function logout()
     {
         session(null);
+        cache("set_fake_wx_id", null);
         return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
     }
 
