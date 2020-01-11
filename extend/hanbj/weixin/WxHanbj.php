@@ -130,7 +130,7 @@ class WxHanbj
                     if (count($parse_cont) === 2) {
                         return self::auto($from, $to, UserOper::set_fake_wx_id($parse_cont[1]));
                     }
-                    return self::auto($from, $to, UserOper::clear_login_session());
+                    return self::auto($from, $to, $cont);
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
                     $cont = cache("tempnum$cont");
                     $cont = self::tempid(json_decode($cont, true));

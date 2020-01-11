@@ -47,6 +47,12 @@ class Mobile extends Controller
         return json([], 404);
     }
 
+    public function logout()
+    {
+        session(null);
+        return WX_redirect('https://app.zxyqwe.com/hanbj/mobile', config('hanbj_api'));
+    }
+
     /**
      * @param string $obj
      * @return Redirect|View
