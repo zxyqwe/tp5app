@@ -2,6 +2,7 @@
 
 namespace hanbj\weixin;
 
+use hanbj\FeeOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
 use think\db\exception\DataNotFoundException;
@@ -129,6 +130,12 @@ class WxHanbj
                     $parse_cont = explode(' ', $cont);
                     if (count($parse_cont) === 2) {
                         return self::auto($from, $to, UserOper::set_fake_wx_id($parse_cont[1]));
+                    }
+                    return self::auto($from, $to, $cont);
+                } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "欠费")) {
+                    $parse_cont = explode(' ', $cont);
+                    if (count($parse_cont) === 2) {
+                        return self::auto($from, $to, FeeOper::info($parse_cont[1]));
                     }
                     return self::auto($from, $to, $cont);
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {

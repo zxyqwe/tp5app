@@ -79,7 +79,8 @@ class FeeOper
         } elseif ($ignore_years < 0) {
             $fee_year = $fee_year->add($ignore_interval);
         }
-        return $fee_year < (new DateTimeImmutable())->add(new DateInterval("P3D"));
+        $fee_year = $fee_year->add(new DateInterval("P3D"));
+        return $fee_year < new DateTimeImmutable();
     }
 
     /**
@@ -103,5 +104,19 @@ class FeeOper
     public static function uncache($uname)
     {
         cache(self::CACHE_NAME . $uname, null);
+    }
+
+    /**
+     * @param $uname
+     * @return string
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function info($uname)
+    {
+        $fee_year = self::cache_fee($uname);
+        $owe = self::owe($uname);
+        return "$uname 到期 " . $fee_year->format("Y-m-d H:i:s") . " 欠费 $owe";
     }
 }
