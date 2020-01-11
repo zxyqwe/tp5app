@@ -41,6 +41,7 @@ class FeeOper
         if (null === $start_year) {
             return (new DateTimeImmutable())->sub(new DateInterval("P1D"));
         }
+        $start_year = $start_year['start_time'];
         $start_year = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $start_year);
 
         $fee_year = Db::table('nfee')
