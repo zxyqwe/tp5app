@@ -7,11 +7,9 @@ use Endroid\QrCode\Exceptions\ImageFunctionUnknownException;
 use hanbj\BonusOper;
 use hanbj\FameOper;
 use hanbj\HBConfig;
-use hanbj\MemberOper;
 use hanbj\UserOper;
 use hanbj\vote\WxVote;
 use think\Controller;
-use think\Db;
 use Endroid\QrCode\QrCode;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -74,50 +72,43 @@ class Pub extends Controller
         }
     }
 
-    /**
-     * @return Json
-     * @throws DataNotFoundException
-     * @throws DbException
-     * @throws ModelNotFoundException
-     * @throws Exception
-     */
     public function json_bulletin()
     {
         return json(['msg' => 'limited']);
-        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
-        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
-        $size = min(100, max(0, $size));
-        $offset = max(0, $offset);
-        $search = input('post.search');
-        if (!empty($search)) {
-            $map['m.unique_name'] = ['like', '%' . $search . '%'];
-        }
-        $map['m.code'] = ['in', MemberOper::getMember()];
-        $join = [
-            ['nfee f', 'm.unique_name=f.unique_name', 'left']
-        ];
-        $tmp = Db::table('member')
-            ->alias('m')
-            ->join($join)
-            ->where($map)
-            ->order('m.id')
-            ->limit($offset, $size)
-            ->cache(600)
-            ->group('m.unique_name')
-            ->field([
-                'm.unique_name as u',
-                'm.year_time as t',
-                'sum(f.code) as b'
-            ])
-            ->select();
-        $data['rows'] = $tmp;
-        $total = Db::table('member')
-            ->alias('m')
-            ->where($map)
-            ->cache(600)
-            ->count();
-        $data['total'] = $total;
-        return json($data);
+//        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+//        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+//        $size = min(100, max(0, $size));
+//        $offset = max(0, $offset);
+//        $search = input('post.search');
+//        if (!empty($search)) {
+//            $map['m.unique_name'] = ['like', '%' . $search . '%'];
+//        }
+//        $map['m.code'] = ['in', MemberOper::getMember()];
+//        $join = [
+//            ['nfee f', 'm.unique_name=f.unique_name', 'left']
+//        ];
+//        $tmp = Db::table('member')
+//            ->alias('m')
+//            ->join($join)
+//            ->where($map)
+//            ->order('m.id')
+//            ->limit($offset, $size)
+//            ->cache(600)
+//            ->group('m.unique_name')
+//            ->field([
+//                'm.unique_name as u',
+//                'm.year_time as t',
+//                'sum(f.code) as b'
+//            ])
+//            ->select();
+//        $data['rows'] = $tmp;
+//        $total = Db::table('member')
+//            ->alias('m')
+//            ->where($map)
+//            ->cache(600)
+//            ->count();
+//        $data['total'] = $total;
+//        return json($data);
     }
 
     public function json_fame()

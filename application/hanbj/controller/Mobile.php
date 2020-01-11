@@ -2,12 +2,17 @@
 
 namespace app\hanbj\controller;
 
+use DateTimeImmutable;
+use Exception;
 use hanbj\TodoOper;
 use hanbj\vote\WxOrg;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\exception\DbException;
+use think\exception\PDOException;
+use think\response\Json;
 use think\response\Redirect;
+use think\response\View;
 use util\MysqlLog;
 use wxsdk\mp\SHA1;
 use wxsdk\mp\WXBizMsgCrypt;
@@ -42,6 +47,14 @@ class Mobile extends Controller
         return json([], 404);
     }
 
+    /**
+     * @param string $obj
+     * @return Redirect|View
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws Exception
+     */
     public function index($obj = '')
     {
         if (!UserOper::wx_login()) {
@@ -57,6 +70,7 @@ class Mobile extends Controller
             ->field([
                 'unique_name',
                 'year_time',
+                'start_time',
                 'code',
                 'master',
                 'tieba_id',
@@ -86,7 +100,9 @@ class Mobile extends Controller
         $res['bonus_top'] = BonusOper::mod_ret($res['bonus']);
         $res['code'] = MemberOper::trans($res['code']);
         $res['fee_code'] = FeeOper::cache_fee($res['unique_name']);
+        $res['fee_str'] = $res['fee_code']->format('Y-m-d H:i:s');
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
+        $res['duration'] = MemberOper::calc_duration($res['start_time'])->days;
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
@@ -95,7 +111,7 @@ class Mobile extends Controller
             'user' => $res,
             'card' => CardOper::mod_ret($map),
             'worker' => in_array($res['unique_name'], BonusOper::getWorkers()) ? 1 : 0,
-            'status' => $res['fee_code'] >= date('Y'),
+            'status' => $res['fee_code'] >= new DateTimeImmutable(),
         ]);
     }
 
@@ -189,6 +205,12 @@ class Mobile extends Controller
         return json($wx);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_active()
     {
         $openid = session('openid');
@@ -219,6 +241,12 @@ class Mobile extends Controller
         return json($wx);
     }
 
+    /**
+     * @return string|Response
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function event()
     {
         if (!isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
@@ -261,6 +289,12 @@ class Mobile extends Controller
         return $reply;
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function unused()
     {
         switch ($this->request->method()) {
@@ -295,6 +329,11 @@ class Mobile extends Controller
         return view('help');
     }
 
+    /**
+     * @return Json
+     * @throws \think\Exception
+     * @throws PDOException
+     */
     public function todo()
     {
         switch ($this->request->method()) {
@@ -321,7 +360,7 @@ class Mobile extends Controller
     }
 
     /**
-     * @return Redirect
+     * @return void
      * @throws DataNotFoundException
      * @throws ModelNotFoundException
      * @throws DbException
@@ -339,5 +378,6 @@ class Mobile extends Controller
             $cont .= $org->listobj($unique_name);
         }
         echo str_replace("\n", "<br />", $cont);
+        return;
     }
 }

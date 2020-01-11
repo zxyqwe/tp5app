@@ -2,20 +2,27 @@
     <div class="page__hd">
         <h1 class="page__title">缴费记录</h1>
     </div>
-    <div class="page__bd page__bd_spacing">
+    <div id="wx_valid" class="page__bd page__bd_spacing">
+<!--        <div class="weui-flex">-->
+<!--            <div class="weui-flex__item">-->
+<!--                <div class="placeholder">-->
+<!--                    <a href="/hanbj/pub/bulletin" class="weui-btn weui-btn_plain-primary">会费公告</a>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div class="weui-flex">
             <div class="weui-flex__item">
                 <div class="placeholder">
-                    <a href="/hanbj/pub/bulletin" class="weui-btn weui-btn_plain-primary">会费公告</a>
+                    实缴时间：{{ real_year_str }}
                 </div>
             </div>
         </div>
-        <div id="wx_valid" class="weui-panel weui-panel_access">
+        <div class="weui-panel weui-panel_access">
             <div class="weui-panel__hd">
                 <a href="#valid_fee" class="weui-cell weui-cell_access" style="padding: 0">
                     <i v-if="cur_year > real_year" class="weui-icon-warn"></i>
                     <i v-else class="weui-icon-success-no-circle"></i>
-                    应缴年份：{{ cur_year }}&nbsp;&nbsp;&nbsp;&nbsp;实缴年份：{{ real_year }}
+                    应缴年份：{{ cur_year }}
                     <div class="weui-cell__bd">
                     </div>
                     <span class="weui-cell__ft slideShine">缴费</span>

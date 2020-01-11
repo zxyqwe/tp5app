@@ -33,31 +33,32 @@ class Wxwork extends Controller
 
     public function json_card()
     {
-        $code = input('post.code');
-        if (!is_numeric($code)) {
-            $code = 0;
-        }
-        $map['f.code'] = $code;
-        $map['m.code'] = ['in', MemberOper::getMember()];
-        $join = [
-            ['member m', 'm.openid=f.openid', 'left']
-        ];
-        $res = Db::table('card')
-            ->alias('f')
-            ->where($map)
-            ->join($join)
-            ->field([
-                'm.unique_name as uni',
-                'm.tieba_id as tie',
-                'm.year_time as yt'
-            ])
-            ->find();
-        if (null === $res) {
-            return json(['msg' => '查无此人：' . $code], 400);
-        }
-        $res['fee'] = FeeOper::cache_fee($res['uni']);
-        $res['act'] = BonusOper::getActName();
-        return json($res);
+        return;
+//        $code = input('post.code');
+//        if (!is_numeric($code)) {
+//            $code = 0;
+//        }
+//        $map['f.code'] = $code;
+//        $map['m.code'] = ['in', MemberOper::getMember()];
+//        $join = [
+//            ['member m', 'm.openid=f.openid', 'left']
+//        ];
+//        $res = Db::table('card')
+//            ->alias('f')
+//            ->where($map)
+//            ->join($join)
+//            ->field([
+//                'm.unique_name as uni',
+//                'm.tieba_id as tie',
+//                'm.year_time as yt'
+//            ])
+//            ->find();
+//        if (null === $res) {
+//            return json(['msg' => '查无此人：' . $code], 400);
+//        }
+//        $res['fee'] = FeeOper::cache_fee($res['uni']);
+//        $res['act'] = BonusOper::getActName();
+//        return json($res);
     }
 
     public function json_act()

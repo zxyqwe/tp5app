@@ -5,7 +5,12 @@ namespace hanbj;
 use think\Db;
 use Exception;
 use hanbj\weixin\WxTemp;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
+use think\exception\PDOException;
 use util\MysqlLog;
+use wxsdk\pay\WxPayUnifiedOrder;
 
 class OrderOper
 {
@@ -22,6 +27,12 @@ class OrderOper
         return [self::FEE];
     }
 
+    /**
+     * @param $outid
+     * @param $year
+     * @throws \think\Exception
+     * @throws PDOException
+     */
     public static function dropfee($outid, $year)
     {
         $openid = session('openid');
@@ -38,9 +49,12 @@ class OrderOper
 
     /**
      *
-     * @param \wxsdk\pay\WxPayUnifiedOrder $input
+     * @param WxPayUnifiedOrder $input
      * @param int $year
-     * @return bool|\wxsdk\pay\WxPayUnifiedOrder
+     * @return bool|WxPayUnifiedOrder
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public static function fee($input, $year)
     {
@@ -82,6 +96,13 @@ class OrderOper
         return $input;
     }
 
+    /**
+     * @param $value
+     * @param $uname
+     * @param $trans
+     * @param $d
+     * @throws Exception
+     */
     private static function handleFee($value, $uname, $trans, $d)
     {
         $value = intval($value) + 1;
@@ -154,13 +175,13 @@ class OrderOper
                     WxTemp::notifyFee($res['openid'],
                         $res['unique_name'],
                         intval($total_fee) / 100,
-                        FeeOper::cache_fee($res['unique_name']),
+                        FeeOper::cache_fee($res['unique_name'])->format("Y-m-d H:i:s"),
                         $res['label']);
                     break;
                 default:
                     throw new Exception('无名氏 ' . json_encode($map) . ' ' . json_encode($res) . ' ' . json_encode($ins));
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Db::rollback();
             $e = $e->getMessage();
             trace('NotifyProcess ' . $e . json_encode($data), MysqlLog::ERROR);

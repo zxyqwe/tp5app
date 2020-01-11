@@ -2,6 +2,8 @@
 
 namespace hanbj;
 
+use DateInterval;
+use DateTimeImmutable;
 use Exception;
 use PDOStatement;
 use think\Collection;
@@ -192,6 +194,18 @@ class MemberOper
             $data[] = $item['u'] . '~' . $item['t'];
         }
         return $data;
+    }
+
+    /**
+     * @param $start_time
+     * @return DateInterval
+     * @throws Exception
+     */
+    public static function calc_duration($start_time)
+    {
+        $start = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $start_time);
+        $now = new DateTimeImmutable();
+        return $now->diff($start);
     }
 
     /**

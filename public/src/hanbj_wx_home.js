@@ -272,6 +272,7 @@ var wx_home = (function ($, Vue, w, undefined) {
                 }
                 vvalid.items.push.apply(vvalid.items, da);
                 vvalid.real_year = msg.real_year;
+                vvalid.real_year_str = msg.real_year_str;
             },
             error: w.msgto,
             complete: function () {
@@ -319,7 +320,8 @@ var wx_home = (function ($, Vue, w, undefined) {
             data: {
                 items: [],
                 cur_year: new Date().getFullYear(),
-                real_year: 0
+                real_year: 0,
+                real_year_str: ""
             },
             ready: function () {
             }
