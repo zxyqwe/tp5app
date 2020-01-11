@@ -4,6 +4,9 @@ namespace hanbj;
 
 
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
 use util\MysqlLog;
 
@@ -13,6 +16,13 @@ class UserOper
     const WX_VERSION = 'wx_succ_2';
     const time = 60;
 
+    /**
+     * @param $unique
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function limit($unique)
     {
         return in_array($unique, self::reg());
@@ -24,6 +34,12 @@ class UserOper
         return array_unique($data);
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function pretty_toplist()
     {
         return MemberOper::pretty_tieba(MemberOper::get_tieba(self::toplist()));
@@ -34,6 +50,12 @@ class UserOper
         return in_array($unique, self::toplist());
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function reg()
     {
         // uniq in current fame
@@ -62,6 +84,11 @@ class UserOper
         return array_unique($data);
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function login()
     {
         $unique = session('unique_name');
@@ -77,6 +104,12 @@ class UserOper
         trace("$unique 登录微信", MysqlLog::LOG);
     }
 
+    /**
+     * @param $nonce
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function nonce($nonce)
     {
         $unique = session('unique_name');
@@ -88,6 +121,12 @@ class UserOper
         trace("$unique 登录网页", MysqlLog::INFO);
     }
 
+    /**
+     * @param $json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function valid_pc($json)
     {
         $unique = session('unique_name');
@@ -109,6 +148,7 @@ class UserOper
 
     public static function wx_login()
     {
+        self::try_fake_wx_id_for_developer();
         if (self::WX_VERSION !== session('wx_login')) {
             session(null);
         } else {
@@ -139,5 +179,38 @@ class UserOper
             $tieba = session('tieba_id');
             trace("微信访问 $uniq $tieba $controller $action", MysqlLog::LOG);
         }
+    }
+
+    private static function try_fake_wx_id_for_developer()
+    {
+        if (session('unique_name') !== HBConfig::CODER) {
+            return;
+        }
+        if (!cache("?set_fake_wx_id")) {
+            return;
+        }
+        $openid = cache("set_fake_wx_id");
+        session('openid', $openid);
+        session('unique_name', $openid);
+    }
+
+    public static function set_fake_wx_id($unique)
+    {
+        $ret = Db::table('member')
+            ->where([
+                'unique_name' => $unique
+            ])
+            ->value('openid');
+        if (null !== $ret) {
+            $ret = strval($ret);
+            cache("set_fake_wx_id", $ret, 600);
+        }
+        return $ret;
+    }
+
+    public static function clear_login_session()
+    {
+        session(null);
+        return "清除";
     }
 }
