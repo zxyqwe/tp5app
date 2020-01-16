@@ -163,6 +163,7 @@ class System extends Controller
         }
         $res = Db::table('payout')
             ->alias('f')
+            ->where($map)
             ->join($join)
             ->order('f.id', 'desc')
             ->limit($offset, $size)
