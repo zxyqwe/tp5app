@@ -187,6 +187,7 @@ class System extends Controller
         $data['rows'] = $res;
         $total = Db::table('payout')
             ->alias('f')
+            ->where($map)
             ->count();
         $data['total'] = $total;
         return json($data);
