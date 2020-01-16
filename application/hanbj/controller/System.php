@@ -146,7 +146,7 @@ class System extends Controller
      * @throws ModelNotFoundException
      * @throws DbException
      */
-    public function payout()
+    public function json_payout()
     {
         $size = input('post.limit', 20, FILTER_VALIDATE_INT);
         $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
