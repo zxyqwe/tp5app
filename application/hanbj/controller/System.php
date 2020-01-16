@@ -152,9 +152,15 @@ class System extends Controller
         $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
         $size = min(100, max(0, $size));
         $offset = max(0, $offset);
+        $pass = input('post.pass/b', false, FILTER_VALIDATE_BOOLEAN);
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];
+        $map = [];
+        if ($pass) {
+            $map['actname'] = ['neq', '实名认证'];
+            $map['orgname'] = ['neq', '个人活动'];
+        }
         $res = Db::table('payout')
             ->alias('f')
             ->join($join)
