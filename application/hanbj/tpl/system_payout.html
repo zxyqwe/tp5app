@@ -3,6 +3,14 @@
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>支出明细</h1>
         <div id="body">
+            <div id="simp_form">
+                <form class="form-inline">
+                    <div class="form-group" style="margin-right: 1em">
+                        <span>过滤实名认证：</span>
+                        <input type="checkbox" v-model="pass">
+                    </div>
+                </form>
+            </div>
             <table id="table"
                    data-method="post"
                    data-pagination="true"
@@ -11,7 +19,9 @@
                    data-show-toggle="true"
                    data-show-columns="true"
                    data-url="/hanbj/system/json_payout"
-                   data-page-list="[20, 50, 100]">
+                   data-page-list="[20, 50, 100]"
+                   data-query-params="wxParams"
+                   data-toolbar="#simp_form">
                 <thead>
                 <tr>
                     <th data-field="id" class="sr-only">ID</th>
@@ -38,8 +48,38 @@
     var nav = 'nav4_7';
     var payout = (function ($, w, undefined) {
         'use strict';
-        var $table;
+        var $table, t_data = {};
+        var refresh = function (tmp_data) {
+            t_data = tmp_data;
+            $table.bootstrapTable('refresh');
+        };
+        var build_vue = function () {
+            var vmain = new Vue({
+                el: '#simp_form',
+                data: {
+                    pass: true
+                },
+                methods: {
+                    get_res: function () {
+                        return {
+                            pass: this.pass
+                        }
+                    }
+                }
+            });
+            vmain.$watch('pass', function (nv) {
+                refresh(this.get_res());
+            });
+        };
         var init = function () {
+            build_vue();
+            w.wxParams = function (params) {
+                for (var x in t_data) {
+                    params[x] = t_data[x];
+                }
+                params['_ajax'] = 1;
+                return params;
+            };
             w.codeFormatter = function (value, row) {
                 switch (value) {
                     case '0':
@@ -53,18 +93,25 @@
                     case '4':
                         return '支付失败';
                     case '5':
-                        return '已报告成功';
+                        return '已报告：成功';
                     case '6':
-                        return '已报告失败';
+                        return '已报告：失败';
                 }
                 return value;
             };
             w.priceFormatter = function (value, row) {
+                if (value.length === 2) {
+                    return "0." + value + " 元";
+                }
+                if (value.length < 2) {
+                    return "异常 0." + value + " 元";
+                }
                 return value.substr(0, value.length - 2) + '.' + value.substr(-2) + " 元";
             };
             $table = $('#table');
             $table.bootstrapTable({
                 'pageSize': 20,
+                'silent': true,
                 responseHandler: function (res) {
                     return res;
                 }
