@@ -10,7 +10,13 @@ use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\Db;
 use hanbj\vote\WxOrg;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
+use think\response\View;
 use util\StatOper;
 
 class System extends Controller
@@ -24,6 +30,12 @@ class System extends Controller
         abort(404, "页面不存在$action");
     }
 
+    /**
+     * @return View
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function test()
     {
         $ret = [];
@@ -97,6 +109,12 @@ class System extends Controller
         }
     }
 
+    /**
+     * @return View
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function token()
     {
         $length = 10;
@@ -119,5 +137,51 @@ class System extends Controller
 
         $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
         return view('token', ['data' => $map]);
+    }
+
+    /**
+     * @return Json
+     * @throws Exception
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
+    public function payout()
+    {
+        $size = input('post.limit', 20, FILTER_VALIDATE_INT);
+        $offset = input('post.offset', 0, FILTER_VALIDATE_INT);
+        $size = min(100, max(0, $size));
+        $offset = max(0, $offset);
+        $join = [
+            ['member m', 'm.openid=f.openid', 'left']
+        ];
+        $res = Db::table('payout')
+            ->alias('f')
+            ->join($join)
+            ->order('f.id', 'desc')
+            ->limit($offset, $size)
+            ->field([
+                'f.id',
+                'm.unique_name as u',
+                'm.tieba_id as e',
+                'f.tradeid as o',
+                'f.realname as t',
+                'f.fee as f',
+                'f.desc as y',
+                'f.gene_time as v',
+                'f.payment_no as l',
+                'f.payment_time as i',
+                'f.status as s',
+                'f.nickname as n',
+                'f.orgname as r',
+                'f.actname as a'
+            ])
+            ->select();
+        $data['rows'] = $res;
+        $total = Db::table('payout')
+            ->alias('f')
+            ->count();
+        $data['total'] = $total;
+        return json($data);
     }
 }
