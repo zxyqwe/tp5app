@@ -37,6 +37,7 @@ class HanbjOrderStat extends BaseStat
         if ($fetch_date === false) {
             return false;
         }
+        $fetch_date = $fetch_date->format(StatOper::TIME_FORMAT);
         trace("HanbjOrderStat::generateOneDay $fetch_date", MysqlLog::INFO);
         $ret = Db::table('order')
             ->where([

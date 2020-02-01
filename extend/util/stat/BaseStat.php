@@ -61,7 +61,7 @@ abstract class BaseStat
 
     /**
      * @param $stat_type
-     * @return bool|string
+     * @return bool|DateTimeImmutable
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
@@ -81,6 +81,6 @@ abstract class BaseStat
         if ($current_new_day >= $this->today) {
             return false;
         }
-        return $current_new_day->format(StatOper::TIME_FORMAT);
+        return $current_new_day;
     }
 }

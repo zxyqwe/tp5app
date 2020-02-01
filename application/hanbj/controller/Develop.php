@@ -302,21 +302,22 @@ class Develop extends Controller
 //            ->order('id')
 //            ->find();
 
-        $ret = Db::table('member')
-            ->where([
-                'code' => ['not in', [MemberOper::UNUSED, MemberOper::DELETED_HISTORY]],
-                'start_time' => ''
-            ])
-            ->field([
-                'unique_name', 'year_time', 'code'
-            ])
-            ->select();
+//        $ret = Db::table('member')
+//            ->where([
+//                'code' => ['not in', [MemberOper::UNUSED, MemberOper::DELETED_HISTORY]],
+//                'start_time' => ''
+//            ])
+//            ->field([
+//                'unique_name', 'year_time', 'code'
+//            ])
+//            ->select();
 
 //        $u_log = Db::table('logs')
 //            ->where(['msg' => ['like', '%磬癸亥%']])
 //            ->field('msg')
 //            ->select();
 
+        $ret = StatOper::OutputAll(StatOper::HANBJ_WEEK_REPORT);
         return json([
             'msg' => $ret,
 //            'first' => $first,
