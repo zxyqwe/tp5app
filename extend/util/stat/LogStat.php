@@ -36,6 +36,7 @@ class LogStat extends BaseStat
         if ($fetch_date === false) {
             return false;
         }
+        $fetch_date = $fetch_date->format(StatOper::TIME_FORMAT);
         trace("LogStat::generateOneDay $fetch_date", MysqlLog::INFO);
         $ret = Db::table('logs')
             ->where([

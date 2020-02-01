@@ -5,9 +5,11 @@ namespace util;
 
 use hanbj\weixin\WxTemp;
 use think\Db;
+use think\Db\Query;
 use think\exception\HttpResponseException;
 use util\stat\BaseStat;
 use util\stat\HanbjOrderStat;
+use util\stat\HanbjWeekStat;
 use util\stat\LogStat;
 
 class StatOper
@@ -16,10 +18,11 @@ class StatOper
 
     const LOG_NUM = 0;
     const HANBJ_ORDER_NUM = 1;
+    const HANBJ_WEEK_REPORT = 2;
 
     /**
      * @param int $type
-     * @return \think\Db\Query
+     * @return Query
      */
     public static function getQuery($type)
     {
@@ -70,6 +73,8 @@ class StatOper
                 return new LogStat();
             case self::HANBJ_ORDER_NUM:
                 return new HanbjOrderStat();
+            case self::HANBJ_WEEK_REPORT:
+                return new HanbjWeekStat();
             default:
                 if (request()->isAjax()) {
                     $res = json(['msg' => "stat type error $type"], 400);

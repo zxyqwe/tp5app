@@ -127,7 +127,7 @@ class MemberOper
     public static function get_open()
     {
         $map['code'] = self::UNUSED;
-        $map['id'] = ['>', 863];
+        $map['id'] = ['>', HBConfig::FIRST_UNAME_ID];
         $ret = Db::table('member')
             ->where($map)
             ->field('unique_name  as u')
