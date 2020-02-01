@@ -62,13 +62,19 @@ class Index extends Controller
         if (cache("?$name"))
             return;
         cache($name, $name, 60 - 10);
-        $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
-        $db->refresh();
-        WxHanbj::addUnionID($db->get());
+
         $db = new WxTokenJsapi('HANBJ_JSAPI', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
         $db = new WxTokenTicketapi('HANBJ_TICKETAPI', config('hanbj_api'), config('hanbj_secret'));
         $db->refresh();
+        $db = new WxTokenAccess('HANBJ_ACCESS', config('hanbj_api'), config('hanbj_secret'));
+        $db->refresh();
+
+        if (ValidateTimeOper::NotGoodForAnything()) {
+            return;
+        }
+
+        WxHanbj::addUnionID($db->get());
         MemberOper::daily();
 
         PayoutOper::generateAnyTodo();

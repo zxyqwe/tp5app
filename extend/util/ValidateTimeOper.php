@@ -34,4 +34,18 @@ class ValidateTimeOper
         }
         return false;
     }
+
+    public static function NotGoodForAnything()
+    {
+        $now = getdate();
+        $hour = $now['hours']; // 0 ~ 23
+        $minutes = $now['minutes']; // 0 ~ 59
+        if ($hour === 0 && $minutes < 3) {
+            return true;
+        }
+        if ($hour === 23 && $minutes > 56) {
+            return true;
+        }
+        return false;
+    }
 }
