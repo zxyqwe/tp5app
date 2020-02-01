@@ -5,6 +5,9 @@ namespace util\stat;
 use DateInterval;
 use DateTimeImmutable;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use util\MysqlLog;
 use util\StatOper;
 
@@ -21,23 +24,18 @@ class LogStat extends BaseStat
         $this->time_interval = new DateInterval("P1D");
     }
 
+    /**
+     * @return array|bool|false
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function generateOneDay()
     {
-        $current_new_day = StatOper::getQuery(StatOper::LOG_NUM)
-            ->order('time desc')
-            ->field('time as t')
-            ->find();
-        if (null === $current_new_day) {
-            $current_new_day = $this->first_day;
-        } else {
-            $current_new_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, $current_new_day['t']);
-            $current_new_day = $current_new_day->add($this->time_interval);
-        }
-        if ($current_new_day >= $this->today) {
+        $fetch_date = self::fetch_date(StatOper::LOG_NUM);
+        if ($fetch_date === false) {
             return false;
         }
-
-        $fetch_date = $current_new_day->format(StatOper::TIME_FORMAT);
         trace("LogStat::generateOneDay $fetch_date", MysqlLog::INFO);
         $ret = Db::table('logs')
             ->where([
@@ -56,36 +54,25 @@ class LogStat extends BaseStat
         return [$fetch_date, json_encode($ret), $desc];
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function OutputAll()
     {
         $all_catg = MysqlLog::get_level();
-        $template = [];
-        foreach ($all_catg as $item) {
-            $template[$item] = [];
-        }
-        $time_range = [];
-        $content = StatOper::getQuery(StatOper::LOG_NUM)
-            ->order('time asc')
-            ->field(['time', 'content'])
-            ->cache("StatOper" . StatOper::LOG_NUM, 3600)
-            ->select();
-        foreach ($content as $item) {
-            $time_range[] = $item['time'];
-            $data = json_decode($item['content'], true);
-            $data = $this->build_kv($data);
-            foreach ($all_catg as $k) {
-                $template[$k][] = $data[$k];
-            }
-        }
-        return [
-            'time' => $time_range,
-            'data' => $template
-        ];
+        return self::output(StatOper::LOG_NUM, $all_catg);
     }
 
-    private function build_kv($select_ret)
+    /**
+     * @param $select_ret
+     * @param $all_catg
+     * @return array
+     */
+    protected function build_kv($select_ret, $all_catg)
     {
-        $all_catg = MysqlLog::get_level();
         $data = [];
         foreach ($select_ret as $item) {
             $data[$item['type']] = $item['num'];
