@@ -37,7 +37,7 @@ class HanbjWeekStat extends BaseStat
         if ($fetch_date === false) {
             return false;
         }
-        trace("HanbjWeekStat::generateOneDay $fetch_date", MysqlLog::INFO);
+        trace("HanbjWeekStat::generateOneDay " . $fetch_date->format(StatOper::TIME_FORMAT), MysqlLog::INFO);
         $start_date = $fetch_date->sub($this->time_interval);
         $time_range = [$start_date->format("Y-m-d H:i:s"), $fetch_date->format("Y-m-d H:i:s")];
 

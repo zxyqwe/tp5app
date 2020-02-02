@@ -16,6 +16,7 @@ class LogStat extends BaseStat
     function __construct()
     {
         $this->today = new DateTimeImmutable();
+        $this->today = $this->today->setTime(0, 0, 0);
         $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-29");
         $this->time_interval = new DateInterval("P1D");
     }
