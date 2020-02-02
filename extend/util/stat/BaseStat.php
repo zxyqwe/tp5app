@@ -11,6 +11,10 @@ use util\StatOper;
 
 abstract class BaseStat
 {
+    protected $today;
+    protected $first_day;
+    protected $time_interval;
+
     /**
      * @return false|array(string, string)
      */
