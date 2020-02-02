@@ -14,10 +14,6 @@ use util\StatOper;
 
 class HanbjOrderStat extends BaseStat
 {
-    private $today;
-    private $first_day;
-    private $time_interval;
-
     function __construct()
     {
         $this->today = new DateTimeImmutable();

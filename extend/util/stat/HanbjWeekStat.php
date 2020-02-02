@@ -16,13 +16,9 @@ use util\StatOper;
 
 class HanbjWeekStat extends BaseStat
 {
-    private $today;
-    private $first_day;
-    private $time_interval;
-
     function __construct()
     {
-        $this->today = new DateTimeImmutable();
+        $this->today = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, (new DateTimeImmutable())->format(StatOper::TIME_FORMAT));
         $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-29");
         $this->time_interval = new DateInterval("P7D");
     }
@@ -142,6 +138,9 @@ class HanbjWeekStat extends BaseStat
         ];
         // 会员：汇总当前会员状态，可选号码数量，新加入会员数量
         $group = Db::table("member")
+            ->where([
+                "code" => ["neq", MemberOper::TEMPUSE]
+            ])
             ->group("code")
             ->field([
                 "count(1) as c",
@@ -157,7 +156,8 @@ class HanbjWeekStat extends BaseStat
             ->find();
         $new_group = Db::table("member")
             ->where([
-                "start_time" => ['between', $time_range]
+                "start_time" => ['between', $time_range],
+                "code" => ["neq", MemberOper::TEMPUSE]
             ])
             ->group("code")
             ->field([
