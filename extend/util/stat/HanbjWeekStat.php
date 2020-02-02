@@ -19,7 +19,8 @@ class HanbjWeekStat extends BaseStat
     function __construct()
     {
         $this->today = new DateTimeImmutable();
-        $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-29");
+        $this->today = $this->today->setTime(0, 0, 0);
+        $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-28");
         $this->first_day = $this->first_day->setTime(0, 0, 0);
         $this->time_interval = new DateInterval("P7D");
     }
