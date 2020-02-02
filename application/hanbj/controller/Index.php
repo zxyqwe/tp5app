@@ -84,8 +84,17 @@ class Index extends Controller
 
         // 2点以后
         if (ValidateTimeOper::GoodForBackup()) {
-            StatOper::generateOneDay(StatOper::LOG_NUM);
-            StatOper::generateOneDay(StatOper::HANBJ_ORDER_NUM);
+            $stat_type = [
+                StatOper::LOG_NUM,
+                StatOper::HANBJ_ORDER_NUM,
+                StatOper::HANBJ_WEEK_REPORT
+            ];
+            foreach ($stat_type as $type) {
+                $ret = StatOper::generateOneDay($type);
+                if ($ret > 0) {
+                    break;
+                }
+            }
             ActivityOper::revokeTest();
         }
 
