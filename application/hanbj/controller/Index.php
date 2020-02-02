@@ -95,14 +95,14 @@ class Index extends Controller
             TodoOper::noticeAny();
         }
 
-        if (ValidateTimeOper::IsYearEnd()) {
-            WxVote::try_add_todo();
-            foreach (WxOrg::vote_cart as $item) {
-                $org = new WxOrg(intval($item));
-                $org->try_add_todo();
-            }
-        }
-        WxOrg::cancel_all_todo();
-        WxVote::cancel_all_todo();
+//        if (ValidateTimeOper::IsYearEnd()) {
+//            WxVote::try_add_todo();
+//            foreach (WxOrg::vote_cart as $item) {
+//                $org = new WxOrg(intval($item));
+//                $org->try_add_todo();
+//            }
+//        }
+//        WxOrg::cancel_all_todo();
+//        WxVote::cancel_all_todo();
     }
 }

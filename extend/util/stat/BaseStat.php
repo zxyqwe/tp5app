@@ -82,6 +82,7 @@ abstract class BaseStat
             $current_new_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, $current_new_day['t']);
             $current_new_day = $current_new_day->add($this->time_interval);
         }
+        $current_new_day = $current_new_day->setTime(0, 0, 0, 0);
         if ($current_new_day >= $this->today) {
             return false;
         }
