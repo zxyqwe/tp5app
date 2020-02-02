@@ -19,7 +19,7 @@ class ValidateTimeOper
     {
         $now = getdate();
         $hour = $now['hours']; // 0 ~ 23
-        if ($hour < 2 || $hour > 6) {
+        if ($hour < 2 || $hour > 19) {
             return false;
         }
         return true;
