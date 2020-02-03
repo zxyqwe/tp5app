@@ -192,4 +192,20 @@ class System extends Controller
         $data['total'] = $total;
         return json($data);
     }
+
+    public function json_week()
+    {
+        $sel_date = input("post.date");
+        $sel_date = strval($sel_date);
+        $ret = Db::table("stat")
+            ->where([
+                "type" => StatOper::HANBJ_WEEK_REPORT,
+                "time" => ["eq", $sel_date]
+            ])
+            ->value("content");
+        if (null === $ret) {
+            return json(["msg" => "$sel_date 不存在"], 400);
+        }
+        return json(['data' => $ret]);
+    }
 }

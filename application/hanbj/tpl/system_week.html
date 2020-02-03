@@ -29,35 +29,62 @@
     var nav = 'nav4_8';
     var week_report = (function ($, w, undefined) {
         'use strict';
-        var vmain, first_day = new Date(2019, 1, 28, 0, 0, 0), today = new Date(), one_day_ms = 86400 * 1000;
+        var vmain, first_day = new Date(2019, 0, 29, 1, 0, 0), today = new Date(), one_week_ms = 7 * 86400 * 1000,
+            init_all_weeks = [];
+        var get_data = function (sel_date) {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u25,
+                dataType: "json",
+                data: {
+                    _ajax: 1,
+                    date: sel_date
+                },
+                success: function (msg) {
+                    vmain.current_week = msg.data;
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        };
         var init_week = function () {
             var tmp_day = first_day;
             while (tmp_day < today) {
                 var start_day_desc = new Date;
-                start_day_desc.setTime(tmp_day.getTime() - one_day_ms);
+                start_day_desc.setTime(tmp_day.getTime() - one_week_ms);
                 start_day_desc = start_day_desc.toISOString().split("T")[0];
                 var end_dat_desc = tmp_day.toISOString().split("T")[0];
-                vmain.all_weeks.push({desc: start_day_desc + " ~ " + end_dat_desc, end: end_dat_desc});
+                var desc = start_day_desc + " ~ " + end_dat_desc;
+                init_all_weeks.push({desc: desc, end: end_dat_desc});
+                console.log(desc);
+                tmp_day.setTime(tmp_day.getTime() + one_week_ms);
             }
+            init_all_weeks = init_all_weeks.reverse();
         };
         var build_vue = function () {
             vmain = new Vue({
                 el: '#vue_body',
                 data: {
                     week_selected: undefined,
-                    all_weeks: [],
+                    all_weeks: init_all_weeks,
                     current_week: []
                 },
                 methods: {},
                 ready: function () {
-                    init_week();
+                    this.week_selected = this.all_weeks[0].end;
+                    get_data(this.week_selected);
                 }
             });
             vmain.$watch('week_selected', function (nv) {
-                console.log("week_selected " + nv.toString());
+                console.log("week_selected " + nv);
+                get_data(nv);
             });
         };
         var init = function () {
+            init_week();
             build_vue();
         };
         return {
