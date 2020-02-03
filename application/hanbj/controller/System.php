@@ -206,6 +206,6 @@ class System extends Controller
         if (null === $ret) {
             return json(["msg" => "$sel_date 不存在"], 400);
         }
-        return json(['data' => $ret]);
+        return json(['data' => json_decode($ret, true)]);
     }
 }
