@@ -85,7 +85,7 @@ var nav_active = (function ($, w, undefined) {
         w.u22 = base + develop + 'logdata';
         w.u23 = base + system + 'hanbjorderdata';
         w.u24 = base + pub + 'json_vote';
-        w.u25 = base + pub + 'json_week';
+        w.u25 = base + system + 'json_week';
     };
     var init = function () {
         dict();
