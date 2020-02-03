@@ -1,0 +1,70 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>汉北周报汇总</h1>
+        <div id="vue_body" v-cloak>
+            <div class="row">
+                <div class="panel panel-info">
+                    <div class="panel-heading">选择</div>
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">周</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" v-model="week_selected">
+                                        <option v-for="week in all_weeks" :value="week.end">{{ week.desc }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var nav = 'nav4_8';
+    var week_report = (function ($, w, undefined) {
+        'use strict';
+        var vmain, first_day = new Date(2019, 1, 28, 0, 0, 0), today = new Date(), one_day_ms = 86400 * 1000;
+        var init_week = function () {
+            var tmp_day = first_day;
+            while (tmp_day < today) {
+                var start_day_desc = new Date;
+                start_day_desc.setTime(tmp_day.getTime() - one_day_ms);
+                start_day_desc = start_day_desc.toISOString().split("T")[0];
+                var end_dat_desc = tmp_day.toISOString().split("T")[0];
+                vmain.all_weeks.push({desc: start_day_desc + " ~ " + end_dat_desc, end: end_dat_desc});
+            }
+        };
+        var build_vue = function () {
+            vmain = new Vue({
+                el: '#vue_body',
+                data: {
+                    week_selected: undefined,
+                    all_weeks: [],
+                    current_week: []
+                },
+                methods: {},
+                ready: function () {
+                    init_week();
+                }
+            });
+            vmain.$watch('week_selected', function (nv) {
+                console.log("week_selected " + nv.toString());
+            });
+        };
+        var init = function () {
+            build_vue();
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    $(window).load(function () {
+        week_report.init();
+    });
+</script>
