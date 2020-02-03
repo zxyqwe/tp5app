@@ -4,23 +4,61 @@
         <h1>汉北周报汇总</h1>
         <div id="vue_body" v-cloak>
             <div class="row">
-                <div class="panel panel-info">
-                    <div class="panel-heading">选择</div>
-                    <div class="panel-body">
-                        <div class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">周</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" v-model="week_selected">
-                                        <option v-for="week in all_weeks" :value="week.end">{{ week.desc }}</option>
-                                    </select>
-                                </div>
+                <div class="col-md-10 col-md-offset-1 column">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">选择周</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" v-model="week_selected">
+                                    <option v-for="week in all_weeks" :value="week.end">{{ week.desc }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">时间区间</div>
+                        <div class="panel-body">
+                            <p>{{ current_week.tr }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.act }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.wxc }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.fame.f1 }}</p>
+                            <p>{{ current_week.fame.f2 }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.log.rpc }}</p>
+                            <p>{{ current_week.log.wx }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.m.g }}</p>
+                            <p>{{ current_week.m.un }}</p>
+                            <p>{{ current_week.m.ng }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.fee }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.o }}</p>
+                        </div>
+                        <div class="panel-heading"></div>
+                        <div class="panel-body">
+                            <p>{{ current_week.pay.r }}</p>
+                            <p>{{ current_week.pay.p }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
             </div>
         </div>
     </div>
@@ -70,7 +108,7 @@
                 data: {
                     week_selected: undefined,
                     all_weeks: init_all_weeks,
-                    current_week: []
+                    current_week: {}
                 },
                 methods: {},
                 ready: function () {
