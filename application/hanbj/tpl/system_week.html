@@ -18,45 +18,160 @@
                     <div class="panel panel-info">
                         <div class="panel-heading">时间区间</div>
                         <div class="panel-body">
-                            <p>{{ current_week.tr }}</p>
+                            <p>起点： {{ current_week.tr[0] }} 终点： {{ current_week.tr[1] }}</p>
                         </div>
-                        <div class="panel-heading"></div>
+                        <template v-if="current_week.act.an > 0">
+                            <div class="panel-heading">活动登记</div>
+                            <div class="panel-body">
+                                <p>登记活动数量： {{ current_week.act.an }}</p>
+                                <p>登记参与者数量： {{ current_week.act.un }} ，其中志愿者数量： {{ current_week.act.vb }}</p>
+                                <p>发放积分数量： {{ current_week.act.ab }} 分</p>
+                            </div>
+                        </template>
+                        <div class="panel-heading">微信会员卡</div>
                         <div class="panel-body">
-                            <p>{{ current_week.act }}</p>
+                            <p>共发放 {{ current_week.wxc.c }} 张微信会员卡，其中激活数量为： {{ current_week.wxc.s }}</p>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">当前吧务组</div>
                         <div class="panel-body">
-                            <p>{{ current_week.wxc }}</p>
+                            <p>共 {{ current_week.fame.f1.nl }} 个部门，登记在册 {{ current_week.fame.f1.un }} 名成员</p>
+                            <p>其中：</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>任职级别</th>
+                                    <th>数量</th>
+                                </tr>
+                                <template v-for="level in current_week.fame.f2">
+                                    <tr>
+                                        <td>{{ level.g | grade_code }}</td>
+                                        <td>{{ level.c }}</td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">与小程序交互</div>
                         <div class="panel-body">
-                            <p>{{ current_week.fame.f1 }}</p>
-                            <p>{{ current_week.fame.f2 }}</p>
+                            <p>次数： {{ current_week.log.rpc.c }}</p>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">与微信公众号交互</div>
                         <div class="panel-body">
-                            <p>{{ current_week.log.rpc }}</p>
-                            <p>{{ current_week.log.wx }}</p>
+                            <p>公众号事件：</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>事件类型</th>
+                                    <th>数量</th>
+                                </tr>
+                                <template v-for="item in current_week.log.wx">
+                                    <tr>
+                                        <td>{{ $key | trans_wx_event }}</td>
+                                        <td>{{ item }}</td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">会员信息</div>
                         <div class="panel-body">
-                            <p>{{ current_week.m.g }}</p>
-                            <p>{{ current_week.m.un }}</p>
-                            <p>{{ current_week.m.ng }}</p>
+                            <p>可选会员编号： {{ current_week.m.un.c }} 个</p>
+                            <p>当前会员状态：</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>会员类别</th>
+                                    <th>数量</th>
+                                </tr>
+                                <template v-for="item in current_week.m.g">
+                                    <tr>
+                                        <td>{{ item.s | trans_mem }}</td>
+                                        <td>{{ item.c }}</td>
+                                    </tr>
+                                </template>
+                            </table>
+                            <p>新加入会员信息：</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>会员类别</th>
+                                    <th>数量</th>
+                                </tr>
+                                <template v-for="item in current_week.m.ng">
+                                    <tr>
+                                        <td>{{ item.s | trans_mem }}</td>
+                                        <td>{{ item.c }}</td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">会费登记情况</div>
                         <div class="panel-body">
-                            <p>{{ current_week.fee }}</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>登记类别</th>
+                                    <th>登记数量</th>
+                                    <th>会员数量</th>
+                                    <th>发放积分</th>
+                                </tr>
+                                <template v-for="item in current_week.fee">
+                                    <tr>
+                                        <td>
+                                            <span v-if="item.s > 0">缴费登记</span>
+                                            <span v-else>撤销记录</span>
+                                        </td>
+                                        <td>{{ item.c }}</td>
+                                        <td>{{ item.un }}</td>
+                                        <td>{{ item.b }}</td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
-                        <div class="panel-heading"></div>
+                        <div class="panel-heading">收入情况</div>
                         <div class="panel-body">
-                            <p>{{ current_week.o }}</p>
+                            <table class="table table-striped table-condensed table-bordered">
+                                <tr>
+                                    <th>收费名目</th>
+                                    <th>订单数量</th>
+                                </tr>
+                                <template v-for="item in current_week.o">
+                                    <tr>
+                                        <td>{{ item.l }}</td>
+                                        <td>{{ item.c }}</td>
+                                    </tr>
+                                </template>
+                            </table>
                         </div>
-                        <div class="panel-heading"></div>
-                        <div class="panel-body">
-                            <p>{{ current_week.pay.r }}</p>
-                            <p>{{ current_week.pay.p }}</p>
-                        </div>
+                        <template v-if="current_week.pay.p.length > 0">
+                            <div class="panel-heading">支出情况</div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed table-bordered">
+                                    <tr>
+                                        <th>订单状态</th>
+                                        <th>订单数量</th>
+                                        <th>支付总金额（单位：分）</th>
+                                    </tr>
+                                    <template v-for="item in current_week.pay.p">
+                                        <tr>
+                                            <td>{{ item.s | order_state }}</td>
+                                            <td>{{ item.c }}</td>
+                                            <td>{{ item.f }}</td>
+                                        </tr>
+                                    </template>
+                                </table>
+                            </div>
+                        </template>
+                        <template v-if="current_week.pay.r.length > 0">
+                            <div class="panel-heading">实名认证</div>
+                            <div class="panel-body">
+                                <table class="table table-striped table-condensed table-bordered">
+                                    <tr>
+                                        <th>订单状态</th>
+                                        <th>订单数量</th>
+                                    </tr>
+                                    <template v-for="item in current_week.pay.r">
+                                        <tr>
+                                            <td>{{ item.s | order_state }}</td>
+                                            <td>{{ item.c }}</td>
+                                        </tr>
+                                    </template>
+                                </table>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -103,6 +218,56 @@
             init_all_weeks = init_all_weeks.reverse();
         };
         var build_vue = function () {
+            Vue.filter('order_state', function (n) {
+                switch (n) {
+                    case '0':
+                        return "初始化";
+                    case '1':
+                        return "发送待办通知";
+                    case '2':
+                        return "已获取授权";
+                    case '3':
+                        return "成功";
+                    case '4':
+                        return "失败";
+                    case '5':
+                        return "成功且通知小程序";
+                    case '6':
+                        return "失败且通知小程序";
+                }
+                return n;
+            });
+            Vue.filter('grade_code', function (n) {
+                return w.grade('' + n);
+            });
+            Vue.filter('trans_mem', function (n) {
+                return w.mem_code('' + n);
+            });
+            Vue.filter('trans_wx_event', function (n) {
+                switch (n) {
+                    case "TEMPLATESENDJOBFINISH":
+                        return "发送微信模板消息给用户";
+                    case "MASSSENDJOBFINISH":
+                        return "群发消息完成";
+                    case "update_member_card":
+                        return "更新用户的会员卡信息";
+                    case "user_enter_session_from_card":
+                        return "用户从会员卡进入公众号";
+                    case "VIEW":
+                        return "用户点击公众号下方菜单";
+                    case "unsubscribe":
+                        return "用户取消关注公众号";
+                    case "subscribe":
+                        return "用户新关注公众号";
+                    case "user_get_card":
+                        return "用户领取微信会员卡";
+                    case "user_view_card":
+                        return "用户浏览微信会员卡";
+                    case "user_del_card":
+                        return "用户删除微信会员卡";
+                }
+                return n;
+            });
             vmain = new Vue({
                 el: '#vue_body',
                 data: {
