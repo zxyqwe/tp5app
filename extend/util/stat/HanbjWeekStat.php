@@ -7,6 +7,7 @@ use DateTimeImmutable;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\OrderOper;
+use hanbj\TodoOper;
 use think\Db;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -252,5 +253,32 @@ class HanbjWeekStat extends BaseStat
     protected function build_kv($select_ret, $all_catg)
     {
         return [];
+    }
+
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function addLastTodo()
+    {
+        $ret = StatOper::getQuery(StatOper::HANBJ_WEEK_REPORT)
+            ->order('time desc')
+            ->field('time as t')
+            ->find();
+        $current_new_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, $ret['t']);
+        $current_new_day = $current_new_day->setTime(0, 0, 0);
+        $key = $current_new_day->getTimestamp();
+        $notified_users = [HBConfig::CODER];
+        $user_map = MemberOper::getIdUnameMap($notified_users);
+        foreach ($notified_users as $user) {
+            $user_id = intval($user_map[$user]);
+            $user_key = $key + $user_id;
+            if (!TodoOper::TestTypeKeyValid(TodoOper::WEEK_REPORT, $user_key)) {
+                continue;
+            }
+            trace("Add WeekReport $user : $key + $user_id = $user_key", Mysqllog::LOG);
+            TodoOper::RecvTodoFromOtherOper(TodoOper::WEEK_REPORT, $user_key, $ret['t'], $user);
+        }
     }
 }

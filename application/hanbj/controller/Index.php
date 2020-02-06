@@ -12,6 +12,7 @@ use hanbj\weixin\WxHanbj;
 use think\Controller;
 use think\exception\HttpResponseException;
 use util\BackupOper;
+use util\stat\HanbjWeekStat;
 use util\StatOper;
 use util\ValidateTimeOper;
 use wxsdk\WxTokenAccess;
@@ -102,6 +103,8 @@ class Index extends Controller
         if (ValidateTimeOper::IsDayUp()) {
             BackupOper::run();
             TodoOper::noticeAny();
+            $week_report = new HanbjWeekStat();
+            $week_report->addLastTodo();
         }
 
 //        if (ValidateTimeOper::IsYearEnd()) {
