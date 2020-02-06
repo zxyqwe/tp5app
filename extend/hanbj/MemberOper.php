@@ -165,6 +165,23 @@ class MemberOper
 
     /**
      * @param $list
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getIdUnameMap($list)
+    {
+        $users = self::get_tieba($list);
+        $kv = [];
+        foreach ($users as $idx) {
+            $kv[$idx['u']] = $idx['id'];
+        }
+        return $kv;
+    }
+
+    /**
+     * @param $list
      * @return array|false|PDOStatement|string|Collection
      * @throws DataNotFoundException
      * @throws DbException
@@ -178,6 +195,7 @@ class MemberOper
         $res = Db::table('member')
             ->where(['unique_name' => ['in', $list]])
             ->field([
+                'id',
                 'tieba_id as t',
                 'unique_name as u',
                 'openid as o'
@@ -406,6 +424,13 @@ class MemberOper
         }
     }
 
+    /**
+     * @param $unique_name
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function Temp2Junior($unique_name)
     {
         if (FeeOper::owe($unique_name)) {
@@ -440,6 +465,13 @@ class MemberOper
         }
     }
 
+    /**
+     * @param $unique_name
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function Junior2Temp($unique_name)
     {
         if (!FeeOper::owe($unique_name, -1)) {
@@ -464,6 +496,21 @@ class MemberOper
         }
     }
 
+    /**
+     * @param $unique_name
+     * @param $tieba_id
+     * @param $gender
+     * @param $phone
+     * @param $QQ
+     * @param $master
+     * @param $eid
+     * @param $rn
+     * @param $mail
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function Junior2Normal($unique_name, $tieba_id, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
     {
         if (FeeOper::owe($unique_name)) {
@@ -496,6 +543,13 @@ class MemberOper
         }
     }
 
+    /**
+     * @param $unique_name
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function Normal2Banned($unique_name)
     {
         if (!FeeOper::owe($unique_name, -2)) {
@@ -540,6 +594,14 @@ class MemberOper
         return $ret;
     }
 
+    /**
+     * @param $unique_name
+     * @param int $panelty
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     private static function Banned2Normal($unique_name, $panelty = 2)
     {
         if (FeeOper::owe($unique_name, $panelty)) {

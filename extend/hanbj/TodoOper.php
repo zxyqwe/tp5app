@@ -17,12 +17,13 @@ class TodoOper
     const PAT_OUT = 1;
     const VOTE_ORG = 2;
     const VOTE_TOP = 3;
+    const WEEK_REPORT = 4;
 
     const UNDO = 0;
     const DONE = 1;
     const FAIL_FOREVER = 2;
 
-    const VALID_TYPE = [self::PAT_OUT, self::VOTE_ORG, self::VOTE_TOP];
+    const VALID_TYPE = [self::PAT_OUT, self::VOTE_ORG, self::VOTE_TOP, self::WEEK_REPORT];
     const VALID_RESULT = [self::DONE, self::FAIL_FOREVER];
 
     private static function Speak($type)
@@ -196,17 +197,23 @@ class TodoOper
 
     private static function handleDetail($type, $key, $result)
     {
-        if ($type === self::PAT_OUT) {
-            if ($result === self::DONE) {
-                PayoutOper::authOneTodo($key);
-            } else {
-                PayoutOper::cancelOneTodo($key);
-            }
-        } elseif ($type === self::VOTE_ORG) {
-        } elseif ($type === self::VOTE_TOP) {
-        } else {
-            Db::rollback();
-            throw new HttpResponseException(json(['msg' => "handleDetail($type, $key, $result) type err"]));
+        switch ($type) {
+            case self::PAT_OUT:
+                {
+                    if ($result === self::DONE) {
+                        PayoutOper::authOneTodo($key);
+                    } else {
+                        PayoutOper::cancelOneTodo($key);
+                    }
+                }
+                break;
+            case self::VOTE_ORG:
+            case self::VOTE_TOP:
+            case self::WEEK_REPORT:
+                break;
+            default:
+                Db::rollback();
+                throw new HttpResponseException(json(['msg' => "handleDetail($type, $key, $result) type err"]));
         }
     }
 }
