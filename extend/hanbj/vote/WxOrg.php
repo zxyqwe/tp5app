@@ -380,7 +380,8 @@ class WxOrg
             } else {
                 trace("投票update $uname {$this->catg} $obj", MysqlLog::INFO);
             }
-            $id_key = $this->calc_int($obj, $uname);
+            $user_id = MemberOper::getIdUnameMap([$uname]);
+            $id_key = $this->calc_int($obj, intval($user_id[$uname]));
             if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
                 TodoOper::handleTodo(TodoOper::VOTE_ORG, $id_key, TodoOper::DONE);
             }
@@ -398,23 +399,11 @@ class WxOrg
 
     /**
      * @param string $target
-     * @param string $uname
+     * @param int $id_ret
      * @return int
-     * @throws DataNotFoundException
-     * @throws DbException
-     * @throws ModelNotFoundException
      */
-    private function calc_int($target, $uname)
+    private function calc_int($target, $id_ret)
     {
-        $id_ret = Db::table("member")
-            ->where(["unique_name" => $uname])
-            ->field(['id'])
-            ->cache(86400 * 30)
-            ->find();
-        if (null === $id_ret) {
-            throw new HttpResponseException(json(['msg' => "calc_int $target, $uname"], 400));
-        }
-        $id_ret = intval($id_ret['id']);
         $id_target = intval(array_search($target, $this->obj, true));
         $id_catg = intval($this->catg);
         return $id_target + $id_catg * 100 + $id_ret * 10000;
@@ -439,9 +428,10 @@ class WxOrg
         if (count($todo_uname) == 0) {
             return;
         }
+        $id_user_map = MemberOper::getIdUnameMap($todo_uname);
         foreach ($todo_uname as $uname) {
             foreach ($this->obj as $target) {
-                $key = $this->calc_int($target, $uname);
+                $key = $this->calc_int($target, intval($id_user_map[$uname]));
                 if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $key)) {
                     continue;
                 }
