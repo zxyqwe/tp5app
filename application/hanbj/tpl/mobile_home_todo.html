@@ -43,6 +43,16 @@
                             </p>
                         </a>
                     </template>
+                    <template v-if="item.type==4">
+                        <div class="weui-media-box weui-media-box_text" v-on:click="handle_todo(item)">
+                            <h4 class="weui-media-box__title">
+                                {{ title_todo(item) }}
+                            </h4>
+                            <p class="weui-media-box__desc wx-many-line">
+                                最新 {{ item.content.date }} 的周报已生成，点击查看。
+                            </p>
+                        </div>
+                    </template>
                 </template>
             </div>
         </div>
@@ -57,6 +67,7 @@
         var PAT_OUT = 1;
         var VOTE_ORG = 2;
         var VOTE_TOP = 3;
+        var WEEK_REPORT = 4;
         var DONE = 1;
         var FAIL_FOREVER = 2;
         var handle_post = function (type, key, res) {
@@ -106,6 +117,24 @@
                 }]
             });
         };
+        var week_re = function (key) {
+            return weui.confirm(str, {
+                title: '最新周报',
+                buttons: [{
+                    label: '去看',
+                    type: 'primary',
+                    onClick: function () {
+                        w.location.href = "https://app.zxyqwe.com/hanbj/system/week";
+                    }
+                }, {
+                    label: '已阅',
+                    type: 'alert',
+                    onClick: function () {
+                        handle_post(WEEK_REPORT, key, DONE);
+                    }
+                }]
+            });
+        };
         var vue_init = function (todos) {
             vmain = new Vue({
                 el: '#vmain',
@@ -127,6 +156,8 @@
                             case "" + VOTE_ORG:
                             case "" + VOTE_TOP:
                                 return "投票";
+                            case "" + WEEK_REPORT:
+                                return "汉北周报";
                             default:
                                 console.log("什么todo？" + JSON.stringify(item));
                                 return "???";
@@ -136,6 +167,9 @@
                         switch (item.type) {
                             case "" + PAT_OUT:
                                 payout(this.title_fee(item), item.key);
+                                break;
+                            case "" + WEEK_REPORT:
+                                week_re(item.key);
                                 break;
                             default:
                                 w.msgto2(JSON.stringify(item));
