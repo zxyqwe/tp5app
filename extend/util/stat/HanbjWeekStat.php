@@ -278,7 +278,7 @@ class HanbjWeekStat extends BaseStat
                 continue;
             }
             trace("Add WeekReport $user : $key + $user_id = $user_key", Mysqllog::LOG);
-            TodoOper::RecvTodoFromOtherOper(TodoOper::WEEK_REPORT, $user_key, $ret['t'], $user);
+            TodoOper::RecvTodoFromOtherOper(TodoOper::WEEK_REPORT, $user_key, json_encode(["date" => $ret['t']]), $user);
         }
     }
 }
