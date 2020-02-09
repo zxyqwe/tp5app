@@ -117,8 +117,8 @@
                 }]
             });
         };
-        var week_re = function (key) {
-            return weui.confirm(str, {
+        var week_re = function (desc, key) {
+            return weui.confirm("生成时间：" + desc, {
                 title: '最新周报',
                 buttons: [{
                     label: '去看',
@@ -169,7 +169,7 @@
                                 payout(this.title_fee(item), item.key);
                                 break;
                             case "" + WEEK_REPORT:
-                                week_re(item.key);
+                                week_re(item.content.date, item.key);
                                 break;
                             default:
                                 w.msgto2(JSON.stringify(item));
