@@ -28,7 +28,7 @@ class UserOper
         return in_array($unique, self::reg());
     }
 
-    private static function toplist()
+    public static function toplist()
     {
         $data = array_merge(FameOper::getTop(), HBConfig::FIXED);
         return array_unique($data);

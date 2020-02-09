@@ -8,6 +8,7 @@ use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\OrderOper;
 use hanbj\TodoOper;
+use hanbj\UserOper;
 use think\Db;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -269,7 +270,7 @@ class HanbjWeekStat extends BaseStat
         $current_new_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, $ret['t']);
         $current_new_day = $current_new_day->setTime(0, 0, 0);
         $key = $current_new_day->getTimestamp();
-        $notified_users = [HBConfig::CODER];
+        $notified_users = UserOper::toplist();
         $user_map = MemberOper::getIdUnameMap($notified_users);
         foreach ($notified_users as $user) {
             $user_id = intval($user_map[$user]);
