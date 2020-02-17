@@ -50,8 +50,8 @@
         var $table, $modal, $modalbody, $player = undefined;
         w.actionFormatter = function (value, row) {
             return '<a type="button" class="btn btn-success" href="javascript:tap_play(\'' +
-                row.id + row.n + "'" +
-                ',\'video/mp4\')" style="margin-right: 1em;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>'
+                row.id + "\',\'" + row.n +
+                '\')" style="margin-right: 1em;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>';
         };
         w.start_player = function (target_url, target_type) {
             $modal.modal('show');

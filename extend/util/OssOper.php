@@ -8,6 +8,7 @@ use OSS\OssClient;
 class OssOper
 {
     private $client_;
+    private $client_public_;
 
     /**
      * OssOper constructor.
@@ -16,6 +17,7 @@ class OssOper
     function __construct()
     {
         $this->client_ = new OssClient(config('oss_key'), config('oss_sk'), config('oss_end'));
+        $this->client_public_ = new OssClient(config('oss_key'), config('oss_sk'), config('oss_end_pub'));
     }
 
     /**
@@ -98,7 +100,7 @@ class OssOper
     {
         $object = "video/bilibili/$dir/$name";
         $timeout = 3600;
-        $signedUrl = $this->client_->signUrl(config('oss_buk'), $object, $timeout);
+        $signedUrl = $this->client_public_->signUrl(config('oss_buk'), $object, $timeout);
         return $signedUrl;
     }
 
