@@ -1,4 +1,20 @@
 {layout name="layout_pc" /}
+<div class="modal fade" id="vplayer" tabindex="-1" role="dialog" aria-labelledby="vplayerLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="alert_msgLabel">播放器</h4>
+            </div>
+            <div class="modal-body">
+                <video-js id="vplayerdom">
+                </video-js>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid" style="padding-bottom: 70px;">
     <div id="container" class="col-md-10 col-md-offset-1 column">
         <h1>文件目录</h1>
@@ -16,6 +32,7 @@
                    data-page-list="[20, 50, 100, 500, 1000]">
                 <thead>
                 <tr>
+                    <th data-field="action" data-formatter="actionFormatter">播放</th>
                     <th data-field="id" data-sortable="true">目录</th>
                     <th data-field="n" data-sortable="true">文件名</th>
                     <th data-field="s" data-sortable="true">大小</th>
@@ -32,10 +49,38 @@
 <script>
     var oss_show = (function ($, w, undefined) {
         'use strict';
-        var $table;
+        var $table, $modal, $player = undefined;
+        w.priceFormatter = function (value, row) {
+            return '<a type="button" class="btn btn-success" href="javascript:tap_play(' +
+                row.id + row.n +
+                ',\'video/mp4\')" style="margin-right: 1em;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>'
+        };
+        var tap_play = function (target_url, target_type) {
+            $player = videojs('vplayerdom', {
+                controls: true,
+                autoplay: false,
+                preload: 'auto',
+                flvjs: {
+                    mediaDataSource: {
+                        isLive: true,
+                        cors: true,
+                        withCredentials: false,
+                    },
+                    // config: {},
+                },
+                sources: [{
+                    src: target_url,
+                    type: target_type
+                },],
+            });
+        };
         var init = function () {
             $table = $('#table');
             $table.bootstrapTable({});
+            $modal = $('#vplayer');
+            $modal.on('hide.bs.modal', function (e) {
+                $player.dispose();
+            });
         };
         return {
             init: init
