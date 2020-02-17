@@ -19,14 +19,14 @@
     "php": ">=5.6.0",
     "topthink/framework": "5.0.24",
     "endroid/qr-code": "~1.9",
-    "topthink/think-captcha": "^1.0",
-    "phpmailer/phpmailer": "~6.0",
+    "topthink/think-captcha": "=1.0.7",
+    "phpmailer/phpmailer": "=6.0.6",
+    "aliyuncs/oss-sdk-php": "=2.3.1",
     "ext-json": "*",
     "ext-simplexml": "*",
     "ext-libxml": "*",
     "ext-pdo": "*",
-    "ext-http": "*",
-    "aliyuncs/oss-sdk-php": "~2.0"
+    "ext-http": "*"
   },
   "extra": {
     "think-path": "thinkphp"
