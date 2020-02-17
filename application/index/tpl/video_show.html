@@ -10,14 +10,17 @@
                    data-show-refresh="true"
                    data-show-toggle="true"
                    data-show-columns="true"
+                   data-sort-class="table-active"
+                   data-sortable="true"
                    data-url="/index/video/json_show"
                    data-page-list="[20, 50, 100, 500, 1000]">
                 <thead>
                 <tr>
-                    <th data-field="n">文件名</th>
-                    <th data-field="s">大小</th>
+                    <th data-field="id" data-sortable="true">目录</th>
+                    <th data-field="n" data-sortable="true">文件名</th>
+                    <th data-field="s" data-sortable="true">大小</th>
                     <th data-field="e">ETAG</th>
-                    <th data-field="m">修改时间</th>
+                    <th data-field="m" data-sortable="true">修改时间</th>
                     <th data-field="c">存储</th>
                     <th data-field="t">类型</th>
                 </tr>

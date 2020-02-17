@@ -69,9 +69,12 @@ class OssOper
                 if (self::endsWith($oname, '/') || self::endsWith($oname, 'xml')) {
                     continue;
                 }
+                $oname = explode('/', $oname);
+                $oname = array_reverse($oname);
                 $ret[] = [
-                    'n' => $oname,
-                    's' => $objectInfo->getSize(),
+                    'id' => $oname[1],
+                    'n' => $oname[0],
+                    's' => self::readableSize($objectInfo->getSize()),
                     'e' => $objectInfo->getETag(),
                     'm' => $objectInfo->getLastModified(),
                     'c' => $objectInfo->getStorageClass(),
@@ -93,5 +96,16 @@ class OssOper
         }
 
         return (substr($haystack, -$length) === $needle);
+    }
+
+    private static function readableSize($size)
+    {
+        $a = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $pos = 0;
+        while ($size >= 1024) {
+            $size /= 1024;
+            $pos++;
+        }
+        return round($size, 2) . " " . $a[$pos];
     }
 }
