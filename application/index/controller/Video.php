@@ -5,9 +5,9 @@ namespace app\index\controller;
 use hanbj\HBConfig;
 use hanbj\UserOper;
 use OSS\Core\OssException;
-use OSS\OssClient;
 use think\Controller;
 use think\exception\HttpResponseException;
+use util\OssOper;
 
 class Video extends Controller
 {
@@ -44,25 +44,8 @@ class Video extends Controller
     public function show()
     {
         try {
-            $ossClient = new OssClient(config('oss_key'), config('oss_sk'), config('oss_end'));
-            $options = array(
-                'delimiter' => '/',
-                'prefix' => 'video/bilibili/av',
-                'max-keys' => 1000,
-                'marker' => '',
-            );
-            $listObjectInfo = $ossClient->listObjects(config('oss_buk'), $options);
-            $objectList = $listObjectInfo->getObjectList(); // object list
-            $prefixList = $listObjectInfo->getPrefixList(); // directory list
-            $oname = [];
-            foreach ($objectList as $objectInfo) {
-                $oname[] = $objectInfo->getKey();
-            }
-            $pname = [];
-            foreach ($prefixList as $prefixInfo) {
-                $pname[] = $prefixInfo->getPrefix();
-            }
-            return json(['oname' => $oname, 'pname' => $pname]);
+            $oss_client = new OssOper();
+            return json(['oname' => $oss_client->getVideoFile(), 'pname' => $oss_client->getVideoDir()]);
         } catch (OssException $e) {
             throw new HttpResponseException(json(['msg' => $e->getMessage()], 400));
         }
