@@ -65,12 +65,33 @@ class OssOper
             $nextMarker = $listObjectInfo->getNextMarker();
             $objectList = $listObjectInfo->getObjectList(); // object list
             foreach ($objectList as $objectInfo) {
-                $ret[] = $objectInfo->getKey();
+                $oname = $objectInfo->getKey();
+                if (self::endsWith($oname, '/') || self::endsWith($oname, 'xml')) {
+                    continue;
+                }
+                $ret[] = [
+                    'n' => $oname,
+                    's' => $objectInfo->getSize(),
+                    'e' => $objectInfo->getETag(),
+                    'm' => $objectInfo->getLastModified(),
+                    'c' => $objectInfo->getStorageClass(),
+                    't' => $objectInfo->getType()
+                ];
             }
             if ($nextMarker === '') {
                 break;
             }
         }
         return $ret;
+    }
+
+    private static function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
     }
 }

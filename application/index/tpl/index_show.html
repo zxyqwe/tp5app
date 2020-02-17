@@ -1,0 +1,44 @@
+{layout name="layout_pc" /}
+<div class="container-fluid" style="padding-bottom: 70px;">
+    <div id="container" class="col-md-10 col-md-offset-1 column">
+        <h1>文件目录</h1>
+        <div id="body">
+            <table id="table"
+                   data-method="post"
+                   data-pagination="true"
+                   data-search="true"
+                   data-show-refresh="true"
+                   data-show-toggle="true"
+                   data-show-columns="true"
+                   data-url="/index/video/show"
+                   data-page-list="[20, 50, 100, 500, 1000]">
+                <thead>
+                <tr>
+                    <th data-field="n">文件名</th>
+                    <th data-field="s">大小</th>
+                    <th data-field="e">ETAG</th>
+                    <th data-field="m">修改时间</th>
+                    <th data-field="c">存储</th>
+                    <th data-field="t">类型</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    var oss_show = (function ($, w, undefined) {
+        'use strict';
+        var $table;
+        var init = function () {
+            $table = $('#table');
+            $table.bootstrapTable({});
+        };
+        return {
+            init: init
+        };
+    })(jQuery, window);
+    $(window).on("load", function () {
+        oss_show.init();
+    });
+</script>

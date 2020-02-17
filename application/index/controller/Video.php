@@ -41,11 +41,12 @@ class Video extends Controller
         abort(404, "页面不存在$action");
     }
 
-    public function show()
+    public function json_show()
     {
         try {
             $oss_client = new OssOper();
-            return json(['oname' => $oss_client->getVideoFile(), 'pname' => $oss_client->getVideoDir()]);
+            $video_list = $oss_client->getVideoFile();
+            return json($video_list);
         } catch (OssException $e) {
             throw new HttpResponseException(json(['msg' => $e->getMessage()], 400));
         }
