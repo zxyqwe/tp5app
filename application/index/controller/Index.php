@@ -22,6 +22,7 @@ class Index extends Controller
 
     public function qrcode()
     {
+        local_cron();
         $qrCode = new QrCode('https://app.zxyqwe.com/index/index/index');
         $qrCode
             ->setSize(300)
@@ -50,6 +51,7 @@ class Index extends Controller
 
     public function amail()
     {
+        local_cron();
         define('TAG_TIMEOUT_EXCEPTION', true);
         $to = input('post.to');
         $sub = input('post.sub');

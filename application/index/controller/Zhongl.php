@@ -18,6 +18,7 @@ class Zhongl
 
     public function geocode()
     {
+        local_cron();
         $pos = input('post.pos');
         if (empty($pos)) {
             return json(['msg' => 'pos']);
