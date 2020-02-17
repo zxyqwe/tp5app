@@ -51,4 +51,21 @@ class Video extends Controller
             throw new HttpResponseException(json(['msg' => $e->getMessage()], 400));
         }
     }
+
+    public function geturl()
+    {
+        $dir = input('post.dir');
+        $name = input('post.name');
+        try {
+            $oss_client = new OssOper();
+            $url = $oss_client->getUrl($dir, $name);
+            $type = 'video/mp4';
+            if (OssOper::endsWith($name, 'flv')) {
+                $type = 'video/x-flv';
+            }
+            return json(['url' => $url, 'type' => $type]);
+        } catch (OssException $e) {
+            throw new HttpResponseException(json(['msg' => $e->getMessage()], 400));
+        }
+    }
 }
