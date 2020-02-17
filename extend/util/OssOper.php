@@ -88,7 +88,21 @@ class OssOper
         return $ret;
     }
 
-    private static function endsWith($haystack, $needle)
+    /**
+     * @param $dir
+     * @param $name
+     * @return string
+     * @throws OssException
+     */
+    public function getUrl($dir, $name)
+    {
+        $object = "video/bilibili/$dir/$name";
+        $timeout = 3600;
+        $signedUrl = $this->client_->signUrl(config('oss_buk'), $object, $timeout);
+        return $signedUrl;
+    }
+
+    public static function endsWith($haystack, $needle)
     {
         $length = strlen($needle);
         if ($length == 0) {

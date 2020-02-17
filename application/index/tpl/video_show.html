@@ -5,9 +5,7 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="alert_msgLabel">播放器</h4>
             </div>
-            <div class="modal-body">
-                <video-js id="vplayerdom">
-                </video-js>
+            <div class="modal-body" id="modalbody">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -49,17 +47,20 @@
 <script>
     var oss_show = (function ($, w, undefined) {
         'use strict';
-        var $table, $modal, $player = undefined;
-        w.priceFormatter = function (value, row) {
-            return '<a type="button" class="btn btn-success" href="javascript:tap_play(' +
-                row.id + row.n +
+        var $table, $modal, $modalbody, $player = undefined;
+        w.actionFormatter = function (value, row) {
+            return '<a type="button" class="btn btn-success" href="javascript:tap_play(\'' +
+                row.id + row.n + "'" +
                 ',\'video/mp4\')" style="margin-right: 1em;"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></a>'
         };
-        var tap_play = function (target_url, target_type) {
+        w.start_player = function (target_url, target_type) {
+            $modal.modal('show');
+            $modalbody.html('<video-js id="vplayerdom"></video-js>');
             $player = videojs('vplayerdom', {
                 controls: true,
-                autoplay: false,
+                autoplay: true,
                 preload: 'auto',
+                fluid: true,
                 flvjs: {
                     mediaDataSource: {
                         isLive: true,
@@ -68,16 +69,39 @@
                     },
                     // config: {},
                 },
-                sources: [{
-                    src: target_url,
-                    type: target_type
-                },],
+                sources: [
+                    {
+                        src: target_url,
+                        type: target_type
+                    },
+                ],
+            });
+        };
+        w.tap_play = function (rowid, rowname) {
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: '/index/video/geturl',
+                data: {
+                    dir: rowid,
+                    name: rowname,
+                    _ajax: 1,
+                },
+                dataType: "json",
+                success: function (msg) {
+                    start_player(msg.url, msg.type);
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
             });
         };
         var init = function () {
             $table = $('#table');
             $table.bootstrapTable({});
             $modal = $('#vplayer');
+            $modalbody = $('#modalbody');
             $modal.on('hide.bs.modal', function (e) {
                 $player.dispose();
             });
