@@ -35,7 +35,7 @@ class Video extends Controller
     public function _empty()
     {
         $action = $this->request->action();
-        if (is_file(__DIR__ . "/../tpl/develop_$action.html")) {
+        if (is_file(__DIR__ . "/../tpl/video_$action.html")) {
             throw new HttpResponseException(view($action));
         }
         abort(404, "页面不存在$action");
