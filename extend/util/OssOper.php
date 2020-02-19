@@ -2,8 +2,12 @@
 
 namespace util;
 
+use bilibili\BiliOssFile;
 use OSS\Core\OssException;
 use OSS\OssClient;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 
 class OssOper
 {
@@ -51,9 +55,13 @@ class OssOper
     /**
      * @return array
      * @throws OssException
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
      */
     public function getVideoFile()
     {
+        $kvmap = BiliOssFile::getAllData();
         $nextMarker = '';
         $ret = [];
         while (true) {
@@ -73,15 +81,15 @@ class OssOper
                 }
                 $oname = explode('/', $oname);
                 $oname = array_reverse($oname);
-                $ret[] = [
+                $ret[] = array_merge([
                     'id' => $oname[1],
                     'n' => $oname[0],
                     's' => self::readableSize($objectInfo->getSize()),
                     'e' => $objectInfo->getETag(),
                     'm' => $objectInfo->getLastModified(),
                     'c' => $objectInfo->getStorageClass(),
-                    't' => $objectInfo->getType()
-                ];
+                    'pt' => $objectInfo->getType()
+                ], $kvmap[$oname[1]]); // av l p t
             }
             if ($nextMarker === '') {
                 break;
