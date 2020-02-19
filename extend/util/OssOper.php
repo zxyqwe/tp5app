@@ -62,6 +62,7 @@ class OssOper
     public function getVideoFile()
     {
         $kvmap = BiliOssFile::getAllData();
+        $used_keys = [];
         $nextMarker = '';
         $ret = [];
         while (true) {
@@ -81,19 +82,34 @@ class OssOper
                 }
                 $oname = explode('/', $oname);
                 $oname = array_reverse($oname);
+                $av = $oname[1];
+                $target_meta = [];
+                if (array_key_exists($av, $kvmap)) {
+                    $target_meta = $kvmap[$av];
+                    // av l p t
+                }
+                $used_keys[] = $av;
                 $ret[] = array_merge([
-                    'id' => $oname[1],
+                    'id' => $av,
                     'n' => $oname[0],
                     's' => self::readableSize($objectInfo->getSize()),
                     'e' => $objectInfo->getETag(),
                     'm' => $objectInfo->getLastModified(),
                     'c' => $objectInfo->getStorageClass(),
                     'pt' => $objectInfo->getType()
-                ], $kvmap[$oname[1]]); // av l p t
+                ], $target_meta);
             }
             if ($nextMarker === '') {
                 break;
             }
+        }
+        foreach ($used_keys as $item) {
+            unset($kvmap[$item]);
+        }
+        foreach ($kvmap as $k => $v) {
+            $ret[] = array_merge([
+                'id' => $k
+            ], $v);
         }
         return $ret;
     }
