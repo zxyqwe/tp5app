@@ -9,11 +9,6 @@ use think\exception\DbException;
 
 class BiliOssFile
 {
-    public static function FindMiss()
-    {
-
-    }
-
     /**
      * @throws DataNotFoundException
      * @throws ModelNotFoundException
