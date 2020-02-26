@@ -43,7 +43,7 @@ class Index extends Controller
 
     public function old() //需要这个，不然route就会屏蔽入口
     {
-        return redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
+        return redirect('https://app.zxyqwe.com/hanbj/pub/bonus');
     }
 
     public function logout()
