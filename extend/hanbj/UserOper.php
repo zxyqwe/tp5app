@@ -140,7 +140,7 @@ class UserOper
             if ($json) {
                 $res = json(['msg' => '未登录'], 400);
             } else {
-                $res = redirect('https://app.zxyqwe.com/hanbj/pub/bulletin');
+                $res = redirect('https://app.zxyqwe.com/hanbj/pub/bonus');
             }
             throw new HttpResponseException($res);
         }
