@@ -54,7 +54,7 @@ window.grade = function (n) {
         case '10':
             return '代理部长';
         case '11':
-            return '离职';
+            return '撤销记录';
         case '12':
             return '专职副会长';
     }

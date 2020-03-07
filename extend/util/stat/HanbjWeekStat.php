@@ -86,18 +86,20 @@ class HanbjWeekStat extends BaseStat
             ->find();
         $data['wxc'] = $wx_card;
         // 本届吧务组：有多少个部门，总共多少人
-        $fame_ret = Db::table("fame")
+        $fame_ret = Db::table('fame')
             ->where([
-                'year' => HBConfig::YEAR
+                'year' => HBConfig::YEAR,
+                'type' => 0
             ])
             ->field([
                 "count(distinct unique_name) as un",
                 "count(distinct label) as nl"
             ])
             ->find();
-        $fame_ret2 = Db::table("fame")
+        $fame_ret2 = Db::table('fame')
             ->where([
-                'year' => HBConfig::YEAR
+                'year' => HBConfig::YEAR,
+                'type' => 0
             ])
             ->field([
                 "grade as g",

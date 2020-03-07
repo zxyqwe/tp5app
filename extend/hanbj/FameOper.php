@@ -26,7 +26,7 @@ class FameOper
     const vice_secretary = 8;//副秘书长
     const fame_chair = 9;//名誉会长
     const like_manager = 10;//代理部长
-    const leave = 11;//离职
+    const leave = 11;//撤销记录
     const fixed_vice_chairman = 12;//专职副会长
     const max_pos = 12;
     const order = [
@@ -85,24 +85,17 @@ class FameOper
     public static function getWhoCanLogIn()
     {
         // uniq in current fame
-        return Db::table('fame')
-            ->where([
-                'year' => HBConfig::YEAR,
-                'grade' => ['in', [
-                    FameOper::chairman,
-                    FameOper::vice_chairman,
-                    FameOper::fixed_vice_chairman,
-                    FameOper::manager,
-                    FameOper::vice_manager,
-                    FameOper::commissioner,
-                    FameOper::secretary,
-                    FameOper::vice_secretary,
-                    FameOper::like_manager
-                ]]
-            ])
-            ->field(['unique_name as u'])
-            ->cache(600)
-            ->select();
+        return self::get([
+            FameOper::chairman,
+            FameOper::vice_chairman,
+            FameOper::fixed_vice_chairman,
+            FameOper::manager,
+            FameOper::vice_manager,
+            FameOper::commissioner,
+            FameOper::secretary,
+            FameOper::vice_secretary,
+            FameOper::like_manager
+        ]);
     }
 
     /**
@@ -187,7 +180,8 @@ class FameOper
                 'tieba_id',
                 'year as y',
                 'grade',
-                'label'
+                'label',
+                'type'
             ])
             ->select();
         $res = self::sort($res);
@@ -245,7 +239,8 @@ class FameOper
             ->where([
                 'unique_name' => session('unique_name'),
                 'year' => HBConfig::YEAR,
-                'grade' => ['neq', self::leave]
+                'grade' => ['neq', self::leave],
+                'type' => 0
             ])
             ->field([
                 'grade',
@@ -292,7 +287,7 @@ class FameOper
 
     /**
      * @param $unique
-     * @return array|false|PDOStatement|string|\think\Model
+     * @return array|false
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
@@ -303,7 +298,8 @@ class FameOper
             ->where([
                 'unique_name' => $unique,
                 'year' => HBConfig::YEAR,
-                'grade' => ['neq', self::leave]
+                'grade' => ['neq', self::leave],
+                'type' => 0
             ])
             ->cache(600)
             ->field([
@@ -328,8 +324,58 @@ class FameOper
             ->field([
                 'year',
                 'grade',
-                'label'
+                'label',
+                'type'
             ])
             ->select();
     }
+
+    public static function insertInWhile(&$data)
+    {
+        Db::startTrans();
+        try {
+            $res = Db::table('fame')
+                ->insertAll($data);
+            if ($res === count($data)) {
+                Db::commit();
+                trace("Fame Add " . json_encode($data), MysqlLog::INFO);
+                throw new HttpResponseException(json(['msg' => 'ok']));
+            } else {
+                Db::rollback();
+                throw new HttpResponseException(json(['msg' => $res], 400));
+            }
+        } catch (Exception $e) {
+            Db::rollback();
+            $e = $e->getMessage();
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'year_uniq\'/', $e, $token);
+            if (isset($token[3])) {
+                trace("Fame Add $e", MysqlLog::ERROR);
+                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组【 {$token[3]} 】部门中了。请删除此项，重试。";
+                throw new HttpResponseException(json(['msg' => '' . $e], 400));
+            }
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'type_uniq\'/', $e, $token);
+            if (isset($token[3])) {
+                foreach ($data as &$idx) {
+                    if ($idx['unique_name'] === $token[2]) {
+                        $idx['type'] = null;
+                    }
+                }
+                return;
+            }
+            throw new HttpResponseException(json(['msg' => 'Unknown ' . $e], 400));
+        }
+    }
 }
+/*
+CREATE TABLE `fame` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `unique_name` varchar(45) NOT NULL,
+  `year` tinyint(4) NOT NULL,
+  `grade` tinyint(4) NOT NULL,
+  `label` varchar(45) NOT NULL,
+  `type` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `year_uniq` (`year`,`unique_name`,`label`),
+  UNIQUE KEY `type_uniq` (`year`,`unique_name`,`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ */
