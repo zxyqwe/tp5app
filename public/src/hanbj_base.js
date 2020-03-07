@@ -28,7 +28,7 @@ window.wx_mem_code = function (value) {
             return '<p class="temp-text">状态：' + window.mem_code(value);
     }
 };
-window.max_gras = 12;
+window.max_gras = 13;
 window.grade = function (n) {
     switch (n) {
         case '0':
