@@ -4,9 +4,19 @@ namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
 use hanbj\MemberOper;
+use hanbj\vote\WxQuest;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 
-class WxQTop
+class WxQTop extends WxQuest
 {
+    /**
+     * WxQTop constructor.
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     function __construct()
     {
         $this->upper = FameOper::getUp();

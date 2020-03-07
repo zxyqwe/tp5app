@@ -7,13 +7,15 @@ use hanbj\ActivityOper;
 use hanbj\BonusOper;
 use hanbj\FameOper;
 use hanbj\FeeOper;
-use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
 use think\Controller;
-use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 use util\GeneralRet;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
@@ -49,6 +51,12 @@ class Rpc extends Controller
         throw new HttpResponseException(json(['msg' => '页面不存在']));
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function user()
     {
         $data = self::check_params(['unionid']);
@@ -65,24 +73,19 @@ class Rpc extends Controller
             'fee' => FeeOper::owe($ret['unique_name']),
             'status' => $ret['status']
         ];
-        $fame = Db::table('fame')
-            ->where([
-                'unique_name' => $ret['unique_name'],
-                'year' => HBConfig::YEAR,
-                'grade' => ['neq', FameOper::leave]
-            ])
-            ->cache(600)
-            ->field([
-                'grade',
-                'label'
-            ])
-            ->find();
+        $fame = FameOper::getFameForUnique($ret['unique_name']);
         if (null !== $fame) {
             $msg['grade'] = $fame['grade'];
         }
         return json($msg);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function temp()
     {
         $data = self::check_params(['touser']);
@@ -116,6 +119,12 @@ class Rpc extends Controller
         return json(['msg' => $raw]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function act()
     {
         $data = self::check_params(['act', 'bonus', 'unionid', 'operid']);
@@ -191,6 +200,12 @@ class Rpc extends Controller
         }
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function payout()
     {
         $data = self::check_params(['payId', 'unionid', 'nickName', 'realName', 'orgName', 'activeName', 'payNum']);

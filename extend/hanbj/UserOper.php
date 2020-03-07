@@ -58,25 +58,7 @@ class UserOper
      */
     public static function reg()
     {
-        // uniq in current fame
-        $res = Db::table('fame')
-            ->where([
-                'year' => HBConfig::YEAR,
-                'grade' => ['in', [
-                    FameOper::chairman,
-                    FameOper::vice_chairman,
-                    FameOper::fixed_vice_chairman,
-                    FameOper::manager,
-                    FameOper::vice_manager,
-                    FameOper::commissioner,
-                    FameOper::secretary,
-                    FameOper::vice_secretary,
-                    FameOper::like_manager
-                ]]
-            ])
-            ->field(['unique_name as u'])
-            ->cache(600)
-            ->select();
+        $res = FameOper::getWhoCanLogIn();
         $data = HBConfig::FIXED;
         foreach ($res as $item) {
             $data[] = $item['u'];

@@ -191,6 +191,12 @@ class Wxdaily extends Controller
         return redirect('https://app.zxyqwe.com/hanbj/wxdaily/notify');
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_tempid()
     {
         $member_code = session('member_code');
@@ -262,18 +268,7 @@ class Wxdaily extends Controller
      */
     public function history()
     {
-        $map['unique_name'] = session('unique_name');
-        $map['grade'] = ['neq', FameOper::leave];
-        $ret = Db::table('fame')
-            ->where($map)
-            ->order('year desc')
-            ->field([
-                'year',
-                'grade',
-                'label'
-            ])
-            ->select();
-        return json(['hist' => $ret]);
+        return json(['hist' => FameOper::getMyHistory()]);
     }
 
     /**
@@ -291,6 +286,12 @@ class Wxdaily extends Controller
         return json(['msg' => $ret]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function vote()
     {
         $member_code = session('member_code');
