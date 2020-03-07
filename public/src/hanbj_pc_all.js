@@ -647,7 +647,7 @@ var fame = (function ($, Vue, w, undefined) {
         });
     };
     var fameori = function () {
-        var le = [], de = [];
+        var le = [], de = [], te = [{value: null, text: '兼职'}, {value: 0, text: '主职务'}];
         for (var i in Array.from(Array(w.max_gras + 1).keys())) {
             le.push({value: i, text: w.grade(i)});
         }
@@ -682,6 +682,14 @@ var fame = (function ($, Vue, w, undefined) {
                     editable: {
                         type: 'select',
                         source: le
+                    }
+                },
+                {
+                    field: 'type',
+                    title: '类型',
+                    editable: {
+                        type: 'select',
+                        source: te
                     }
                 }],
             formatSearch: function () {

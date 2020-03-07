@@ -200,7 +200,8 @@ class FameOper
             $data[$year]['teams'][$team]['ms'][] = [
                 'u' => $item['unique_name'],
                 't' => $item['tieba_id'],
-                'id' => $item['grade']
+                'id' => $item['grade'],
+                'te' => $item['type']
             ];
         }
         $data = array_values($data);
