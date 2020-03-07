@@ -108,8 +108,12 @@ class Fame extends Controller
         }
         TableOper::generateOneTable('fame');
         TableOper::assertInField('fame', $name);
+        $map_for_log = ['id' => $pk, 'unique_name' => ['neq', $unique]];
+        if ($unique === HBConfig::CODER) {
+            unset($map_for_log['unique_name']);
+        }
         $ret = Db::table('fame')
-            ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
+            ->where($map_for_log)
             ->field(['year', 'grade', 'label'])
             ->find();
         if (null === $ret) {
@@ -131,7 +135,7 @@ class Fame extends Controller
         try {
             Db::table('fame')
                 ->data([$name => $value])
-                ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
+                ->where($map_for_log)
                 ->update();
             trace("Fame Edit $unique $pk $name $value " . json_encode($ret), MysqlLog::INFO);
         } catch (Exception $e) {
@@ -139,7 +143,7 @@ class Fame extends Controller
             trace("Fame Edit $e", MysqlLog::ERROR);
             preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'year_uniq\'/', $e, $token);
             if (isset($token[3])) {
-                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组【 {$token[3]} 】部门中了。请删除此项，重试。";
+                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组【 {$token[3]} 】部门中了。";
                 throw new HttpResponseException(json(['msg' => '' . $e], 400));
             }
             preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'type_uniq\'/', $e, $token);

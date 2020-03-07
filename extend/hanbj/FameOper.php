@@ -257,6 +257,14 @@ class FameOper
         ]));
     }
 
+    /**
+     * @param $year
+     * @param $grade
+     * @param $label
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function assertEditRight($year, $grade, $label)
     {
         $unique_name = session('unique_name');

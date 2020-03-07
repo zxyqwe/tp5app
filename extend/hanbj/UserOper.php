@@ -28,6 +28,12 @@ class UserOper
         return in_array($unique, self::reg());
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function toplist()
     {
         $data = array_merge(FameOper::getTop(), HBConfig::FIXED);
@@ -45,6 +51,13 @@ class UserOper
         return MemberOper::pretty_tieba(MemberOper::get_tieba(self::toplist()));
     }
 
+    /**
+     * @param $unique
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function grantAllRight($unique)
     {
         return in_array($unique, self::toplist());
