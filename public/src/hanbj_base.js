@@ -57,6 +57,8 @@ window.grade = function (n) {
             return '撤销记录';
         case '12':
             return '专职副会长';
+        case '13':
+            return '实习生';
     }
 };
 window.fame_img = function (n) {

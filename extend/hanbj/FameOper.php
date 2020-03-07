@@ -28,7 +28,8 @@ class FameOper
     const like_manager = 10;//代理部长
     const leave = 11;//撤销记录
     const fixed_vice_chairman = 12;//专职副会长
-    const max_pos = 12;
+    const intern = 13;//实习
+    const max_pos = 13;
     const order = [
         self::chairman,
         self::fame_chair,
@@ -42,6 +43,7 @@ class FameOper
         self::commissioner,
         self::assistant,
         self::member,
+        self::intern,
         self::leave
     ];
 
