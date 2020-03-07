@@ -83,11 +83,12 @@ class Fame extends Controller
             ];
         }
         $idx = 0;
-        while ($idx < count($data)) {
+        while ($idx <= count($data)) {
             $idx += 1;
             FameOper::insertInWhile($data);
         }
-        return json(['msg' => '多次尝试失败：' . $idx]);
+        trace("Fame Add " . json_encode($data), MysqlLog::ERROR);
+        return json(['msg' => '多次尝试失败，请联系神棍：' . $idx], 400);
     }
 
     /**
