@@ -2,8 +2,15 @@
 
 namespace hanbj;
 
+use PDOStatement;
+use think\Collection;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\exception\PDOException;
 use util\MysqlLog;
 
 class FameOper
@@ -38,6 +45,12 @@ class FameOper
         self::leave
     ];
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function getUp()//会长层、部长
     {
         return self::get([
@@ -49,6 +62,12 @@ class FameOper
         ]);
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function getTop()//会长层
     {
         return self::get([
@@ -58,6 +77,41 @@ class FameOper
         ]);
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getWhoCanLogIn()
+    {
+        // uniq in current fame
+        return Db::table('fame')
+            ->where([
+                'year' => HBConfig::YEAR,
+                'grade' => ['in', [
+                    FameOper::chairman,
+                    FameOper::vice_chairman,
+                    FameOper::fixed_vice_chairman,
+                    FameOper::manager,
+                    FameOper::vice_manager,
+                    FameOper::commissioner,
+                    FameOper::secretary,
+                    FameOper::vice_secretary,
+                    FameOper::like_manager
+                ]]
+            ])
+            ->field(['unique_name as u'])
+            ->cache(600)
+            ->select();
+    }
+
+    /**
+     * @param $group
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function get($group)
     {
         $map['year'] = HBConfig::YEAR;
@@ -96,6 +150,11 @@ class FameOper
         return $ret;
     }
 
+    /**
+     * @param $uname
+     * @throws Exception
+     * @throws PDOException
+     */
     public static function clear($uname)
     {
         $map['unique_name'] = $uname;
@@ -108,6 +167,12 @@ class FameOper
         }
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function getOrder()
     {
         $join = [
@@ -151,6 +216,29 @@ class FameOper
         return $data;
     }
 
+    /**
+     * @return false|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getCurrentLabel()
+    {
+        return Db::table('fame')
+            ->where([
+                'year' => HBConfig::YEAR
+            ])
+            ->field([
+                'distinct label'
+            ])
+            ->select();
+    }
+
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function cacheMyCurrentYear()
     {
         $ret = Db::table('fame')
@@ -200,5 +288,48 @@ class FameOper
             $res = redirect('https://app.zxyqwe.com/hanbj/index/home');
         }
         throw new HttpResponseException($res);
+    }
+
+    /**
+     * @param $unique
+     * @return array|false|PDOStatement|string|\think\Model
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getFameForUnique($unique)
+    {
+        return Db::table('fame')
+            ->where([
+                'unique_name' => $unique,
+                'year' => HBConfig::YEAR,
+                'grade' => ['neq', self::leave]
+            ])
+            ->cache(600)
+            ->field([
+                'grade',
+                'label'
+            ])
+            ->find();
+    }
+
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getMyHistory()
+    {
+        $map['unique_name'] = session('unique_name');
+        $map['grade'] = ['neq', self::leave];
+        return Db::table('fame')
+            ->where($map)
+            ->order('year desc')
+            ->field([
+                'year',
+                'grade',
+                'label'
+            ])
+            ->select();
     }
 }

@@ -3,23 +3,24 @@
 namespace hanbj\vote\quest;
 
 use hanbj\FameOper;
-use hanbj\HBConfig;
-use think\Db;
+use hanbj\vote\WxQuest;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 
-class WxQDep
+class WxQDep extends WxQuest
 {
+    /**
+     * WxQDep constructor.
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     function __construct()
     {
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::vice_secretary]);
-        $ret = Db::table('fame')
-            ->where([
-                'year' => HBConfig::YEAR
-            ])
-            ->field([
-                'distinct label'
-            ])
-            ->select();
+        $ret = FameOper::getCurrentLabel();
         $this->obj = [];
         foreach ($ret as $item) {
             if (in_array($item['label'], ['中枢', '秘书处']))

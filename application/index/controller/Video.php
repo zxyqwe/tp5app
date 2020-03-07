@@ -6,7 +6,11 @@ use hanbj\HBConfig;
 use hanbj\UserOper;
 use OSS\Core\OssException;
 use think\Controller;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 use util\OssOper;
 
 class Video extends Controller
@@ -15,6 +19,11 @@ class Video extends Controller
         'coder',
     ];
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     protected function coder()
     {
         if (request()->ip() === config('local_mech')) {
@@ -41,6 +50,12 @@ class Video extends Controller
         abort(404, "页面不存在$action");
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function json_show()
     {
         try {
