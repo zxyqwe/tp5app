@@ -60,6 +60,12 @@ class Fame extends Controller
         return json($res);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function fame_add()
     {
         $name = input('post.name/a', []);
