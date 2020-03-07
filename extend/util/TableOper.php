@@ -48,7 +48,7 @@ class TableOper
         if (in_array($name, self::getFieldsArray($tmp))) {
             return;
         }
-        $err = "field error $tmp $name";
+        $err = "check field error $tmp $name";
         trace($err, MysqlLog::ERROR);
         if (request()->isAjax()) {
             $res = json(['msg' => $err], 400);

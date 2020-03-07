@@ -58,7 +58,7 @@ class Fame extends Controller
             ->select();
         foreach ($res as &$item) {
             if (null === $item['type']) {
-                $item['type'] = 'null';
+                $item['type'] = 'a';
             }
         }
         $res = FameOper::sort($res);
@@ -113,7 +113,7 @@ class Fame extends Controller
         $name = input('post.name');
         $pk = intval(input('post.pk'));
         $value = input('post.value');
-        if ('null' === $value) {
+        if ('a' === $value) {
             $value = null;
         }
         $unique = session('unique_name');
