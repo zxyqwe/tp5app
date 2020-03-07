@@ -2,10 +2,15 @@
 
 namespace app\hanbj\controller;
 
+use Exception;
 use think\Controller;
 use hanbj\FameOper;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 use util\MysqlLog;
 use util\TableOper;
 use hanbj\HBConfig;
@@ -26,6 +31,12 @@ class Fame extends Controller
         return view('log', ['fixed_year' => HBConfig::YEAR]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_init()
     {
         $join = [
@@ -41,7 +52,8 @@ class Fame extends Controller
                 'year as y',
                 'grade',
                 'label',
-                'm.code'
+                'm.code',
+                'f.type'
             ])
             ->select();
         $res = FameOper::sort($res);
@@ -70,30 +82,20 @@ class Fame extends Controller
                 'label' => $label
             ];
         }
-        Db::startTrans();
-        try {
-            $res = Db::table('fame')
-                ->insertAll($data);
-            if ($res === count($data)) {
-                Db::commit();
-                trace("Fame Add " . json_encode($data), MysqlLog::INFO);
-            } else {
-                Db::rollback();
-                return json(['msg' => $res], 400);
-            }
-        } catch (\Exception $e) {
-            Db::rollback();
-            $e = $e->getMessage();
-            trace("Fame Add $e", MysqlLog::ERROR);
-            preg_match('/Duplicate entry \'(.*)-(.*)\' for key/', $e, $token);
-            if (isset($token[2])) {
-                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组中了。请删除此项，重试。";
-            }
-            return json(['msg' => '' . $e], 400);
+        $idx = 0;
+        while ($idx < count($data)) {
+            $idx += 1;
+            FameOper::insertInWhile($data);
         }
-        return json(['msg' => 'ok']);
+        return json(['msg' => '多次尝试失败：' . $idx]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function edit_fame()
     {
         $name = input('post.name');
@@ -114,11 +116,13 @@ class Fame extends Controller
         }
         FameOper::assertEditRight($ret['year'], $ret['grade'], $ret['label']);
         switch ($name) {
-            case'grade':
+            case 'grade':
                 FameOper::assertEditRight($ret['year'], $value, $ret['label']);
                 break;
-            case'label':
+            case 'label':
                 FameOper::assertEditRight($ret['year'], $ret['grade'], $value);
+                break;
+            case 'type':
                 break;
             default:
                 return json(['msg' => "查无此人 $name"], 400);
@@ -129,12 +133,21 @@ class Fame extends Controller
                 ->where(['id' => $pk, 'unique_name' => ['neq', $unique]])
                 ->update();
             trace("Fame Edit $unique $pk $name $value " . json_encode($ret), MysqlLog::INFO);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $e = $e->getMessage();
             trace("Fame Edit $e", MysqlLog::ERROR);
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'year_uniq\'/', $e, $token);
+            if (isset($token[3])) {
+                $e = "错误！【 {$token[2]} 】已经被登记在第【 {$token[1]} 】届吧务组【 {$token[3]} 】部门中了。请删除此项，重试。";
+                throw new HttpResponseException(json(['msg' => '' . $e], 400));
+            }
+            preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'type_uniq\'/', $e, $token);
+            if (isset($token[3])) {
+                $e = "错误！【 {$token[2]} 】的主职务岗位已经被登记在第【 {$token[1]} 】届吧务组中了。请尝试登记兼职岗位，重试。";
+                throw new HttpResponseException(json(['msg' => '' . $e], 400));
+            }
             return json(['msg' => $e], 400);
         }
         return json('修改成功！');
     }
-
 }

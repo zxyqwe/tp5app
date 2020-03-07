@@ -59,10 +59,7 @@ class UserOper
     public static function reg()
     {
         $res = FameOper::getWhoCanLogIn();
-        $data = HBConfig::FIXED;
-        foreach ($res as $item) {
-            $data[] = $item['u'];
-        }
+        $data = array_merge(HBConfig::FIXED, $res);
         return array_unique($data);
     }
 
