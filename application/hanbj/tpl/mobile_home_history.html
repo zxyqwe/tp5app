@@ -11,7 +11,7 @@
                         <img class="weui-media-box__thumb" :src="trans(i.grade)" alt="">
                     </div>
                     <div class="weui-media-box__bd">
-                        <h4 class="weui-media-box__title">{{ trans2(i.grade) }} | {{ i.type }}</h4>
+                        <h4 class="weui-media-box__title">{{ trans2(i.grade) }} | {{ i.type==='0'?'主职务':'兼职' }}</h4>
                         <p class="weui-media-box__desc">第{{ i.year }}届 {{ i.label }}</p>
                     </div>
                 </a>

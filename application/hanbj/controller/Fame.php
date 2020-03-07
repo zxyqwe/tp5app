@@ -56,6 +56,11 @@ class Fame extends Controller
                 'f.type'
             ])
             ->select();
+        foreach ($res as &$item) {
+            if (null === $item['type']) {
+                $item['type'] = 'null';
+            }
+        }
         $res = FameOper::sort($res);
         return json($res);
     }
@@ -108,6 +113,9 @@ class Fame extends Controller
         $name = input('post.name');
         $pk = intval(input('post.pk'));
         $value = input('post.value');
+        if ('null' === $value) {
+            $value = null;
+        }
         $unique = session('unique_name');
         if (strlen($name) < 1) {
             return json(['msg' => 'name len short'], 400);
