@@ -42,6 +42,7 @@ class SubscribeOper
 
     public static function mayAddNewOpenid($openid)
     {
+        Db::startTrans();
         $idmap = Db::table('idmap')
             ->where(['openid' => $openid])
             ->find();
@@ -49,9 +50,13 @@ class SubscribeOper
             $ret = Db::table('idmap')
                 ->insert(['openid' => $openid]);
             if ($ret > 0) {
+                Db::commit();
                 trace("addOpenID $ret $openid", MysqlLog::LOG);
+                return;
             }
         }
+        Db::rollback();
+        return;
     }
 
     public static function maySubscribe($openid)
