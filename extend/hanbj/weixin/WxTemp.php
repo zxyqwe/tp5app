@@ -290,6 +290,6 @@ class WxTemp
         ];
         $log = "待办提醒 " . implode(', ', [$openid, $uname, $num]);
         self::base($data, $log);
-        cache($cache_key, $cache_key, 86400);
+        cache($cache_key, $cache_key, 86400 - 120);
     }
 }
