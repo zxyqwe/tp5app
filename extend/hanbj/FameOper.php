@@ -388,7 +388,10 @@ class FameOper
      */
     public static function getUnionId($label, $grade, $type)
     {
-        $map = ['year' => HBConfig::YEAR];
+        $map = [
+            'year' => HBConfig::YEAR,
+            'i.status' => SubscribeOper::Subscribe
+        ];
         if ('ALL' !== $label) {
             $map['label'] = $label;
         }
@@ -400,10 +403,11 @@ class FameOper
         }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
-            ['idmap i', 'm.openid=i.openid']
+            ['idmap i', 'm.openid=i.openid', 'left']
         ];
         $ret = Db::table('fame')
             ->alias('f')
+            ->join($join)
             ->where($map)
             ->field(['i.unionid'])
             ->select();
