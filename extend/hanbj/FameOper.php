@@ -389,19 +389,21 @@ class FameOper
     public static function getUnionId($label, $grade, $type)
     {
         $map = [
-            'year' => HBConfig::YEAR,
+            'f.year' => HBConfig::YEAR,
             'i.status' => SubscribeOper::Subscribe
         ];
         if ('ALL' !== $label) {
-            $map['label'] = $label;
+            $map['f.label'] = $label;
         }
         if ('ALL' !== $grade) {
-            $map['label'] = intval($grade);
+            $map['f.grade'] = intval($grade);
+        } else {
+            $map['f.grade'] = ['neq', self::leave];
         }
         if ('ALL' !== $type) {
-            $map['label'] = intval($type);
-            if ($map['label'] === 1) {
-                $map['label'] = null;
+            $map['f.type'] = intval($type);
+            if ($map['f.type'] === 1) {
+                $map['f.type'] = null;
             }
         }
         $join = [
@@ -413,6 +415,7 @@ class FameOper
             ->join($join)
             ->where($map)
             ->field(['distinct i.unionid'])
+            ->cache(600)
             ->select();
         $data = [];
         foreach ($ret as $item) {
