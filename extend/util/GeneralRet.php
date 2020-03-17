@@ -37,6 +37,11 @@ class GeneralRet
         'DUPLICATE_ACTIVITY' => 2, // 重复登记的活动，不需要再记录，之前曾经记录过
     ];
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @return array
+     */
     public static function __callStatic($name, $arguments)
     {
         $data_ = ['desc' => $name];
