@@ -400,6 +400,9 @@ class FameOper
         }
         if ('ALL' !== $type) {
             $map['label'] = intval($type);
+            if ($map['label'] === 1) {
+                $map['label'] = null;
+            }
         }
         $join = [
             ['member m', 'm.unique_name=f.unique_name', 'left'],
@@ -409,7 +412,7 @@ class FameOper
             ->alias('f')
             ->join($join)
             ->where($map)
-            ->field(['i.unionid'])
+            ->field(['distinct i.unionid'])
             ->select();
         $data = [];
         foreach ($ret as $item) {
