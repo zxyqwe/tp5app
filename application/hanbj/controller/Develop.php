@@ -3,6 +3,7 @@
 namespace app\hanbj\controller;
 
 use hanbj\CardOper;
+use hanbj\FameOper;
 use hanbj\UserOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
@@ -317,7 +318,9 @@ class Develop extends Controller
 //            ->field('msg')
 //            ->select();
 
-        $ret = StatOper::OutputAll(StatOper::HANBJ_WEEK_REPORT);
+//        $ret = StatOper::OutputAll(StatOper::HANBJ_WEEK_REPORT);
+
+        $ret = FameOper::getUnionId('ALL', 'ALL', 'ALL');
         return json([
             'msg' => $ret,
 //            'first' => $first,

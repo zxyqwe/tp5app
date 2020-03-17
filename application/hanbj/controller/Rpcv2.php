@@ -244,6 +244,16 @@ class Rpcv2 extends Controller
         return json($gen_ret);
     }
 
+    public function get_fame_unionid()
+    {
+        $data = self::check_params(['label', 'level']);
+        $data = FameOper::getUnionId(strval($data['label']), strval($data['grade']), strval($data['type']));
+        $ret = GeneralRet::SUCCESS();
+        $ret['data'] = $data;
+        $ret['len'] = count($data);
+        return json($ret);
+    }
+
     private function check_params($items)
     {
         $data = json_decode($GLOBALS['HTTP_RAW_POST_DATA'], true);

@@ -376,6 +376,43 @@ class FameOper
             throw new HttpResponseException(json(['msg' => 'Unknown ' . $e], 400));
         }
     }
+
+    /**
+     * @param $label
+     * @param $grade
+     * @param $type
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function getUnionId($label, $grade, $type)
+    {
+        $map = ['year' => HBConfig::YEAR];
+        if ('ALL' !== $label) {
+            $map['label'] = $label;
+        }
+        if ('ALL' !== $grade) {
+            $map['label'] = intval($grade);
+        }
+        if ('ALL' !== $type) {
+            $map['label'] = intval($type);
+        }
+        $join = [
+            ['member m', 'm.unique_name=f.unique_name', 'left'],
+            ['idmap i', 'm.openid=i.openid']
+        ];
+        $ret = Db::table('fame')
+            ->alias('f')
+            ->where($map)
+            ->field(['i.unionid'])
+            ->select();
+        $data = [];
+        foreach ($ret as $item) {
+            $data[] = $item['unionid'];
+        }
+        return $data;
+    }
 }
 /*
 CREATE TABLE `fame` (
