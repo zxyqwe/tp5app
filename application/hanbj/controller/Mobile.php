@@ -140,7 +140,7 @@ class Mobile extends Controller
         $callback = input("get.callback");
         $callback = urldecode($callback);
         $callback = filter_var($callback, FILTER_SANITIZE_URL);
-        if (!preg_match("/^(https:\/\/(\w\w*\.)?hanfushop\.com|https?:\/\/localhost(:\d\d*)?)(\/.*)?$/i", $callback)) {
+        if (!preg_match("/^(https:\/\/(\w\w*\.)?hanfubj\.com|https?:\/\/localhost(:\d\d*)?)(\/.*)?$/i", $callback)) {
             return json(["msg" => $callback], 400);
         }
 
