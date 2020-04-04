@@ -137,41 +137,47 @@ class Mobile extends Controller
 
     public function rpcauth()
     {
-        if (!session('?user_info')) {
-            session(null);
-        }
-        if (!UserOper::wx_login()) {
-            return WX_redirect('https://app.zxyqwe.com/hanbj/mobile/rpcauth', config('hanbj_api'), '', 'snsapi_userinfo');
+        $callback = input("get.callback");
+        $callback = urldecode($callback);
+        $callback = filter_var($callback, FILTER_SANITIZE_URL);
+        if (!preg_match("/^(https:\/\/(\w\w*\.)?hanfushop\.com|https?:\/\/localhost(:\d\d*)?)(\/.*)?$/i", $callback)) {
+            return json(["msg" => $callback], 400);
         }
 
+        $register = input("get.register");
+        $register = urldecode($register);
+        $register = filter_var($register, FILTER_SANITIZE_URL);
+        if (!preg_match("/^(https:\/\/active\.qunliaoweishi\.com|https?:\/\/localhost(:\d\d*)?)(\/.*)?$/i", $register)) {
+            return json(["msg" => $register], 400);
+        }
+
+        if (!UserOper::wx_login()) {
+            return WX_redirect('https://app.zxyqwe.com' . $_SERVER["REQUEST_URI"], config('hanbj_api'), '', 'snsapi_userinfo');
+        }
+
+        $openid = session('openid');
         $user_info = [];
-        if (!session('?user_info')) {
-            $userinfo_auth = WX_union(session('access_token'), session('openid'), $user_info);
-            if ($userinfo_auth) {
-                trace('RpcAuth ' . json_encode($user_info), MysqlLog::INFO);
-            }
+        if (!cache("?user_info$openid")) {
+            WX_union(session('access_token'), $openid, $user_info);
         } else {
-            $user_info = json_decode(session('user_info'), true);
+            $user_info = json_decode(cache("user_info$openid"), true);
         }
         unset($user_info['privilege']);
 
         $redirect_data = [];
-        if (count($user_info) > 0) {
-            $raw = Curl_Post($user_info, 'https://active.qunliaoweishi.com/manage/api/mini/v10/register4web.php');
-            $data = json_decode($raw, true);
-            if (!isset($data['code']) ||
-                $data['code'] !== 0 ||
-                !isset($data['data']) ||
-                !isset($data['data']['token']) ||
-                !isset($data['data']['openId']) ||
-                !isset($data['data']['unionId'])
-            ) {
-                trace("RpcAuth $raw", MysqlLog::ERROR);
-            } else {
-                $redirect_data = $data['data'];
-            }
+        $raw = Curl_Post($user_info, $register);
+        $data = json_decode($raw, true);
+        if (
+            !isset($data['code']) ||
+            $data['code'] !== 0 ||
+            !isset($data['data']) ||
+            !isset($data['data']['token'])
+        ) {
+            trace("RpcAuth $register $raw", MysqlLog::ERROR);
+        } else {
+            $redirect_data = ["token" => $data['data']['token']];
         }
-        return redirect('https://active.qunliaoweishi.com/manage/guess/guess.php?' . http_build_query($redirect_data));
+        return redirect($callback . "?" . http_build_query($redirect_data));
     }
 
     public function json_old()
