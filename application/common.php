@@ -91,13 +91,13 @@ function WX_union($access_token, $openid, &$user_info)
         "&openid=" . $openid .
         "&lang=zh_CN");
     $data = json_decode($raw, true);
-    if (!isset($data['openid'])) {
-        trace("Weixin Exception $raw", 'error');
-        return false;
+    if (!isset($data['unionid'])) {
+        $next_target = WX_redirect('https://app.zxyqwe.com' . $_SERVER["REQUEST_URI"], config('hanbj_api'), '', 'snsapi_userinfo');
+        throw new \think\exception\HttpResponseException(($next_target));
     }
-    session('user_info', $raw);
+    cache("user_info$openid", $raw, 86400);
+    trace("User Info " . $raw);
     $user_info = $data;
-    return true;
 }
 
 function WX_code($code, $api, $sec)
@@ -159,6 +159,9 @@ function explode_curl($ch)
     return $c_info;
 }
 
+/**
+ * @throws HttpResponseException
+ */
 function local_cron()
 {
     $ret = request()->ip();
