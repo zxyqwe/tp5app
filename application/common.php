@@ -92,6 +92,7 @@ function WX_union($access_token, $openid, &$user_info)
         "&lang=zh_CN");
     $data = json_decode($raw, true);
     if (!isset($data['unionid'])) {
+        session(null);
         $next_target = WX_redirect('https://app.zxyqwe.com' . $_SERVER["REQUEST_URI"], config('hanbj_api'), '', 'snsapi_userinfo');
         throw new \think\exception\HttpResponseException(($next_target));
     }

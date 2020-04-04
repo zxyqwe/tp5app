@@ -152,6 +152,7 @@ class Mobile extends Controller
         }
 
         if (!UserOper::wx_login()) {
+            session(null);
             return WX_redirect('https://app.zxyqwe.com' . $_SERVER["REQUEST_URI"], config('hanbj_api'), '', 'snsapi_userinfo');
         }
 
