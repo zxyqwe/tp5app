@@ -68,6 +68,27 @@ class TodoOper
         }
     }
 
+    public static function ExpireOldRecordByType($type, $expired_time)
+    {
+        $map = [
+            'type' => $type,
+            'time' => ['leq', $expired_time],
+            'status' => self::UNDO
+        ];
+        try {
+            $ret = Db::table('todo')
+                ->where($map)
+                ->data(['status' => self::FAIL_FOREVER])
+                ->update();
+            if ($ret > 0) {
+                trace("ExpireOldRecordByType $type $expired_time : $ret", MysqlLog::INFO);
+            }
+        } catch (Exception $e) {
+            $e = $e->getMessage();
+            trace("ExpireOldRecordByType $type $expired_time :  $e", MysqlLog::ERROR);
+        }
+    }
+
     /**
      * @param int $type
      * @param int $key
