@@ -38,11 +38,11 @@ class HanbjWeekStat extends BaseStat
      */
     public function generateOneDay()
     {
-        TodoOper::ExpireOldRecordByType(TodoOper::WEEK_REPORT, $this->expire_time->format("Y-m-d H:i:s"));
         $fetch_date = self::fetch_date(StatOper::HANBJ_WEEK_REPORT);
         if ($fetch_date === false) {
             return false;
         }
+        TodoOper::ExpireOldRecordByType(TodoOper::WEEK_REPORT, $this->expire_time->format("Y-m-d H:i:s"));
         trace("HanbjWeekStat::generateOneDay " . $fetch_date->format(StatOper::TIME_FORMAT), MysqlLog::INFO);
         $start_date = $fetch_date->sub($this->time_interval);
         $time_range = [$start_date->format("Y-m-d H:i:s"), $fetch_date->format("Y-m-d H:i:s")];

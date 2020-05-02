@@ -72,7 +72,7 @@ class TodoOper
     {
         $map = [
             'type' => $type,
-            'time' => ['leq', $expired_time],
+            'time' => ['elt', $expired_time],
             'status' => self::UNDO
         ];
         try {
