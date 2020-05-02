@@ -18,6 +18,8 @@ use util\StatOper;
 
 class HanbjWeekStat extends BaseStat
 {
+    protected $expire_time;
+
     function __construct()
     {
         $this->today = new DateTimeImmutable();
@@ -25,6 +27,7 @@ class HanbjWeekStat extends BaseStat
         $this->first_day = DateTimeImmutable::createFromFormat(StatOper::TIME_FORMAT, "2019-01-28");
         $this->first_day = $this->first_day->setTime(0, 0, 0);
         $this->time_interval = new DateInterval("P7D");
+        $this->expire_time = $this->today->sub(new DateInterval("P14D"));
     }
 
     /**
@@ -35,6 +38,7 @@ class HanbjWeekStat extends BaseStat
      */
     public function generateOneDay()
     {
+        TodoOper::ExpireOldRecordByType(TodoOper::WEEK_REPORT, $this->expire_time->format("Y-m-d H:i:s"));
         $fetch_date = self::fetch_date(StatOper::HANBJ_WEEK_REPORT);
         if ($fetch_date === false) {
             return false;
