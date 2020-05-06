@@ -320,7 +320,9 @@ class Develop extends Controller
 
 //        $ret = StatOper::OutputAll(StatOper::HANBJ_WEEK_REPORT);
 
-        $ret = FameOper::getUnionId('ALL', 'ALL', '1');
+//        $ret = FameOper::getUnionId('ALL', 'ALL', '1');
+
+        $ret = MemberOper::Junior2Temp("良丙寅");
         return json([
             'msg' => $ret,
 //            'first' => $first,

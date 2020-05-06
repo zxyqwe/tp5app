@@ -33,16 +33,18 @@ class FeeOper
             return cache($cache_name);
         }
         $map['unique_name'] = $uname;
+        $fee_one_day = new DateInterval("P1D");
 
         $start_year = Db::table('member')
             ->where($map)
             ->field('start_time')
             ->find();
         if (null === $start_year) {
-            return (new DateTimeImmutable())->sub(new DateInterval("P1D"));
+            return (new DateTimeImmutable())->sub($fee_one_day);
         }
         $start_year = $start_year['start_time'];
         $start_year = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", $start_year);
+        $start_year = $start_year->sub($fee_one_day);
 
         $fee_year = Db::table('nfee')
             ->alias('f')
@@ -52,7 +54,7 @@ class FeeOper
             ])
             ->find();
         if (null === $fee_year) {
-            return (new DateTimeImmutable())->sub(new DateInterval("P1D"));
+            return (new DateTimeImmutable())->sub($fee_one_day);
         }
         $fee_year = intval($fee_year['n']);
         $fee_interval = new DateInterval("P" . abs($fee_year) . "Y");
