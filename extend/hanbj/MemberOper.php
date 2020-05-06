@@ -472,7 +472,7 @@ class MemberOper
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public static function Junior2Temp($unique_name)
+    private static function Junior2Temp($unique_name)
     {
         if (!FeeOper::owe($unique_name, -1)) {
             return false;
