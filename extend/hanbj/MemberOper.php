@@ -629,12 +629,12 @@ class MemberOper
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
+     * @throws \think\Exception
      */
     public static function GenBirthFromEid()
     {
         $map['code'] = MemberOper::NORMAL;
         $map['birth'] = '';
-        $data = $map;
         $ret = Db::table('member')
             ->where($map)
             ->field([
@@ -642,14 +642,19 @@ class MemberOper
                 'unique_name as u',
                 'id'
             ])
-            ->cache(600)
             ->select();
         $today = date('Ymd');
         foreach ($ret as &$item) {
             $tmp_eid = $item['eid'];
             if ($tmp_eid > 19491001 && $tmp_eid < $today) {
-                $data['birth'] = '' . intval($tmp_eid / 1000) . '-' . (intval($tmp_eid / 100) % 100) . '-' . ($tmp_eid % 100);
-                echo $item['id'] . $item['u'] . $data['birth'] . "\n";
+                $day = DateTimeImmutable::createFromFormat('Ymd', "$tmp_eid");
+                $map['id'] = $item['id'];
+                $map['unique_name'] = $item['u'];
+                echo Db::table('member')
+                    ->where($map)
+                    ->data(['birth' => $day->format('Y-m-d')])
+                    ->update();
+                echo $item['id'] . $item['u'] . "\n";
             }
         }
     }

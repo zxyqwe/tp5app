@@ -2,11 +2,16 @@
 
 namespace app\hanbj\controller;
 
+use DateTimeImmutable;
 use hanbj\MemberOper;
 use hanbj\UserOper;
 use think\Controller;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 
 class Analysis extends Controller
 {
@@ -14,6 +19,11 @@ class Analysis extends Controller
         'valid_id'
     ];
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     protected function valid_id()
     {
         UserOper::valid_pc($this->request->isAjax());
@@ -28,6 +38,12 @@ class Analysis extends Controller
         abort(404, "页面不存在$action");
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_group()
     {
         $ret = Db::table('member')
@@ -42,6 +58,12 @@ class Analysis extends Controller
         return json($ret);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_brief()
     {
         $ret = Db::table('member')
@@ -69,27 +91,32 @@ class Analysis extends Controller
         return json($ret);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function json_birth()
     {
-        $map['code'] = MemberOper::NORMAL;
+        $map['code'] = ['in', [MemberOper::NORMAL, MemberOper::JUNIOR]];
         $ret = Db::table('member')
             ->where($map)
             ->field([
-                'SUBSTRING(eid,7,8) as eid',
+                'birth as eid',
                 'gender',
                 'year_time',
                 'SUBSTRING(unique_name,1,1) as u'
             ])
             ->cache(600)
             ->select();
-        $today = date('Ymd');
         foreach ($ret as &$item) {
-            $tmp_eid = $item['eid'];
-            if ($tmp_eid > 19491001 && $tmp_eid < $today) {
-                $item['eid'] = $tmp_eid;
-            } else {
+            if ($item['eid'] === '') {
                 $item['eid'] = false;
+                continue;
             }
+            $tmp_eid = DateTimeImmutable::createFromFormat('Y-m-d', $item['eid']);
+            $item['eid'] = intval($tmp_eid->format('Ymd'));
             switch ($item['gender']) {
                 case '男':
                     $item['gender'] = 0;
@@ -105,6 +132,12 @@ class Analysis extends Controller
         return json($ret);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function json_tree()
     {
         $map['f.master'] = ['neq', ''];
