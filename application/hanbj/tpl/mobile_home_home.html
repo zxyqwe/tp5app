@@ -225,6 +225,7 @@
         weui.datePicker({
             start: 1949,
             end: new Date(),
+            defaultValue: name.split('-'),
             onConfirm: function (result) {
                 var ret = new Date();
                 ret.setFullYear(result[0], result[1] - 1, result[2]);
@@ -244,10 +245,11 @@
             if (result === name) {
                 return false;
             }
+            var w = window;
             w.waitloading();
             $.ajax({
                 type: "POST",
-                url: window.u14 + '?action=birth',
+                url: w.u14 + '?action=birth',
                 dataType: "json",
                 data: {
                     _ajax: 1,
