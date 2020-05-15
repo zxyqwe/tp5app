@@ -88,6 +88,8 @@ class Mobile extends Controller
                 'web_name',
                 'bonus',
                 'phone',
+                'birth',
+                'location',
             ])
             ->find();
         if (null === $res) {
