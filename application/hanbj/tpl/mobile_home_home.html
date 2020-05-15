@@ -228,7 +228,7 @@
             onConfirm: function (result) {
                 var ret = new Date();
                 ret.setFullYear(result[0], result[1] - 1, result[2]);
-                change_birth(name, ret.format("yyyy-MM-dd"));
+                change_birth(name, ret.toISOString().slice(0, 10));
             },
             id: 'select_birth_datePicker'
         });
@@ -247,7 +247,7 @@
             w.waitloading();
             $.ajax({
                 type: "POST",
-                url: url,
+                url: window.u14 + '?action=birth',
                 dataType: "json",
                 data: {
                     _ajax: 1,
