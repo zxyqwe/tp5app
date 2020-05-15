@@ -116,7 +116,7 @@ class Analysis extends Controller
                 continue;
             }
             $tmp_eid = DateTimeImmutable::createFromFormat('Y-m-d', $item['eid']);
-            $item['eid'] = intval($tmp_eid->format('Ymd'));
+            $item['eid'] = $tmp_eid->format('Ymd');
             switch ($item['gender']) {
                 case '男':
                     $item['gender'] = 0;
