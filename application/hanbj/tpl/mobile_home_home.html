@@ -223,10 +223,12 @@
             return;
         }
         weui.datePicker({
-            start: 1900,
+            start: 1949,
             end: new Date(),
             onConfirm: function (result) {
-                change_birth(name, result);
+                var ret = new Date();
+                ret.setFullYear(result[0], result[1] - 1, result[2]);
+                change_birth(name, ret.format("yyyy-MM-dd"));
             },
             id: 'select_birth_datePicker'
         });
