@@ -320,10 +320,10 @@ class Develop extends Controller
 
 //        $ret = StatOper::OutputAll(StatOper::HANBJ_WEEK_REPORT);
 
-//        $ret = FameOper::getUnionId('ALL', 'ALL', '1');
-        MemberOper::GenBirthFromEid();
+        $ret = FameOper::getUnionId('ALL', 'ALL', '1');
+//        MemberOper::GenBirthFromEid();
         return json([
-            'msg' => '',
+            'msg' => $ret,
 //            'first' => $first,
 //            'al_ret' => $al_ret,
 //            'u_log' => $u_log
