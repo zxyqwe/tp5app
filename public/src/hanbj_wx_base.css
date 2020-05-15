@@ -271,11 +271,12 @@ ul {
 }
 
 .wx-many-line {
-    -webkit-webkit: line clamp 2;
-    -moz-webkit: line clamp 2;
-    -ms-webkit: line clamp 2;
-    -o-webkit: line clamp 2;
-    webkit: line clamp 2;
+    -webkit-webkit: line clamp 20;
+    -moz-webkit: line clamp 20;
+    -ms-webkit: line clamp 20;
+    -o-webkit: line clamp 20;
+    webkit: line clamp 20;
+    -webkit-line-clamp: 20;
 }
 
 [v-cloak] {

@@ -624,6 +624,35 @@ class MemberOper
             throw new HttpResponseException(json(['msg' => $e], 400));
         }
     }
+
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function GenBirthFromEid()
+    {
+        $map['code'] = MemberOper::NORMAL;
+        $map['birth'] = '';
+        $data = $map;
+        $ret = Db::table('member')
+            ->where($map)
+            ->field([
+                'SUBSTRING(eid,7,8) as eid',
+                'unique_name as u',
+                'id'
+            ])
+            ->cache(600)
+            ->select();
+        $today = date('Ymd');
+        foreach ($ret as &$item) {
+            $tmp_eid = $item['eid'];
+            if ($tmp_eid > 19491001 && $tmp_eid < $today) {
+                $data['birth'] = '' . intval($tmp_eid / 1000) . '-' . (intval($tmp_eid / 100) % 100) . '-' . ($tmp_eid % 100);
+                echo $item['id'] . $item['u'] . $data['birth'] . "\n";
+            }
+        }
+    }
 }
 
 /*
@@ -644,7 +673,9 @@ class MemberOper
   `year_time` int(11) NOT NULL DEFAULT '2013',
   `start_time` varchar(45) NOT NULL,
   `openid` varchar(255) DEFAULT NULL,
-  `bonus` int(11) NOT NULL
+  `bonus` int(11) NOT NULL,
+  `birth` varchar(45) NOT NULL DEFAULT '',
+  `location` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name_UNIQUE` (`unique_name`),
   UNIQUE KEY `t_uniq` (`tieba_id`),
