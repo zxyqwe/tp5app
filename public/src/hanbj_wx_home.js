@@ -438,6 +438,54 @@ var wx_home = (function ($, Vue, w, undefined) {
     var web = function (name) {
         change_item(name, w.u14 + '?action=web_name', '常用网名');
     };
+    var select_birth = function (name) {
+        weui.datePicker({
+            start: 1949,
+            end: new Date(),
+            defaultValue: name.split('-'),
+            onConfirm: function (result) {
+                var ret = new Date();
+                ret.setFullYear(result[0], result[1] - 1, result[2]);
+                change_birth(name, ret.toISOString().slice(0, 10));
+            },
+            id: 'select_birth_datePicker'
+        });
+    };
+    var change_birth = function (name, result) {
+        var str = '<div class="weui-cells weui-cells_form" style="margin-top: 0"><div class="weui-cell">' +
+            '<div class="weui-cell__hd"><label class="weui-label">旧生日' +
+            '</label></div><div class="weui-cell__bd">' + name +
+            '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新生日' +
+            '</label></div><div class="weui-cell__bd"><div class="weui-cell__bd">' + result +
+            '</div></div></div></div>';
+        return weui.confirm(str, function () {
+            if (result === name) {
+                return false;
+            }
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: w.u14 + '?action=birth',
+                dataType: "json",
+                data: {
+                    _ajax: 1,
+                    old: name,
+                    new: result
+                },
+                success: function (msg) {
+                    w.msgok();
+                    w.location.reload(true);
+                    w.location.search += '&_=' + Date.now();
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        }, {
+            title: '修改生日'
+        });
+    };
     var init = function () {
         $cardn = $("#card-1");
         $card0 = $("#card0");
@@ -453,6 +501,7 @@ var wx_home = (function ($, Vue, w, undefined) {
         work_act_log: work_act_log,
         pref: pref,
         web: web,
+        select_birth: select_birth,
         build: function () {
             get_act('416521837905');
         }
