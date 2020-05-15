@@ -61,7 +61,7 @@
                 </div>
                 <div class="weui-cell__ft">{$user.web_name}</div>
             </a>
-            <a class="weui-cell weui-cell_access" href="javascript:">
+            <a class="weui-cell weui-cell_access" href="javascript:select_birth('{$user.birth}')">
                 <div class="weui-cell__bd">
                     <p>生日</p>
                 </div>
@@ -217,4 +217,53 @@
     var $status = $('#card' + $card);
     var worker = "{$worker}";
     wx_home.init();
+
+    window.select_birth = function (name) {
+        if ('{$user.unique_name}' !== '坎丙午') {
+            return;
+        }
+        weui.datePicker({
+            start: 1900,
+            end: new Date(),
+            onConfirm: function (result) {
+                change_birth(name, result);
+            },
+            id: 'select_birth_datePicker'
+        });
+    };
+    window.change_birth = function (name, result) {
+        var str = '<div class="weui-cells weui-cells_form" style="margin-top: 0"><div class="weui-cell">' +
+            '<div class="weui-cell__hd"><label class="weui-label">旧生日' +
+            '</label></div><div class="weui-cell__bd">' + name +
+            '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新生日' +
+            '</label></div><div class="weui-cell__bd"><div class="weui-cell__bd">' + result +
+            '</div></div></div></div>';
+        return weui.confirm(str, function () {
+            if (result === name) {
+                return false;
+            }
+            w.waitloading();
+            $.ajax({
+                type: "POST",
+                url: url,
+                dataType: "json",
+                data: {
+                    _ajax: 1,
+                    old: name,
+                    new: result
+                },
+                success: function (msg) {
+                    w.msgok();
+                    w.location.reload(true);
+                    w.location.search += '&_=' + Date.now();
+                },
+                error: w.msgto,
+                complete: function () {
+                    w.cancelloading();
+                }
+            });
+        }, {
+            title: '修改生日'
+        });
+    };
 </script>
