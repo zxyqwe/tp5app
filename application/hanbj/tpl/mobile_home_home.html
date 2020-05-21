@@ -67,7 +67,7 @@
                 </div>
                 <div class="weui-cell__ft">{$user.birth}</div>
             </a>
-            <a class="weui-cell weui-cell_access" href="javascript:select_location('{$user.location}')">
+            <a class="weui-cell weui-cell_access" href="javascript:wx_home.select_location('{$user.location}')">
                 <div class="weui-cell__bd">
                     <p>地区</p>
                 </div>
@@ -217,96 +217,4 @@
     var $status = $('#card' + $card);
     var worker = "{$worker}";
     wx_home.init();
-    var w = window;
-    w.trans_location_func = function () {
-        var trans_location_dom = $('#trans_location');
-        var name = trans_location_dom.html();
-        if (name.length !== 6) {
-            return;
-        }
-        name = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 2)];
-        for (var idx in w.regions) {
-            idx = w.regions[idx];
-            if (idx.value !== name[0]) {
-                continue;
-            }
-            for (var idx2 in idx.children) {
-                idx2 = idx.children[idx2];
-                if (idx2.value !== name[1]) {
-                    continue;
-                }
-                for (var idx3 in idx2.children) {
-                    idx3 = idx2.children[idx3];
-                    if (idx3.value !== name[2]) {
-                        continue;
-                    }
-                    console.log(idx);
-                    console.log(idx2);
-                    console.log(idx3);
-                    trans_location_dom.html(idx.label + idx2.label + idx3.label);
-                }
-            }
-        }
-    };
-    trans_location_func();
-    var change_location = function (old_num, new_num, new_label) {
-        var trans_location_dom = $('#trans_location');
-        var name = trans_location_dom.html();
-        var str = '<div class="weui-cells weui-cells_form" style="margin-top: 0"><div class="weui-cell">' +
-            '<div class="weui-cell__hd"><label class="weui-label">旧地区' +
-            '</label></div><div class="weui-cell__bd">' + name +
-            '</div></div><div class="weui-cell"><div class="weui-cell__hd"><label class="weui-label">新地区' +
-            '</label></div><div class="weui-cell__bd"><div class="weui-cell__bd">' + new_label +
-            '</div></div></div></div>';
-        return weui.confirm(str, function () {
-            if (old_num === new_num) {
-                return false;
-            }
-            w.waitloading();
-            $.ajax({
-                type: "POST",
-                url: w.u14 + '?action=location',
-                dataType: "json",
-                data: {
-                    _ajax: 1,
-                    old: old_num,
-                    new: new_num
-                },
-                success: function (msg) {
-                    w.msgok();
-                    w.location.reload(true);
-                    w.location.search += '&_=' + Date.now();
-                },
-                error: w.msgto,
-                complete: function () {
-                    w.cancelloading();
-                }
-            });
-        }, {
-            title: '修改地区'
-        });
-    };
-    w.select_location = function (old_name) {
-        if ('{$user.unique_name}' !== '坎丙午') {
-            return;
-        }
-        var name = old_name.toString();
-        if (name.length === 6) {
-            name = [name.substr(0, 2), name.substr(2, 2), name.substr(4, 2)];
-        } else {
-            name = ['11', '01', '08'];
-        }
-        weui.picker(regions, {
-            depth: 3,
-            defaultValue: name,
-            onConfirm: function (result) {
-                var value = result[0].value + result[1].value + result[2].value;
-                var label = result[0].label + result[1].label + result[2].label;
-                console.log(value);
-                console.log(label);
-                change_location(old_name, value, label);
-            },
-            id: 'select_location_picker'
-        });
-    };
 </script>

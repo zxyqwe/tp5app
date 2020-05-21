@@ -258,7 +258,7 @@ class Wxdaily extends Controller
                 return json(['msg' => '生日格式错误 ' . $data[$action]], 400);
             }
         } elseif ($action === 'location') {
-            if (strlen($data[$action]) !== 6 || !is_integer($data[$action])) {
+            if (strlen($data[$action]) !== 6 || !is_numeric($data[$action])) {
                 return json(['msg' => '地区格式错误 ' . $data[$action]], 400);
             }
         }
