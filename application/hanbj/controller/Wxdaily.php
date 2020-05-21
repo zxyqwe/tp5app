@@ -237,7 +237,7 @@ class Wxdaily extends Controller
     public function change()
     {
         $action = input('get.action');
-        if (!in_array($action, ['pref', 'web_name', 'birth'])) {
+        if (!in_array($action, ['pref', 'web_name', 'birth', 'location'])) {
             return json(['msg' => '操作未知' . $action], 400);
         }
         $map['openid'] = session('openid');
@@ -256,6 +256,10 @@ class Wxdaily extends Controller
                 !checkdate($new_val[1], $new_val[2], $new_val[0]) ||
                 !preg_match('/[12]\d\d\d-[01]\d-[0123]\d/', $data[$action])) {
                 return json(['msg' => '生日格式错误 ' . $data[$action]], 400);
+            }
+        } elseif ($action === 'location') {
+            if (strlen($data[$action]) !== 6 || !is_integer($data[$action])) {
+                return json(['msg' => '地区格式错误 ' . $data[$action]], 400);
             }
         }
         $res = Db::table('member')
