@@ -67,7 +67,7 @@
                 </div>
                 <div class="weui-cell__ft">{$user.birth}</div>
             </a>
-            <a class="weui-cell weui-cell_access" href="javascript:">
+            <a class="weui-cell weui-cell_access" href="javascript:select_location('{$user.location}')">
                 <div class="weui-cell__bd">
                     <p>地区</p>
                 </div>
@@ -217,4 +217,24 @@
     var $status = $('#card' + $card);
     var worker = "{$worker}";
     wx_home.init();
+    var w = window;
+    w.select_location = function (name) {
+        if ('{$user.unique_name}' !== '坎丙午') {
+            return;
+        }
+        name = name.toString();
+        if (name.length === 6) {
+            name = [name.substr(0, 2), name.substr(2, 4), name.substr(4, 6)];
+        } else {
+            name = ['11', '01', '08'];
+        }
+        weui.picker(regions, {
+            depth: 3,
+            defaultValue: name.split('-'),
+            onConfirm: function (result) {
+                console.log(result);
+            },
+            id: 'select_location_picker'
+        });
+    };
 </script>
