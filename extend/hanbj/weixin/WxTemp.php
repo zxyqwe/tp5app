@@ -5,6 +5,9 @@ namespace hanbj\weixin;
 
 use hanbj\HBConfig;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use util\MysqlLog;
 use util\ValidateTimeOper;
 
@@ -116,8 +119,15 @@ class WxTemp
         //    {{remark.DATA}}
     ];
 
-    private static function useOtherFuncToLogTempDetail($data)
+    private static function useOtherFuncToLogTempDetail($data, $log)
     {
+        switch ($data['template_id']) {
+            case "GO9x4kW5Hm8gS3t8NLNrZXbKSdH7HdaNOS6aLUf-yFo":
+                $act_info = $data['data']['keyword1']['value'];
+                trace("RPC订阅 {$data['touser']} $act_info", MysqlLog::INFO);
+                trace($log, MysqlLog::LOG);
+                return true;
+        }
         return false;
     }
 
@@ -141,7 +151,7 @@ class WxTemp
             cache($limit, $limit, 60); // 缩短到一分钟
             return $raw;
         }
-        if (!self::useOtherFuncToLogTempDetail($data)) {
+        if (!self::useOtherFuncToLogTempDetail($data, $log)) {
             trace($log, MysqlLog::INFO);
         }
         return 'ok';
@@ -219,6 +229,13 @@ class WxTemp
         return self::base($data, $log);
     }
 
+    /**
+     * @param $type
+     * @param $data
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function notifyStat($type, $data)
     {
         $cache_key = "notifyStat$type";
