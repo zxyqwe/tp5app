@@ -4,6 +4,7 @@ namespace hanbj;
 
 
 use hanbj\weixin\HanbjPayConfig;
+use hanbj\weixin\WxTemp;
 use think\Db;
 use think\exception\HttpResponseException;
 use util\GeneralRet;
@@ -248,11 +249,14 @@ class PayoutOper
                 'fee',
                 'actname'
             ])
-            ->find();
-        if (null === $ret) {
-            return;
+            ->select();
+        foreach ($ret as $item) {
+            if (cache("?AUTH_RETRY{$item['tradeid']}")) {
+                continue;
+            }
+            self::payWX($item);
+            break;
         }
-        self::payWX($ret);
     }
 
     private static function payWX($ret)
@@ -288,6 +292,28 @@ class PayoutOper
             $next_stage = ['status' => self::FAIL];
             $gen_ret = GeneralRet::NAME_VARIFY_WX_FAIL();
             $gen_ret['wx'] = $wx_ret;
+
+            $send_msg = "";
+            if (isset($wx_ret['err_code'])) {
+                $send_msg .= $wx_ret['err_code'];
+            }
+            if (isset($wx_ret['err_code_des'])) {
+                $send_msg .= $wx_ret['err_code_des'];
+            }
+            $send_openid = Db::table("member")
+                ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER]]])
+                ->field(['openid'])
+                ->cache(600)
+                ->select();
+            foreach ($send_openid as $recv_user) {
+                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg);
+            }
+            if (isset($wx_ret['err_code']) && $wx_ret['err_code'] === 'MONEY_LIMIT') {
+                $calc_time = strtotime(date("Y-m-d")) + 25 * 3600 - time();
+                cache("AUTH_RETRY{$ret['tradeid']}", 1, $calc_time);
+                trace("AUTH_RETRY {$ret['tradeid']} {$ret['actname']} {$ret['fee']} $send_msg $calc_time", MysqlLog::ERROR);
+                return $gen_ret;
+            }
         }
         $update_ret = Db::table('payout')
             ->where([

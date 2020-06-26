@@ -309,4 +309,31 @@ class WxTemp
         self::base($data, $log);
         cache($cache_key, $cache_key, 86400 - 120);
     }
+
+    public static function notifyPayoutError($openid, $trade_id, $actname, $fee, $wx_msg)
+    {
+        $data = [
+            "touser" => $openid,
+            "template_id" => "rH5w5wCf_Y0CphLuXBSrYpgYnck8-W6dJXFcqDMjv20",
+            "url" => "https://app.zxyqwe.com/hanbj/mobile/#todo",
+            "topcolor" => "#FF0000",
+            "data" => [
+                "first" => [
+                    "value" => "$trade_id"
+                ],
+                "keyword1" => [
+                    "value" => "$actname"
+                ],
+                'keyword2' => [
+                    'value' => "$fee 分",
+                    "color" => "#173177"
+                ],
+                'remark' => [
+                    'value' => "$wx_msg"
+                ]
+            ]
+        ];
+        $log = "打款失败 " . implode(', ', [$openid, $trade_id, $actname, $fee, $wx_msg]);
+        self::base($data, $log);
+    }
 }
