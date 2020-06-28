@@ -311,7 +311,7 @@ class WxTemp
         cache($cache_key, $cache_key, 86400 - 120);
     }
 
-    public static function notifyPayoutError($openid, $trade_id, $actname, $fee, $wx_msg)
+    public static function notifyPayoutError($openid, $trade_id, $actname, $fee, $wx_msg, $final)
     {
         $data = [
             "touser" => $openid,
@@ -326,7 +326,7 @@ class WxTemp
                     "value" => "$actname"
                 ],
                 'keyword2' => [
-                    'value' => "$fee 分",
+                    'value' => "$fee 分，$final",
                     "color" => "#173177"
                 ],
                 'remark' => [

@@ -305,9 +305,6 @@ class PayoutOper
                 ->field(['openid'])
                 ->cache(600)
                 ->select();
-            foreach ($send_openid as $recv_user) {
-                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg);
-            }
             if (isset($wx_ret['err_code']) &&
                 (
                     $wx_ret['err_code'] === 'MONEY_LIMIT' ||
@@ -316,7 +313,13 @@ class PayoutOper
                 $calc_time = strtotime(date("Y-m-d")) + 25 * 3600 - time();
                 cache("AUTH_RETRY{$ret['tradeid']}", 1, $calc_time);
                 trace("AUTH_RETRY {$ret['tradeid']} {$ret['actname']} {$ret['fee']} $send_msg $calc_time", MysqlLog::ERROR);
+                foreach ($send_openid as $recv_user) {
+                    WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg, "将在 $calc_time 秒后重试");
+                }
                 return $gen_ret;
+            }
+            foreach ($send_openid as $recv_user) {
+                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg, "不会重试，将告知小程序。");
             }
         }
         $update_ret = Db::table('payout')
