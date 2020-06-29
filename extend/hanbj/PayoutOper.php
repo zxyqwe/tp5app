@@ -307,8 +307,7 @@ class PayoutOper
                 ->select();
             if (isset($wx_ret['err_code']) &&
                 (
-                    $wx_ret['err_code'] === 'MONEY_LIMIT' ||
-                    $wx_ret['err_code'] === 'AMOUNT_LIMIT'
+                    $wx_ret['err_code'] === 'MONEY_LIMIT'
                 )) {
                 $calc_time = strtotime(date("Y-m-d")) + 25 * 3600 - time();
                 cache("AUTH_RETRY{$ret['tradeid']}", 1, $calc_time);
