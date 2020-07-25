@@ -91,13 +91,11 @@ class BiliBase
             throw new HttpResponseException(json(['msg' => "$err_info $return_str"], 400));
         }
         if (
-            false !== strpos($return_str, 'timeout')
-            || false !== strpos($return_str, 'time-out')
-            || false !== strpos($return_str, '系统繁忙')
+            false !== strpos($return_str, '系统繁忙')
         ) {
-            if (false !== strpos($url, "bag_send")) {
-                trace("bag_send $return_str", MysqlLog::ERROR);
-            }
+//            if (false !== strpos($url, "bag_send")) {
+//                trace("bag_send $return_str", MysqlLog::ERROR);
+//            }
             cache("bilibilineedlogin", "bilibilineedlogin", 86400);
             trace("超时 $err_info", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $err_info], 400));
