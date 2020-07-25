@@ -95,13 +95,16 @@ class BiliBase
             || false !== strpos($return_str, 'time-out')
             || false !== strpos($return_str, '系统繁忙')
         ) {
+            if (false !== strpos($url, "bag_send")) {
+                trace("bag_send $return_str", MysqlLog::ERROR);
+            }
             cache("bilibilineedlogin", "bilibilineedlogin", 86400);
-            trace($err_info, MysqlLog::ERROR);
+            trace("超时 $err_info", MysqlLog::ERROR);
             throw new HttpResponseException(json(['msg' => $err_info], 400));
         }
         if (true && is_null(json_decode($return_str))) {
             if ($url !== 'https://live.bilibili.com/' . $room) {
-                trace($err_info, MysqlLog::ERROR);
+                trace("空json $err_info", MysqlLog::ERROR);
             }
         }
         if (false !== strpos($return_str, 'token')) {
