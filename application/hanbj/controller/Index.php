@@ -93,7 +93,7 @@ class Index extends Controller
             foreach ($stat_type as $type) {
                 $ret = StatOper::generateOneDay($type);
                 if ($ret > 0) {
-                    break;
+                    return;
                 }
             }
             ActivityOper::revokeTest();
