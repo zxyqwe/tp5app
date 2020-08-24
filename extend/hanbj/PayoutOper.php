@@ -5,11 +5,19 @@ namespace hanbj;
 
 use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
+use PDOStatement;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\exception\PDOException;
+use think\Model;
 use util\GeneralRet;
 use util\MysqlLog;
 use wxsdk\pay\WxPayApi;
+use wxsdk\pay\WxPayException;
 use wxsdk\pay\WxPayTransfer;
 
 class PayoutOper
@@ -52,6 +60,21 @@ class PayoutOper
         }
     }
 
+    /**
+     * @param $to
+     * @param $tradeid
+     * @param $realname
+     * @param $fee
+     * @param $desc
+     * @param $nick
+     * @param $org
+     * @param $act
+     * @return array|false|mixed|PDOStatement|string|Model
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws \Exception
+     */
     public static function recordNameVerifyPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act)
     {
         if ($fee !== 30) {
@@ -91,6 +114,21 @@ class PayoutOper
         }
     }
 
+    /**
+     * @param $to
+     * @param $tradeid
+     * @param $realname
+     * @param $fee
+     * @param $desc
+     * @param $nick
+     * @param $org
+     * @param $act
+     * @param int $first_step
+     * @return mixed
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public static function recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act, $first_step = self::WAIT)
     {
         $fee = intval($fee);
@@ -134,6 +172,13 @@ class PayoutOper
         }
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     * @throws PDOException
+     */
     public static function generateAnyTodo()
     {
         Db::startTrans();
@@ -145,6 +190,14 @@ class PayoutOper
         }
     }
 
+    /**
+     * @return bool
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     * @throws PDOException
+     */
     private static function generateAnyTodo_inner()
     {
         $ret = Db::table('payout')
@@ -196,16 +249,32 @@ class PayoutOper
         return $ret === count($ids);
     }
 
+    /**
+     * @param $key
+     * @throws Exception
+     * @throws PDOException
+     */
     public static function cancelOneTodo($key)
     {
         self::handleOneTodo($key, self::FAIL);
     }
 
+    /**
+     * @param $key
+     * @throws Exception
+     * @throws PDOException
+     */
     public static function authOneTodo($key)
     {
         self::handleOneTodo($key, self::AUTH);
     }
 
+    /**
+     * @param $key
+     * @param $event
+     * @throws Exception
+     * @throws PDOException
+     */
     private static function handleOneTodo($key, $event)
     {
         $unique_name = session("unique_name");
@@ -233,6 +302,14 @@ class PayoutOper
         }
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     * @throws PDOException
+     * @throws WxPayException
+     */
     public static function handleOneAuth()
     {
         $ret = Db::table('payout')
@@ -259,8 +336,24 @@ class PayoutOper
         }
     }
 
+    /**
+     * @param $ret
+     * @return mixed
+     * @throws Exception
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     * @throws PDOException
+     * @throws WxPayException
+     */
     private static function payWX($ret)
     {
+        $send_openid = Db::table("member")
+            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申']]])
+            ->field(['openid'])
+            ->cache(600)
+            ->select();
+
         $input = new WxPayTransfer();
         $input->SetOut_trade_no($ret['tradeid']);
         $input->SetOpen_id($ret['openid']);
@@ -287,6 +380,9 @@ class PayoutOper
                 'status' => self::DONE
             ];
             $gen_ret = GeneralRet::SUCCESS();
+            foreach ($send_openid as $recv_user) {
+                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "支出例行通知", "支付成功，将告知小程序。");
+            }
         } else {
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
             $next_stage = ['status' => self::FAIL];
@@ -300,11 +396,6 @@ class PayoutOper
             if (isset($wx_ret['err_code_des'])) {
                 $send_msg .= $wx_ret['err_code_des'];
             }
-            $send_openid = Db::table("member")
-                ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER]]])
-                ->field(['openid'])
-                ->cache(600)
-                ->select();
             if (isset($wx_ret['err_code']) &&
                 (
                     $wx_ret['err_code'] === 'MONEY_LIMIT'
@@ -336,6 +427,13 @@ class PayoutOper
         return $gen_ret;
     }
 
+    /**
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws Exception
+     * @throws ModelNotFoundException
+     * @throws PDOException
+     */
     public static function notify_original() //1 done, 0 fail
     {
         $payout = Db::table("payout")
