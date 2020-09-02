@@ -320,13 +320,13 @@ class WxTemp
             "topcolor" => "#FF0000",
             "data" => [
                 "first" => [
-                    "value" => "$trade_id"
+                    "value" => "小程序提供的订单号 $trade_id"
                 ],
                 "keyword1" => [
                     "value" => "$actname"
                 ],
                 'keyword2' => [
-                    'value' => "$fee 分，$final",
+                    'value' => "$fee 分。 $final",
                     "color" => "#173177"
                 ],
                 'remark' => [
