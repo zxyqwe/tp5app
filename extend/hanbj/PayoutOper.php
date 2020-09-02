@@ -381,7 +381,7 @@ class PayoutOper
             ];
             $gen_ret = GeneralRet::SUCCESS();
             foreach ($send_openid as $recv_user) {
-                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "支出例行通知", "支付成功，将告知小程序。");
+                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "打款成功，支出例行通知", "支付成功，将告知小程序。");
             }
         } else {
             trace('Pay Out ' . json_encode($input->GetValues()) . ' ' . json_encode($wx_ret), MysqlLog::ERROR);
@@ -404,12 +404,12 @@ class PayoutOper
                 cache("AUTH_RETRY{$ret['tradeid']}", 1, $calc_time);
                 trace("AUTH_RETRY {$ret['tradeid']} {$ret['actname']} {$ret['fee']} $send_msg $calc_time", MysqlLog::ERROR);
                 foreach ($send_openid as $recv_user) {
-                    WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg, "将在 $calc_time 秒后重试");
+                    WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "打款失败，" . $send_msg, "将在 $calc_time 秒后重试");
                 }
                 return $gen_ret;
             }
             foreach ($send_openid as $recv_user) {
-                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], $send_msg, "不会重试，将告知小程序。");
+                WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "打款失败，" . $send_msg, "不会重试，将告知小程序。");
             }
         }
         $update_ret = Db::table('payout')

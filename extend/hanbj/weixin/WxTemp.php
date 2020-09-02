@@ -270,7 +270,7 @@ class WxTemp
                 ]
             ]
         ];
-        self::base($data, "统计信息提醒");
+        self::base($data, "统计信息提醒", false);
     }
 
     public static function notifyTodo($openid, $uname, $num)
@@ -307,7 +307,7 @@ class WxTemp
             ]
         ];
         $log = "待办提醒 " . implode(', ', [$openid, $uname, $num]);
-        self::base($data, $log);
+        self::base($data, $log, false);
         cache($cache_key, $cache_key, 86400 - 120);
     }
 
@@ -334,7 +334,7 @@ class WxTemp
                 ]
             ]
         ];
-        $log = "打款失败 " . implode(', ', [$openid, $trade_id, $actname, $fee, $wx_msg]);
-        self::base($data, $log);
+        $log = implode(', ', [$openid, $trade_id, $actname, $fee, $wx_msg, $final]);
+        self::base($data, $log, false);
     }
 }
