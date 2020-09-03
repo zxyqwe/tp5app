@@ -45,9 +45,9 @@ class LogStat extends BaseStat
                 'type'
             ])
             ->select();
-        $desc = "$fetch_date;";
+        $desc = "日志汇总 $fetch_date;";
         foreach ($ret as $item) {
-            $desc .= "{$item['type']}类型{$item['num']};";
+            $desc .= "{$item['type']}类型{$item['num']}条;";
         }
         return [$fetch_date, json_encode($ret), $desc];
     }
