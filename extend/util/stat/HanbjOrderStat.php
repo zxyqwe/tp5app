@@ -46,8 +46,11 @@ class HanbjOrderStat extends BaseStat
                 'type'
             ])
             ->select();
-        $desc = "支出明细 $fetch_date;";
+        $desc = "收入明细 $fetch_date;";
         foreach ($ret as $item) {
+            if ($item['type'] === '1') {
+                $item['type'] = '会费';
+            }
             $desc .= "{$item['type']}类型{$item['fee']}分;";
         }
         return [$fetch_date, json_encode($ret), $desc];
