@@ -124,10 +124,21 @@ class WxTemp
         switch ($data['template_id']) {
             case "GO9x4kW5Hm8gS3t8NLNrZXbKSdH7HdaNOS6aLUf-yFo":
             case "_UAmJO3kH230039TEOgYtt179_KV8LANcl_XbnQgNK0":
+            {
                 $act_info = $data['data']['keyword1']['value'];
                 trace("RPC订阅 {$data['touser']} $act_info", MysqlLog::INFO);
                 trace($log, MysqlLog::LOG);
                 return true;
+            }
+            case "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY":
+            {
+                $text_info = $data['data']['keyword1']['value'];
+                $result = $data['data']['keyword2']['value'];
+                $title = $data['data']['first']['value'];
+                trace("$title {$data['touser']} $text_info $result", MysqlLog::INFO);
+                trace($log, MysqlLog::LOG);
+                return true;
+            }
         }
         return false;
     }
