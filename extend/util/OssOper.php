@@ -25,6 +25,16 @@ class OssOper
     }
 
     /**
+     * @param $position
+     * @param $filePath
+     * @throws OssException
+     */
+    public function uploadBackups($position, $filePath)
+    {
+        $this->client_->uploadFile(config('oss_buk'), "backups/" . $position, $filePath);
+    }
+
+    /**
      * @return array
      * @throws OssException
      */
