@@ -176,8 +176,9 @@ class Mobile extends Controller
             !isset($data['data']) ||
             !isset($data['data']['token'])
         ) {
-            trace("RpcAuth $register $raw", MysqlLog::ERROR);
+            trace("RpcAuth $register $raw " . json_encode($user_info), MysqlLog::ERROR);
         } else {
+            trace("RpcAuth Read " . json_encode($user_info), MysqlLog::INFO);
             $redirect_data = ["token" => $data['data']['token']];
         }
         return redirect($callback . "?" . http_build_query($redirect_data));
