@@ -101,7 +101,8 @@ class Index extends Controller
 
         // 白天
         if (ValidateTimeOper::IsDayUp()) {
-            BackupOper::run();
+//            BackupOper::runMail();
+            BackupOper::runOss();
             TodoOper::noticeAny();
             $week_report = new HanbjWeekStat();
             $week_report->addLastTodo();

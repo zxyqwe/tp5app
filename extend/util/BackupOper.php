@@ -2,11 +2,16 @@
 
 namespace util;
 
+use OSS\Core\OssException;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 class BackupOper
 {
+    /**
+     * @return PHPMailer
+     * @throws Exception
+     */
     public static function getMail()
     {
         // Passing `true` enables exceptions
@@ -25,7 +30,10 @@ class BackupOper
         return $mail;
     }
 
-    public static function run()
+    /**
+     * @throws Exception
+     */
+    public static function runMail()
     {
         $today = date('Ymd');
         if (cache("?BackupOper$today")) {
@@ -58,6 +66,29 @@ class BackupOper
             trace("备份邮件 $today", MysqlLog::INFO);
         } catch (Exception $e) {
             trace("备份邮件 " . $mail->ErrorInfo, MysqlLog::ERROR);
+        }
+    }
+
+    public static function runOss()
+    {
+        $today = date('Ymd');
+        if (cache("?BackupOper$today")) {
+            return;
+        }
+        cache("BackupOper$today", $today, 86400);
+        $dir_position = date('Ym');
+        $obj = [
+            'hanbj', 'wiki'
+        ];
+        $oss = new OssOper();
+        try {
+            foreach ($obj as $item) {
+                $oss->uploadBackups("$item/$dir_position/$item.$today.sql.gz", config('backup_dir') . DS . "$item.$today.sql.gz");
+
+            }
+            trace("备份Oss $today", MysqlLog::INFO);
+        } catch (OssException $e) {
+            trace("备份Oss " . $e->getMessage(), MysqlLog::ERROR);
         }
     }
 }
