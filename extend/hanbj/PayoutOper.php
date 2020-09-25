@@ -98,7 +98,7 @@ class PayoutOper
         }
         try {
             $ret = self::recordNewPayout($to, $tradeid, $realname, $fee, $desc, $nick, $org, $act, self::AUTH);
-            if ($ret['msg'] !== 'ok') {
+            if ($ret['msg'] !== 'ok' || $ret['code'] !== 0) {
                 return $ret;
             }
             $order = [
@@ -106,7 +106,8 @@ class PayoutOper
                 'tradeid' => $tradeid,
                 'realname' => $realname,
                 'fee' => $fee,
-                'actname' => $act
+                'actname' => $act,
+                'handle_id' => ''
             ];
             return self::payWX($order);
         } catch (\Exception $e) {
@@ -324,7 +325,8 @@ class PayoutOper
                 'openid',
                 'realname',
                 'fee',
-                'actname'
+                'actname',
+                'handle_id'
             ])
             ->select();
         foreach ($ret as $item) {
@@ -348,6 +350,21 @@ class PayoutOper
      */
     private static function payWX($ret)
     {
+        $if_unique_handler = Db::table('payout')
+            ->where([
+                'tradeid' => $ret['tradeid'],
+                'status' => self::AUTH,
+                'payment_no' => ['exp', Db::raw('is null')],
+                'payment_time' => '',
+                'handle_id' => $ret['handle_id']
+            ])
+            ->data(['handle_id' => '' . rand()])
+            ->update();
+        if ($if_unique_handler != 1) {
+            trace("unique pay {$ret['tradeid']}, " . json_encode($ret), MysqlLog::ERROR);
+            return GeneralRet::DUPLICATE_PAY();
+        }
+
         $send_openid = Db::table("member")
             ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申']]])
             ->field(['openid'])
@@ -381,6 +398,9 @@ class PayoutOper
             ];
             $gen_ret = GeneralRet::SUCCESS();
             foreach ($send_openid as $recv_user) {
+                if ($ret['actname'] === '实名认证' && $ret['fee'] === 30) {
+                    break;
+                }
                 WxTemp::notifyPayoutError($recv_user['openid'], $ret['tradeid'], $ret['actname'], $ret['fee'], "打款成功，支出例行通知", "支付成功，将告知小程序。");
             }
         } else {
