@@ -366,7 +366,7 @@ class PayoutOper
         }
 
         $send_openid = Db::table("member")
-            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申']]])
+            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申', '商丙子']]])
             ->field(['openid'])
             ->cache(600)
             ->select();
