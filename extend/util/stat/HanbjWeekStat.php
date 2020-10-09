@@ -157,13 +157,7 @@ class HanbjWeekStat extends BaseStat
                 "code as s"
             ])
             ->select();
-        $unused_ret = Db::table('member')
-            ->where([
-                "code" => MemberOper::UNUSED,
-                "id" => ['>', HBConfig::FIRST_UNAME_ID]
-            ])
-            ->field('count(1) as c')
-            ->find();
+        $unused_ret = MemberOper::get_open_stock();
         $new_group = Db::table("member")
             ->where([
                 "start_time" => ['between', $time_range],
