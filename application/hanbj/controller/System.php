@@ -126,16 +126,16 @@ class System extends Controller
         $map['志愿者增加积分'] = BonusOper::getVolBonus();
         $map['活动增加积分'] = BonusOper::getActBonus();
         $map['活动预置名称'] = BonusOper::getActName();
-
         $res = MemberOper::get_tieba(BonusOper::getWorkers());
         $map['当前微信工作人员'] = implode('，', MemberOper::pretty_tieba($res));
-
         $res = MemberOper::get_tieba(UserOper::reg());
         $map['内网登录权限'] = implode('，', MemberOper::pretty_tieba($res));
-
         $map['内网超级权限'] = implode('，', UserOper::pretty_toplist());
-
         $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
+        $res = MemberOper::get_open_stock();
+        if (null !== $res) {
+            $map['当前可选编号数量'] = $res['c'];
+        }
         return view('token', ['data' => $map]);
     }
 

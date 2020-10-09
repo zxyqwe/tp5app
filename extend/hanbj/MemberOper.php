@@ -142,6 +142,23 @@ class MemberOper
     }
 
     /**
+     * @return array|false|PDOStatement|string|Model
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function get_open_stock()
+    {
+        return Db::table('member')
+            ->where([
+                "code" => MemberOper::UNUSED,
+                "id" => ['>', HBConfig::FIRST_UNAME_ID]
+            ])
+            ->field('count(1) as c')
+            ->find();
+    }
+
+    /**
      * @param $c
      * @return array
      * @throws DataNotFoundException
