@@ -17,6 +17,7 @@ class SubscribeOper
             ->where([
                 'unionid' => ['exp', Db::raw('is null')]
             ])
+            ->order("id desc")
             ->field(['openid'])
             ->select();
     }

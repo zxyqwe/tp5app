@@ -49,7 +49,7 @@ class WxHanbj
         return $token->get();
     }
 
-    public static function addUnionID($access, $limit = 5)
+    public static function addUnionID($access, $limit = 15)
     {
         $ret = SubscribeOper::getNoUnionId();
         $user = [];

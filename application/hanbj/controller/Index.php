@@ -75,7 +75,12 @@ class Index extends Controller
             return;
         }
 
-        WxHanbj::addUnionID($db->get());
+        $un_update = 1;
+        $loop_count = 0;
+        while ($un_update > 0 && $loop_count < 10) {
+            $loop_count += 1;
+            $un_update = WxHanbj::addUnionID($db->get());
+        }
         MemberOper::daily();
 
         PayoutOper::generateAnyTodo();
