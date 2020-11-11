@@ -255,6 +255,9 @@ class WxTemp
             return;
         }
         cache($cache_key, $cache_key, 43200);
+        if (strlen($data) === 0) {
+            return;
+        }
         $openid = Db::table("member")
             ->where(['unique_name' => HBConfig::CODER])
             ->field(['openid'])
