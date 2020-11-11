@@ -48,7 +48,7 @@ class HanbjOrderStat extends BaseStat
             ->select();
         if (count($ret) === 0) {
             trace("没有会费收入", MysqlLog::INFO);
-            return false;
+            return [$fetch_date, json_encode($ret), ""];
         }
         $desc = "收入明细 $fetch_date;";
         foreach ($ret as $item) {
