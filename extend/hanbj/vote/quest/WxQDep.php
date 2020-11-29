@@ -21,9 +21,9 @@ class WxQDep extends WxQuest
         $this->upper = FameOper::getUp();
         $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::vice_secretary]);
         $ret = FameOper::getCurrentLabel();
-        $this->obj = [];
+        $this->obj = ['含章', '迎宾使'];
         foreach ($ret as $item) {
-            if (in_array($item['label'], ['中枢', '秘书处']))
+            if (in_array($item['label'], ['中枢', '秘书处', '换届选举监委会']))
                 continue;
             $this->obj[] = $item['label'];
         }
