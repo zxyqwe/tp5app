@@ -72,12 +72,12 @@ class WxOrg
 
     private static function GetDeadline()
     {
-        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-20 20:00:00");
+        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-12-12 20:00:00");
     }
 
     private static function IsExpired()
     {
-        $start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-10-20 20:00:00");
+        $start_time = DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-10-20 20:00:00");
         $deadline = self::GetDeadline();
         $now = new DateTimeImmutable();
         return $now < $start_time || $now > $deadline;
