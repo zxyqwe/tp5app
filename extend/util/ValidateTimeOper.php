@@ -29,7 +29,7 @@ class ValidateTimeOper
     {
         $now = getdate();
         $month = $now['mon']; // 1 ~ 12
-        if ($month > 11) {
+        if ($month > 10) {
             return true;
         }
         return false;
