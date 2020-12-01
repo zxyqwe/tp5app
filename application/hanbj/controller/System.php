@@ -42,17 +42,18 @@ class System extends Controller
         foreach (WxOrg::vote_cart as $catg) {
             $org = new WxOrg($catg);
             $ans = $org->getAns();
-            $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->obj);
+            $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->quest->obj);
             $ratio = number_format($ratio, 2, '.', '');
-            $miss = cache($org->name . 'getAns.miss');
+            $miss = cache($org->quest->name . 'getAns.miss');
             $ret[] = [
                 'avg' => $org->getAvg($ans),
                 'cmt' => $org->getComment($ans),
-                'obj' => $org->obj,
+                'obj' => $org->quest->obj,
                 'mis' => $miss,
                 'rto' => $ratio,
                 'all' => implode(', ', MemberOper::pretty_tieba(MemberOper::get_tieba($org->getAll()))),
-                'name' => $org->name
+                'name' => $org->quest->name,
+                'rules' => $org->trans_rules()
             ];
         }
         return view('test', ['data' => json_encode($ret)]);
