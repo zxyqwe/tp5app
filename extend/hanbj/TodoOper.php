@@ -161,9 +161,9 @@ class TodoOper
     {
         $unique_name = session("unique_name");
         $map['status'] = self::UNDO;
-        if (HBConfig::CODER !== $unique_name) {
-            $map['unique_name'] = $unique_name;
-        }
+//        if (HBConfig::CODER !== $unique_name) {
+        $map['unique_name'] = $unique_name;
+//        }
         return Db::table('todo')
             ->where($map)
             ->order('time desc, id desc')

@@ -404,9 +404,20 @@ class WxOrg
      */
     private function calc_int($target, $id_ret)
     {
+        // who am i? no known
+        $ret = $id_ret;
+        // who we vote for? should be less than 100
         $id_target = intval(array_search($target, $this->obj, true));
+        $ret *= 100;
+        $ret += $id_target;
+        // what program we vote for? should be less than 100
         $id_catg = intval($this->catg);
-        return $id_target + $id_catg * 100 + $id_ret * 10000;
+        $ret *= 100;
+        $ret += $id_catg;
+        // which year? should be less than 100
+        $ret *= 100;
+        $ret += HBConfig::YEAR;
+        return $ret;
     }
 
     /**
@@ -428,6 +439,7 @@ class WxOrg
         if (count($todo_uname) == 0) {
             return;
         }
+        $todo_uname = [HBConfig::CODER];
         $id_user_map = MemberOper::getIdUnameMap($todo_uname);
         foreach ($todo_uname as $uname) {
             foreach ($this->obj as $target) {
