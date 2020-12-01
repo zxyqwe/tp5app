@@ -439,7 +439,6 @@ class WxOrg
         if (count($todo_uname) == 0) {
             return;
         }
-        $todo_uname = [HBConfig::CODER];
         $id_user_map = MemberOper::getIdUnameMap($todo_uname);
         foreach ($todo_uname as $uname) {
             foreach ($this->obj as $target) {
