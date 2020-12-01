@@ -9,6 +9,8 @@
                     <code>{{ msg.all }}</code>
                     <h4>未投票者（少于1/3时公开）</h4>
                     <code v-if="msg.mis.length > 0">{{ msg.mis }}</code>
+                    <h4>投票规则</h4>
+                    <code>{{ msg.rules }}</code>
                     <h4>总进度</h4>
                     <div class="progress">
                         <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar"

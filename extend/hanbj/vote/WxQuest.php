@@ -25,9 +25,13 @@ class WxQuest
     /**
      * @var array
      */
-    public $lower;
+    public $fame_power2;
     /**
      * @var array
      */
-    public $upper;
+    public $fame_power1;
+    /**
+     * @var array
+     */
+    public $fame_power_half;
 }

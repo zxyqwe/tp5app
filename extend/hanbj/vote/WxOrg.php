@@ -4,6 +4,7 @@ namespace hanbj\vote;
 
 use DateTimeImmutable;
 use Exception;
+use hanbj\FameOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
 use hanbj\TodoOper;
@@ -22,39 +23,19 @@ class WxOrg
 {
     const vote_cart = [1, 2];
     /**
-     * @var int
+     * @var WxQuest
      */
-    private $max_score;
-    /**
-     * @var array
-     */
-    public $test;
-    /**
-     * @var string
-     */
-    public $name;
-    /**
-     * @var array
-     */
-    public $obj;
-    /**
-     * @var array
-     */
-    private $lower;
-    /**
-     * @var array
-     */
-    private $upper;
+    public $quest;
     private $catg;
 
     function __construct($catg)
     {
         switch ($catg) {
             case 2:
-                $quest = new WxQDep();
+                $this->quest = new WxQDep();
                 break;
             case 1:
-                $quest = new WxQTop();
+                $this->quest = new WxQTop();
                 break;
             default:
                 $res = json(['msg' => '投票分类错误'], 400);
@@ -62,17 +43,11 @@ class WxOrg
                 break;
         }
         $this->catg = $catg;
-        $this->upper = $quest->upper;
-        $this->lower = $quest->lower;
-        $this->obj = $quest->obj;
-        $this->name = $quest->name;
-        $this->test = $quest->test;
-        $this->max_score = $quest->max_score;
     }
 
     private static function GetDeadline()
     {
-        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-12-12 20:00:00");
+        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-12-10 23:59:59");
     }
 
     private static function IsExpired()
@@ -90,14 +65,52 @@ class WxOrg
         return $deadline->diff($now);
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function getAll()
     {
-        return array_merge($this->upper, $this->lower);
+        $ret = [];
+        $ret = array_merge($ret, $this->quest->fame_power2);
+        $ret = array_merge($ret, $this->quest->fame_power1);
+        $ret = array_merge($ret, $this->quest->fame_power_half);
+        return FameOper::get_for_test($ret);
     }
 
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function getUser()
     {
         return array_merge($this->getAll(), [HBConfig::CODER]);
+    }
+
+    public function trans_rules()
+    {
+        $idx = 0;
+        $power2_rule = "";
+        $power1_rule = "";
+        $power_half_rule = "";
+        $no_involve = "";
+        while ($idx <= FameOper::max_pos) {
+            if (in_array($idx, $this->quest->fame_power2)) {
+                $power2_rule .= FameOper::translate($idx) . "；";
+            } elseif (in_array($idx, $this->quest->fame_power1)) {
+                $power1_rule .= FameOper::translate($idx) . "；";
+            } elseif (in_array($idx, $this->quest->fame_power_half)) {
+                $power_half_rule .= FameOper::translate($idx) . "；";
+            } else {
+                $no_involve .= FameOper::translate($idx) . "；";
+            }
+            $idx++;
+        }
+        return "票力2：$power2_rule\n票力1：$power1_rule\n票力0.5：$power_half_rule\n不参与：$no_involve";
     }
 
     /**
@@ -114,7 +127,7 @@ class WxOrg
             ->where([
                 'year' => HBConfig::YEAR,
                 'catg' => $this->catg,
-                'name' => ['in', $this->obj]
+                'name' => ['in', $this->quest->obj]
             ])
             ->field([
                 'ans',
@@ -126,14 +139,15 @@ class WxOrg
             $ans_list[$item['unique_name'] . $item['name']] = $item['ans'];
         }
 
+        $fame_power2_uniaue_name = FameOper::get_for_test($this->quest->fame_power2);
         foreach ($user as $u) {
-            foreach ($this->obj as $o) {
+            foreach ($this->quest->obj as $o) {
                 if (isset($ans_list[$u . $o])) {
                     $data[] = [
                         'ans' => json_decode($ans_list[$u . $o], true),
                         'u' => $u,
                         'o' => $o,
-                        'w' => in_array($u, $this->upper) ? 2.0 : 1.0
+                        'w' => in_array($u, $fame_power2_uniaue_name) ? 2.0 : 1.0
                     ];
                 } else {
                     $miss[] = $u;
@@ -141,7 +155,7 @@ class WxOrg
             }
         }
         $miss = array_unique($miss);
-        cache($this->name . 'getAns.miss_real', implode(',', $miss));
+        cache($this->quest->name . 'getAns.miss_real', implode(',', $miss));
         if (session("unique_name") != HBConfig::CODER && count($miss) * 3 > count($user)) {
             $miss = ['秘密（' . count($miss) . '/' . count($user) . '）'];
         } else {
@@ -152,21 +166,21 @@ class WxOrg
             }
         }
         $miss = implode(', ', $miss);
-        cache($this->name . 'getAns.miss', $miss);
+        cache($this->quest->name . 'getAns.miss', $miss);
         return $data;
     }
 
     public function getAvg($data)
     {
         $cnt = [];
-        foreach ($this->obj as $o) {
+        foreach ($this->quest->obj as $o) {
             $cnt[$o] = 0;
         }
         $ans = [];
         foreach ($data as $item) {
             $weight = $item['w'];
             $cnt[$item['o']] += $weight;
-            for ($i = 0; $i < count($this->test); $i++) {
+            for ($i = 0; $i < count($this->quest->test); $i++) {
                 if (!isset($ans[$item['o']])) {
                     $ans[$item['o']] = [];
                 }
@@ -178,13 +192,13 @@ class WxOrg
         }
 
         $ret = [];
-        for ($i = 0; $i < count($this->test); $i++) {
-            $test = $this->test[$i];
+        for ($i = 0; $i < count($this->quest->test); $i++) {
+            $test = $this->quest->test[$i];
             if (!isset($test['a'])) {
                 continue;
             }
             $tmp = ['q' => $test['q']];
-            foreach ($this->obj as $o) {
+            foreach ($this->quest->obj as $o) {
                 if (isset($ans[$o])) {
                     if ($cnt[$o] === 0) {
                         $ans[$o][$i] = 0;
@@ -197,8 +211,8 @@ class WxOrg
             }
             $ret[] = $tmp;
         }
-        $tmp = ['q' => "总分（{$this->max_score}分）"];
-        foreach ($this->obj as $o) {
+        $tmp = ['q' => "总分（{$this->quest->max_score}分）"];
+        foreach ($this->quest->obj as $o) {
             if (isset($ans[$o])) {
                 $tmp[$o] = number_format(array_sum($ans[$o]), 2, '.', '');
             }
@@ -219,7 +233,7 @@ class WxOrg
             for ($i = 0; $i < count($cmt); $i++) {
                 if (empty($cmt[$i]))
                     continue;
-                $tmp = $this->test[$i];
+                $tmp = $this->quest->test[$i];
                 $s = 10;
                 if (isset($tmp['s'])) {
                     $s = $tmp['s'];
@@ -245,12 +259,12 @@ class WxOrg
     private function progress()
     {
         $all = $this->getAll();
-        $len = count($all) * count($this->obj);
+        $len = count($all) * count($this->quest->obj);
 
         $map = [
             'year' => HBConfig::YEAR,
             'catg' => $this->catg,
-            'name' => ['in', $this->obj],
+            'name' => ['in', $this->quest->obj],
             'unique_name' => ['in', $this->getAll()]
         ];
         $acc = Db::table('score')
@@ -266,11 +280,11 @@ class WxOrg
         if (!is_array($ans)) {
             throw new HttpResponseException(json(['msg' => '答案类型不匹配！'], 400));
         }
-        $len = count($this->test);
+        $len = count($this->quest->test);
         if (!isset($ans['sel']) || !is_array($ans['sel']) || count($ans['sel']) !== $len) {
             throw new HttpResponseException(json(['msg' => '没有答案啊？'], 400));
         }
-        if (array_sum($ans['sel']) === $this->max_score) {
+        if (array_sum($ans['sel']) === $this->quest->max_score) {
             throw new HttpResponseException(json(['msg' => '不能给满分！'], 400));
         }
         if (!isset($ans['sel_add'])) {
@@ -280,7 +294,7 @@ class WxOrg
             throw new HttpResponseException(json(['msg' => '文字类型不匹配！'], 400));
         }
         foreach (range(0, $len - 1) as $i) {
-            $tmp = $this->test[$i];
+            $tmp = $this->quest->test[$i];
             if (!isset($tmp['a'])) {
                 continue;
             }
@@ -311,7 +325,7 @@ class WxOrg
      */
     public function listobj($uname)
     {
-        $ret = "\n\n提取投票......{$this->name}";
+        $ret = "\n\n提取投票......{$this->quest->name}";
         if (!in_array($uname, $this->getUser())) {
             return "$ret\n身份验证......失败\n";
         }
@@ -343,7 +357,7 @@ class WxOrg
             $ans_list[] = $item['name'];
         }
 
-        foreach ($this->obj as $item) {
+        foreach ($this->quest->obj as $item) {
             $nonce = WxHanbj::setJump('wxtest', "$item-{$this->catg}", $uname, 60 * 60);
             if (!in_array($item, $ans_list)) {
                 $unfinish .= "<a href=\"https://app.zxyqwe.com/hanbj/mobile/index/obj/$nonce\">$item</a>\n";
@@ -407,7 +421,7 @@ class WxOrg
         // who am i? no known
         $ret = $id_ret;
         // who we vote for? should be less than 100
-        $id_target = intval(array_search($target, $this->obj, true));
+        $id_target = intval(array_search($target, $this->quest->obj, true));
         $ret *= 100;
         $ret += $id_target;
         // what program we vote for? should be less than 100
@@ -428,20 +442,20 @@ class WxOrg
         if (self::IsExpired()) {
             return;
         }
-        $cache_key = $this->name . "try_add_todo";
+        $cache_key = $this->quest->name . "try_add_todo";
         if (cache("?$cache_key")) {
             return;
         }
         cache($cache_key, $cache_key, 3600);
 
-        $todo_uname = "" . cache($this->name . 'getAns.miss_real');
+        $todo_uname = "" . cache($this->quest->name . 'getAns.miss_real');
         $todo_uname = explode(",", $todo_uname);
         if (count($todo_uname) == 0) {
             return;
         }
         $id_user_map = MemberOper::getIdUnameMap($todo_uname);
         foreach ($todo_uname as $uname) {
-            foreach ($this->obj as $target) {
+            foreach ($this->quest->obj as $target) {
                 $key = $this->calc_int($target, intval($id_user_map[$uname]));
                 if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $key)) {
                     continue;
@@ -450,7 +464,7 @@ class WxOrg
                     TodoOper::VOTE_ORG,
                     $key,
                     json_encode([
-                        "name" => $this->name,
+                        "name" => $this->quest->name,
                         "target" => $target
                     ]),
                     $uname);

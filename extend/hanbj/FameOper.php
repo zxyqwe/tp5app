@@ -47,6 +47,42 @@ class FameOper
         self::leave
     ];
 
+    public static function translate($type)
+    {
+        switch ($type) {
+            case self::chairman:
+                return "会长";
+            case self::vice_chairman:
+                return "副会长";
+            case self::manager:
+                return "部长";
+            case self::vice_manager:
+                return "副部长";
+            case self::member:
+                return "干事";
+            case self::assistant:
+                return "助理";
+            case self::commissioner:
+                return "专员";
+            case self::secretary:
+                return "秘书长";
+            case self::vice_secretary:
+                return "副秘书长";
+            case self::fame_chair:
+                return "名誉会长";
+            case self::like_manager:
+                return "代理部长";
+            case self::leave:
+                return "撤销记录";
+            case self::fixed_vice_chairman:
+                return "专职副会长";
+            case self::intern:
+                return "实习";
+            default:
+                return "未知：$type";
+        }
+    }
+
     /**
      * @return array
      * @throws DataNotFoundException
@@ -107,10 +143,37 @@ class FameOper
      * @throws ModelNotFoundException
      * @throws DbException
      */
+    public static function get_for_test($group)
+    {
+        $map['year'] = HBConfig::YEAR;
+        $map['grade'] = ['in', $group];
+        $map['type'] = 0;
+        return self::get_inner($map);
+    }
+
+    /**
+     * @param $group
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public static function get($group)
     {
         $map['year'] = HBConfig::YEAR;
         $map['grade'] = ['in', $group];
+        return self::get_inner($map);
+    }
+
+    /**
+     * @param $map
+     * @return array
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
+    private static function get_inner($map)
+    {
         $ret = Db::table('fame')
             ->where($map)
             ->field('unique_name as u')

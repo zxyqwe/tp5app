@@ -18,8 +18,20 @@ class WxQDep extends WxQuest
      */
     function __construct()
     {
-        $this->upper = FameOper::getUp();
-        $this->lower = FameOper::get([FameOper::vice_manager, FameOper::fame_chair, FameOper::like_manager, FameOper::vice_secretary]);
+        $this->fame_power2 = [
+            FameOper::chairman,
+            FameOper::vice_chairman,
+            FameOper::fixed_vice_chairman,
+            FameOper::secretary,
+            FameOper::manager
+        ];
+        $this->fame_power1 = [
+            FameOper::vice_manager,
+            FameOper::fame_chair,
+            FameOper::like_manager,
+            FameOper::vice_secretary
+        ];
+        $this->fame_power_half = [];
         $ret = FameOper::getCurrentLabel();
         $this->obj = ['含章', '迎宾使'];
         foreach ($ret as $item) {

@@ -49,7 +49,7 @@ class Wxtest extends Controller
         $catg = intval($obj[1]);
         $obj = $obj[0];
         $org = new WxOrg($catg);
-        if (!in_array($obj, $org->obj)) {
+        if (!in_array($obj, $org->quest->obj)) {
             return json(['msg' => '投票目标错误'], 400);
         }
         $uname = session('unique_name');
@@ -57,8 +57,8 @@ class Wxtest extends Controller
             return json(['msg' => '没有投票权'], 400);
         }
         $data['uname'] = $obj;
-        $data['name'] = $org->name;
-        $data['test'] = $org->test;
+        $data['name'] = $org->quest->name;
+        $data['test'] = $org->quest->test;
         $data['catg'] = $catg;
         $ans = Db::table('score')
             ->where([
@@ -80,12 +80,18 @@ class Wxtest extends Controller
         return view('home', ['obj' => json_encode($data)]);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function up()
     {
         $obj = input('post.obj');
         $catg = intval(input('post.catg'));
         $org = new WxOrg($catg);
-        if (!in_array($obj, $org->obj)) {
+        if (!in_array($obj, $org->quest->obj)) {
             return json(['msg' => '投票目标错误'], 400);
         }
         $ans = input('post.ans/a', []);
