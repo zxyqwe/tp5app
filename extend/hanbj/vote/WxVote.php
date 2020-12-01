@@ -130,6 +130,7 @@ class WxVote
                 ->field(['id'])
                 ->find();
             if (null !== $ret) {
+                // every year, vote once. so only my id num need
                 $key = intval($ret['id']) * 1000 + HBConfig::YEAR;
                 if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
                     TodoOper::handleTodo(TodoOper::VOTE_TOP, $key, TodoOper::DONE);
@@ -306,6 +307,7 @@ class WxVote
 
         $vote_name = "第" . (HBConfig::YEAR + 1) . "届会长层换届选举";
         foreach ($todo_uname as $uname) {
+            // every year, vote once. so only my id num need
             $key = intval($uname_id_map[$uname]) * 1000 + HBConfig::YEAR;
             if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_TOP, $key)) {
                 continue;
