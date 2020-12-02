@@ -181,7 +181,70 @@ class WxOrg
 
     public function getAvgGroupByLabel($data)
     {
+        $group_data = [];
+        foreach ($data as $item) {
+            if (in_array($item['l'], ['换届选举监委会'])) {
+                continue;
+            }
+            if (!isset($group_data[$item['l']])) {
+                $group_data[$item['l']] = [];
+            }
+            $group_data[$item['l']][] = $item;
+        }
+        $all_label_data = [];
+        foreach ($group_data as $key => $v) {
+            $label_data = $this->getAvg($v);
+            $all_label_data[] = [$key, $label_data];
+        }
+        assert(count($all_label_data) === count($group_data));
 
+        $ret = [];
+        $ans = [];
+        $log_str = "getAvgGroupByLabel: ";
+        for ($i = 0; $i < count($this->quest->test); $i++) {
+            $test = $this->quest->test[$i];
+            if (!isset($test['a'])) {
+                continue;
+            }
+            $tmp = ['q' => $test['q']];
+            foreach ($this->quest->obj as $o) {
+                $tmp[$o] = 0;
+                $used_label_num = 0;
+                $log_str .= "$o -> ";
+                foreach ($all_label_data as $item) {
+                    $current_q = $item[1][count($ret)];
+                    if (!isset($current_q[$o])) {
+                        continue;
+                    }
+                    $tmp[$o] += floatval($current_q[$o]);
+                    $used_label_num++;
+                    $log_str .= "" . $item[0] . " " . floatval($current_q[$o]) . ";";
+                }
+                $log_str .= " <- $used_label_num;";
+                if ($used_label_num === 0) {
+                    $tmp[$o] = 0;
+                } else {
+                    $tmp[$o] /= $used_label_num;
+                }
+                if (!isset($ans[$o])) {
+                    $ans[$o] = 0;
+                }
+                $ans[$o] += $tmp[$o];
+                $tmp[$o] = number_format($tmp[$o], 2, '.', '');
+            }
+            $ret[] = $tmp;
+        }
+        $tmp = ['q' => "总分（{$this->quest->max_score}分）"];
+        foreach ($this->quest->obj as $o) {
+            if (isset($ans[$o])) {
+                $tmp[$o] = number_format($ans[$o], 2, '.', '');
+            }
+        }
+        $ret[] = $tmp;
+        if (session('name') === HBConfig::CODER) {
+            trace($log_str, MysqlLog::INFO);
+        }
+        return $ret;
     }
 
     public function getAvg($data)
