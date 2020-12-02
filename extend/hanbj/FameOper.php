@@ -138,6 +138,29 @@ class FameOper
 
     /**
      * @param $group
+     * @return false|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function get_label_for_test($group)
+    {
+        $map['year'] = HBConfig::YEAR;
+        $map['grade'] = ['in', $group];
+        $map['type'] = 0;
+        return Db::table('fame')
+            ->where($map)
+            ->field([
+                'unique_name as u',
+                'label as l',
+                'grade as g'
+            ])
+            ->cache(600)
+            ->select();
+    }
+
+    /**
+     * @param $group
      * @return array
      * @throws DataNotFoundException
      * @throws ModelNotFoundException
@@ -419,6 +442,7 @@ class FameOper
                 throw new HttpResponseException(json(['msg' => $res], 400));
             }
         } catch (Exception $e) {
+            // Think Exception
             Db::rollback();
             $e = $e->getMessage();
             preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key \'year_uniq\'/', $e, $token);

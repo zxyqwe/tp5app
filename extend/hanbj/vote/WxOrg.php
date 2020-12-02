@@ -139,7 +139,15 @@ class WxOrg
             $ans_list[$item['unique_name'] . $item['name']] = $item['ans'];
         }
 
-        $fame_power2_uniaue_name = FameOper::get_for_test($this->quest->fame_power2);
+        $user_fame = $this->quest->fame_power2;
+        $user_fame = array_merge($user_fame, $this->quest->fame_power1);
+        $user_fame = array_merge($user_fame, $this->quest->fame_power_half);
+        $user_label = FameOper::get_label_for_test($user_fame);
+        $user_fame = [];
+        foreach ($user_label as $item) {
+            $user_fame[$item['u']] = $item;
+        }
+
         foreach ($user as $u) {
             foreach ($this->quest->obj as $o) {
                 if (isset($ans_list[$u . $o])) {
@@ -147,7 +155,8 @@ class WxOrg
                         'ans' => json_decode($ans_list[$u . $o], true),
                         'u' => $u,
                         'o' => $o,
-                        'w' => in_array($u, $fame_power2_uniaue_name) ? 2.0 : 1.0
+                        'l' => $user_fame[$u]['l'],
+                        'g' => $user_fame[$u]['g']
                     ];
                 } else {
                     $miss[] = $u;
@@ -170,6 +179,11 @@ class WxOrg
         return $data;
     }
 
+    public function getAvgGroupByLabel($data)
+    {
+
+    }
+
     public function getAvg($data)
     {
         $cnt = [];
@@ -178,7 +192,14 @@ class WxOrg
         }
         $ans = [];
         foreach ($data as $item) {
-            $weight = $item['w'];
+            $weight = 0;
+            if (in_array($item['g'], $this->quest->fame_power2)) {
+                $weight = 2.0;
+            } elseif (in_array($item['g'], $this->quest->fame_power1)) {
+                $weight = 1.0;
+            } elseif (in_array($item['g'], $this->quest->fame_power_half)) {
+                $weight = 0.5;
+            }
             $cnt[$item['o']] += $weight;
             for ($i = 0; $i < count($this->quest->test); $i++) {
                 if (!isset($ans[$item['o']])) {
