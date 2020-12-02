@@ -45,8 +45,13 @@ class System extends Controller
             $ratio = count($ans) * 100.0 / count($org->getAll()) / count($org->quest->obj);
             $ratio = number_format($ratio, 2, '.', '');
             $miss = cache($org->quest->name . 'getAns.miss');
+            if ($catg == 2) {
+                $avg_ans = $org->getAvgGroupByLabel($ans);
+            } else {
+                $avg_ans = $org->getAvg($ans);
+            }
             $ret[] = [
-                'avg' => $org->getAvg($ans),
+                'avg' => $avg_ans,
                 'cmt' => $org->getComment($ans),
                 'obj' => $org->quest->obj,
                 'mis' => $miss,
