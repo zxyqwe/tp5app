@@ -23,13 +23,13 @@ class WxQDep extends WxQuest
             FameOper::vice_chairman,
             FameOper::fixed_vice_chairman,
             FameOper::secretary,
-            FameOper::manager
+            FameOper::manager,
+            FameOper::vice_secretary
         ];
         $this->fame_power1 = [
             FameOper::vice_manager,
             FameOper::fame_chair,
-            FameOper::like_manager,
-            FameOper::vice_secretary
+            FameOper::like_manager
         ];
         $this->fame_power_half = [
             FameOper::member,
