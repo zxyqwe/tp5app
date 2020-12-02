@@ -31,7 +31,11 @@ class WxQDep extends WxQuest
             FameOper::like_manager,
             FameOper::vice_secretary
         ];
-        $this->fame_power_half = [];
+        $this->fame_power_half = [
+            FameOper::member,
+            FameOper::assistant,
+            FameOper::commissioner
+        ];
         $ret = FameOper::getCurrentLabel();
         $this->obj = ['含章', '迎宾使'];
         foreach ($ret as $item) {
