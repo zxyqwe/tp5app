@@ -125,7 +125,7 @@ class WxHanbj
                         $org = new WxOrg(intval($item));
                         $cont .= $org->listobj($unique_name);
                     }
-                    $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/system/test\" >点我</a>\n";
+                    // $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/system/test\" >点我</a>\n";
                     return self::auto($from, $to, $cont, '投票');
                 } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "调试")) {
                     $parse_cont = explode(' ', $cont);
