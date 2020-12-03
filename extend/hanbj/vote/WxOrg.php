@@ -242,9 +242,9 @@ class WxOrg
             }
         }
         $ret[] = $tmp;
-        if (session('name') === HBConfig::CODER) {
-            trace($log_str, MysqlLog::INFO);
-        }
+//        if (session('name') === HBConfig::CODER) {
+//            trace($log_str, MysqlLog::INFO);
+//        }
         return $ret;
     }
 
