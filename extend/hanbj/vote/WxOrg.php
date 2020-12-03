@@ -17,6 +17,7 @@ use think\exception\DbException;
 use think\exception\HttpResponseException;
 use hanbj\weixin\WxHanbj;
 use think\exception\PDOException;
+use think\response\Json;
 use util\MysqlLog;
 
 class WxOrg
@@ -452,8 +453,21 @@ class WxOrg
         return $ret . $sep . $unfinish . $sep . $finish . $sep;
     }
 
+    /**
+     * @param $uname
+     * @param $obj
+     * @param $ans
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws PDOException
+     * @throws \think\Exception
+     */
     public function addAns($uname, $obj, $ans)
     {
+        $user_id = MemberOper::getIdUnameMap([$uname]);
+        $id_key = $this->calc_int($obj, intval($user_id[$uname]));
         try {
             $ret = Db::table('score')
                 ->where([
@@ -478,8 +492,6 @@ class WxOrg
             } else {
                 trace("投票update $uname {$this->catg} $obj", MysqlLog::INFO);
             }
-            $user_id = MemberOper::getIdUnameMap([$uname]);
-            $id_key = $this->calc_int($obj, intval($user_id[$uname]));
             if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
                 TodoOper::handleTodo(TodoOper::VOTE_ORG, $id_key, TodoOper::DONE);
             }
@@ -487,6 +499,9 @@ class WxOrg
             $e = $e->getMessage();
             preg_match('/Duplicate entry \'(.*)-(.*)-(.*)\' for key/', $e, $token);
             if (isset($token[2])) {
+                if (!TodoOper::TestTypeKeyValid(TodoOper::VOTE_ORG, $id_key)) {
+                    TodoOper::handleTodo(TodoOper::VOTE_ORG, $id_key, TodoOper::DONE);
+                }
                 return json(['msg' => 'OK']);
             }
             trace("Test UP $e", MysqlLog::ERROR);
