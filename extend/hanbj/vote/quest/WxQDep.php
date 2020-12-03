@@ -39,7 +39,7 @@ class WxQDep extends WxQuest
         $ret = FameOper::getCurrentLabel();
         $this->obj = ['含章', '迎宾使'];
         foreach ($ret as $item) {
-            if (in_array($item['label'], ['中枢', '秘书处', '换届选举监委会']))
+            if (in_array($item['label'], ['中枢', '换届选举监委会']))
                 continue;
             $this->obj[] = $item['label'];
         }
