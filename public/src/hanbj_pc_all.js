@@ -108,7 +108,8 @@ var all_mem = (function ($, w, undefined) {
         });
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
@@ -227,7 +228,8 @@ var baselog = (function ($, Vue, w, undefined) {
         });
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, Vue, window);
 
@@ -274,8 +276,9 @@ var feelog = (function ($, Vue, w, undefined) {
 
 var card = (function ($, w, undefined) {
     'use strict';
+    var $table;
     var init = function () {
-        var $table = $('#table');
+        $table = $('#table');
         $table.bootstrapTable({
             'pageSize': 20,
             formatSearch: function () {
@@ -290,7 +293,8 @@ var card = (function ($, w, undefined) {
         };
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
@@ -326,7 +330,8 @@ var order = (function ($, w, undefined) {
         });
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
@@ -531,14 +536,15 @@ var tlog = (function ($, w, undefined) {
         });
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
 
 var fame = (function ($, Vue, w, undefined) {
     'use strict';
-    var vmain;
+    var vmain, $table;
     var init = function () {
         vmain = new Vue({
             el: '#fame',
@@ -657,7 +663,7 @@ var fame = (function ($, Vue, w, undefined) {
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
         };
-        var $table = $('#table');
+        $table = $('#table');
         $table.bootstrapTable({
             columns: [
                 {field: 'id', title: 'ID'},
@@ -700,7 +706,8 @@ var fame = (function ($, Vue, w, undefined) {
     return {
         init: init,
         initlog: initlog,
-        fameori: fameori
+        fameori: fameori,
+        get_table: $table
     };
 })(jQuery, Vue, window);
 
@@ -1819,6 +1826,7 @@ var wprom = (function ($, w, undefined) {
         $table.bootstrapTable({});
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);

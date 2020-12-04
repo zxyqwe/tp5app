@@ -1,7 +1,8 @@
 var bulletin = (function ($, w, undefined) {
     'use strict';
+    var $table;
     var init = function () {
-        var $table = $('#table');
+        $table = $('#table');
         var alr = $('#ggly').html();
         var nye = $('#rgly').html();
         var time = new Date();
@@ -22,18 +23,21 @@ var bulletin = (function ($, w, undefined) {
         });
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
 var bonus = (function ($, w, undefined) {
     'use strict';
+    var $table;
     var init = function () {
-        var $table = $('#table');
+        $table = $('#table');
         $table.bootstrapTable();
     };
     return {
-        init: init
+        init: init,
+        get_table: $table
     };
 })(jQuery, window);
 
