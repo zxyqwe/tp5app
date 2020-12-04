@@ -519,6 +519,9 @@ var tlog = (function ($, w, undefined) {
                         level: this.level
                     }
                 }
+            },
+            ready: function () {
+                this.level = 'info';
             }
         });
         vmain.$watch('level', function (nv) {
@@ -542,6 +545,10 @@ var tlog = (function ($, w, undefined) {
             'pageSize': 20,
             'silent': true
         });
+        $table.bootstrapTable('hideColumn', "ip");
+        $table.bootstrapTable('hideColumn', "method");
+        $table.bootstrapTable('hideColumn', "url");
+        $table.bootstrapTable('hideColumn', "query");
     };
     return {
         init: init,
