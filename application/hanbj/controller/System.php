@@ -50,9 +50,11 @@ class System extends Controller
             } else {
                 $avg_ans = $org->getAvg($ans);
             }
+            $cmt = $org->getComment($ans);
+            usort($cmt, [WxOrg::class, 'cmp']);
             $ret[] = [
                 'avg' => $avg_ans,
-                'cmt' => $org->getComment($ans),
+                'cmt' => $cmt,
                 'obj' => $org->quest->obj,
                 'mis' => $miss,
                 'rto' => $ratio,
