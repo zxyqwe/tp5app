@@ -342,16 +342,16 @@ class WxOrg
     public static function cmp($a, $b)
     {
         if ($a['o'] !== $b['o']) {
-            return $a['o'] < $b['o'] ? 1 : -1;
+            return $a['o'] > $b['o'] ? 1 : -1;
         }
         if ($a['q'] !== $b['q']) {
-            return $a['q'] < $b['q'] ? 1 : -1;
+            return $a['q'] > $b['q'] ? 1 : -1;
         }
         if ($a['s'] !== $b['s']) {
-            return $a['s'] < $b['s'] ? 1 : -1;
+            return $a['s'] > $b['s'] ? 1 : -1;
         }
         if ($a['t'] !== $b['t']) {
-            return $a['t'] < $b['t'] ? 1 : -1;
+            return $a['t'] > $b['t'] ? 1 : -1;
         }
         return 0;
     }
