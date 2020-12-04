@@ -24,7 +24,9 @@ var bulletin = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 
@@ -37,7 +39,9 @@ var bonus = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 

@@ -109,7 +109,9 @@ var all_mem = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 
@@ -229,7 +231,9 @@ var baselog = (function ($, Vue, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, Vue, window);
 
@@ -294,7 +298,9 @@ var card = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 
@@ -331,7 +337,9 @@ var order = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 
@@ -537,7 +545,9 @@ var tlog = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
 
@@ -707,7 +717,9 @@ var fame = (function ($, Vue, w, undefined) {
         init: init,
         initlog: initlog,
         fameori: fameori,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, Vue, window);
 
@@ -1827,6 +1839,8 @@ var wprom = (function ($, w, undefined) {
     };
     return {
         init: init,
-        get_table: $table
+        get_table: function () {
+            return $table;
+        }
     };
 })(jQuery, window);
