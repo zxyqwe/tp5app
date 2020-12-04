@@ -522,6 +522,7 @@ var tlog = (function ($, w, undefined) {
             },
             ready: function () {
                 this.level = 'info';
+                refresh(this.get_res());
             }
         });
         vmain.$watch('level', function (nv) {
