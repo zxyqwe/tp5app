@@ -502,13 +502,13 @@ var fee = (function ($, Vue, w, undefined) {
 
 var tlog = (function ($, w, undefined) {
     'use strict';
-    var $table, t_data = {};
+    var $table, t_data = {}, vmain;
     var refresh = function (tmp_data) {
         t_data = tmp_data;
         $table.bootstrapTable('refresh');
     };
     var build_vue = function () {
-        var vmain = new Vue({
+        vmain = new Vue({
             el: '#simp_form',
             data: {
                 level: 'all'
@@ -519,10 +519,6 @@ var tlog = (function ($, w, undefined) {
                         level: this.level
                     }
                 }
-            },
-            ready: function () {
-                this.level = 'info';
-                refresh(this.get_res());
             }
         });
         vmain.$watch('level', function (nv) {
@@ -550,6 +546,7 @@ var tlog = (function ($, w, undefined) {
         $table.bootstrapTable('hideColumn', "method");
         $table.bootstrapTable('hideColumn', "url");
         $table.bootstrapTable('hideColumn', "query");
+        vmain.level = 'info';
     };
     return {
         init: init,
