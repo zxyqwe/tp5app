@@ -149,21 +149,29 @@ class WxOrg
             $user_fame[$item['u']] = $item;
         }
 
+        $vote_ratio_label = [];
         foreach ($user as $u) {
             foreach ($this->quest->obj as $o) {
+                $this_label = $user_fame[$u]['l'];
+                if (!isset($vote_ratio_label[$this_label])) {
+                    $vote_ratio_label[$this_label] = ['Y' => 0, 'N' => 0];
+                }
+                $vote_ratio_label[$this_label]['Y']++;
                 if (isset($ans_list[$u . $o])) {
                     $data[] = [
                         'ans' => json_decode($ans_list[$u . $o], true),
                         'u' => $u,
                         'o' => $o,
-                        'l' => $user_fame[$u]['l'],
+                        'l' => $this_label,
                         'g' => $user_fame[$u]['g']
                     ];
                 } else {
+                    $vote_ratio_label[$this_label]['N']++;
                     $miss[] = $u;
                 }
             }
         }
+
         $miss = array_unique($miss);
         cache($this->quest->name . 'getAns.miss_real', implode(',', $miss));
         if (session("unique_name") != HBConfig::CODER && count($miss) * 3 > count($user)) {
@@ -176,7 +184,13 @@ class WxOrg
             }
         }
         $miss = implode(', ', $miss);
-        cache($this->quest->name . 'getAns.miss', $miss);
+
+        $label_unvote_str = "";
+        foreach ($vote_ratio_label as $k => $v) {
+            $label_unvote_str .= "$k 未投票率：" . number_format($v['N'] * 100.0 / $v['Y'], 2, '.', '') . "%；";
+        }
+
+        cache($this->quest->name . 'getAns.miss', $label_unvote_str . "\n" . $miss);
         return $data;
     }
 
