@@ -170,6 +170,7 @@ class FameOper
     {
         $map['year'] = HBConfig::YEAR;
         $map['grade'] = ['in', $group];
+        $map['label'] = ['not in', ['换届选举监委会']];
         $map['type'] = 0;
         return self::get_inner($map);
     }
