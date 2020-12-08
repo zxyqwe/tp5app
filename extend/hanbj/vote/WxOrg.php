@@ -185,12 +185,12 @@ class WxOrg
         }
         $miss = implode(', ', $miss);
 
-        $label_unvote_str = "";
+        $label_unvote_str = "未投票率\n<ul>";
         foreach ($vote_ratio_label as $k => $v) {
-            $label_unvote_str .= "$k 未投票率：" . number_format($v['N'] * 100.0 / $v['Y'], 2, '.', '') . "%；";
+            $label_unvote_str .= "<ol>$k ：" . number_format($v['N'] * 100.0 / $v['Y'], 2, '.', '') . "%；</ol>";
         }
 
-        cache($this->quest->name . 'getAns.miss', $label_unvote_str . "\n" . $miss);
+        cache($this->quest->name . 'getAns.miss', $label_unvote_str . "</ul>\n\n未投票者名单\n" . $miss);
         return $data;
     }
 
