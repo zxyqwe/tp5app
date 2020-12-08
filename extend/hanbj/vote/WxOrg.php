@@ -185,13 +185,25 @@ class WxOrg
         }
         $miss = implode(', ', $miss);
 
-        $label_unvote_str = "未投票率\n<ul>";
+        $label_unvote_sort_array = [];
         foreach ($vote_ratio_label as $k => $v) {
-            $label_unvote_str .= "<ol>$k ：" . number_format($v['N'] * 100.0 / $v['Y'], 2, '.', '') . "%；</ol>";
+            $unvote_ratio = $v['N'] * 100.0 / $v['Y'];
+            $label_unvote_sort_array[] = [$unvote_ratio, number_format($unvote_ratio, 2, '.', '') . "%：$k\n"];
+        }
+        usort($label_unvote_sort_array, [self::class, 'cmp_unvote_label']);
+
+        $label_unvote_str = "未投票率\n";
+        foreach ($label_unvote_sort_array as $item) {
+            $label_unvote_str .= $item[1];
         }
 
-        cache($this->quest->name . 'getAns.miss', $label_unvote_str . "</ul>\n\n未投票者名单\n" . $miss);
+        cache($this->quest->name . 'getAns.miss', $label_unvote_str . "\n未投票者名单\n" . $miss);
         return $data;
+    }
+
+    public static function cmp_unvote_label($a, $b)
+    {
+        return $a[0] < $b[0] ? 1 : -1;
     }
 
     public function getAvgGroupByLabel($data)
