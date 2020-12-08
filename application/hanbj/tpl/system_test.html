@@ -6,9 +6,9 @@
                 <h1>{{ msg.name }}</h1>
                 <div>
                     <h4>投票人总名单</h4>
-                    <code>{{ msg.all }}</code>
+                    <code style="white-space: pre-line;">{{ msg.all }}</code>
                     <h4>未投票者（少于1/3时公开）</h4>
-                    <code v-if="msg.mis.length > 0">{{ msg.mis }}</code>
+                    <code style="white-space: pre-line;" v-if="msg.mis.length > 0">{{ msg.mis }}</code>
                     <h4>投票规则</h4>
                     <code style="white-space: pre-line;">{{ msg.rules }}</code>
                     <h4>总进度</h4>
