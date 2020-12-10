@@ -200,6 +200,45 @@ class WxVote
         return $ans;
     }
 
+    public static function trans_rules()
+    {
+        $idx = 0;
+        $rest_time = self::GetRestTime();
+        $ret = "剩余时间" . $rest_time->format("%a 天 %H 时 %i 分 %s 秒");
+        while ($idx <= FameOper::max_pos) {
+            $ret .= "\n" . FameOper::translate($idx) . "：票力" . self::get_weight($idx) . "；";
+            $idx++;
+        }
+        return $ret;
+    }
+
+    public static function get_weight($grade)
+    {
+        if ($grade === null) {
+            return 1;
+        }
+        $grade = intval($grade);
+        if (in_array($grade, [
+            FameOper::chairman,
+            FameOper::vice_chairman,
+            FameOper::fixed_vice_chairman,
+            FameOper::manager,
+            FameOper::vice_manager,
+            FameOper::commissioner,
+            FameOper::secretary,
+            FameOper::vice_secretary,
+            FameOper::fame_chair,
+            FameOper::like_manager
+        ])) {
+            return 3;
+        }
+
+        if ($grade !== FameOper::leave) {
+            return 2;
+        }
+        return 1;
+    }
+
     private static function test_ZG($ans, $target_year)
     {
         $total = 0;
@@ -210,28 +249,7 @@ class WxVote
         }
         foreach ($ans as $item) {
             $tmp = explode(',', $item['a']);
-            if ($item['g'] === null) {
-                $weight = 1;
-            } elseif (in_array(intval($item['g']), [
-                FameOper::chairman,
-                FameOper::vice_chairman,
-                FameOper::fixed_vice_chairman,
-                FameOper::manager,
-                FameOper::vice_manager,
-                FameOper::commissioner,
-                FameOper::secretary,
-                FameOper::vice_secretary,
-                FameOper::fame_chair,
-                FameOper::like_manager
-            ])) {
-                $weight = 3;
-            } else {
-                if ($item['g'] !== FameOper::leave) {
-                    $weight = 2;
-                } else {
-                    $weight = 1;
-                }
-            }
+            $weight = self::get_weight($item['g']);
             $total += $weight;
             foreach ($tmp as $idx) {
                 $candidate[$map[$idx]['s']] += $weight;
