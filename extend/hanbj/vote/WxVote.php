@@ -203,8 +203,14 @@ class WxVote
     public static function trans_rules()
     {
         $idx = 0;
-        $rest_time = self::GetRestTime();
-        $ret = "剩余时间" . $rest_time->format("%a 天 %H 时 %i 分 %s 秒");
+        $ret = "剩余时间：";
+        if (self::IsExpired()) {
+            $last = "0 天 0 时 0 分 0 秒";
+        } else {
+            $last = self::GetRestTime();
+            $last = $last->format("%a 天 %H 时 %i 分 %s 秒");
+        }
+        $ret .= $last;
         while ($idx <= FameOper::max_pos) {
             $ret .= "\n" . FameOper::translate($idx) . "：票力" . self::get_weight($idx) . "；";
             $idx++;
