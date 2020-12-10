@@ -49,6 +49,9 @@ class FameOper
 
     public static function translate($type)
     {
+        if ($type === null) {
+            return "非理事会成员";
+        }
         switch ($type) {
             case self::chairman:
                 return "会长";
@@ -78,8 +81,6 @@ class FameOper
                 return "专职副会长";
             case self::intern:
                 return "实习";
-            case null:
-                return "非理事会成员";
             default:
                 return "未知：$type";
         }
