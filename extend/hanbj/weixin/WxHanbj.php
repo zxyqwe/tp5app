@@ -131,6 +131,7 @@ class WxHanbj
                 } elseif ($cont === '选举规则') {
                     $cont = "检查口令......成功\n";
                     $cont .= WxVote::trans_rules();
+                    $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/pub/vote" . HBConfig::YEAR . "\" >点我</a>\n";
                     return self::auto($from, $to, $cont, '选举规则');
                 } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "调试")) {
                     $parse_cont = explode(' ', $cont);

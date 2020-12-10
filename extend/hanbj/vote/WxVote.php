@@ -209,6 +209,8 @@ class WxVote
             $ret .= "\n" . FameOper::translate($idx) . "：票力" . self::get_weight($idx) . "；";
             $idx++;
         }
+        $idx = null;
+        $ret .= "\n" . FameOper::translate($idx) . "：票力" . self::get_weight($idx) . "；";
         return $ret;
     }
 

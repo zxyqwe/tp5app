@@ -78,6 +78,8 @@ class FameOper
                 return "专职副会长";
             case self::intern:
                 return "实习";
+            case null:
+                return "非理事会成员";
             default:
                 return "未知：$type";
         }
