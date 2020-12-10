@@ -5,6 +5,7 @@ namespace hanbj\weixin;
 use hanbj\FeeOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\vote\WxVote;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
 use think\Exception;
@@ -127,6 +128,10 @@ class WxHanbj
                     }
                     // $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/system/test\" >点我</a>\n";
                     return self::auto($from, $to, $cont, '投票');
+                } elseif ($cont === '选举规则') {
+                    $cont = "检查口令......成功\n";
+                    $cont .= WxVote::trans_rules();
+                    return self::auto($from, $to, $cont, '选举规则');
                 } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "调试")) {
                     $parse_cont = explode(' ', $cont);
                     if (count($parse_cont) === 2) {
