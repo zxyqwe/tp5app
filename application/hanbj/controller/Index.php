@@ -120,7 +120,7 @@ class Index extends Controller
                 $org->try_add_todo();
             }
         }
-//        WxOrg::cancel_all_todo();
+        WxOrg::cancel_all_todo();
 //        WxVote::cancel_all_todo();
     }
 }
