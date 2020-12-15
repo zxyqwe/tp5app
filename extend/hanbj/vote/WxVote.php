@@ -25,13 +25,13 @@ class WxVote
         13 => ['离庚寅', '艮甲辰', '乾甲申', '乾壬申'],
         // 夜娘·魁児  荼蘼未开  颜真真  未名
         14 => ['乾壬申', '兑甲戌', '夏庚子', '商丙子'],
-        // 夜娘·魁児  荼蘼未开  颜真真  未名
-        15 => ['乾壬申', '兑甲戌', '夏庚子', '商丙子']
+        // 素问  穆穆  颜真真  未名
+        15 => ['坤丁酉', '隋甲午', '夏庚子', '商丙子']
     ];
 
     private static function GetDeadline()
     {
-        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2019-12-22 13:30:00");
+        return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-12-20 14:00:00");
     }
 
     public static function IsExpired()
