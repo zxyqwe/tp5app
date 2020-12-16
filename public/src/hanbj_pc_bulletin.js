@@ -100,6 +100,22 @@ var login = (function ($, Vue, w, undefined) {
 var vote = (function ($, Vue, w, undefined) {
     'use strict';
     var vmain;
+    var vote_sort = function (a, b) {
+        if (a.v !== b.v) {
+            return b.v - a.v;
+        }
+        return a.n < b.n ? 1 : -1;
+    };
+    var parse_vote_ret = function (data) {
+        var pw = [], tmp, rto, i;
+        for (i in data.detail) {
+            tmp = data.detail[i];
+            rto = 100 * tmp / data.tot;
+            pw.push({n: i, v: tmp, rto: rto.toFixed(2)});
+        }
+        pw.sort(vote_sort);
+        return pw;
+    };
     var refresh = function (target_year) {
         w.waitloading();
         $.ajax({
@@ -110,21 +126,8 @@ var vote = (function ($, Vue, w, undefined) {
             },
             dataType: "json",
             success: function (msg) {
-                var zg = [], tmp, rto, i;
-                for (i in msg.zg.detail) {
-                    tmp = msg.zg.detail[i];
-                    rto = 100 * tmp / msg.zg.tot;
-                    zg.push({
-                        n: i, v: tmp, rto: rto.toFixed(2)
-                    })
-                    ;
-                }
-                var pw = [];
-                for (i in msg.pw.detail) {
-                    tmp = msg.pw.detail[i];
-                    rto = 100 * tmp / msg.pw.tot;
-                    pw.push({n: i, v: tmp, rto: rto.toFixed(2)});
-                }
+                var zg = parse_vote_ret(msg.zg);
+                var pw = parse_vote_ret(msg.pw);
                 vmain.ans = {zg: zg, pw: pw, zg_tot: msg.zg.tot, pw_tot: msg.pw.tot};
                 vmain.refresh = msg.ref;
                 vmain.last = msg.last;
