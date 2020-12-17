@@ -295,7 +295,11 @@ class Wxdaily extends Controller
         if (null === $ret) {
             return json(['msg' => '没有投票权'], 400);
         }
-        return json(['msg' => $ret]);
+        return json([
+            'msg' => $ret,
+            'year' => HBConfig::YEAR,
+            'deadline' => WxVote::GetDeadlineString()
+        ]);
     }
 
     /**
