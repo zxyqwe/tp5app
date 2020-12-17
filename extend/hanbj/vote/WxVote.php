@@ -34,6 +34,11 @@ class WxVote
         return DateTimeImmutable::createFromFormat("Y-m-d H:i:s", "2020-12-20 14:00:00");
     }
 
+    public static function GetDeadlineString()
+    {
+        return self::GetDeadline()->format("Y-m-d H:i:s");
+    }
+
     public static function IsExpired()
     {
         $deadline = self::GetDeadline();

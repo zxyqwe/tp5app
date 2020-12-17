@@ -1,6 +1,6 @@
 <div class="page" id="votemain">
     <div class="page__hd">
-        <h1 class="page__title">吧务组 - 换届选举</h1>
+        <h1 class="page__title">吧务组 - 第{{ year + 1 }}届换届选举</h1>
         <p class="page__desc"><a href="https://app.zxyqwe.com/hanbj/pub/vote">【选举结果实时公示】</a></p>
     </div>
     <div class="page__bd page__bd_spacing">
@@ -15,14 +15,14 @@
                 <section>
                     <h3>1.1 说明</h3>
                     <p>
-                        请点击写有名字的方框给你心目中的第16届会长层成员投票，【可多选】，方框变为绿色表示选择成功，再次点击取消选择。
+                        请点击写有名字的方框给你心目中的第{{ year + 1 }}届会长层成员投票，【可多选】，方框变为绿色表示选择成功，再次点击取消选择。
                         <!--可发送【？？？】至后台查看候选人参选材料。-->
                     </p>
                 </section>
                 <section>
                     <h3>1.2 规则</h3>
                     <p>
-                        普通实名会员票力为1，第14届理事会干事票力为2，第14届理事会副部以上骨干票力为3，所获总票力不足60%的候选人，落选会长层。
+                        普通实名会员票力为1，第{{ year }}届理事会干事票力为2，第{{ year }}届理事会副部以上骨干票力为3，所获总票力不足60%的候选人，落选会长层。
                         票力根据后台信息自动计算，可到【汉服北京服务号】-【我的】-【个人中心】-【会员状态】查看是否实名会员，【任职履历】可查看自己当前职务。
                     </p>
                 </section>
@@ -70,7 +70,7 @@
             <section>
                 <section>
                     <p>
-                        投票截止时间为2020年12月20日14：00，在此之前可重复提交修改投票，最终记票以最后一次提交结果为准。
+                        投票截止时间为{{ deadline }}，在此之前可重复提交修改投票，最终记票以最后一次提交结果为准。
                         截止时间后，不能再修改选票。
                     </p>
                 </section>
@@ -98,6 +98,8 @@
                 dataType: "json",
                 success: function (msg) {
                     vmain.colors = [];
+                    vmain.year = msg.year;
+                    vmain.deadline = msg.deadline;
                     vmain.candi = msg.msg;
                     for (var i in msg.msg) {
                         if (msg.msg[i].sel) {
@@ -117,7 +119,9 @@
                 el: '#votemain',
                 data: {
                     candi: [],
-                    colors: []
+                    colors: [],
+                    year: 0,
+                    deadline: ""
                 }, methods: {
                     upvote: function () {
                         var ret = [];
