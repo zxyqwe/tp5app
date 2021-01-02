@@ -65,14 +65,15 @@ var all_mem = (function ($, w, undefined) {
         alr = $('#ggly').html();
         nye = $('#rgly').html();
         build_vue();
-        w.loaddetail = function (id) {
+        w.loaddetail = function (id, u) {
             w.waitloading();
             $.ajax({
                 type: "POST",
                 url: w.u7,
                 data: {
                     _ajax: 1,
-                    id: id
+                    id: id,
+                    u: u
                 },
                 dataType: "json",
                 success: function (msg) {
@@ -91,7 +92,7 @@ var all_mem = (function ($, w, undefined) {
             str = str.replace('fee', 'fee' + row.id);
             str = str.replace('act', 'act' + row.id);
             str = str.replace('fame', 'fame' + row.id);
-            return str + "<script" + ">loaddetail(" + row.id + ")<" + "/script>";
+            return str + "<script" + ">loaddetail(" + row.id + "," + row.u + ")<" + "/script>";
         };
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
