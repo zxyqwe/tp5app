@@ -15,7 +15,7 @@ class HBConfig
         '离庚寅', '兑壬子', '兑癸卯', '兑癸巳', '兑甲辰',
         '兑庚午', '兑丙子', '夏辛未', '夏庚子'];
     // 本届吧务组年代
-    const YEAR = 15;
+    const YEAR = 16;
     // 收个开放号码ID
     const FIRST_UNAME_ID = 863;
 }
