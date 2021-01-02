@@ -3,10 +3,15 @@
 namespace app\hanbj\controller;
 
 use hanbj\BonusOper;
+use hanbj\FeeOper;
 use hanbj\MemberOper;
 use think\Controller;
 use think\Db;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\exception\DbException;
 use think\exception\HttpResponseException;
+use think\response\Json;
 
 
 class Daily extends Controller
@@ -129,10 +134,18 @@ class Daily extends Controller
         return json($data);
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws ModelNotFoundException
+     * @throws DbException
+     */
     public function json_detail()
     {
         $id = input('post.id', 1, FILTER_VALIDATE_INT);
+        $u = input('post.u');
         $map['m.id'] = $id;
+        $map['m.unique_name'] = $u;
         $fee = Db::table('member')
             ->alias('m')
             ->join('nfee f', 'm.unique_name=f.unique_name')
@@ -173,6 +186,7 @@ class Daily extends Controller
         $data['fee'] = $fee;
         $data['act'] = $act;
         $data['fame'] = $fame;
+        $data['fee_code'] = FeeOper::cache_fee($u)->format('Y-m-d H:i:s');
         return json($data);
     }
 
