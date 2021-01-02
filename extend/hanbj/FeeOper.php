@@ -16,7 +16,7 @@ use util\MysqlLog;
 class FeeOper
 {
     const ADD = 0;
-    const CACHE_NAME = "cache_fee_v2";
+    const CACHE_NAME = "cache_fee_v3";
 
     /**
      * @param $uname
@@ -33,7 +33,7 @@ class FeeOper
             return cache($cache_name);
         }
         $map['unique_name'] = $uname;
-        $fee_one_day = new DateInterval("P1D");
+        $fee_one_day = new DateInterval("PT1S");
 
         $start_year = Db::table('member')
             ->where($map)
