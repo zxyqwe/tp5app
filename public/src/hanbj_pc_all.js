@@ -11,8 +11,8 @@ var all_mem = (function ($, w, undefined) {
         str += '</a>';
         return str;
     };
-    var itfee = function (fee) {
-        var data = [];
+    var itfee = function (fee, fee_code) {
+        var data = [listitem("到期时间", [fee_code])];
         for (var i in fee) {
             var tmp = fee[i];
             if (tmp.code === '1')
@@ -77,7 +77,7 @@ var all_mem = (function ($, w, undefined) {
                 },
                 dataType: "json",
                 success: function (msg) {
-                    $('#fee' + id).html(itfee(msg.fee));
+                    $('#fee' + id).html(itfee(msg.fee, msg.fee_code));
                     $('#act' + id).html(itact(msg.act));
                     $('#fame' + id).html(itfame(msg.fame));
                 },
@@ -92,7 +92,7 @@ var all_mem = (function ($, w, undefined) {
             str = str.replace('fee', 'fee' + row.id);
             str = str.replace('act', 'act' + row.id);
             str = str.replace('fame', 'fame' + row.id);
-            return str + "<script" + ">loaddetail(" + row.id + "," + row.u + ")<" + "/script>";
+            return str + "<script" + ">loaddetail(" + row.id + ",'" + row.u + "')<" + "/script>";
         };
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
