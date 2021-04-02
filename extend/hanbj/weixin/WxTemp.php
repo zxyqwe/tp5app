@@ -181,7 +181,7 @@ class WxTemp
             "topcolor" => "#FF0000",
             "data" => [
                 "first" => [
-                    "value" => "您好，您已成功进行北京汉服协会（筹）会员缴费。"
+                    "value" => "您好，您已成功进行汉服北京会员缴费。"
                 ],
                 "accountType" => [
                     "value" => '会员编号'
