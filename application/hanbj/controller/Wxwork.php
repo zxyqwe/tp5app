@@ -43,6 +43,7 @@ class Wxwork extends Controller
 //        $join = [
 //            ['member m', 'm.openid=f.openid', 'left']
 //        ];
+//        'card_id' => config('hanbj_cardid'),
 //        $res = Db::table('card')
 //            ->alias('f')
 //            ->where($map)

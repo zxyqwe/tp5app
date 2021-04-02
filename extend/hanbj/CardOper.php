@@ -137,6 +137,7 @@ class CardOper
     {
         $map['f.code'] = $code;
         $map['m.code'] = ['in', MemberOper::getMember()];
+        $map['card_id'] = config('hanbj_cardid');
         $join = [
             ['member m', 'm.openid=f.openid', 'left']
         ];
@@ -258,6 +259,7 @@ class CardOper
         $map['status'] = 0;
         $map['code'] = $code;
         $map['openid'] = session('openid');
+        $map['card_id'] = config('hanbj_cardid');
         $res = Db::table('card')
             ->where($map)
             ->setField('status', 1);
@@ -281,7 +283,8 @@ class CardOper
         $openid = (string)$msg->FromUserName;
         $data = [
             'openid' => $openid,
-            'code' => $cardid
+            'code' => $cardid,
+            'card_id' => config('hanbj_cardid')
         ];
         $res = Db::table('card')
             ->where($data)
@@ -301,7 +304,8 @@ class CardOper
         $openid = (string)$msg->FromUserName;
         $data = [
             'openid' => $openid,
-            'code' => $cardid
+            'code' => $cardid,
+            'card_id' => config('hanbj_cardid')
         ];
         $res = Db::table('card')
             ->insert($data);
@@ -323,6 +327,7 @@ class CardOper
      */
     public static function mod_ret($map)
     {
+        $map['card_id'] = config('hanbj_cardid');
         $card = Db::table('card')
             ->where($map)
             ->field([

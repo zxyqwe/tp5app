@@ -198,6 +198,7 @@ class Daily extends Controller
         $offset = max(0, $offset);
         $search = input('post.search');
         $map['f.code'] = ['exp', Db::raw('is not null')];
+        $map['card_id'] = config('hanbj_cardid');
         if (!empty($search)) {
             $map['m.tieba_id|m.unique_name'] = ['like', '%' . $search . '%'];
         }

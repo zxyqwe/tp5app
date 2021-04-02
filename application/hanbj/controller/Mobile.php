@@ -214,6 +214,7 @@ class Mobile extends Controller
     {
         $openid = session('openid');
         $map['openid'] = $openid;
+        $map['card_id'] = config('hanbj_cardid');
         $card = Db::table('card')
             ->where($map)
             ->value('code');
@@ -233,6 +234,7 @@ class Mobile extends Controller
         $openid = session('openid');
         $map['openid'] = $openid;
         $map['status'] = 0;
+        $map['card_id'] = config('hanbj_cardid');
         $card = Db::table('card')
             ->where($map)
             ->value('code');
