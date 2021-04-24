@@ -531,7 +531,7 @@ class MemberOper
     public static function Junior2Normal($unique_name, $tieba_id, $gender, $phone, $QQ, $master, $eid, $rn, $mail)
     {
         if (FeeOper::owe($unique_name)) {
-            return false;
+            throw new HttpResponseException(json(['msg' => "$unique_name 欠会费"], 400));
         }
         $map['code'] = self::JUNIOR;
         $map['unique_name'] = $unique_name;

@@ -164,7 +164,7 @@ class Write extends Controller
                 if ($ret) {
                     return json(['msg' => 'ok']);
                 }
-                return json(['msg' => '失败'], 400);
+                return json(['msg' => '失败，可能已经添加了？'], 400);
             default:
                 return json(['msg' => $this->request->method()], 400);
         }
