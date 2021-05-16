@@ -123,6 +123,12 @@ class WxTemp
     {
         switch ($data['template_id']) {
             case "GO9x4kW5Hm8gS3t8NLNrZXbKSdH7HdaNOS6aLUf-yFo":
+            {
+                $act_info = $data['data']['keyword1']['value'];
+                trace("RPC订阅 {$data['touser']} $act_info", MysqlLog::RPC);
+                trace($log, MysqlLog::LOG);
+                return true;
+            }
             case "_UAmJO3kH230039TEOgYtt179_KV8LANcl_XbnQgNK0":
             {
                 $act_info = $data['data']['keyword1']['value'];
