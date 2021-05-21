@@ -212,7 +212,8 @@ class PayoutOper
                 'id',
                 'realname',
                 'fee',
-                'desc'
+                'desc',
+                "nickname"
             ])
             ->select();
         if (null === $ret) {

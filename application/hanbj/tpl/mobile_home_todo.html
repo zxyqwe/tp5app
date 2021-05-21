@@ -147,7 +147,11 @@
                         return '' + parseInt(fee / 100) + '.' + parseInt(fee % 100);
                     },
                     title_fee: function (item) {
-                        return "支付给【 " + item.content.realname + " 】共计【 " + this.trans_fee(item.content.fee) + " 】元";
+                        var show_name = item.content.realname;
+                        if (show_name === "NO_USE") {
+                            show_name = "未实名的'" + item.content.nickname + "'";
+                        }
+                        return "支付给【 " + show_name + " 】共计【 " + this.trans_fee(item.content.fee) + " 】元";
                     },
                     title_todo: function (item) {
                         switch (item.type) {
