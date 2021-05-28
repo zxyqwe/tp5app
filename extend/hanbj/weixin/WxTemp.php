@@ -301,7 +301,7 @@ class WxTemp
         if (!ValidateTimeOper::IsDayUp()) {
             return;
         }
-        $cache_key = "TodonoticeAny$openid";
+        $cache_key = "TodonoticeAny$openid$num";
         if (cache("?$cache_key")) {
             return;
         }
