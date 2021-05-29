@@ -570,8 +570,11 @@ class PayoutOper
      */
     private static function notify_member()
     {
+        $target_member = array_merge(FameOper::getTop(), HBConfig::FIXED);
+        $target_member = array_merge($target_member, [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申', '商丙子']);
+        $target_member = array_unique($target_member);
         $send_openid = Db::table("member")
-            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申', '商丙子']]])
+            ->where(['unique_name' => ['in', $target_member]])
             ->field(['openid'])
             ->cache(600)
             ->select();
