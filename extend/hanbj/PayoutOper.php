@@ -474,11 +474,11 @@ class PayoutOper
         switch ($payout['status']) {
             case self::DONE:
                 $data['status'] = 1;
-                $final_status = 5;
+                $final_status = self::DONE_NOTICE;
                 break;
             case self::FAIL:
                 $data['status'] = 0;
-                $final_status = 6;
+                $final_status = self::FAIL_NOTICE;
                 break;
             default:
                 trace("notify_original select " . json_encode($payout), MysqlLog::ERROR);
@@ -503,6 +503,38 @@ class PayoutOper
                 trace("update after notify err $output_str", MysqlLog::ERROR);
             }
         }
+    }
+
+    /**
+     * @param $tradeid
+     * @return string
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function fail2auth($tradeid)
+    {
+        $map = [
+            'status' => self::FAIL_NOTICE,
+            'actname' => ['neq', '实名认证'],
+            'tradeid' => $tradeid
+        ];
+        $payout = Db::table("payout")
+            ->where($map)
+            ->field([
+                'status',
+                'realname',
+                'fee',
+                'nickname',
+                'orgname',
+                'actname'
+            ])
+            ->find();
+        if (null === $payout) {
+            return "";
+        }
+        $outstr = json_encode($payout);
+        return $outstr;
     }
 }
 

@@ -5,6 +5,7 @@ namespace hanbj\weixin;
 use hanbj\FeeOper;
 use hanbj\HBConfig;
 use hanbj\MemberOper;
+use hanbj\PayoutOper;
 use hanbj\vote\WxVote;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -110,7 +111,7 @@ class WxHanbj
         if (cache("?chatbot$from")) {
             $unique_name = cache("chatbot$from");
         }
-        $welcome = "欢迎关注，此服务号仅做汉北平台技术支持使用，无人值守，全程自动。如需交流请关注北京汉服协会（筹），微信搜: hanfubeijing\n\n点击这里进入微店<a href=\"https://weidian.com/?userid=1353579309\">汉服北京的小店</a>~";
+        $welcome = "欢迎关注，此服务号仅做汉北平台技术支持使用，无人值守，全程自动。如需交流请关注汉北娘，微信搜: hanfubeijing\n\n点击这里进入微店<a href=\"https://weidian.com/?userid=1353579309\">汉服北京的小店</a>~";
         switch ($type) {
             case 'event':
                 return self::do_event($msg, $unique_name);
@@ -120,6 +121,19 @@ class WxHanbj
                 if (in_array($cont, ['买', '推', '订'])) {
                     trace("跳过关键词 $unique_name $cont", MysqlLog::LOG);
                     return '';
+                } elseif ($cont === '帮助') {
+                    $cont = "检查口令......成功\n";
+                    $cont .= "帮助列表\n";
+                    $cont .= "· 投票\n";
+                    $cont .= "· 选举\n";
+                    if ($unique_name === HBConfig::CODER) {
+                        $cont .= "· 调试\n";
+                        $cont .= "· 欠费\n";
+                    }
+                    if ($unique_name === HBConfig::CODER || $unique_name === PayoutOper::AUTHOR) {
+                        $cont .= "· 重置\n";
+                    }
+                    return self::auto($from, $to, $cont, '帮助');
                 } elseif ($cont === '投票') {
                     $cont = "检查口令......成功\n";
                     foreach (WxOrg::vote_cart as $item) {
@@ -128,11 +142,11 @@ class WxHanbj
                     }
                     // $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/system/test\" >点我</a>\n";
                     return self::auto($from, $to, $cont, '投票');
-                } elseif ($cont === '选举规则') {
+                } elseif ($cont === '选举') {
                     $cont = "检查口令......成功\n";
                     $cont .= WxVote::trans_rules();
                     $cont .= "\n实时结果：<a href=\"https://app.zxyqwe.com/hanbj/pub/vote/" . HBConfig::YEAR . "\" >点我</a>\n";
-                    return self::auto($from, $to, $cont, '选举规则');
+                    return self::auto($from, $to, $cont, '选举');
                 } elseif ($unique_name === HBConfig::CODER && 0 === strpos($cont, "调试")) {
                     $parse_cont = explode(' ', $cont);
                     if (count($parse_cont) === 2) {
@@ -143,6 +157,12 @@ class WxHanbj
                     $parse_cont = explode(' ', $cont);
                     if (count($parse_cont) === 2) {
                         return self::auto($from, $to, FeeOper::info($parse_cont[1]));
+                    }
+                    return self::auto($from, $to, $cont);
+                } elseif (($unique_name === HBConfig::CODER || $unique_name === PayoutOper::AUTHOR) && 0 === strpos($cont, "重置")) {
+                    $parse_cont = explode(' ', $cont);
+                    if (count($parse_cont) === 2) {
+                        return self::auto($from, $to, PayoutOper::fail2auth($parse_cont[1]));
                     }
                     return self::auto($from, $to, $cont);
                 } elseif (strlen($cont) === 4 && is_numeric($cont) && cache("?tempnum$cont")) {
