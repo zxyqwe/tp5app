@@ -6,6 +6,7 @@ namespace hanbj;
 use hanbj\weixin\HanbjPayConfig;
 use hanbj\weixin\WxTemp;
 use PDOStatement;
+use think\Collection;
 use think\Db;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\ModelNotFoundException;
@@ -366,11 +367,7 @@ class PayoutOper
             return GeneralRet::DUPLICATE_PAY();
         }
 
-        $send_openid = Db::table("member")
-            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申', '商丙子']]])
-            ->field(['openid'])
-            ->cache(600)
-            ->select();
+        $send_openid = self::notify_member();
 
         $input = new WxPayTransfer();
         $input->SetOut_trade_no($ret['tradeid']);
@@ -511,6 +508,7 @@ class PayoutOper
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
+     * @throws Exception
      */
     public static function fail2auth($tradeid)
     {
@@ -541,8 +539,43 @@ class PayoutOper
         $outstr .= "\n组织名称：" . $payout['orgname'];
         $outstr .= "\n收款人昵称：" . $payout['nickname'];
         $outstr .= "\n收款人实名：" . $payout['realname'];
-        $outstr .= "\n金额：" . $fee_desc;
+        $outstr .= "\n金额：" . $fee_desc . " 元";
+        $reset_ret = Db::table("payout")
+            ->where($map)
+            ->data(["status" => self::AUTH])
+            ->update();
+        if ($reset_ret === 1) {
+            $outstr .= "\n重置成功";
+            $send_openid = self::notify_member();
+            foreach ($send_openid as $recv_user) {
+                WxTemp::notifyPayoutError(
+                    $recv_user['openid'],
+                    $tradeid,
+                    $payout['actname'],
+                    $payout['fee'],
+                    "重置订单状态 $tradeid ，小心重复支出风险！",
+                    "从" . self::Speak($payout["status"]) . "改为" . self::Speak(self::AUTH));
+            }
+        } else {
+            $outstr .= "\n重置失败";
+        }
         return $outstr;
+    }
+
+    /**
+     * @return false|PDOStatement|string|Collection
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    private static function notify_member()
+    {
+        $send_openid = Db::table("member")
+            ->where(['unique_name' => ['in', [self::AUTHOR, HBConfig::CODER, '坤丁酉', '乾壬申', '商丙子']]])
+            ->field(['openid'])
+            ->cache(600)
+            ->select();
+        return $send_openid;
     }
 }
 
