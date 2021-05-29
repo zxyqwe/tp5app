@@ -534,8 +534,8 @@ class PayoutOper
             return "没查到符合要求的订单 $tradeid";
         }
         $fee = intval($payout['fee']);
-        $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
-        $outstr = "订单信息";
+        $fee_desc = sprintf("%d.%02d", intval($fee / 100), intval($fee % 100));
+        $outstr = "正在重置的订单信息";
         $outstr .= "\n状态：" . self::Speak($payout["status"]);
         $outstr .= "\n活动名称：" . $payout['actname'];
         $outstr .= "\n组织名称：" . $payout['orgname'];

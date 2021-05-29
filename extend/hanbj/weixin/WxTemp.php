@@ -334,7 +334,7 @@ class WxTemp
     public static function notifyPayoutError($openid, $trade_id, $actname, $fee, $wx_msg, $final)
     {
         $fee = intval($fee);
-        $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
+        $fee_desc = sprintf("%d.%02d", intval($fee / 100), intval($fee % 100));
         $data = [
             "touser" => $openid,
             "template_id" => "rH5w5wCf_Y0CphLuXBSrYpgYnck8-W6dJXFcqDMjv20",

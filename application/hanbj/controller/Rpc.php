@@ -235,7 +235,7 @@ class Rpc extends Controller
         $org = strval($data['orgName']);
         $act = strval($data['activeName']);
         $fee = intval($data['payNum']);
-        $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
+        $fee_desc = sprintf("%d.%02d", intval($fee / 100), intval($fee % 100));
         $desc = "付款：应【 $act 】的需求，向【 $org 】组织的【 " . strval($openid['unique_name']) . " $nick $real_desc 】付款人民币【 $fee_desc 】元";
         $gen_ret = PayoutOper::recordNewPayout($openid['openid'], $payId, $realname, $fee, $desc, $nick, $org, $act);
         return json($gen_ret);
