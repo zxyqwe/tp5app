@@ -531,9 +531,17 @@ class PayoutOper
             ])
             ->find();
         if (null === $payout) {
-            return "";
+            return "没查到符合要求的订单 $tradeid";
         }
-        $outstr = json_encode($payout);
+        $fee = intval($payout['fee']);
+        $fee_desc = sprintf("%d.%2d", intval($fee / 100), intval($fee % 100));
+        $outstr = "订单信息";
+        $outstr .= "\n状态：" . self::Speak($payout["status"]);
+        $outstr .= "\n活动名称：" . $payout['actname'];
+        $outstr .= "\n组织名称：" . $payout['orgname'];
+        $outstr .= "\n收款人昵称：" . $payout['nickname'];
+        $outstr .= "\n收款人实名：" . $payout['realname'];
+        $outstr .= "\n金额：" . $fee_desc;
         return $outstr;
     }
 }
