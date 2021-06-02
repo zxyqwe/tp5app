@@ -204,6 +204,12 @@ class Rpcv2 extends Controller
         }
     }
 
+    /**
+     * @return Json
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
     public function payout()
     {
         $data = self::check_params(['payId', 'unionid', 'nickName', 'realName', 'orgName', 'activeName', 'payNum']);
@@ -213,7 +219,7 @@ class Rpcv2 extends Controller
             return json(GeneralRet::PEOPLE_NOT_FOUND());
         }
         if (intval($openid['status']) !== SubscribeOper::Subscribe) {
-            return GeneralRet::REQUIRE_SUBSCRIBE();
+            return json(GeneralRet::REQUIRE_SUBSCRIBE());
         }
         if (null === $openid['unique_name']) {
             $openid['unique_name'] = "";
@@ -227,7 +233,7 @@ class Rpcv2 extends Controller
 
         $payId = strval($data['payId']);
         if (!preg_match("/^[A-Za-z0-9]+$/u", $payId)) {
-            return GeneralRet::PAY_ID_INVALID();
+            return json(GeneralRet::PAY_ID_INVALID());
         }
         $nick = strval($data['nickName']);
         $org = strval($data['orgName']);

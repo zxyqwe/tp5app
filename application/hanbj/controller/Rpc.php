@@ -215,7 +215,7 @@ class Rpc extends Controller
             return json(['msg' => "查无此人"]);
         }
         if (intval($openid['status']) !== SubscribeOper::Subscribe) {
-            return GeneralRet::REQUIRE_SUBSCRIBE();
+            return json(GeneralRet::REQUIRE_SUBSCRIBE());
         }
         if (null === $openid['unique_name']) {
             $openid['unique_name'] = "";
@@ -229,7 +229,7 @@ class Rpc extends Controller
 
         $payId = strval($data['payId']);
         if (!preg_match("/^[A-Za-z0-9]+$/u", $payId)) {
-            return GeneralRet::PAY_ID_INVALID();
+            return json(GeneralRet::PAY_ID_INVALID());
         }
         $nick = strval($data['nickName']);
         $org = strval($data['orgName']);
