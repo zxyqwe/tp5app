@@ -29,7 +29,9 @@ class FameOper
     const leave = 11;//撤销记录
     const fixed_vice_chairman = 12;//专职副会长
     const intern = 13;//实习
-    const max_pos = 13;
+    const adviser = 14;//顾问
+    const manager_secretary = 15;//部门秘书
+    const max_pos = 15;
     const order = [
         self::chairman,
         self::fame_chair,
@@ -40,7 +42,9 @@ class FameOper
         self::like_manager,
         self::vice_secretary,
         self::vice_manager,
+        self::adviser,
         self::commissioner,
+        self::manager_secretary,
         self::assistant,
         self::member,
         self::intern,
@@ -81,6 +85,10 @@ class FameOper
                 return "专职副会长";
             case self::intern:
                 return "实习";
+            case self::adviser:
+                return "顾问";
+            case self::manager_secretary:
+                return "部门秘书";
             default:
                 return "未知：$type";
         }
@@ -127,15 +135,17 @@ class FameOper
     {
         // uniq in current fame
         return self::get([
-            FameOper::chairman,
-            FameOper::vice_chairman,
-            FameOper::fixed_vice_chairman,
-            FameOper::manager,
-            FameOper::vice_manager,
-            FameOper::commissioner,
-            FameOper::secretary,
-            FameOper::vice_secretary,
-            FameOper::like_manager
+            self::chairman,
+            self::vice_chairman,
+            self::fixed_vice_chairman,
+            self::manager,
+            self::vice_manager,
+            self::adviser,
+            self::commissioner,
+            self::manager_secretary,
+            self::secretary,
+            self::vice_secretary,
+            self::like_manager
         ]);
     }
 

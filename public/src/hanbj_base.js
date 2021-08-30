@@ -28,7 +28,7 @@ window.wx_mem_code = function (value) {
             return '<p class="temp-text">状态：' + window.mem_code(value);
     }
 };
-window.max_gras = 13;
+window.max_gras = 15;
 window.grade = function (n) {
     switch (n) {
         case '0':
@@ -59,6 +59,10 @@ window.grade = function (n) {
             return '专职副会长';
         case '13':
             return '实习生';
+        case '14':
+            return "顾问";
+        case '15':
+            return "部门秘书";
     }
 };
 window.fame_img = function (n) {
