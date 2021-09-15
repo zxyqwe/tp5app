@@ -61,8 +61,8 @@ class Bilibili
 
         if (ValidateTimeOper::IsDayUp()) {
             $bili->online();
-            $bili->unknown_notice();
-            $bili->unknown_heart();
+//            $bili->unknown_notice();
+//            $bili->unknown_heart();
 
             cache('bili_cron_user_past', cache('bili_cron_user'));
             $res = $bili->getInfo();
