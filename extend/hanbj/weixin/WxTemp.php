@@ -145,6 +145,13 @@ class WxTemp
                 trace($log, MysqlLog::LOG);
                 return true;
             }
+            case "ZztiVmh-pB6jtAewRkugjGbpi-o043eho-Tuz440K5E":
+            {
+                $text_info = $data['data']['first']['value'];
+                trace("小程序 {$data['touser']} $text_info", MysqlLog::INFO);
+                trace($log, MysqlLog::LOG);
+                return true;
+            }
         }
         return false;
     }
@@ -272,7 +279,7 @@ class WxTemp
         $data = [
             "touser" => $openid,
             "template_id" => "XgXKHJzWfVHAub63HOtUnPai-eiQCOL76kwOrtGA5jY",
-            "url" => "https://app.zxyqwe.com/hanbj/mobile",
+            "url" => "https://app.zxyqwe.com/hanbj/develop/runlog",
             "topcolor" => "#FF0000",
             "data" => [
                 "first" => [
