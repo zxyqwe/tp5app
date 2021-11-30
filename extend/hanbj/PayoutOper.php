@@ -380,7 +380,7 @@ class PayoutOper
             $input->SetUser_name($ret['realname']);
         }
         $input->SetTotal_fee(intval($ret['fee']));
-        $input->SetDesc(substr($ret['actname'], 0, 10));
+        $input->SetDesc(mb_substr($ret['actname'], 0, 10, 'utf-8'));
         $wx_ret = WxPayApi::payOut(new HanbjPayConfig(), $input);
         if (
             array_key_exists("return_code", $wx_ret)
