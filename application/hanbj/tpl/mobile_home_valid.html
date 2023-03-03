@@ -33,7 +33,7 @@
                     <div class="weui-media-box weui-media-box_text">
                         <h4 class="weui-media-box__title">
                             <div v-if="item.code >= 0"><i class="weui-icon-success"></i>缴费 {{ item.code }} 年</div>
-                            <div v-else><i class="weui-icon-cancel"></i>撤销</div>
+                            <div v-else><i class="weui-icon-cancel"></i>撤销 {{ item.code }} 年</div>
                         </h4>
                         <p class="weui-media-box__desc">
                             时间：{{ item.fee_time }}<br>登记者：{{ item.oper }}
