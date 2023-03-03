@@ -138,7 +138,8 @@ class System extends Controller
         $map['当前微信工作人员'] = implode('，', MemberOper::pretty_tieba($res));
         $res = MemberOper::get_tieba(UserOper::reg());
         $map['内网登录权限'] = implode('，', MemberOper::pretty_tieba($res));
-        $map['内网超级权限'] = implode('，', UserOper::pretty_toplist());
+        $map['内网超级权限（来自名人堂）'] = implode('，', UserOper::pretty_toplist());
+        $map['内网超级权限（固定人员）'] = implode('，', UserOper::pretty_fixedlist());
         $map['当前吧务组'] = '第' . HBConfig::YEAR . '届';
         $res = MemberOper::get_open_stock();
         if (null !== $res) {

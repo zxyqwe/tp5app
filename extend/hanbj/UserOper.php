@@ -48,7 +48,18 @@ class UserOper
      */
     public static function pretty_toplist()
     {
-        return MemberOper::pretty_tieba(MemberOper::get_tieba(self::toplist()));
+        return MemberOper::pretty_tieba(MemberOper::get_tieba(FameOper::getTop()));
+    }
+
+    /**
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function pretty_fixedlist()
+    {
+        return MemberOper::pretty_tieba(MemberOper::get_tieba(HBConfig::FIXED));
     }
 
     /**
