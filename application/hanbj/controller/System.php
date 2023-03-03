@@ -135,7 +135,7 @@ class System extends Controller
         $map['活动增加积分'] = BonusOper::getActBonus();
         $map['活动预置名称'] = BonusOper::getActName();
         $res = MemberOper::get_tieba(BonusOper::getWorkers());
-        $map['当前微信工作人员'] = implode('，', MemberOper::pretty_tieba($res));
+        $map['当前微信扫码工作人员'] = implode('，', MemberOper::pretty_tieba($res));
         $res = MemberOper::get_tieba(UserOper::reg());
         $map['内网登录权限'] = implode('，', MemberOper::pretty_tieba($res));
         $map['内网超级权限（来自名人堂）'] = implode('，', UserOper::pretty_toplist());
