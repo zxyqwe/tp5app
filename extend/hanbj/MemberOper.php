@@ -675,6 +675,11 @@ class MemberOper
             }
         }
     }
+
+    public static function event($union_id)
+    {
+        return "";
+    }
 }
 
 /*

@@ -112,6 +112,7 @@ class Mobile extends Controller
         $res['fee_str'] = $res['fee_code']->format('Y-m-d H:i:s');
         $res['phone'] = preg_replace('/(\d{3})\d{4}(\d{4})/', "$1****$2", $res['phone']);
         $res['duration'] = MemberOper::calc_duration($res['start_time'])->days;
+        $res['event'] = MemberOper::event($res['unique_name']);
         if (!empty($obj)) {
             return WxHanbj::jump($obj);
         }
