@@ -696,13 +696,13 @@ class MemberOper
         switch (intval($ret['c'])) {
             case self::TEMPUSE:
                 $fee_duration = FeeOper::duration($unique_name);
-                return "缴费到" . $fee_duration->format("%a") . "天后转为会员";
+                return "缴费" . $fee_duration->format("%a") . "天后转为会员";
             case self::JUNIOR:
                 $fee_duration = FeeOper::duration($unique_name, -1);
                 return $fee_duration->format("%a") . "天后转为临时抢号";
             case self::BANNED:
                 $fee_duration = FeeOper::duration($unique_name, 2);
-                return "缴费到" . $fee_duration->format("%a") . "天后转为实名会员";
+                return "缴费" . $fee_duration->format("%a") . "天后转为实名会员";
             case self::NORMAL:
                 $fee_duration = FeeOper::duration($unique_name, -2);
                 return $fee_duration->format("%a") . "天后转为注销";

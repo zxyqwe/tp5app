@@ -15,7 +15,7 @@ var all_mem = (function ($, w, undefined) {
         var data = [listitem("到期时间", [fee_code])];
         for (var i in fee) {
             var tmp = fee[i];
-            if (tmp.code === '1')
+            if (tmp.code >= 0)
                 data.push(listitem(alr + '缴费', [jsr + tmp.oper, sj + tmp.fee_time, jf + tmp.bonus, rz + (tmp.up === '1' ? yrz : wrz)]));
             else
                 data.push(listitem(nye + '撤销', [jsr + tmp.oper, sj + tmp.fee_time, jf + tmp.bonus, rz + (tmp.up === '1' ? yrz : wrz)]));
