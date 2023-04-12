@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     cssnano = require('gulp-cssnano'),
     rev = require('gulp-rev'),
     revCollector = require("gulp-rev-collector"),
+    htmlmin = require('gulp-htmlmin'),
     gulpSequence = require('gulp-sequence');
 
 gulp.task('js', function () {
@@ -29,6 +30,7 @@ gulp.task('hanbj_tpl', function () {
         .pipe(revCollector({
             replaceReved: true
         }))
+        .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(gulp.dest('application/hanbj/view/'));
 });
 gulp.task('index_tpl', function () {
@@ -36,6 +38,7 @@ gulp.task('index_tpl', function () {
         .pipe(revCollector({
             replaceReved: true
         }))
+        .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(gulp.dest('application/index/view/'));
 });
 gulp.task('books_tpl', function () {
@@ -43,6 +46,7 @@ gulp.task('books_tpl', function () {
         .pipe(revCollector({
             replaceReved: true
         }))
+        .pipe(htmlmin({ collapseWhitespace: true }))
         .pipe(gulp.dest('application/books/view/'));
 });
 gulp.task('hanbj', gulpSequence(['js', 'css'], ['hanbj_tpl', 'index_tpl', 'books_tpl']));
