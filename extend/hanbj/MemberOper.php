@@ -676,9 +676,38 @@ class MemberOper
         }
     }
 
-    public static function event($union_id)
+    /**
+     * @param $unique_name
+     * @return string
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public static function event($unique_name)
     {
-        return "";
+        $map['unique_name'] = $unique_name;
+        $ret = Db::table('member')
+            ->where($map)
+            ->field('code  as c')
+            ->find();
+        if (null === $ret) {
+            return "无";
+        }
+        switch (intval($ret['c'])) {
+            case self::TEMPUSE:
+                $fee_year = FeeOper::shift_year($unique_name);
+                return "缴费到" . $fee_year->format("Y-m-d H:i:s") . "转为会员";
+            case self::JUNIOR:
+                $fee_year = FeeOper::shift_year($unique_name, -1);
+                return $fee_year->format("Y-m-d H:i:s") . "之后转为临时抢号";
+            case self::BANNED:
+                $fee_year = FeeOper::shift_year($unique_name, 2);
+                return "缴费到" . $fee_year->format("Y-m-d H:i:s") . "转为实名会员";
+            case self::NORMAL:
+                $fee_year = FeeOper::shift_year($unique_name, -2);
+                return $fee_year->format("Y-m-d H:i:s") . "之后转为注销";
+        }
+        return "无";
     }
 }
 
