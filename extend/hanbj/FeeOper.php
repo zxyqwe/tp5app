@@ -77,7 +77,7 @@ class FeeOper
      * @throws ModelNotFoundException
      * @throws Exception
      */
-    public static function shift_year($uname, $ignore_years = 0)
+    private static function shift_year($uname, $ignore_years)
     {
         $fee_year = self::cache_fee($uname);
         $ignore_interval = new DateInterval("P" . abs($ignore_years) . "Y");
@@ -102,6 +102,22 @@ class FeeOper
     {
         $fee_year = self::shift_year($uname, $ignore_years);
         return $fee_year < new DateTimeImmutable();
+    }
+
+    /**
+     * @param $uname
+     * @param int $ignore_years
+     * @return DateInterval
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     * @throws Exception
+     */
+    public static function duration($uname, $ignore_years = 0)
+    {
+        $fee_year = self::shift_year($uname, $ignore_years);
+        $today = new DateTimeImmutable();
+        return $today->diff($fee_year);
     }
 
     /**
