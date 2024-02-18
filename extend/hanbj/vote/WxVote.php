@@ -100,6 +100,9 @@ class WxVote
 
     private static function getMap($target_year)
     {
+        if (!array_key_exists($target_year, self::HISTORY)) {
+            return [];
+        }
         $res = MemberOper::get_tieba(self::HISTORY[$target_year]);
         $map = [];
         foreach ($res as $item) {
