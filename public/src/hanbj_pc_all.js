@@ -673,8 +673,8 @@ var fame = (function ($, Vue, w, undefined) {
         for (var i in Array.from(Array(w.max_gras + 1).keys())) {
             le.push({value: i, text: w.grade(i)});
         }
-        for (var i in w.department) {
-            de.push({value: w.department[i], text: w.department[i]});
+        for (var i in w.department_history) {
+            de.push({value: w.department_history[i], text: w.department_history[i]});
         }
         w.codeFormatter = function (value, row) {
             return w.mem_code(value);
