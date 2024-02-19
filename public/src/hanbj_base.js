@@ -97,6 +97,8 @@ window.fame_img = function (n) {
             return '/static/arrow-up.png';
         case '12':
             return '/static/arrow-up.png';
+        default:
+            return '/static/arrow-up.png';
     }
 };
 window.repeat_icon = function (target, n) {

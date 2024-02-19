@@ -231,6 +231,17 @@ class FameOper
         return $data;
     }
 
+    private static function label_sort($label)
+    {
+        if(in_array($label, ['中枢', '理事会'])) {
+            return '0' + $label;
+        }
+        if(in_array($label, ['执行干事'])) {
+            return '9' + $label;
+        }
+        return '1' + $label;
+    }
+
     public static function cmp($a, $b)
     {
         $order = array_flip(self::order);
@@ -239,7 +250,7 @@ class FameOper
             return $a['y'] < $b['y'] ? 1 : -1;
         }
         if ($a['label'] !== $b['label']) {
-            return $a['label'] < $b['label'] ? -1 : 1;
+            return self::label_sort($a['label']) < self::label_sort($b['label']) ? -1 : 1;
         }
         if ($a['grade'] !== $b['grade']) {
             return $order[$a['grade']] < $order[$b['grade']] ? -1 : 1;
