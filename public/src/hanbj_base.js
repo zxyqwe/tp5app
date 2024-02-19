@@ -28,7 +28,7 @@ window.wx_mem_code = function (value) {
             return '<p class="temp-text">状态：' + window.mem_code(value);
     }
 };
-window.max_gras = 15;
+window.max_gras = 17;
 window.grade = function (n) {
     switch (n) {
         case '0':
@@ -63,6 +63,10 @@ window.grade = function (n) {
             return "顾问";
         case '15':
             return "部门秘书";
+        case '16':
+            return "理事长";
+        case '17':
+            return "理事";
     }
 };
 window.fame_img = function (n) {
@@ -110,6 +114,8 @@ window.repeat_icon = function (target, n) {
     }
     return total;
 };
-window.department = ['中枢', '会员部', '会员中心', '外联部', '外事中心', '外事部', '宣传部', '宣传中心',
-    '活动部', '活动中心', '人力部', '人力资源与会员事务部', '秘书处', '办公室', '产业中心', '社推部',
-    '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会', '第一项目组', '第二项目组', '第三项目组'].sort();
+
+// '中枢', '会员部', '会员中心', '外联部', '外事中心', '外事部', '宣传部', '宣传中心',
+// '活动部', '活动中心', '人力部', '人力资源与会员事务部', '秘书处', '办公室', '产业中心', '社推部',
+// '新媒体运营部', '交流联络部', '公共关系部', '换届选举监委会', '第一项目组', '第二项目组', '第三项目组'
+window.department = ['理事会', '活动研学', '行政综合', '商务外联', '品宣媒体', '执行干事'].sort();

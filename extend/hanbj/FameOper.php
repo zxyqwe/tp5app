@@ -31,9 +31,12 @@ class FameOper
     const intern = 13;//实习
     const adviser = 14;//顾问
     const manager_secretary = 15;//部门秘书
-    const max_pos = 15;
+    const council_president = 16;//理事长
+    const council_director = 17;//理事
+    const max_pos = 17;
     const order = [
         self::chairman,
+        self::council_president,
         self::fame_chair,
         self::fixed_vice_chairman,
         self::vice_chairman,
@@ -44,6 +47,7 @@ class FameOper
         self::vice_manager,
         self::adviser,
         self::commissioner,
+        self::council_director,
         self::manager_secretary,
         self::assistant,
         self::member,
@@ -89,6 +93,10 @@ class FameOper
                 return "顾问";
             case self::manager_secretary:
                 return "部门秘书";
+            case self::council_president:
+                return "理事长";
+            case self::council_director:
+                return "理事";
             default:
                 return "未知：$type";
         }

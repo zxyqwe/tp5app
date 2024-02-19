@@ -11,7 +11,7 @@ class HBConfig
     // 活动扫码工作人员：会长层 + 部长层 + 一些人
     const WORKER = [self::CODER, '乾壬申'];
     // 本届吧务组年代
-    const YEAR = 17;
+    const YEAR = 18;
     // 收个开放号码ID
     const FIRST_UNAME_ID = 863;
 }

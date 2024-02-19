@@ -608,7 +608,7 @@ var fame = (function ($, Vue, w, undefined) {
                 uname: '',
                 year: fixed_year,
                 grade: 0,
-                labelname: '中枢',
+                labelname: w.department[0],
                 candy: [],
                 res: [],
                 labellist: w.department,
