@@ -58,6 +58,7 @@ class WxHanbj
         foreach ($ret as $idx) {
             if (!cache("?addUnionID{$idx['openid']}")) {
                 $user[] = $idx;
+                cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
             }
             if (count($user) >= $limit) {
                 break;
@@ -72,14 +73,13 @@ class WxHanbj
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
-            trace("addUnionID $raw", MysqlLog::ERROR);
+            trace("addUnionID $raw" . json_encode($user), MysqlLog::ERROR);
             return $limit;
         }
 
         $limit = count($user);
         foreach ($res['user_info_list'] as $idx) {
             if (!isset($idx['unionid'])) {
-                cache("addUnionID{$idx['openid']}", "addUnionID{$idx['openid']}", 3600);
                 continue;
             }
             $ret = SubscribeOper::setUnionidOnOpenid($idx['openid'], $idx['unionid']);
