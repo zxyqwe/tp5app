@@ -73,7 +73,7 @@ class WxHanbj
         $raw = Curl_Post($data, $url, false);
         $res = json_decode($raw, true);
         if (!isset($res['user_info_list'])) {
-            trace("addUnionID $raw" . json_encode($user), MysqlLog::ERROR);
+            trace("addUnionID $raw" . json_encode($user), MysqlLog::LOG);
             return $limit;
         }
 
